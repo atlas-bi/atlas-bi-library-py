@@ -34,10 +34,8 @@ RUN apt-get install -y -qq \
 
 WORKDIR /app
 
-COPY / /app
-
-#RUN git -c http.sslVerify=false clone --depth 1 "$REMOTE" . \
-RUN python -m pip install --disable-pip-version-check poetry \
+RUN git -c http.sslVerify=false clone --depth 1 "$REMOTE" . \
+    && python -m pip install --disable-pip-version-check poetry \
     && poetry config virtualenvs.create false \
     && poetry install \
     && poetry env info
