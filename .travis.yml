@@ -13,7 +13,7 @@ jobs:
       env: TOXV=py39
 services:
   - redis
-  - postgres
+  - postgresql
 before_install:
   - sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl
   - pip install tox-travis poetry codecov
