@@ -24,7 +24,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "atlas",
-        "HOST": "127.0.0.1",
+        "HOST": "localhost",
         "USER": "postgres",
         "PASSWORD": "",
     },

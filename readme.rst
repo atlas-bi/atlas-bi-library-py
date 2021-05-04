@@ -1,5 +1,5 @@
 
-|travis|
+|travis| |codecov|
 
 Atlas of Information Management
 ===============================
@@ -186,5 +186,9 @@ to create cache:
     python manage.py createcachetable
 
 
-.. |travis| .. image:: https://travis-ci.com/Riverside-Healthcare/Atlas-Py.svg?branch=master
+.. |travis| image:: https://travis-ci.com/Riverside-Healthcare/Atlas-Py.svg?branch=master
     :target: https://travis-ci.com/Riverside-Healthcare/Atlas-Py
+
+.. |codecov| image:: https://codecov.io/gh/Riverside-Healthcare/Atlas-Py/branch/main/graph/badge.svg?token=2JfEYNRwFl
+      :target: https://codecov.io/gh/Riverside-Healthcare/Atlas-Py
+    
