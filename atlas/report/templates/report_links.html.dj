@@ -1,0 +1,29 @@
+<div class="pageNav">
+    {% if imgs %}
+        <a href="#images" class="pageNav-link">Images</a>
+    {% endif %}
+
+    {% if report.description or report.developerdescription or report.keyassumptions or report.systemdescription %}
+        <a href="#description" class="pageNav-link">Description</a>
+    {% endif %}
+
+    {% if terms %}
+        <a href="#terms" class="pageNav-link">Terms</a>
+    {% endif %}
+
+    <a href="#details" class="pageNav-link">Details</a>
+
+    {% if query %}
+        <a href="#query" class="pageNav-link">Query</a>
+    {% endif %}
+
+    {% if parents or children or groups %}
+                <a href="#relationships" class="pageNav-link">Relationships</a>
+    {% endif %}
+
+    {% if maint_log %}
+                <a href="#maintenance" class="pageNav-link">Maintenance</a>
+    {% endif %}
+
+    <a href="#comments" class="pageNav-link">Comments</a>
+</div>

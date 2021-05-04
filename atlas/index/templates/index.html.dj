@@ -1,0 +1,14 @@
+{% extends 'layout.html.dj' %}
+
+{% block body %}
+    hey {{ user }} <br>
+permissions<br>
+    {{ permissions }}
+favorites<br>
+{{ favorites }}
+
+<br>
+
+
+{{ user.active_role }}
+{% endblock body %}

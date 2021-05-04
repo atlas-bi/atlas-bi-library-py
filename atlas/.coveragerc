@@ -1,0 +1,24 @@
+[run]
+source =.
+branch = True
+
+
+[report]
+show_missing = True
+skip_covered = True
+omit =
+    */test*
+    */asgi.py
+    */wsgi.py
+    settings/
+    */models-dev.py
+    */manage.py
+    */testutils.py
+    */routers.py
+    */migrations*
+    index/models_sqlsvr.py
+    analytics*
+    index*
+    mail*
+    report*
+    search*

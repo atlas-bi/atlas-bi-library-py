@@ -1,0 +1,32 @@
+{% verbatim %}
+<h2 class="fav-col-title">Filters</h2>
+<form id="searchForm">
+    <input type="hidden" value="@Model.SearchString" name="s" />
+    <input type="hidden" value="@Model.SearchFilter" name="f" />
+    <input type="hidden" value="@Model.SearchField" name="sf" />
+
+    {{#each facet_counts.facet_fields }}
+
+        <h5 class="fav-col-sub-title">{{filter_name @key }}</h5>
+        <div class="srch-fltr">
+            {{#each this }}
+                {{#if this }}
+                <div class='form-check search-filter'>
+                    <input type="checkbox"  value='??'/>
+                    <input type="hidden" />
+                    <label>{{filter_name @key }}<span class="search-filterQty">{{ this }}</span></label>
+                </div>
+                {{/if}}
+            {{/each}}
+         </div>
+           <!-- <div class="srch-fltr">
+                <div class='form-check search-filter'>
+                    <input type="checkbox" @if(Model.SearchFilter != null && Model.SearchFilter.Contains("28")) {<text>checked="checked"</text>} value='28'/>
+                    <input type="hidden" />
+                    <label>SSRS</label>    
+                </div>
+
+            </div>-->
+    {{/each}}
+</form>
+{% endverbatim %}

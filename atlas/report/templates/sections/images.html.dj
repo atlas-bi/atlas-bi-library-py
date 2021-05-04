@@ -1,0 +1,31 @@
+<h3 class="pageSection-title">Images</h3>
+
+{% if imgs|length == 1 %}
+    <div class="pop text-center" style="max-height:400px;">
+        <img class="img-responsive" src="/report/{{ report.report_id }}/image/{{ imgs.0.image_id }}" alt="Main report image" style="max-width: 98%;max-height: 390px;min-height: 1px;">
+    </div>
+{% else %}
+    <div class="crsl">
+        {% for img in imgs %}
+            <div class="crsl-itm pop">
+                {% if forloop.counter0 > 0 %}
+                    <img data-src="/report/{{ report.report_id }}/image/{{ img.image_id }}" src="/static/img/loader.gif" />
+                {% else %}
+                    <img src="/report/{{ report.report_id }}/image/{{ img.image_id }}"/>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div class="crsl-ind">
+            {% for img in imgs %}
+                <span  class="crsl-dot" slide="{{ forloop.counter0 }}"></span>
+            {% endfor %}
+        </div>
+        <a class="crsl-prev">
+            <i class="fas fa-chevron-left fa-lg"></i>
+        </a>
+        <a class="crsl-next">
+            <i class="fas fa-chevron-right fa-lg"></i>
+        </a>
+    </div>
+{% endif %}

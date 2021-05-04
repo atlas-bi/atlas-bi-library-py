@@ -1,0 +1,15 @@
+{% extends 'layout.html.dj' %}
+
+{% load compress %}
+
+
+{% block body %}
+
+    {% compress js file drag %}
+        <script src="/static/js/solr.js" async></script>
+    {% endcompress %}
+
+<div class="sr-results">
+</div>
+
+{% endblock body %}

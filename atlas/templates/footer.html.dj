@@ -1,0 +1,3 @@
+<footer class="ft">
+    &copy; {% now "Y" %} - {{ settings.ORG_NAME }}
+</footer>

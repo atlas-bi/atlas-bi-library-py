@@ -1,0 +1,32 @@
+{% load compress %}
+{% compress css inline auth%}
+    <link rel="stylesheet" href="/static/lib/fonts/sfmin/stylesheet.css" type="text/css" charset="utf-8"/>
+    <link rel="stylesheet" href="/static/lib/fonts/cheltmin/stylesheet.css" type="text/css" charset="utf-8"/>
+    <link type="text/css" rel="stylesheet" href="/static/css/auth.css" />
+{% endcompress %}
+
+<link rel="preload" href="/static/lib/fonts/cheltmin/subset-NYTCheltenham-Medium.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/static/lib/fonts/cheltmin/subset-NYTCheltenham-Bold.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/static/lib/fonts/cheltmin/subset-NYTCheltenham-MediumItalic.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/static/lib/fonts/cheltmin/subset-NYTCheltenhamWide-Regular.woff2" as="font" type="font/woff2" crossorigin />
+
+
+<div class="login">
+    <div class="login-cntr">
+        <form action="" method="post" autocomplete="off">
+             {% csrf_token %}
+            <h2 class="login-ttl">Atlas Dev</h2>
+
+            <div class="login-inputGrp">
+                <div class="login-inputTtl" >Email</div>
+                <input class="login-input" autocapitalize="none" autocomplete="username" autofocus="" id="id_username" maxlength="254" name="username" required="" type="text">
+            </div>
+            <div class="login-inputGrp">
+                <div class="login-inputTtl">Password</div>
+                <input class="login-input" autocomplete="current-password" id="id_password" name="password" required="" type="password" value="123">
+            </div>
+            <button class="login-btn" type="submit" value="Submit">Log In</button>
+        </form>
+        <div class="login-copy">&copy; {% now "Y" %} - {{ settings.ORG_NAME }}</div>
+    </div>
+</div>

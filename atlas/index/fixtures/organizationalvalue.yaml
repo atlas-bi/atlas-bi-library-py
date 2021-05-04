@@ -1,0 +1,12 @@
+-   model: index.organizationalvalue
+    pk: 1
+    fields:
+        name: "High"
+-   model: index.organizationalvalue
+    pk: 1
+    fields:
+        name: "Medium-High"
+-   model: index.organizationalvalue
+    pk: 1
+    fields:
+        name: "Medium"

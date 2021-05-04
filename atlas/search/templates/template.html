@@ -1,0 +1,127 @@
+{% verbatim %}
+
+<div class="srch">
+    <div class="srch-colOne">
+        <partial name="Partials/_Filters" />
+    </div>
+    <div class="srch-colTwo" id="results">
+        <div class="srch-results {% endverbatim %}{% if 41 in permissions %}disabled{% endif %}{% verbatim %}" ss-container>
+            {{#each results}}
+                <div class="srch-result">
+
+                    <!-- fav links -->
+                    <div class="fav-links">
+                        <div class="fav-star">
+                            <!-- {% endverbatim %}{{ favorites }}{% verbatim %} -->
+                             <i fav-type="{{ this.type }}" object-id="{{ this.atlas_id }}" class="far fa-star favorite"></i>
+                        </div>
+                        <div class="fav-share darken" data-toggle="mdl" data-target="shareModal" data-type="report" data-name='{{ this.name }}' data-url="{{ Id }}">
+                            <i class="fas fa-share"></i>
+                        </div>
+                        <!-- only if there is a run button present -->
+                        <div class="fav-access" data-toggle="mdl" data-target="requestAccessModal" data-name="{{ Name }}">
+                            <i class="fas fa-universal-access"></i>
+                        </div>
+                    </div>
+
+                    <!-- fav body -->
+                    <div class="fav-body">
+                        <h5 class="fav-title" data-toggle="clps" data-target="clps-{{ this.atlas_id }}">
+                            <span>
+                                {{#if Documented}}
+                                    <span class="text-success"><i class="fas fa-check"></i></span>
+                                {{/if}}
+                                <!-- no longer know what field we matched in solr -->
+                                <!--<span class="srch-field" style="margin-left:6px;margin-right:0px">@this.SearchField</span>-->
+                                 {{ Name }} {{#if this.epic_record_id}}{{ this.epic_master_file }} {{ this.epic_record_id }}{{/if}}
+                            </span>
+                            <div class="fav-type">
+                                {{#if this.epic_released }}
+                                    <span class="srch-field">Epic Released</span>
+                                {{/if}}
+
+                                {{#if this.orphan }}
+                                    <span class="srch-field">Orphan</span>
+                                {{/if}}
+
+                                {{#if this.hidden }}
+                                    <span class="srch-field">Hidden</span>
+                                {{/if}}
+
+                                <span class="srch-field">{{ type }}</span>
+                            </div>
+                        </h5>
+                        <h5 class="fav-nav">
+                            <a href="{{ this.atlas_id }}">Open In Atlas</a>
+                            <!-- if run url -->
+                            <!--<a  target="_blank" rel="noopener" href="@this.ReportUrl">Run Report</a> -->
+                            <!-- else
+                            {
+                                if(this.EditReportUrl != null && @Model.Permissions.Contains(38))
+                                {
+                                    <div style="position: relative;">
+                                        <span class="tt-top" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Open in report library.">Run Report</span>
+                                    </div>
+                                } else 
+                                {
+                                    <div style="position: relative;">
+                                        <span class="tt-top" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Login to Hyperspace to run report.">Run Report</span>
+                                    </div>
+                                }
+                            } -->
+                            <!--
+                            @if (this.EditReportUrl != null && @Model.Permissions.Contains(38))
+                            {
+                                <a target="_blank" rel="noopener" href="@this.EditReportUrl">Edit Report</a>
+                            }
+                            @if (this.ManageReportUrl != null && @Model.Permissions.Contains(38))
+                            {
+                                <a target="_blank" rel="noopener" href="@this.ManageReportUrl">Manage Report</a>
+                            }-->
+                        </h5>
+                        <div class="clps fav-dtls" id="clps-{{ this.atlas_id }}">
+                            <div class="markdown noleft">
+                                {{ this.Documentation }}
+                                <!--
+                                @if (this.Description != null && this.Description != "")
+                                {
+                                    @if(this.SearchField == "Query"){
+                                    @if(@Request.Headers["User-Agent"].ToString().Contains("Trident")){
+                                     @:Open in Atlas to view query.
+                                } else {
+                                     <div class="query-box">
+                                        <div class="query-box-inner light ss-preview" id='query-@this.Id' ss-container>
+                                            <pre><code class="sql" id="code-@this.Id">@this.Description</code></pre>
+                                        </div>
+                                    </div>
+                                }
+                                    } else {
+                                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(@this.Description))
+                                }
+                                } else {
+                                    @:Open in Atlas to see details.
+                                }-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             {{/each}}
+
+                 <partial name="Partials/_Pagination" />
+           {{#unless results }}
+                <div class="srch-none">
+                    <h5>Not finding what you are looking for?<br><a href="http://reports.riversidehealthcare.net/" target="_blank">Request a New Report here.</a></h5>
+                    <p>
+                        <hr />
+                        A few things to consider -<br><br>
+                        Are you searching for a private or hidden report? Try out the advanced search filters!<br><br>
+                        Is it a new Hyperspace Report? Hyperspace reports typically are not imported until the following business day.<br>
+                        Is it a new SSRS Report? SSRS reports typically take two hours to be loaded into the search results.
+                    </p>
+                </div>
+            {{/unless}}
+
+        </div>
+    </div>
+</div>
+{% endverbatim %}

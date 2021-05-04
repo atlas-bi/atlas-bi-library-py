@@ -1,0 +1,93 @@
+# Basic User
+-   model: index.users
+    pk: 1
+    fields:
+        email: "user@user.user"
+        username: "user-user"
+        _full_name: user user
+        _first_name: user
+
+# Admin User
+-   model: index.users
+    pk: 2
+    fields:
+        email: "admin@admin.admin"
+        username: "admin-admin"
+        _full_name: admin admin
+        _first_name: admin
+
+-   model: index.userrolelinks
+    pk: 1
+    fields:
+        role_id: 1
+        user_id: 2
+
+# Term
+-   model: index.terms
+    pk: 1
+    fields:
+        name: LOS Length of Stay
+        summary: "# LOS \n calculation ```sql\nselect *\n```"
+        technical_definition: "# LOS \n calculation ```sql\nselect *\n```"
+        approved: Y
+        _approved_at: 2020-01-01 00:00:00+0
+        approved_by: 2
+        modified_by: 2
+
+# Analytics
+-   model: index.analytics
+    pk: 1
+    fields:
+        app_code_name: "Mozilla"
+        app_name: "Netscape"
+        app_version: "5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15"
+        cookie_enabled: "true"
+        language: "en-us"
+        platform: "MacIntel"
+        useragent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15"
+        host: "127.0.0.1:8000"
+        hostname: "127.0.0.1"
+        href: "http: //127.0.0.1:8000/analytics/"
+        protocol: "http: "
+        search: ""
+        pathname: "/analytics/"
+        screen_height: 1335
+        screen_width: 1998
+        origin: "http: //127.0.0.1:8000"
+        title: "Analytics - Atlas"
+        referrer: ""
+        load_time: 9135
+        zoom: 1
+        session_id: "V2VkIEFwciAyOCAyMDIxIDEwOjIzOjEwIEdNVC0wNTAwIChDRFQp"
+        page_id: "V2VkIEFwciAyOCAyMDIxIDEwOjIzOjEwIEdNVC0wNTAwIChDRFQp"
+        page_time: 46
+
+# Initiative
+-   model: index.initiatives
+    pk: 1
+    fields:
+        name: Test Initiative to Do Something Cool
+        description: "This is a nice *description* about `nothing`. \n ```sql\n select something;\n```"
+        ops_owner: 1
+        exec_owner: 1
+        financial_impact: 1
+        strategic_importance: 1
+        modified_by: 1
+        _modified_at: 2020-01-01 00:00:00+0
+
+# Project
+-   model: index.projects
+    pk: 1
+    fields:
+        initiative: 1
+        name: Test project to group stuff up
+        description: "#Do\n\n##we\n\n```python\n\nneed one?```\n"
+        ops_owner: 1
+        exec_owner: 1
+        analytics_owner: 1
+        data_owner: 1
+        financial_impact: 1
+        strategic_importance: 1
+        external_documentation_url: "www.google.com"
+        _modified_at: 2020-01-01 00:00:00+0
+        modified_by: 1

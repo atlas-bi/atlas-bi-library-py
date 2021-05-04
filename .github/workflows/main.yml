@@ -1,0 +1,22 @@
+name: "CI"
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    container: python:39-slim
+    steps:
+      - name: get code
+        uses: actions/checkout@v1
+
+      - name: build
+        run: tox -e docs
+
+      - name: publish
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/_build

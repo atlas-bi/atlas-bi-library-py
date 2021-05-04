@@ -1,0 +1,108 @@
+{% extends 'layout.html.dj' %}
+
+{% block start_css %}
+    <link rel="stylesheet" href="/static/css/reports.css" type="text/css" charset="utf-8"/>
+    <link rel="stylesheet" href="/static/css/utility/carousel.css" type="text/css" charset="utf-8"/>
+{% endblock start_css %}
+
+{% block body %}
+    {{ report_id }}
+    {{ report.report_id }}
+    {{ report.name }}
+    {{ report.ReportDoc}}
+
+    {{ favorite }}
+
+    <div class="pageTitle">
+        <h2 class="pageTitle-head">
+            <span>{{ report.name }}</span>
+        </h2>
+        {% if 12 in permissions %}
+            <div data-ajax="yes" class="no-loader" data-url="/report/{{ report.report_id }}/maint_status"></div>
+        {% endif %}
+
+        {% include 'report_links.html.dj' %}
+    </div>
+    <section class="pageSection">
+        <span class="location" id="images"></span>
+        <div id="report-image-container">
+            {% if imgs %}
+                {% include "sections/images.html.dj" %}
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="pageSection">
+        <span class="location" id="description"></span>
+        <div id="report-description-container">
+
+            {% if report.description or report.detailed_description or report.developer_description or report.keyassumptions or report.systemdescription %}
+                {% include 'sections/description.html.dj' %}
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="pageSection">
+        <span class="location" id="terms"></span>
+        <div id="report-terms-container">
+            {% if terms %}
+                <!--<partial name="_Terms" />-->
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="pageSection">
+        <span class="location" id="details"></span>
+        <div id="report-details-container">
+            <!--<partial name="_Details" />-->
+        </div>
+    </section>
+
+    {% if query %}
+        <section class="pageSection">
+            <span class="location" id="query"></span>
+            <!--<partial name="_Query">-->
+        </section>
+    {% endif %}
+
+    {% if parents or children or groups %}
+        <section class="pageSection">
+            <span class="location" id="relationships"></span>
+            <!--<partial name="_Relationships">-->
+        </section>
+    {% endif %}
+
+
+    <section class="pageSection">
+        <span class="location" id="maintenance"></span>
+        <div id="report-maintenance-container">
+            {% if maint_log %}
+                <!--<partial name="_Maintenance" />-->
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="pageSection">
+        <span class="location" id="comments"></span>
+        <div class="comments" data-ajax="yes" data-url="/report/{{ report.report_id }}/comments"></div>
+    </section>
+
+
+    {% if 12 in permissions %}
+        <!--<partial name="_Edit" />-->
+    {% endif %}
+
+    <!--<partial name="modals\_image" />-->
+    <!--<partial name="modals\_reportProfile" />-->
+
+    {% block js %}
+        <textarea class="postLoadScripts">
+            <script src="/js/flowchart.min.js"></script><script>hljs.initHighlightingOnLoad();</script>@if (ViewBag.Permissions.Contains(12)){<script src="/js/editor.min.js" async></script><script src="/js/report-editor.min.js" async></script>}
+        </textarea>
+    {% endblock js %}
+
+    {% block start_js_inline %}
+        <script src="/static/js/reportProfile.js"></script>
+    {% endblock start_js_inline %}
+
+{% endblock body %}

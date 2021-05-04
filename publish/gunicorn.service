@@ -1,0 +1,22 @@
+[Unit]
+Description=atlas daemon
+After=network.target
+
+[Service]
+User=webapp
+Group=www-data
+WorkingDirectory=/home/websites/atlas/hash/atlas
+Environment="PATH=/home/websites/atlas/hash/venv/bin"
+ExecStart=/home/websites/atlas/hash/venv/bin/gunicorn \
+          --worker-class=gevent \
+          --capture-output \
+          --access-logfile /home/websites/atlas/hash/access.log \
+          --error-logfile /home/websites/atlas/hash/error.log \
+          --workers 11 \
+          --thread 30 \
+          --worker-connections=1000 \
+          --bind unix:/home/websites/atlas/hash/gunicorn.sock \
+          atlas.wsgi:application
+
+[Install]
+WantedBy=multi-user.target

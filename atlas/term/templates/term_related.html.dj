@@ -1,0 +1,26 @@
+<h3>Linked Reports</h3>
+
+<div class="table-responsive">
+    <table class="table sort">
+        <thead>
+            <tr>
+                <th>Report Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in related_reports %}
+              <tr>
+                <td>
+                    <a  href="\reports\{{ report.report_id }}">{{ report.name }}</a>
+                </td>
+                <td>
+                    {% if report.run_url %}
+                        <a href="{{ report.run_url }}">Run Report</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,3 @@
+**/polyfill.js
+**/*.min.js
+**/lib/*.js
