@@ -20,3 +20,16 @@ DATABASES = {
 }
 
 DATABASE_ROUTERS: list = []
+
+class DisableMigrations(object):
+    def __contains__(self, item):
+        return True
+
+    def __getitem__(self, item):
+        return None
+
+# pretend there are no migrations. By default the tests will create a database that is based
+# on the latest migrations. Since we are not doing any migrations on the psql db (app is using
+# mssql db in production/dev), we can ignore migrations for tests and just create a db based
+# on the models.py file.
+MIGRATION_MODULES = DisableMigrations()
