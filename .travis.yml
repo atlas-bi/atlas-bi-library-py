@@ -15,21 +15,27 @@ services:
   - redis
   - postgresql
 addons:
-  postgresql: '12'
+  postgresql: 13
   apt:
     packages:
-      - postgresql-12
-      - postgresql-client-12
+      - postgresql-13
 env:
   global:
     - PGUSER=postgres
-    - PGPORT=5432
+    - PGPORT=5433
 before_install:
   - sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl
   - pip install tox-travis poetry codecov
   - python --version
+  - >-
+    sudo sed -i
+    -e '/local.*peer/s/postgres/all/'
+    -e 's/peer\|md5/trust/g'
+    /etc/postgresql/13/main/pg_hba.conf
+  # Restart the PostgreSQL service:
+  - sudo service postgresql@13-main restart
 before_script:
-  - psql -c 'create database atlas;' -U postgres
+  - sudo psql -c 'create database atlas;' -U postgres -p 5433
 script:
   - tox -e clean,$TOXV,cov
 after_success:
