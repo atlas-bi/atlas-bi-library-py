@@ -10,17 +10,21 @@ LOGIN_REDIRECT_URL = "/"
 COMPRESS_ENABLED = True
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "atlas",
-        "HOST": "127.0.0.1",
-        "USER": "atlas",
-        "PASSWORD": "12345",
-    },
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase',
+    }
 }
+
 DEBUG=True
 ALLOWED_HOSTS = ["*"]
 DATABASE_ROUTERS: list = []
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.dummy.DummyCache",  # for debug
+    }
+}
 
 class DisableMigrations(object):
     def __contains__(self, item):
