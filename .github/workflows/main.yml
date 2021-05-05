@@ -12,6 +12,8 @@ jobs:
       - name: get code
         uses: actions/checkout@v1
 
+      - name: install packages
+        run: sudo apt-get update && apt-get install -y --no-install-recommends unixodbc-dev unixodbc libpq-dev
       - name: build docs
         run: |
           pip install tox poetry Sphinx Pygments furo sphinx-copybutton sphinx-inline-tabs myst-parser colorama sphinx-panels git+https://github.com/sphinx-contrib/youtube.git
