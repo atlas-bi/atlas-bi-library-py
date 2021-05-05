@@ -1,3 +1,5 @@
+# docker build . -t atlas-py-test
+# docker run -i -t -p 8000:8000 -e PORT=8000 -u 0 atlas-py-test
 FROM python:3.9
 
 ENV DEBIAN_FRONTEND=noninteractive \
