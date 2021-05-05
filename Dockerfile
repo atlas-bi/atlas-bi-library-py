@@ -41,7 +41,9 @@ RUN git -c http.sslVerify=false clone --depth 1 "$REMOTE" . \
 
 WORKDIR /app/atlas
 
-RUN poetry run python manage.py migrate --run-syncdb  --settings atlas.settings.demo \
+# RUN poetry run python manage.py makemigrations --settings atlas.settings.demo \
+#     && poetry run python manage.py migrate --settings atlas.settings.demo \
+RUN  poetry run python manage.py migrate --run-syncdb  --settings atlas.settings.demo \
     && poetry run python manage.py loaddata index/fixtures/*.yaml --settings atlas.settings.demo
 
 CMD poetry run python manage.py runserver 0.0.0.0:$PORT --settings atlas.settings.demo
