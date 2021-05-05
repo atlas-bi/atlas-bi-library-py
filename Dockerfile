@@ -14,7 +14,7 @@ RUN apt-get update -qq \
 
 RUN su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER atlas WITH SUPERUSER PASSWORD '12345';\"&& createdb -O atlas atlas"
 
-RUN apt-get install -y --no-install-recommends. \
+RUN apt-get install -y --no-install-recommends \
     build-essential \
     libssl-dev \
     libffi-dev \
