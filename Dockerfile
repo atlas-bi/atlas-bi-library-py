@@ -44,10 +44,8 @@ RUN git -c http.sslVerify=false clone --depth 1 "$REMOTE" . \
 
 RUN cd atlas; \
     /etc/init.d/postgresql start \
-    && poetry run python manage.py makemigrations \
-    && poetry run python manage.py showmigrations \
     && poetry run python manage.py migrate --run-syncdb  --settings atlas.settings.demo \
     && poetry run python manage.py loaddata index/fixtures/*.yaml --settings atlas.settings.demo
 
 
-CMD (redis-server &) && (/etc/init.d/postgresql start &) &&  cd atlas; poetry run python manage.py runserver 0.0.0.0:$PORT --settings atlas.settings.demo
+CMD (redis-server &) && /etc/init.d/postgresql start &&  cd atlas; poetry run python manage.py runserver 0.0.0.0:$PORT --settings atlas.settings.demo

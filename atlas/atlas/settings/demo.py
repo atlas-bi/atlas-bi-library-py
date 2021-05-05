@@ -18,7 +18,8 @@ DATABASES = {
         "PASSWORD": "12345",
     },
 }
-
+DEBUG=True
+ALLOWED_HOSTS = ["*"]
 DATABASE_ROUTERS: list = []
 
 class DisableMigrations(object):
