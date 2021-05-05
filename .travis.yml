@@ -15,13 +15,13 @@ services:
   - redis
   - postgresql
 addons:
-    postgresql: "10"
+    postgresql: "13"
 before_install:
   - sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl
   - pip install tox-travis poetry codecov
   - python --version
 before_script:
-  - sudo psql -c 'create database atlas;' -U postgres
+  - sudo psql -c 'create database atlas;' -U postgres -p 5433
 script:
   - tox -e clean,$TOXV,cov
 after_success:
