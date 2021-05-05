@@ -8,11 +8,13 @@ ENV DEBIAN_FRONTEND=noninteractive \
     REMOTE=https://github.com/Riverside-Healthcare/Atlas-Py.git
 
 RUN apt-get update -qq \
-     && apt-get install -y -qq --no-install-recommends apt-utils curl pkg-config postgresql postgresql-contrib > /dev/null
+     && apt-get install -y --no-install-recommends apt-utils curl pkg-config postgresql postgresql-contrib > /dev/null  \
+     && apt-get clean \
+     && rm -rf /var/lib/apt/lists/*
 
 RUN su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER atlas WITH SUPERUSER PASSWORD '12345';\"&& createdb -O atlas atlas"
 
-RUN apt-get install -y -qq \
+RUN apt-get install -y --no-install-recommends. \
     build-essential \
     libssl-dev \
     libffi-dev \
@@ -32,7 +34,9 @@ RUN apt-get install -y -qq \
     libxmlsec1-dev \
     redis-server \
     memcached \
-    libmemcached-tools
+    libmemcached-tools \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 

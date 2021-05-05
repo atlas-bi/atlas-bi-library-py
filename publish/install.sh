@@ -226,7 +226,7 @@ sudo systemctl is-active nginx | grep "inactive" > install.log && echo "${RED}!!
 # remove old gunicorn processes
 fmt_blue "Removing old gunicorn processes"
 sudo systemctl reset-failed
-(cd /etc/systemd/system/ && ls atlas-py*) | grep "atlas-py*" | grep -v "atlas-py.*$HASH" | xargs -i sh -c 'sudo systemctl disable {} || true && sudo systemctl stop {} || true && sudo rm -f /etc/systemd/system/{}'
+(cd /etc/systemd/system/ && ls atlas-py*) | grep '^atlas-py' | grep -v "atlas-py.*$HASH" | xargs -i sh -c 'sudo systemctl disable {} || true && sudo systemctl stop {} || true && sudo rm -f /etc/systemd/system/{}'
 sudo systemctl reset-failed
 
 # remove old instances of the website
