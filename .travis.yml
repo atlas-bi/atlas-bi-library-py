@@ -19,7 +19,7 @@ before_install:
   - pip install tox-travis poetry codecov
   - python --version
 before_script:
-  - sudo psql -c 'create database atlas;' -U postgres -p 5433
+  - sudo psql -c 'create database atlas;' -U postgres
 script:
   - tox -e clean,$TOXV,cov
 after_success:
