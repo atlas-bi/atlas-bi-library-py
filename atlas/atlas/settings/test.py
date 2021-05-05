@@ -34,7 +34,7 @@ TESTING = True
 LOGIN_REDIRECT_URL = "/"
 
 SESSION_REDIS = {
-    "host": "redis",
+    "host": "localhost",
     "port": 6379,
     "db": 0,
     "prefix": "atlas_session",
