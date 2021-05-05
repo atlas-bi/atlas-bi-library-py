@@ -21,7 +21,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     retcode = 0
 
-    if os.path.isfile("atlas/requirements.txt") and open("atlas/requirements.txt", "r").read() != stdout:
+    if not os.path.isfile("atlas/requirements.txt") or (os.path.isfile("atlas/requirements.txt") and open("atlas/requirements.txt", "r").read() != stdout):
         subprocess.Popen(build_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         print('created new requirements.txt file')
         retcode = 1
