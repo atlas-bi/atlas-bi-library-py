@@ -189,8 +189,9 @@ to create cache:
 .. |travis| image:: https://travis-ci.com/Riverside-Healthcare/Atlas-Py.svg?branch=master
     :target: https://travis-ci.com/Riverside-Healthcare/Atlas-Py
 
-.. |codecov| image:: https://codecov.io/gh/Riverside-Healthcare/Atlas-Py/branch/main/graph/badge.svg?token=2JfEYNRwFl
+.. |codecov| image:: https://codecov.io/gh/Riverside-Healthcare/Atlas-Py/branch/master/graph/badge.svg?token=2JfEYNRwFl
       :target: https://codecov.io/gh/Riverside-Healthcare/Atlas-Py
+
 
 .. |codeql| image:: https://github.com/Riverside-Healthcare/Atlas-Py/actions/workflows/codeql-analysis.yml/badge.svg
    :target: https://github.com/Riverside-Healthcare/Atlas-Py/actions/workflows/codeql-analysis.yml
