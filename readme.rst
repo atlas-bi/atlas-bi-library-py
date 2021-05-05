@@ -1,5 +1,5 @@
 
-|travis| |codecov| |climate|
+|travis| |codecov| |climate| |codacy|
 
 Atlas of Information Management
 ===============================
@@ -193,9 +193,12 @@ to create cache:
       :target: https://codecov.io/gh/Riverside-Healthcare/Atlas-Py
 
 .. |climate| image:: https://api.codeclimate.com/v1/badges/385f0450d811190e7e43/maintainability
-   :target: https://codeclimate.com/github/Riverside-Healthcare/Atlas/maintainability
+   :target: https://codeclimate.com/github/Riverside-Healthcare/Atlas-Py/maintainability
    :alt: Maintainability
 
 .. |codeql| image:: https://github.com/Riverside-Healthcare/Atlas-Py/actions/workflows/codeql-analysis.yml/badge.svg
    :target: https://github.com/Riverside-Healthcare/Atlas-Py/actions/workflows/codeql-analysis.yml
    :alt: CodeQL
+
+.. |codacy| image:: https://app.codacy.com/project/badge/Grade/ccc9f660171643669480f456be4a5e3c
+    :target: https://www.codacy.com/gh/Riverside-Healthcare/Atlas-Py/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Riverside-Healthcare/Atlas-Py&amp;utm_campaign=Badge_Grade
