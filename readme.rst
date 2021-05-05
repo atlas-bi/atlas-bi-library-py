@@ -195,3 +195,7 @@ to create cache:
 .. |climate| image:: https://api.codeclimate.com/v1/badges/385f0450d811190e7e43/maintainability
    :target: https://codeclimate.com/github/Riverside-Healthcare/Atlas/maintainability
    :alt: Maintainability
+
+.. |codeql| image:: https://github.com/Riverside-Healthcare/Atlas-Py/actions/workflows/codeql-analysis.yml/badge.svg
+   :target: https://github.com/Riverside-Healthcare/Atlas-Py/actions/workflows/codeql-analysis.yml
+   :alt: CodeQL
