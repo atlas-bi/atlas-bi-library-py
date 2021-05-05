@@ -77,6 +77,6 @@ repos:
     hooks:
       - id: requirements.txt
         name: requirements.txt
-        entry: poetry export --output requirements.txt --without-hashes
+        entry: python poetry_to_requirements.py
         language: system
         always_run: true
