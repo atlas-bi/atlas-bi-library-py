@@ -14,6 +14,16 @@ jobs:
 services:
   - redis
   - postgresql
+addons:
+  postgresql: '12'
+  apt:
+    packages:
+      - postgresql-12
+      - postgresql-client-12
+env:
+  global:
+    - PGUSER=postgres
+    - PGPORT=5432
 before_install:
   - sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl
   - pip install tox-travis poetry codecov
