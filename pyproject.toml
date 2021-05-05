@@ -75,6 +75,8 @@ tblib = "^1.7.0"
 selenium = { version = "^3.141.0", optional = true }
 virtualenv = "^20.4.4"
 django-libsass = "^0.8"
+dj-database-url = "^0.5.0"
+gunicorn = "^20.1.0"
 
 [tool.poetry.extras]
 test = ["Pygments", "toml", "coverage", "selenium"]
@@ -91,6 +93,7 @@ black = "^20.8b1"
 tox = "^3.20.1"
 fabric = "^2.6.0"
 bs4 = "^0.0.1"
+django-heroku = "^0.3.1"
 
 
 [build-system]

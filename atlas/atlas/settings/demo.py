@@ -1,5 +1,6 @@
 from .settings import *
-
+import dj_database_url
+import django_heroku
 
 AUTHENTICATION_BACKENDS = ("atlas.no_pass_auth.Backend",)
 
@@ -9,15 +10,8 @@ LOGIN_REDIRECT_URL = "/"
 
 COMPRESS_ENABLED = True
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "atlas",
-        "HOST": "127.0.0.1",
-        "USER": "atlas",
-        "PASSWORD": "12345",
-    },
-}
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, default="postgres://atlas:12345@127.0.0.1/atlas")
+
 DEBUG=True
 ALLOWED_HOSTS = ["*"]
 DATABASE_ROUTERS: list = []
@@ -40,3 +34,5 @@ class DisableMigrations(object):
 # mssql db in production/dev), we can ignore migrations for tests and just create a db based
 # on the models.py file.
 MIGRATION_MODULES = DisableMigrations()
+
+django_heroku.settings(locals())
