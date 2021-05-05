@@ -46,7 +46,7 @@ RUN cd atlas; \
     /etc/init.d/postgresql start \
     && poetry run python manage.py makemigrations \
     && poetry run python manage.py showmigrations \
-    && poetry run python manage.py migrate index --run-syncdb  --settings atlas.settings.demo \
+    && poetry run python manage.py migrate --run-syncdb  --settings atlas.settings.demo \
     && poetry run python manage.py loaddata index/fixtures/*.yaml --settings atlas.settings.demo
 
 
