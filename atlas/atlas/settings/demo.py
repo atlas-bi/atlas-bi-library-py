@@ -1,6 +1,6 @@
 from .settings import *
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
 AUTHENTICATION_BACKENDS = ("atlas.no_pass_auth.Backend",)
 
 LOGIN_URL = "/accounts/login/"
@@ -10,12 +10,14 @@ LOGIN_REDIRECT_URL = "/"
 COMPRESS_ENABLED = True
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / "db.sqlite3",
-    }
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "atlas",
+        "HOST": "127.0.0.1",
+        "USER": "atlas",
+        "PASSWORD": "12345",
+    },
 }
-
 DEBUG=True
 ALLOWED_HOSTS = ["*"]
 DATABASE_ROUTERS: list = []
