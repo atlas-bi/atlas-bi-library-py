@@ -3,7 +3,6 @@
 from selenium import webdriver
 
 from .settings import *
-from .settings import BASE_DIR
 
 
 class DisableMigrations(object):

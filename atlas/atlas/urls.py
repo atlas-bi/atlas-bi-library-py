@@ -15,11 +15,9 @@ Including another URLconf
 """
 import djangosaml2
 from django.conf import settings as django_settings
-from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    #  path("admin/", admin.site.urls),
     path("", include("index.urls")),
     path("saml2/", include("djangosaml2.urls")),
     path("test/", djangosaml2.views.EchoAttributesView.as_view()),

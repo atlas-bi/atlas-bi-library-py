@@ -80,3 +80,4 @@ repos:
         entry: python poetry_to_requirements.py
         language: system
         always_run: true
+        args: [--dev,--output=atlas/requirements.txt]

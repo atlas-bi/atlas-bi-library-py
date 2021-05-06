@@ -1,6 +1,3 @@
-from django.conf import settings as django_settings
-
-
 class IndexRouter(object):
     def db_for_read(self, model, **hints):
         if model._meta.app_label == "index":
