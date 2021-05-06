@@ -61,7 +61,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if check_old_requirements(args.output, args.dev):
         build_new_requirements(args.output, args.dev)
 
-        print("created new requirements.txt file")
+        print("created new %s file" % args.output)
         retcode = 1
 
     return retcode
