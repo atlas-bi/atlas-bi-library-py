@@ -44,6 +44,8 @@ checks:
 
 exclude_patterns:
 - "tests/"
+- "**/static/admin/"
+- "**/testutils.py"
 - "migrations/"
 - "node_modules/"
 - "**/lib/"
@@ -76,6 +78,9 @@ plugins:
     enabled: true
     plugins:
       - django
+    checks:
+      wrong-import-order:
+        enabled: false
   radon:
     enabled: true
   scss-lint:
