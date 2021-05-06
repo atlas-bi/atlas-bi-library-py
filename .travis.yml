@@ -1,8 +1,8 @@
 language: python
 os:
   - linux
-    dist: focal
   - osx
+dist: focal
 
 jobs:
   include:
