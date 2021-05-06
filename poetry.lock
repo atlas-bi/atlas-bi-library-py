@@ -1471,7 +1471,7 @@ test = ["Pygments", "toml", "coverage", "selenium"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6.1"
-content-hash = "dccf57d9c6eb10dc51fce770fe9daf31fe8278e0c06c039c878f046424a92de1"
+content-hash = "b0b850136bdf1e0838c6d454c7b06aa39d83c06322144487109e9120904e7c59"
 
 [metadata.files]
 alabaster = [

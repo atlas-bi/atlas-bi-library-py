@@ -1,9 +1,13 @@
+import os
+
 import dj_database_url
 import django_heroku
 
 from .settings import *
 
 AUTHENTICATION_BACKENDS = ("atlas.no_pass_auth.Backend",)
+
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 LOGIN_URL = "/accounts/login/"
 
@@ -14,6 +18,7 @@ COMPRESS_ENABLED = True
 DATABASES = {}
 DATABASES["default"] = dj_database_url.config(conn_max_age=600)
 
+print(os.environ.get("DATABASE_URL"))
 
 DEBUG = True
 ALLOWED_HOSTS = ["*"]
@@ -24,6 +29,10 @@ CACHES = {
         "BACKEND": "django.core.cache.backends.dummy.DummyCache",  # for debug
     }
 }
+
+MIDDLEWARE.append(
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+)
 
 
 class DisableMigrations(object):
