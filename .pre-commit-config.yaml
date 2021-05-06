@@ -73,11 +73,8 @@ repos:
     rev: v2.13.0
     hooks:
       - id: pyupgrade
-  - repo: local
+  - repo: https://github.com/christopherpickering/pre-commit-hooks
+    rev: 0.0.6
     hooks:
-      - id: requirements.txt
-        name: requirements.txt
-        entry: python poetry_to_requirements.py
-        language: system
-        always_run: true
+      - id: poetry-to-requirements
         args: [--dev,--output=atlas/requirements.txt]
