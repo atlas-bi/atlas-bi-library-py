@@ -263,7 +263,7 @@
               lheight +
               '%">';
             html += "<p " + p + "></p>";
-            if (!!thisChart.lastlinePointY || thisChart.lastlinePointY == 0) {
+            if (!!thisChart.lastlinePointY || thisChart.lastlinePointY === 0) {
               w = (colWidth / 100) * width;
               var angle =
                 (Math.atan2(
@@ -306,7 +306,7 @@
       html = '<caption class="chart-ticks">';
       for (c in axii) {
         style = (Math.floor(c / 2) + 1) * 55;
-        side = c % 2 == 1 ? "right" : "left";
+        side = c % 2 === 1 ? "right" : "left";
         if (typeof axis[a] != "undefined") {
           html +=
             '<div class="chart-yAxisTitle ' +
@@ -330,8 +330,8 @@
           (c == ticks ? " last " : "") +
           '">';
         for (q in range) {
-          style = (Math.floor(q / 2) + 1) * (q % 2 == 1 ? 30 : 30);
-          side = q % 2 == 1 ? "right" : "left";
+          style = (Math.floor(q / 2) + 1) * (q % 2 === 1 ? 30 : 30);
+          side = q % 2 === 1 ? "right" : "left";
           if (range[q] > 0) {
             var val = range[q] - (range[q] / ticks) * (c - 1);
             val = val < 10 ? val.toFixed(2) : Math.round(val);

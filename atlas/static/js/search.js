@@ -245,7 +245,7 @@
     hAjx.send();
 
     hAjx.onreadystatechange = function (e) {
-      if (this.readyState == 4 && this.status == 200) {
+      if (this.readyState === 4 && this.status === 200) {
         hst.innerHTML = this.responseText;
         hst.style.removeProperty("display");
       }

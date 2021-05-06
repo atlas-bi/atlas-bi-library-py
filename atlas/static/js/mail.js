@@ -467,7 +467,7 @@
     };
 
   setInterval(function () {
-    if (typeof window.ajaxOn == "undefined" || window.ajaxOn == true) {
+    if (typeof window.ajaxOn == "undefined" || window.ajaxOn === true) {
       pollForNewMessages();
     }
   }, 10000); //10000 milliseconds = 10 seconds

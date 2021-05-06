@@ -203,7 +203,7 @@
       q.onload = function () {
         data = q.responseText;
 
-        if (data.trim().length == 0) {
+        if (data.trim().length === 0) {
           termsContainer.innerHTML = "";
         } else {
           termsContainer.innerHTML = data;

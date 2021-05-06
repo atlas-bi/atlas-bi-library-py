@@ -27,7 +27,7 @@ function getUrlVars() {
 }
 
 (function () {
-  if (getUrlVars().EPIC == 1 || getCookie("EPIC") == 1) {
+  if (getUrlVars().EPIC === 1 || getCookie("EPIC") === 1) {
     setCookie("EPIC", 1, 99);
   }
 })();

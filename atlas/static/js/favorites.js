@@ -175,10 +175,10 @@
 
     if (
       (folderId !== null &&
-        d.querySelectorAll('.favs div[folder-id="' + folderId + '"]').length ==
+        d.querySelectorAll('.favs div[folder-id="' + folderId + '"]').length ===
           0) ||
       (folderId == null &&
-        d.querySelectorAll(".favs div[folder-id]").length == 0)
+        d.querySelectorAll(".favs div[folder-id]").length === 0)
     ) {
       i = nr.childNodes;
 

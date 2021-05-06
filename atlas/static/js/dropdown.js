@@ -262,7 +262,7 @@
           }, 0);
         });
       } else if (
-        key == 46 &&
+        key === 46 &&
         t == "SELECT" &&
         ipt.nextElementSibling &&
         ipt.nextElementSibling.matches(".dd-itm") &&
@@ -335,7 +335,7 @@
         }
 
         if (e.shiftKey) {
-          if (Array.prototype.indexOf.call(vInputs, i) == 0) {
+          if (Array.prototype.indexOf.call(vInputs, i) === 0) {
             setTimeout(function () {
               vInputs[vInputs.length - 1].focus();
             }, 0);
@@ -355,7 +355,7 @@
             }, 0);
           }
         }
-      } else if (key == 38) {
+      } else if (key === 38) {
         // up arrow
         b.preventDefault();
         k(function () {
@@ -363,7 +363,7 @@
           if (el) {
             o = Array.prototype.indexOf.call(el.parentElement.children, el);
             el.classList.remove("active");
-            if (o == 0) {
+            if (o === 0) {
               newEl =
                 el.parentElement.children[el.parentElement.children.length - 1];
             } else {
@@ -794,7 +794,7 @@
                   if (data[x].Type == "g") div.classList.add("group");
                   div.setAttribute("value", id);
                   div.innerHTML = data[x].Name;
-                  if (x == 0) {
+                  if (x === 0) {
                     div.classList.add("active");
                   }
                   rs.appendChild(div);

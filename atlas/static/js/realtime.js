@@ -43,5 +43,5 @@ document.addEventListener("DOMContentLoaded", function () {
     if (e.getElementById("active-users")) {
       getActiveUsers();
     }
-  }, 1e4);
+  }, 10000);
 });

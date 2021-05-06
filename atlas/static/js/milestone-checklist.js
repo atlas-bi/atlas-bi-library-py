@@ -81,7 +81,7 @@
         q.send();
 
         q.onreadystatechange = function (e) {
-          if (this.readyState == 4 && this.status == 200) {
+          if (this.readyState === 4 && this.status === 200) {
             ShowMessageBox("Changes saved.");
           }
         };
