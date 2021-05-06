@@ -1,5 +1,5 @@
 
-|travis| |codecov| |codacy| |codeql| |climate|
+|travis| |codecov| |codacy| |codeql| |climate| |quality| |docs| |demo|
 
 Atlas of Information Management
 ===============================
@@ -204,3 +204,11 @@ to create cache:
    :target: https://codeclimate.com/github/Riverside-Healthcare/Atlas-Py/maintainability
    :alt: Maintainability
 
+.. |quality| image:: https://github.com/Riverside-Healthcare/Atlas-Py/actions/workflows/quality.yml/badge.svg
+   :target: https://github.com/Riverside-Healthcare/Atlas-Py/actions/workflows/quality.yml
+
+.. |docs| image:: https://github.com/Riverside-Healthcare/Atlas-Py/actions/workflows/docs.yml/badge.svg
+   :target: https://riverside-healthcare.github.io/Atlas-Py/
+
+.. |demo| image:: https://github.com/Riverside-Healthcare/Atlas-Py/actions/workflows/demo.yml/badge.svg
+   :target: https://atlas-py.herokuapp.com
