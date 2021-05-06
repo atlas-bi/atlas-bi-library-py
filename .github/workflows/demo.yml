@@ -21,3 +21,4 @@ jobs:
           heroku_email_address: ${{ secrets.HEROKU_EMAIL }}
           use_git: true
           working-directory: ./atlas
+          force_push: true
