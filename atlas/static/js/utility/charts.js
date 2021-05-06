@@ -223,13 +223,13 @@
           thisChart = charts[c];
 
           var lheight =
-            parseFloat(thisChart.data[d].data) == 0
+            parseFloat(thisChart.data[d].data) === 0
               ? 0
               : (parseFloat(thisChart.data[d].data) / thisChart.range) * 100;
           maxHeight = Math.max(maxHeight, lheight);
           var lwidth = "calc(" + 100 / bars + "% - 5px)";
 
-          if (c == 0)
+          if (c === 0)
             html +=
               '<th class="chart-xAxisTitle" scope="row" style="left:' +
               (-26 + ((colWidth / 100) * width) / 2 - 15) +
@@ -326,7 +326,7 @@
       for (c = 1; c <= ticks; c++) {
         html +=
           '<div class="chart-ticksTick' +
-          (c == 1 ? " first " : "") +
+          (c === 1 ? " first " : "") +
           (c == ticks ? " last " : "") +
           '">';
         for (q in range) {

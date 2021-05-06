@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 import saml2
@@ -81,7 +81,10 @@ SAML_CONFIG = {
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "something very secret"
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY",
+    "cbLKvrnTXB8l0iVzo+PhwXp75HUqByiUyNoXAAt/gfPLlAYxkJlUWUz8itbHYCYkj9dOS9L66PmiWbGYn7rj1w==",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False

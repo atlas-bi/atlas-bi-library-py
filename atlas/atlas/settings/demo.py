@@ -8,7 +8,6 @@ from .settings import *
 
 AUTHENTICATION_BACKENDS = ("atlas.no_pass_auth.Backend",)
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
 
 LOGIN_URL = "/accounts/login/"
 

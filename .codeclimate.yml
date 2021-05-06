@@ -77,7 +77,7 @@ plugins:
     enabled: true
   scss-lint:
     enabled: true
-  shell-check:
+  shellcheck:
     enabled: true
   sonar-python:
     enabled: true

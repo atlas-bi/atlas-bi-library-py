@@ -203,8 +203,8 @@
         newEl;
 
       if (
-        key == 8 &&
-        i.value.length == 0 &&
+        key === 8 &&
+        i.value.length === 0 &&
         t == "SELECT" &&
         ipt.previousElementSibling
       ) {
@@ -233,11 +233,11 @@
           ipt.parentElement.removeChild(ipt.previousElementSibling);
         });
       } else if (
-        key == 37 &&
+        key === 37 &&
         t == "SELECT" &&
         ipt.previousElementSibling &&
         ipt.previousElementSibling.matches(".dd-itm") &&
-        i.selectionStart == 0
+        i.selectionStart === 0
       ) {
         // left arrow
         k(function () {
@@ -248,7 +248,7 @@
           }, 0);
         });
       } else if (
-        key == 39 &&
+        key === 39 &&
         t == "SELECT" &&
         ipt.nextElementSibling &&
         ipt.nextElementSibling.matches(".dd-itm") &&
@@ -296,7 +296,7 @@
 
           ipt.parentElement.removeChild(ipt.nextElementSibling);
         });
-      } else if (key == 13 || key == 3) {
+      } else if (key === 13 || key === 3) {
         // enter or enter mac
         b.preventDefault();
         k(function () {
@@ -309,7 +309,7 @@
             i.focus();
           }, 0);
         });
-      } else if (key == 9) {
+      } else if (key === 9) {
         // tab
         e.preventDefault();
         if (r.getElementsByClassName("active").length > 0) {
@@ -329,7 +329,7 @@
         var vInputs = [];
 
         for (var x = 0; x < inputs.length; x++) {
-          if (isHidden(inputs[x]) == false) {
+          if (isHidden(inputs[x]) === false) {
             vInputs.push(inputs[x]);
           }
         }
@@ -382,7 +382,7 @@
             newEl.parentElement.scrollTop = newEl.offsetTop + 3;
           }
         });
-      } else if (e.keyCode == 40) {
+      } else if (e.keyCode === 40) {
         // down arrow
         b.preventDefault();
         k(function () {

@@ -30,7 +30,7 @@
       c = sessionStorage.getItem(btoa("crumbs"));
     c = c !== null ? JSON.parse(c) : [];
 
-    if (c.length == 0 || !(c[c.length - 1].t == t && c[c.length - 1].u == u)) {
+    if (c.length === 0 || !(c[c.length - 1].t == t && c[c.length - 1].u == u)) {
       j.t = t;
       j.u = u;
 
