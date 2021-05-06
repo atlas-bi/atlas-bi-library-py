@@ -1,4 +1,4 @@
-name: "Demo Deploy"
+name: "Demo"
 
 on:
   schedule:
