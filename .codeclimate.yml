@@ -74,6 +74,8 @@ plugins:
     enabled: true
   pylint:
     enabled: true
+    plugins:
+      - django
   radon:
     enabled: true
   scss-lint:
