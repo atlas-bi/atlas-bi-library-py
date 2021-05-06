@@ -9,8 +9,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         'Convert Poetry to requirements.txt',
     )
 
-    check_cmd = ('poetry', 'export', '--without-hashes')
-    build_cmd = ('poetry', 'export', '--output', 'atlas/requirements.txt', '--without-hashes')
+    check_cmd = ('poetry', 'export', '--dev', '--without-hashes')
+    build_cmd = ('poetry', 'export', '--dev', '--output', 'atlas/requirements.txt', '--without-hashes')
 
     # check current file
     proc = subprocess.Popen(check_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
