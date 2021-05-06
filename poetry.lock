@@ -289,6 +289,17 @@ python-versions = "*"
 django = "*"
 
 [[package]]
+name = "django-bmemcached"
+version = "0.3.0"
+description = "A Django cache backend to use bmemcached module which supports memcached binary protocol with authentication."
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+python-binary-memcached = "*"
+
+[[package]]
 name = "django-compression-middleware"
 version = "0.4.1"
 description = "Django middleware to compress responses using several algorithms."
@@ -947,6 +958,18 @@ toml = "*"
 testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xmlschema"]
 
 [[package]]
+name = "python-binary-memcached"
+version = "0.30.1"
+description = "A pure python module to access memcached via its binary protocol with SASL auth support"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+six = "*"
+uhashring = "*"
+
+[[package]]
 name = "python-dateutil"
 version = "2.8.1"
 description = "Extensions to the standard Python datetime module"
@@ -1355,6 +1378,14 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "uhashring"
+version = "2.1"
+description = "Full featured consistent hashing python library compatible with ketama."
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
 name = "unidecode"
 version = "1.2.0"
 description = "ASCII transliterations of Unicode text"
@@ -1471,7 +1502,7 @@ test = ["Pygments", "toml", "coverage", "selenium"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6.1"
-content-hash = "b0b850136bdf1e0838c6d454c7b06aa39d83c06322144487109e9120904e7c59"
+content-hash = "4438cb803820c7086560d856f5ce9f1e90d0ee9a3c48f45f04252fcd4c75f88c"
 
 [metadata.files]
 alabaster = [
@@ -1706,6 +1737,9 @@ django = [
 django-appconf = [
     {file = "django-appconf-1.0.4.tar.gz", hash = "sha256:be58deb54a43d77d2e1621fe59f787681376d3cd0b8bd8e4758ef6c3a6453380"},
     {file = "django_appconf-1.0.4-py2.py3-none-any.whl", hash = "sha256:1b1d0e1069c843ebe8ae5aa48ec52403b1440402b320c3e3a206a0907e97bb06"},
+]
+django-bmemcached = [
+    {file = "django-bmemcached-0.3.0.tar.gz", hash = "sha256:4e4b7d97216dbae331c1de10e699ca22804b94ec3a90d2762dd5d146e6986a8a"},
 ]
 django-compression-middleware = [
     {file = "django-compression-middleware-0.4.1.tar.gz", hash = "sha256:e9b3cd6ca0b9e7d703a1f2222f2f769961120c495c1ef927a7f1a44b71fc6b3c"},
@@ -2078,6 +2112,9 @@ pytest = [
     {file = "pytest-6.2.3-py3-none-any.whl", hash = "sha256:6ad9c7bdf517a808242b998ac20063c41532a570d088d77eec1ee12b0b5574bc"},
     {file = "pytest-6.2.3.tar.gz", hash = "sha256:671238a46e4df0f3498d1c3270e5deb9b32d25134c99b7d75370a68cfbe9b634"},
 ]
+python-binary-memcached = [
+    {file = "python-binary-memcached-0.30.1.tar.gz", hash = "sha256:f91c3d79d022121c22ef733e9beee86e0598e29ffec67401c68cece1ba7f036a"},
+]
 python-dateutil = [
     {file = "python-dateutil-2.8.1.tar.gz", hash = "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c"},
     {file = "python_dateutil-2.8.1-py2.py3-none-any.whl", hash = "sha256:75bb3f31ea686f1197762692a9ee6a7550b59fc6ca3a1f4b5d7e32fb98e2da2a"},
@@ -2311,6 +2348,9 @@ typing-extensions = [
     {file = "typing_extensions-3.10.0.0-py2-none-any.whl", hash = "sha256:0ac0f89795dd19de6b97debb0c6af1c70987fd80a2d62d1958f7e56fcc31b497"},
     {file = "typing_extensions-3.10.0.0-py3-none-any.whl", hash = "sha256:779383f6086d90c99ae41cf0ff39aac8a7937a9283ce0a414e5dd782f4c94a84"},
     {file = "typing_extensions-3.10.0.0.tar.gz", hash = "sha256:50b6f157849174217d0656f99dc82fe932884fb250826c18350e159ec6cdf342"},
+]
+uhashring = [
+    {file = "uhashring-2.1.tar.gz", hash = "sha256:b21340d0d32497a67f34f5177a64908115fdc23264ed87fa7d1eca79ef9641fa"},
 ]
 unidecode = [
     {file = "Unidecode-1.2.0-py2.py3-none-any.whl", hash = "sha256:12435ef2fc4cdfd9cf1035a1db7e98b6b047fe591892e81f34e94959591fad00"},

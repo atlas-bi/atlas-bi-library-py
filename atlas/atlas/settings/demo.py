@@ -1,4 +1,5 @@
 import os
+from urllib.parse import urlparse
 
 import dj_database_url
 import django_heroku
@@ -18,8 +19,6 @@ COMPRESS_ENABLED = True
 DATABASES = {}
 DATABASES["default"] = dj_database_url.config(conn_max_age=600)
 
-print(os.environ.get("DATABASE_URL"))
-
 DEBUG = True
 ALLOWED_HOSTS = ["*"]
 DATABASE_ROUTERS: list = []
@@ -30,9 +29,22 @@ CACHES = {
     }
 }
 
-MIDDLEWARE.append(
-    "whitenoise.middleware.WhiteNoiseMiddleware",
-)
+
+redis_url = urlparse(os.environ.get("REDIS_URL", "redis://localhost:6379"))
+
+
+SESSION_REDIS = {
+    "host": redis_url.hostname,
+    "port": redis_url.port,
+    "password": redis_url.password,
+    "db": 0,
+    "prefix": "atlas_session",
+    "socket_timeout": 1,
+    "retry_on_timeout": False,
+}
+
+
+DEMO = True
 
 
 class DisableMigrations(object):

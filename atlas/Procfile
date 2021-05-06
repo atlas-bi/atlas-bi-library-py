@@ -1,1 +1,2 @@
+release: ./release_tasks.sh
 web: gunicorn atlas.wsgi-demo --log-file -
