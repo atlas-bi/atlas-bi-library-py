@@ -11,7 +11,7 @@ dist:
   - trusty
 
 osx_image:
-  - xcode12.5
+  - xcode12
   - xcode11
   - xcode10
 
@@ -37,7 +37,7 @@ before_script:
   - sudo psql -c 'create database atlas;' -U postgres
 
 script:
-  - tox -e clean,py,cov
+  - tox -e clean,test,cov
 
 after_success:
   - codecov
