@@ -1,6 +1,9 @@
 language: python
-os: linux
-dist: focal
+os:
+  - linux
+    dist: focal
+  - osx
+
 jobs:
   include:
     - python: 3.6
@@ -16,7 +19,8 @@ services:
 addons:
     postgresql: "13"
 before_install:
-  - sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl; fi
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install libxmlsec1; fi
   - pip install tox-travis poetry codecov
   - python --version
 before_script:
