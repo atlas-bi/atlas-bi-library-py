@@ -69,7 +69,7 @@ How can I contribute?
 =====================
 
 - `Suggest a new feature or idea in our discussion board! <https://github.com/Riverside-Healthcare/Atlas-Py/discussions>`_
-- Try out the daily build demo. Please `create an issue <https://github.com/Riverside-Healthcare/Atlas-Py/issues/new>`_ for any bugs you find!
+- Try out the `daily build demo <https://atlas-py.herokuapp.com>`_. Please `create an issue <https://github.com/Riverside-Healthcare/Atlas-Py/issues/new>`_ for any bugs you find!
 - Contribute to the code!
 
 
