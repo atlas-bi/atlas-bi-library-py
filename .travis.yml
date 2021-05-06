@@ -2,7 +2,16 @@ language: python
 os:
  - linux
  - osx
-dist: focal
+dist: 
+  - focal
+  - bionic
+  - xenial
+  - trusty
+
+osx_image:
+  - xcode12.5
+  - xcode11
+  - xcode10
 
 python:
   - 3.6
