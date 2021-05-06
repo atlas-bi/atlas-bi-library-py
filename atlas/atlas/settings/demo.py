@@ -1,6 +1,7 @@
-from .settings import *
 import dj_database_url
 import django_heroku
+
+from .settings import *
 
 AUTHENTICATION_BACKENDS = ("atlas.no_pass_auth.Backend",)
 
@@ -10,9 +11,13 @@ LOGIN_REDIRECT_URL = "/"
 
 COMPRESS_ENABLED = True
 
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, default="postgres://atlas:12345@127.0.0.1/atlas")
+DATABASES = {}
+DATABASES["default"] = dj_database_url.config(
+    conn_max_age=600, default="postgres://atlas:12345@127.0.0.1/atlas"
+)
 
-DEBUG=True
+
+DEBUG = True
 ALLOWED_HOSTS = ["*"]
 DATABASE_ROUTERS: list = []
 
@@ -22,12 +27,14 @@ CACHES = {
     }
 }
 
+
 class DisableMigrations(object):
     def __contains__(self, item):
         return True
 
     def __getitem__(self, item):
         return None
+
 
 # pretend there are no migrations. By default the tests will create a database that is based
 # on the latest migrations. Since we are not doing any migrations on the psql db (app is using
