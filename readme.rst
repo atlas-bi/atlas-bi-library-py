@@ -193,8 +193,8 @@ to create cache:
       :target: https://codecov.io/gh/Riverside-Healthcare/Atlas-Py
 
 
-.. |codeql| image:: https://github.com/Riverside-Healthcare/Atlas-Py/actions/workflows/codeql-analysis.yml/badge.svg
-   :target: https://github.com/Riverside-Healthcare/Atlas-Py/actions/workflows/codeql-analysis.yml
+.. |codeql| image:: https://github.com/Riverside-Healthcare/Atlas-Py/actions/workflows/codeql.yml/badge.svg
+   :target: https://github.com/Riverside-Healthcare/Atlas-Py/actions/workflows/codeql.yml
    :alt: CodeQL
 
 .. |codacy| image:: https://app.codacy.com/project/badge/Grade/ccc9f660171643669480f456be4a5e3c
