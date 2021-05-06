@@ -12,7 +12,7 @@ checks:
   file-lines:
     enabled: false
     config:
-      threshold: 250
+      threshold: 2500
   method-complexity:
     enabled: true
     config:
@@ -63,6 +63,7 @@ exclude_patterns:
 - "**/vendor/"
 - "**/*_test.go"
 - "**/*.d.ts"
+- "**/polyfill.js"
 
 plugins:
   bandit:
