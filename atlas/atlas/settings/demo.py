@@ -12,9 +12,7 @@ LOGIN_REDIRECT_URL = "/"
 COMPRESS_ENABLED = True
 
 DATABASES = {}
-DATABASES["default"] = dj_database_url.config(
-    conn_max_age=600, default="postgres://atlas:12345@127.0.0.1/atlas"
-)
+DATABASES["default"] = dj_database_url.config(conn_max_age=600)
 
 
 DEBUG = True
