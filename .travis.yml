@@ -39,7 +39,6 @@ jobs:
         - choco install python --version 3.7.9
         - choco install python --version 3.8.10
         - choco install python --version 3.9.5
-        - refreshenv
         - python3 -m ensurepip
       install:
         - pip3 install tox-travis poetry codecov
