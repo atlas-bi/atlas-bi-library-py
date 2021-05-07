@@ -24,7 +24,6 @@ jobs:
         - pyenv install 3.9.4
         - pyenv global 3.6.13 3.7.10 3.8.9 3.9.4
       before_script:
-        - brew services stop postgres
         - sudo rm -f /usr/local/var/postgres/postmaster.pid
         - brew services start postgres
         - sudo psql -c 'create database atlas;' -U postgres
