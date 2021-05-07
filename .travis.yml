@@ -18,7 +18,11 @@ jobs:
       osx_image: xcode12.5
       before_install:
         - brew install libxml2 libxmlsec1 pkg-config postgres
-        - pyenv install 3.6.13 3.7.10 3.8.9 3.9.4
+        - pyenv install 3.6.13
+        - pyenv install 3.7.10
+        - pyenv install 3.8.9
+        - pyenv install 3.9.4
+        - pyenv global 3.6.13 3.7.10 3.8.9 3.9.4
       before_script:
         - brew services start postgres
         - sudo psql -c 'create database atlas;' -U postgres
@@ -30,9 +34,9 @@ jobs:
       env: POSTGRES_PASS=12345
       before_install:
         - choco install postgresql --params '/Password:12345'
-        - choco install python --version 3.6.13
-        - choco install python --version 3.7.10
-        - choco install python --version 3.8.9
+        - choco install python --version 3.6.8
+        - choco install python --version 3.7.9
+        - choco install python --version 3.8.10
         - choco install python --version 3.9.5
       before_script:
         - psql -c 'create database atlas;' -U postgres
