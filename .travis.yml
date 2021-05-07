@@ -17,7 +17,7 @@ jobs:
       language: shell
       osx_image: xcode11.6
       before_install:
-        - brew install libxml2 libxmlsec1 pkg-config postgres
+        - brew install libxmlsec1
         - pyenv install 3.6.13
         - pyenv install 3.7.10
         - pyenv install 3.8.9
@@ -38,7 +38,10 @@ jobs:
         - choco install python --version 3.7.9
         - choco install python --version 3.8.10
         - choco install python --version 3.9.5
-        - python -m ensurepip
+        - refreshenv
+        - python3 -m ensurepip
+      install:
+        - pip3 install tox-travis poetry codecov
       before_script:
         - psql -c 'create database atlas;' -U postgres
       script:
