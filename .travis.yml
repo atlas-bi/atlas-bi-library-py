@@ -35,12 +35,15 @@ jobs:
       env: PGPASSWORD=12345
       before_install:
         - choco install postgresql13 --params '/Password:12345'
-        - choco install python --version 3.6.8
-        - C:/Python36/python.exe -m ensurepip
+        - choco install python --version 3.9.5
+        - C:/Python39/python.exe -m ensurepip
       install:
-        - C:/Python36/python.exe -m pip install tox-travis poetry codecov
+        - C:/Python39/python.exe -m pip install tox-travis poetry codecov
       before_script:
         - C:/"Program Files"/PostgreSQL/13/bin/psql.exe -c 'create database atlas;' -U postgres
+      script:
+        - C:/Python39/python.exe -m tox -e clean,test,cov
+      after_success: echo "ok"
 
 services:
   - redis
