@@ -37,9 +37,9 @@ jobs:
       before_install:
         - choco install postgresql13 --params '/Password:12345'
         - choco install python --version 3.6.8
-        - C:\Python36\pythong.exe -m ensurepip
+        - C:/Python36/python.exe -m ensurepip
       install:
-        - C:\Python36\pip install tox-travis poetry codecov
+        - C:/Python36/python.exe -m pip install tox-travis poetry codecov
       before_script:
         - psql -c 'create database atlas;' -U postgres
 
