@@ -38,6 +38,7 @@ jobs:
         - choco install python --version 3.7.9
         - choco install python --version 3.8.10
         - choco install python --version 3.9.5
+        - python -m ensurepip
       before_script:
         - psql -c 'create database atlas;' -U postgres
       script:
