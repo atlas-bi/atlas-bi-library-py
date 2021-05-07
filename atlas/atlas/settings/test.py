@@ -27,7 +27,7 @@ DATABASES = {
         "NAME": "atlas",
         "HOST": "localhost",
         "USER": "postgres",
-        "PASSWORD": os.environ.get("POSTGRES_PASS", ""),
+        "PASSWORD": os.environ.get("PGPASSWORD", ""),
     },
 }
 

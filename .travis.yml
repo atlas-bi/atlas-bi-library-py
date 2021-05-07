@@ -31,9 +31,10 @@ jobs:
     - name: windows
       os: windows
       language: shell
-      env: POSTGRES_PASS=12345
+      env: PGPASSWORD=12345
       before_install:
-        - choco install postgresql --params '/Password:12345'
+        - choco install postgresql13 --params '/Password:12345'
+        - $Env:PGPASSWORD='12345'; '\conninfo' | psql -Upostgres
         - choco install python --version 3.6.8
         - choco install python --version 3.7.9
         - choco install python --version 3.8.10
