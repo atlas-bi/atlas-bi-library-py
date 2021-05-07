@@ -3,10 +3,7 @@
     "markdown-include": "^0.4.3",
     "markdown-it": "^12.0.4",
     "mustache": "^4.1.0",
-    "postcss": "^7.0.35",
-    "stylelint-config-prettier": "^8.0.2",
-    "stylelint-config-standard": "^22.0.0",
-    "stylelint-prettier": "^1.2.0"
+    "postcss": "^7.0.35"
   },
   "description": "atlas of information management",
   "devDependencies": {

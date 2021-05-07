@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/static/lib/fonts/sfmin/stylesheet.css" type="text/css" charset="utf-8"/>
     <link rel="stylesheet" href="/static/lib/fonts/marckscript/stylesheet.css" type="text/css" charset="utf-8"/>
     <link rel="stylesheet" href="/static/css/nav.scss" type="text/x-scss" charset="utf-8"/>
+    <link rel="stylesheet" href="/static/css/crumbs.scss" type="text/x-scss" charset="utf-8"/>
     <link rel="stylesheet" href="/static/css/favorite.scss" type="text/x-scss" charset="utf-8"/>
     <link rel="stylesheet" href="/static/css/page.scss" type="text/x-scss" charset="utf-8"/>
     <link rel="stylesheet" href="/static/css/video.scss" type="text/x-scss" charset="utf-8"/>

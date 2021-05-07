@@ -1,0 +1,55 @@
+@import "./include/color.scss";
+@import "./include/font.scss";
+
+.nb-cmbsWrp {
+  display: inline-block;
+  height: 20px;
+  margin: 0;
+  margin-top: -20px;
+  overflow: hidden;
+  padding: 0;
+  padding-left: 15px;
+  padding-right: 15px;
+  .nb-cmbs {
+    display: inline-block;
+    font-family: $font-san-serif;
+    font-size: 14px;
+    font-weight: 600;
+    height: 20px;
+    letter-spacing: 0.3px;
+    list-style: none;
+    margin: 0;
+    margin-bottom: 10px;
+    min-width: 100%;
+    opacity: 0;
+    overflow: hidden;
+    padding: 0;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+    li {
+      display: inline-block;
+      max-width: 130px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      a {
+        /* stylelint-disable-line */
+        color: $color-text-light-grey;
+        text-decoration: none;
+        white-space: nowrap;
+        &:hover {
+          color: $color-text-light-grey;
+          text-decoration: none;
+          white-space: nowrap;
+        }
+      }
+    }
+    &:first-child {
+      color: $color-text-blue;
+    }
+    li + li::before {
+      color: $color-text-dark-grey;
+      content: "/";
+      margin: 8px;
+    }
+  }
+}
