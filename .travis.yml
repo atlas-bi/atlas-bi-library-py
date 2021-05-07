@@ -12,42 +12,32 @@ jobs:
       python: 3.8
     - name: linux python 3.9
       python: 3.9
-    - name: osx python 3.6
+    - name: osx
       os: osx
       language: shell
-      before_install: brew install python@3.6
-    - name: osx python 3.7
-      os: osx
-      language: shell
-      before_install: brew install python@3.7
-    - name: osx python 3.8
-      os: osx
-      language: shell
-      before_install: brew install python@3.8
-    - name: osx python 3.9
-      os: osx
-      language: shell
-      before_install: brew install python@3.9
-    - name: windows python 3.6
+      osx_image: xcode12.5
+      before_install:
+        - brew install libxml2 libxmlsec1 pkg-config postgres
+        - pyenv install 3.6.13 3.7.10 3.8.9 3.9.4
+      before_script:
+        - brew services start postgres
+        - sudo psql -c 'create database atlas;' -U postgres
+      script:
+        - tox -e clean,py36,py37,py38,py39,cov
+    - name: windows
       os: windows
       language: shell
+      env: POSTGRES_PASS=12345
       before_install:
-        - choco install python --version 3.6.0
-    - name: windows python 3.7
-      os: windows
-      language: shell
-      before_install:
-        - choco install python --version 3.7.0
-    - name: windows python 3.8
-      os: windows
-      language: shell
-      before_install:
-        - choco install python --version 3.8.0
-    - name: windows python 3.9
-      os: windows
-      language: shell
-      before_install:
-        - choco install python --version 3.9.0
+        - choco install postgresql --params '/Password:12345'
+        - choco install python --version 3.6.13
+        - choco install python --version 3.7.10
+        - choco install python --version 3.8.9
+        - choco install python --version 3.9.5
+      before_script:
+        - psql -c 'create database atlas;' -U postgres
+      script:
+        - tox -e clean,py36,py37,py38,py39,cov
 
 services:
   - redis
@@ -55,16 +45,14 @@ services:
 addons:
     postgresql: "13"
 
+before_install:
+  - sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl
+
 install:
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl; fi
-  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install libxml2 libxmlsec1 pkg-config postgres; fi
-  - if [ "$TRAVIS_OS_NAME" = "windows" ]; then pip install xmlsec; fi
   - pip install tox-travis poetry codecov
   - python --version
 
 before_script:
-  - if [ "$TRAVIS_OS_NAME" = "osx" ]; brew services start postgres; fi
-  - if [ "$TRAVIS_OS_NAME" = "windows" ]; choco install postgresql; fi
   - sudo psql -c 'create database atlas;' -U postgres
 
 script:

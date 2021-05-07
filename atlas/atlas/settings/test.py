@@ -1,5 +1,7 @@
 """Atlas Settings for Test."""
 
+import os
+
 from selenium import webdriver
 
 from .settings import *
@@ -25,7 +27,7 @@ DATABASES = {
         "NAME": "atlas",
         "HOST": "localhost",
         "USER": "postgres",
-        "PASSWORD": "",
+        "PASSWORD": os.environ.get("POSTGRES_PASS", ""),
     },
 }
 
