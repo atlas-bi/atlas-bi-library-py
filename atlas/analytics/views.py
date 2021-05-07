@@ -1,3 +1,5 @@
+"""Atlas analytics views."""
+
 import json
 from datetime import timedelta
 
