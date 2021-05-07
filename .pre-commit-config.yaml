@@ -78,3 +78,8 @@ repos:
     hooks:
       - id: poetry-to-requirements
         args: [--dev,--output=atlas/requirements.txt]
+
+  - repo: git://github.com/alphagov/verify-travis-pre-commit-hook
+    sha: master
+    hooks:
+    -   id: travis-yml-lint
