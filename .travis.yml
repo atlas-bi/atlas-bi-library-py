@@ -41,7 +41,7 @@ jobs:
       install:
         - C:/Python36/python.exe -m pip install tox-travis poetry codecov
       before_script:
-        - C:/Program Files/PostgreSQL/13/bin/psql.exe -c 'create database atlas;' -U postgres
+        - "C:/Program Files/PostgreSQL/13/bin/psql.exe" -c 'create database atlas;' -U postgres
 
 services:
   - redis
