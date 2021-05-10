@@ -24,7 +24,7 @@ LOGIN_URL = "/accounts/login/"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "postgres",
+        "NAME": "atlas",
         "HOST": "localhost",
         "USER": "postgres",
         "PASSWORD": os.environ.get("PGPASSWORD", ""),

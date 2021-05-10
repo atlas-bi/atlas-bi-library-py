@@ -45,7 +45,7 @@ jobs:
         - C:/Python39/python.exe -m pip install tox-travis poetry codecov
       before_script:
         - C:/"Program Files"/PostgreSQL/13/bin/psql.exe -c 'create database atlas;' -U postgres
-        - C:/"Program Files"/PostgreSQL/13/bin/psql.exe -c '\conninfo' -U postgres
+        - C:/"Program Files"/PostgreSQL/13/bin/psql.exe -c '\l' -U postgres
       script:
         - C:/Python39/python.exe -m tox -e clean,test,cov
       after_success: echo "ok"
