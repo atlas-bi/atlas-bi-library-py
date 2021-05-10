@@ -42,7 +42,7 @@ jobs:
       before_script:
         - C:/"Program Files"/PostgreSQL/13/bin/psql.exe -c 'create database atlas;' -U postgres
       script:
-        - C:/Python39/python.exe -m tox -e clean,test,cov
+        - set PGPASSWORD=12345 && C:/Python39/python.exe -m tox -e clean,test,cov
       after_success: echo "ok"
 
 services:
