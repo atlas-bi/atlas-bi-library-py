@@ -64,7 +64,7 @@ install:
   - python --version
 
 before_script:
-  - sudo psql -c 'create database atlas;' -U postgres
+  - sudo psql -c 'create database posgres;' -U postgres
 
 script:
   - tox -e clean,test,cov
