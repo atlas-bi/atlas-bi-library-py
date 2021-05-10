@@ -41,6 +41,7 @@ jobs:
       before_install:
         - choco install postgresql13 --params '/Password:12345'
         - choco install python --version 3.9.5
+        - choco install redis
         - C:/Python39/python.exe -m ensurepip
       install:
         - C:/Python39/python.exe -m pip install tox-travis poetry codecov
