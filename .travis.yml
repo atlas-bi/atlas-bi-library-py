@@ -25,7 +25,7 @@ jobs:
         - pyenv global 3.6.13 3.7.10 3.8.9 3.9.4
       before_script:
         - sudo rm -f /usr/local/var/postgres/postmaster.pid
-        - brew services start postgres
+        - brew services start postgresql
         - sudo psql -c 'create database atlas;' -U postgres
       script:
         - tox -e clean,py36,py37,py38,py39,cov
