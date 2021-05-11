@@ -12,7 +12,7 @@ checks:
   file-lines:
     enabled: false
     config:
-      threshold: 2500
+      threshold: 1000
   method-complexity:
     enabled: true
     config:
