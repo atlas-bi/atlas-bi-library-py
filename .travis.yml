@@ -21,7 +21,7 @@ jobs:
       language: shell
       osx_image: xcode11.6
       before_install:
-        - brew install libxmlsec1 redis
+        - HOMEBREW_NO_AUTO_UPDATE=1 && brew install libxmlsec1 redis
         - pyenv install 3.6.13
         - pyenv install 3.7.10
         - pyenv install 3.8.9
