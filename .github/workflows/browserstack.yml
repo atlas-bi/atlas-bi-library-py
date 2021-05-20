@@ -8,6 +8,7 @@ jobs:
   browserstack:
     env:
       PGPASSWORD: postgres
+      POSTGRES_HOST: postgres
     runs-on: ubuntu-latest
     container: python:3
     services:
