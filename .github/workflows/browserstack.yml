@@ -57,7 +57,7 @@ jobs:
           local-identifier: 'random'
 
       - name: test
-        run: tox -e clean,browsertest,cov
+        run: tox -e browsertest
 
       - name: 'Stop BrowserStackLocal'
         uses: 'browserstack/github-actions/setup-local@master'
