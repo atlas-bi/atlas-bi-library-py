@@ -39,7 +39,7 @@ jobs:
           poetry install --extras "test"
 
       - name: create db
-        run: sudo psql -c 'create database atlas;' -U postgres
+        run: psql -c 'create database atlas;' -U postgres
 
       - name: 'BrowserStack Env Setup'
         uses: 'browserstack/github-actions/setup-env@master'
