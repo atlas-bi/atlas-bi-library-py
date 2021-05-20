@@ -41,9 +41,7 @@ jobs:
 
       - name: install deps
         run: |
-          pip install poetry
-          poetry install
-          poetry install --extras "test"
+          pip install poetry tox
 
       - name: create db
         run: psql -c 'create database atlas;' -U postgres -h postgres
