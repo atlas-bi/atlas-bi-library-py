@@ -54,7 +54,7 @@ jobs:
           local-identifier: 'random'
 
       - name: start app
-        run: cd atlas && poetry run python manage.py runserver --settings atlas.settings.test
+        run: cd atlas && (poetry run python manage.py runserver --settings atlas.settings.test &)
 
       - name: test
         run: echo "testing"
