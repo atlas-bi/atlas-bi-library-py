@@ -1,0 +1,64 @@
+name: BrowserStack
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  docs:
+    env:
+      PGPASSWORD: postgres
+    runs-on: ubuntu-latest
+    container: python:3
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        port:
+          - 5432:5432
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    steps:
+      - name: get code
+        uses: actions/checkout@v1
+
+      - name: install packages
+        run: apt-get update && apt-get install -y --no-install-recommends unixodbc-dev unixodbc libpq-dev
+      - name: install deps
+        run: |
+          pip install poetry
+          poetry install
+
+      - name: 'BrowserStack Env Setup'
+        uses: 'browserstack/github-actions/setup-env@master'
+        with:
+          username:  ${{ secrets.BROWSERSTACK_USERNAME }}
+          access-key: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+          build-name: 'BUILD_INFO'
+          project-name: 'REPO_NAME'
+
+      - name: 'Start BrowserStackLocal Tunnel'
+        uses: 'browserstack/github-actions/setup-local@master'
+        with:
+          local-testing: 'start'
+          local-logging-level: 'all-logs'
+          local-identifier: 'random'
+
+      - name: start app
+        run: cd atlas && poetry run python manage.py runserver --settings atlas.settings.test
+
+      - name: test
+        run: echo "testing"
+
+      - name: 'Stop BrowserStackLocal'
+        uses: 'browserstack/github-actions/setup-local@master'
+        with:
+          local-testing: 'stop'

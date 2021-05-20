@@ -1,5 +1,6 @@
 pages:
   image: python:3.9
+  interruptible: true
   stage: docs
   before_script:
     - apt-get update && apt-get install -y --no-install-recommends unixodbc-dev unixodbc libpq-dev

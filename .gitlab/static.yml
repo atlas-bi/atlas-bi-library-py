@@ -1,6 +1,7 @@
 static:
   image: nikolaik/python-nodejs
   stage: static
+  interruptible: true
   before_script:
     - pip install --no-cache-dir anybadge tox
     - rm -rf package-lock.json

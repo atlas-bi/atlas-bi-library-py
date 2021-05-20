@@ -1,4 +1,5 @@
 .base:
+  interruptible: true
   before_script:
     - apt-get update && apt-get install -y --no-install-recommends unixodbc-dev unixodbc libpq-dev
     - pip install --no-cache-dir tox

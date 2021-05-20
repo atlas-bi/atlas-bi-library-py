@@ -35,7 +35,7 @@ TESTING = True
 LOGIN_REDIRECT_URL = "/"
 
 SESSION_REDIS = {
-    "host": "localhost",
+    "host": os.environ.get("REDIS_HOST", "localhost"),
     "port": 6379,
     "db": 0,
     "prefix": "atlas_session",
