@@ -1,4 +1,5 @@
-
+package-lock.json
+poetry.lock
 # Created by https://www.toptal.com/developers/gitignore/api/python,macos,windows,django
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,macos,windows,django
 
