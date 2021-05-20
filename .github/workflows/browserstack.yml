@@ -15,7 +15,7 @@ jobs:
         image: postgres
         env:
           POSTGRES_PASSWORD: postgres
-        port:
+        ports:
           - 5432:5432
       redis:
         image: redis
