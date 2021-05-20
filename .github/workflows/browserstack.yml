@@ -38,6 +38,9 @@ jobs:
           poetry install
           poetry install --extras "test"
 
+      - name: create db
+        run: sudo psql -c 'create database atlas;' -U postgres
+
       - name: 'BrowserStack Env Setup'
         uses: 'browserstack/github-actions/setup-env@master'
         with:
@@ -53,11 +56,8 @@ jobs:
           local-logging-level: 'all-logs'
           local-identifier: 'random'
 
-      - name: start app
-        run: cd atlas && (poetry run python manage.py runserver --settings atlas.settings.test &)
-
       - name: test
-        run: echo "testing"
+        run: - tox -e clean,browsertest,cov
 
       - name: 'Stop BrowserStackLocal'
         uses: 'browserstack/github-actions/setup-local@master'

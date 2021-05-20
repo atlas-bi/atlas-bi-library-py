@@ -310,7 +310,7 @@ class AtlasBrowserTestCase(TestCase):
             for conn in self.server_thread.connections_override.values():
                 conn.dec_thread_sharing()
 
-            self._live_server_modified_settings.disable()
+            # self._live_server_modified_settings.disable()
             super().tearDown()
 
     def tearDown(self):
