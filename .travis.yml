@@ -62,7 +62,7 @@ jobs:
         browserstack:
           username: "$BROWSERSTACK_USERNAME"
           access_key:
-            secure: "fXygQxyUHtvIrbSDE6dTKsa5RHbcIsJS1Tf35qyr0Az4+rsjY39fv5Ji2KuqyAU7yxsP7kmq4poXvLAV7WjcdpFFjOI4/EV9CmjJkmhmdJ4CeG+lImHHgfMwcZvRzV02j/Ub0ZHmM5FkfJ71Q53LB4nXiT0Gbkz8kbYXRyMmZV6gC3cKICph+B1v6jf8XkCHo8XJWrc0RWH9sOXsNkj/DUYKhzy8Dv4mNW+yPIlsq9Of5sdXIO9NLORMLQPQWhW7lt+rI942+G/0X+LQh+aprQiyGs7ofrwjniHMEiRGPkhAXc+BzMtwBDQ1nX5sByylgqGeZdYvB8OkkGNpahzq0HHdV+3cvY31x59drVDjJSz6ILChMnV3bAIr3RltqABBGuu8LuC+e4rc2Py08CaQXuDDfOQ3ewb4Fr2CI2VNmM7q2n5e8FnJnrZbWo5/VfIjEpV08Kalgf68JJRKClOGF/3ds2kHk5aRQFwqXEOwi58bTMVMroiAZF/D45jCNyfcXOyfDh0oc6BGzLg978g70TgNk9u2CjwiAosZuPt6z0pCsgF2zVDDA3Fknq/9Z5XEhNhpqn5YLdlO9slBga2jxCA8ju9kZxhrUOIf4OIpcqb6Ys4bAWEqCbpZAD85+WAWeELxTKTs/qzrxv7SS0dwWqg7EVZ686DmFrP8YZB7fUA="
+            secure: "k3E3nrvr4c9k/SpmRBgaY4tKXNFdZkY8Nd2a5XjPFIFMgf4SZC9biv5HmrHiPFR1yRmHiX6CNI2a5nagY+DmKV90HFS83z9XdbsW4gKbkqvhXigwvUs8a6OOkHjdFsb04QGBx9zsiI3lseDSHNokxJupQOoGs0Vy8mjdybm1PzvdJtqROAr9yBt7YJf+qAhjYA/QTkNpKLsR26LYMqDpbRd1/uJdQQsVPsj5FRv5/XshtfSrHk/w5JQ8M6DJQyxJhqCRo8lz59bAtrMP/Zij4u5svjlFPvEvptYz3kT/TxY1Vj4QQOdpl6wJ91Svs3LCX7aKkCPEOBkN6Hk7yA5Zy5DnCxt2QJ0Rj1t/5DMy9tvpirnN1VjpVfpbW01TwqWPwAbeoNEMhChtohLqXVuD5kiPGBtpGCtYGQYa84qlMOhxfr2jNSq0wwEa7tWXAo/f72BgQXjd3+Wpf3krxD7H3OyoZmbMS/31AXwBNVt7ndC9784Ga1kGmVtF6CLcvihm3wsWCCl3ycEpI0XFqm4gTBo4ymQFu4c2NUCLjCuKjE4F3bB3hwSZf2n6frbk9U+7zXxg7TgW3Hs/WZHbK54TYNMr8j77xdBQi/+2o4lvaQRBzHH3ieXCYpoVsH0jYfPm5fuwxSuGLZisQszjhbl+zujS1KaXz+PlWZFk2Sl+2LM="
       script:
         - tox -e clean,browsertest,cov
 
