@@ -9,6 +9,7 @@ jobs:
     env:
       PGPASSWORD: postgres
       POSTGRES_HOST: postgres
+      REDIS_HOST: redis
     runs-on: ubuntu-latest
     container: python:3
     services:
