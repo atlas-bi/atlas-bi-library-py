@@ -54,6 +54,9 @@ jobs:
       after_success: echo "ok"
     - name: browser stack
       python: 3.8
+      env:
+        - BROWSERSTACK_BUILD_NAME=TRAVIS_COMMIT
+        - BROWSERSTACK_PROJECT_NAME="Atlas Py"
       addons:
         postgresql: "13"
         browserstack:
