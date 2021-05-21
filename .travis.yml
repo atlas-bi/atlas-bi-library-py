@@ -52,6 +52,16 @@ jobs:
       script:
         - C:/Python39/python.exe -m tox -e clean,test,cov
       after_success: echo "ok"
+    - name: browser stack
+      python: 3.8
+      addons:
+        postgresql: "13"
+        browserstack:
+          username: $BROWSERSTACK_USERNAME
+          access_key:
+            secure: $BROWSERSTACK_ACCESSKEY
+      script:
+        -tox -e clean,browsertest,cov
 
 services:
   - redis
@@ -66,8 +76,8 @@ install:
   - python -m pip install tox-travis poetry codecov
   - python --version
 
-before_script:
-  - sudo psql -c 'create database atlas;' -U postgres
+# before_script:
+#   - sudo psql -c 'create database atlas;' -U postgres
 
 script:
   - tox -e clean,test,cov
