@@ -102,8 +102,8 @@ INTERNAL_IPS = [
 SESSION_ENGINE = "redis_sessions.session"
 
 SESSION_REDIS = {
-    "host": "localhost",
-    "port": 6379,
+    "host": os.environ.get("REDIS_HOST", "localhost"),
+    "port": os.environ.get("REDIS_PORT", 6379),
     "db": 0,
     "prefix": "atlas_session",
     "socket_timeout": 1,
