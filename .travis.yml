@@ -61,8 +61,7 @@ jobs:
         postgresql: "13"
         browserstack:
           username: "$BROWSERSTACK_USERNAME"
-          access_key:
-            secure: "k3E3nrvr4c9k/SpmRBgaY4tKXNFdZkY8Nd2a5XjPFIFMgf4SZC9biv5HmrHiPFR1yRmHiX6CNI2a5nagY+DmKV90HFS83z9XdbsW4gKbkqvhXigwvUs8a6OOkHjdFsb04QGBx9zsiI3lseDSHNokxJupQOoGs0Vy8mjdybm1PzvdJtqROAr9yBt7YJf+qAhjYA/QTkNpKLsR26LYMqDpbRd1/uJdQQsVPsj5FRv5/XshtfSrHk/w5JQ8M6DJQyxJhqCRo8lz59bAtrMP/Zij4u5svjlFPvEvptYz3kT/TxY1Vj4QQOdpl6wJ91Svs3LCX7aKkCPEOBkN6Hk7yA5Zy5DnCxt2QJ0Rj1t/5DMy9tvpirnN1VjpVfpbW01TwqWPwAbeoNEMhChtohLqXVuD5kiPGBtpGCtYGQYa84qlMOhxfr2jNSq0wwEa7tWXAo/f72BgQXjd3+Wpf3krxD7H3OyoZmbMS/31AXwBNVt7ndC9784Ga1kGmVtF6CLcvihm3wsWCCl3ycEpI0XFqm4gTBo4ymQFu4c2NUCLjCuKjE4F3bB3hwSZf2n6frbk9U+7zXxg7TgW3Hs/WZHbK54TYNMr8j77xdBQi/+2o4lvaQRBzHH3ieXCYpoVsH0jYfPm5fuwxSuGLZisQszjhbl+zujS1KaXz+PlWZFk2Sl+2LM="
+          access_key: "$BROWSERSTACK_ACCESS_KEY"
       script:
         - tox -e clean,browsertest,cov
 
