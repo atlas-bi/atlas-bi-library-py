@@ -59,7 +59,7 @@ jobs:
           local-logging-level: 'all-logs'
 
       - name: test
-        run: tox -e clear,browsertest,cov
+        run: tox -e clean,browsertest,cov
 
       - name: 'Stop BrowserStackLocal'
         uses: 'browserstack/github-actions/setup-local@master'
