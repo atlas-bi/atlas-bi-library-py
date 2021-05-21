@@ -42,11 +42,7 @@ jobs:
         run: apt-get update && apt-get install -y --no-install-recommends unixodbc-dev unixodbc libpq-dev postgresql-client
 
       - name: install deps
-        run: |
-          pip install poetry tox
-
-      - name: create db
-        run: psql -c 'create database atlas;' -U postgres -h postgres
+        run: pip install poetry tox
 
       - name: 'BrowserStack Env Setup'
         uses: 'browserstack/github-actions/setup-env@master'
@@ -61,10 +57,9 @@ jobs:
         with:
           local-testing: 'start'
           local-logging-level: 'all-logs'
-          local-identifier: 'random'
 
       - name: test
-        run: tox -e browsertest
+        run: tox -e clear,browsertest,cov
 
       - name: 'Stop BrowserStackLocal'
         uses: 'browserstack/github-actions/setup-local@master'
