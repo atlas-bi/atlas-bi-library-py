@@ -61,7 +61,7 @@ jobs:
           access_key:
             secure: $BROWSERSTACK_ACCESSKEY
       script:
-        -tox -e clean,browsertest,cov
+        - tox -e clean,browsertest,cov
 
 services:
   - redis

@@ -91,8 +91,9 @@ BROWSERSTACK_CAPS.append(
 # iOS 12 max
 BROWSERSTACK_CAPS.append(
     {
+        "realMobile": "true",
         "os_version": "14",
-        "os": "iOS",
+        "browserName": "iOS",
         "device": "iPhone 12 Pro Max",
     }
 )
@@ -100,8 +101,9 @@ BROWSERSTACK_CAPS.append(
 # iOS 8
 BROWSERSTACK_CAPS.append(
     {
+        "realMobile": "true",
         "os_version": "13",
-        "os": "iOS",
+        "browserName": "iOS",
         "device": "iPhone 8",
     }
 )
@@ -109,8 +111,9 @@ BROWSERSTACK_CAPS.append(
 # iOS 7
 BROWSERSTACK_CAPS.append(
     {
+        "realMobile": "true",
         "os_version": "12",
-        "os": "iOS",
+        "browserName": "iOS",
         "device": "iPhone 7",
     }
 )
@@ -118,8 +121,9 @@ BROWSERSTACK_CAPS.append(
 # iOS Ipad Air 4
 BROWSERSTACK_CAPS.append(
     {
+        "realMobile": "true",
         "os_version": "14",
-        "os": "iOS",
+        "browserName": "iOS",
         "device": "iPad Air 4",
     }
 )
@@ -127,8 +131,9 @@ BROWSERSTACK_CAPS.append(
 # iOS Ipad 8th
 BROWSERSTACK_CAPS.append(
     {
+        "realMobile": "true",
         "os_version": "14",
-        "os": "iOS",
+        "browserName": "iOS",
         "device": "iPad 8th",
     }
 )
@@ -136,36 +141,40 @@ BROWSERSTACK_CAPS.append(
 # android Galaxy S21
 BROWSERSTACK_CAPS.append(
     {
+        "realMobile": "true",
         "os_version": "11.0",
-        "os": "Android",
-        "device": "Galaxy S21",
+        "browserName": "android",
+        "device": "Samsung Galaxy S21",
     }
 )
 
 # android Galaxy S10
 BROWSERSTACK_CAPS.append(
     {
+        "realMobile": "true",
         "os_version": "9.0",
-        "os": "Android",
-        "device": "Galaxy S21",
+        "browserName": "android",
+        "device": "Samsung Galaxy S10",
     }
 )
 
 # android Google Pixel 5
 BROWSERSTACK_CAPS.append(
     {
+        "realMobile": "true",
         "os_version": "11.0",
-        "os": "Android",
-        "device": "Pixel 5",
+        "browserName": "android",
+        "device": "Google Pixel 5",
     }
 )
 
 # android Galaxy Tab S7
 BROWSERSTACK_CAPS.append(
     {
+        "realMobile": "true",
         "os_version": "10.0",
-        "os": "Android",
-        "device": "Galaxy Tab S7",
+        "browserName": "android",
+        "device": "Samsun Galaxy Tab S7",
     }
 )
 
