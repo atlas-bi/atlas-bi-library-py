@@ -37,15 +37,6 @@ DATABASES = {
 TESTING = True
 LOGIN_REDIRECT_URL = "/"
 
-SELENIUM_WEBDRIVERS = {
-    "default": {
-        "callable": webdriver.Chrome,
-        "args": (),
-        "kwargs": {},
-    }
-}
-
-
 COMPRESS_ENABLED = False
 
 DATABASE_ROUTERS: list = []
