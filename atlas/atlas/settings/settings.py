@@ -192,6 +192,7 @@ DATABASES = {
     },
 }
 
+# routers used to divert some traffic to another db (sql server)
 DATABASE_ROUTERS = ["index.routers.IndexRouter"]
 
 

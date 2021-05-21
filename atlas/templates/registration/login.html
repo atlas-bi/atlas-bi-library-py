@@ -26,6 +26,14 @@
                 <input class="login-input" autocomplete="current-password" id="id_password" name="password" required="" type="password" value="123">
             </div>
             <button class="login-btn" type="submit" value="Submit">Log In</button>
+            {% for error in form.username.errors %}
+                 <p class="text-danger">{{ error }}</p>
+            {% endfor %}
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                    <p class="text-danger">{{ error }}</p>
+                {% endfor %}
+            {% endif %}
         </form>
         <div class="login-copy">&copy; {% now "Y" %} - {{ settings.ORG_NAME }}</div>
     </div>

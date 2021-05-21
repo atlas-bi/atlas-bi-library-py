@@ -133,20 +133,29 @@ Testing uses a local postgres server and redis server. The server names are "pos
 
       docker run --name postgresql-container -p 5432:5432 -e POSTGRES_HOST_AUTH_METHOD=trust -d postgres
 
-2. Run tests directly (this will also run selenium tests)
+2. Run code tests directly
 
    .. code:: bash
 
-      poetry run python manage.py test --no-input --settings atlas.settings.test
+      poetry run python manage.py test --no-input --pattern="test_views.py" --settings atlas.settings.test
+
+      # or with tox
+      # run with py36, 37, 38 or 39.
+      tox -e clean,py39,cov
 
 
-3. Or run tests with Tox (this will only run headless tests)
+3. Run browser tests
 
    .. code:: bash
 
-       # run with py36, 37, 38 or 39.
-       tox -e clean,py39,cov
+      BROWSERSTACK_USERNAME=<browserstack username> \
+      BROWSERSTACK_ACCESS_KEY=<browserstack accesskey> \
+      BROWSERSTACK_BUILD_NAME="local" \
+      BROWSERSTACK_PROJECT_NAME="Atlas-Py" \
+      poetry run python manage.py test --no-input --pattern="test_browser.py" --settings atlas.settings.test_browser
 
+      # or with tox
+      tox -e clean,browsertest,cov -r
 
 
 Linting

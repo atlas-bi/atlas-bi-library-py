@@ -1,3 +1,4 @@
+"""Atlas Demo Settings."""
 import os
 from urllib.parse import urlparse
 
@@ -46,11 +47,15 @@ SESSION_REDIS = {
 DEMO = True
 
 
-class DisableMigrations(object):
+class DisableMigrations:
+    """Disable migrations to force a fresh db load."""
+
     def __contains__(self, item):
+        """Return true for all keys."""
         return True
 
     def __getitem__(self, item):
+        """Return none for all values."""
         return None
 
 

@@ -1,9 +1,10 @@
 """Atlas User views."""
 
-from atlas.decorators import admin_required
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from index.models import UserPreferences, UserRoles
+
+from atlas.decorators import admin_required
 
 
 @admin_required

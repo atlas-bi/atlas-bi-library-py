@@ -1,12 +1,12 @@
--   model: index.financialimpact
-    pk: 1
-    fields:
-        name: "Medium"
--   model: index.financialimpact
-    pk: 2
-    fields:
-        name: "High"
--   model: index.financialimpact
-    pk: 3
-    fields:
-        name: "Critical"
+- model: index.financialimpact
+  pk: 1
+  fields:
+    name: Medium
+- model: index.financialimpact
+  pk: 2
+  fields:
+    name: High
+- model: index.financialimpact
+  pk: 3
+  fields:
+    name: Critical

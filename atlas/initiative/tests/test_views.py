@@ -1,8 +1,9 @@
 """Atlas Initiative tests."""
 # pylint: disable=C0115,C0103
 
-from atlas.testutils import AtlasTestCase
 from index.models import Initiatives
+
+from atlas.testutils import AtlasTestCase
 
 
 class InitiativeTestCase(AtlasTestCase):

@@ -1,20 +1,20 @@
--   model: index.estimatedrunfrequency
-    pk: 1
-    fields:
-        name: "Multiple Times Per Day"
--   model: index.estimatedrunfrequency
-    pk: 2
-    fields:
-        name: "Daily"
--   model: index.estimatedrunfrequency
-    pk: 3
-    fields:
-        name: "Weekly"
--   model: index.estimatedrunfrequency
-    pk: 4
-    fields:
-        name: "Monthly"
--   model: index.estimatedrunfrequency
-    pk: 5
-    fields:
-        name: "Yearly"
+- model: index.estimatedrunfrequency
+  pk: 1
+  fields:
+    name: Multiple Times Per Day
+- model: index.estimatedrunfrequency
+  pk: 2
+  fields:
+    name: Daily
+- model: index.estimatedrunfrequency
+  pk: 3
+  fields:
+    name: Weekly
+- model: index.estimatedrunfrequency
+  pk: 4
+  fields:
+    name: Monthly
+- model: index.estimatedrunfrequency
+  pk: 5
+  fields:
+    name: Yearly

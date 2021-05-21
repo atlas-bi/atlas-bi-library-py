@@ -14,7 +14,7 @@ class Backend:
     def authenticate(self, request, username=None, password=None):
         """Check that user exists."""
         try:
-            return Users.objects.get(email=username)
+            return Users.objects.filter(email=username).first()
         except Users.DoesNotExist:
             return None
 

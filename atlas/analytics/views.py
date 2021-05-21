@@ -3,7 +3,6 @@
 import json
 from datetime import timedelta
 
-from atlas.decorators import admin_required
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg, Count, PositiveIntegerField
 from django.db.models.functions import Cast, Trunc
@@ -12,6 +11,8 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from index.models import Analytics
+
+from atlas.decorators import admin_required
 
 
 @admin_required

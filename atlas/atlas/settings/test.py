@@ -7,11 +7,15 @@ from selenium import webdriver
 from .settings import *
 
 
-class DisableMigrations(object):
+class DisableMigrations:
+    """Disable migrations to force a fresh db load."""
+
     def __contains__(self, item):
+        """Return true for all keys."""
         return True
 
     def __getitem__(self, item):
+        """Return none for all values."""
         return None
 
 
@@ -20,7 +24,6 @@ AUTHENTICATION_BACKENDS = ("atlas.no_pass_auth.Backend",)
 LOGIN_URL = "/accounts/login/"
 
 # docker run --name postgresql-container -p 5432:5432 -e POSTGRES_HOST_AUTH_METHOD=trust -d postgres
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -50,6 +53,7 @@ SELENIUM_WEBDRIVERS = {
         "kwargs": {},
     }
 }
+
 
 COMPRESS_ENABLED = False
 
