@@ -59,7 +59,7 @@ jobs:
         browserstack:
           username: $BROWSERSTACK_USERNAME
           access_key:
-            secure: $BROWSERSTACK_ACCESSKEY
+            secure: $BROWSERSTACK_ACCESS_KEY
       script:
         - tox -e clean,browsertest,cov
 
