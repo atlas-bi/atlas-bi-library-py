@@ -75,6 +75,7 @@ class Reports(models.Model):
     orphan = models.CharField(max_length=1, blank=True, null=True)
     system_path = models.TextField(blank=True, null=True)
     etl_date = models.DateTimeField(blank=True, null=True)
+    certification_tag = models.CharField(max_length=200, blank=True, null=True)
 
     @property
     def friendly_name(self):
@@ -82,6 +83,75 @@ class Reports(models.Model):
 
     def __str__(self):
         return self.title or self.name
+
+    def system_viewer_url(self, in_system):
+        """Build system record viewer url."""
+        if self.system_id and self.system_identifier and in_system:
+            return "EpicAct:AR_RECORD_VIEWER,runparams:{}|{}".format(
+                self.system_identifier,
+                self.system_id,
+            )
+
+        return None
+
+    def system_editor_url(self, in_system, domain):
+        """Build system editor url."""
+        url = None
+        if self.system_path and in_system:
+            url = "reportbuilder:Action=Edit&ItemPath={}&Endpoint=https://{}.:{}433/ReportServer".format(
+                self.system_path,
+                self.system_server,
+                domain,
+            )
+        elif self.system_identifier == "FDM" and self.system_id and in_system:
+            url = (
+                "EpicACT:BI_SLICERDICER,LaunchOptions:16,RunParams:StartingDataModelId=%s"
+                % self.system_id
+            )
+        elif self.system_identifier == "IDM" and self.system_id and in_system:
+            url = (
+                "EpicAct:WM_DASHBOARD_EDITOR,INFONAME:IDMRECORDID,INFOVALUE%s:"
+                % self.system_id
+            )
+        elif self.system_identifier == "IDB" and self.system_id and in_system:
+            url = (
+                "EpicAct:WM_COMPONENT_EDITOR,INFONAME:IDBRECORDID,INFOVALUE:%s"
+                % self.system_id
+            )
+        elif (
+            self.system_identifier == "HRX"
+            and self.system_id
+            and in_system
+            and self.system_template_id
+        ):
+            url = (
+                "EpicAct:IP_REPORT_SETTING_POPUP,runparams:"
+                + self.system_template_id
+                + "|"
+                + self.system_id
+            )
+        elif (
+            self.system_identifier == "IDN"
+            and self.system_id
+            and in_system
+            and self.system_template_id
+        ):
+            url = (
+                "EpicAct:WM_METRIC_EDITOR,INFONAME:IDNRECORDID,INFOVALUE:%s"
+                % self.system_id
+            )
+
+        return url
+
+    def system_manage_url(self, in_system, domain):
+        """Build system manage url."""
+        if self.type_id.name == "SSRS Report" and not in_system:
+            return "https://{}.{}/Reports/manage/catalogitem/properties{}".format(
+                self.system_server,
+                domain,
+                self.system_path,
+            )
+        return None
 
 
 class ReportGroupMemberships(models.Model):
@@ -1219,10 +1289,16 @@ class TermComments(models.Model):
 
 
 class UserFavoriteFolders(models.Model):
-    userfavoritefolderid = models.AutoField(primary_key=True)
-    foldername = models.TextField(blank=True, null=True)
-    userid = models.IntegerField(blank=True, null=True)
-    folderrank = models.IntegerField(blank=True, null=True)
+    folder_id = models.AutoField(primary_key=True)
+    name = models.TextField(blank=True, null=True)
+    user_id = models.ForeignKey(
+        "Users",
+        models.DO_NOTHING,
+        blank=True,
+        null=True,
+        related_name="user_favorite_folders",
+    )
+    rank = models.IntegerField(blank=True, null=True)
 
 
 class UserFavorites(models.Model):
@@ -1244,6 +1320,38 @@ class UserFavorites(models.Model):
         blank=True,
         null=True,
     )
+
+    @property
+    def atlas_url(self):
+        return "{}/{}".format(
+            self.item_type,
+            self.item_id,
+        )
+
+    @property
+    def system_id(self):
+        if self.item_type.lower() == "report":
+            return Reports.objects.filter(report_id=self.item_id).first().system_id
+
+        return None
+
+    @property
+    def system_identifier(self):
+        if self.item_type.lower() == "report":
+            return (
+                Reports.objects.filter(report_id=self.item_id).first().system_identifier
+            )
+
+        return None
+
+    @property
+    def certification_tag(self):
+        if self.item_type.lower() == "report":
+            return (
+                Reports.objects.filter(report_id=self.item_id).first().certification_tag
+            )
+
+        return None
 
 
 class UserPreferences(models.Model):

@@ -2,7 +2,9 @@
 
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from index.models import UserPreferences, UserRoles
+from django.shortcuts import render
+from django.views.decorators.cache import never_cache
+from index.models import UserFavoriteFolders, UserFavorites, UserPreferences, UserRoles
 
 from atlas.decorators import admin_required
 
@@ -38,3 +40,25 @@ def preference_video(request, state):
         video_open = False
 
     return JsonResponse({}, status=200)
+
+
+@login_required
+@never_cache
+def favorites(request):
+    """Get users favorites."""
+    my_favorites = UserFavorites.objects.filter(user_id=request.user).order_by(
+        "item_rank"
+    )
+    my_folders = UserFavoriteFolders.objects.filter(user_id=request.user).order_by(
+        "rank"
+    )
+
+    context = {
+        "permissions": request.user.get_permissions(),
+        "user": request.user,
+        "favorites": request.user.get_favorites(),
+        "my_favorites": my_favorites,
+        "my_folders": my_folders,
+    }
+
+    return render(request, "favorites.html.dj", context)

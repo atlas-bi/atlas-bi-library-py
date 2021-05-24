@@ -123,7 +123,7 @@ class AtlasBrowserStackTestCase(StaticLiveServerTestCase):
             desired_capabilities=desired_cap,
         )
 
-        if desired_cap["browser"] != "edge":
+        if desired_cap.get("browser", "other") != "edge":
             cls.selenium.implicitly_wait(10)
 
     def login(self, username="user@user.user"):

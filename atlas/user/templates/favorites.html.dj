@@ -1,0 +1,169 @@
+{% load user_tags %}
+
+{% with permissions|authorized as authorized %}
+<!--@if (ViewBag.UserId == ViewBag.MyId ||-->
+    <div class="favs-cntr">
+        {% if my_favorites|length > 0 %}
+            <div class="favs-colOne">
+                <h2 class="fav-col-title">Folders</h2>
+                <div id="fav-folders" ss-container>
+                    <div class="fav-folder active fav-show-all"><i class="fas fa-folder-open"></i>All<div class="fav-count">{{ my_favorites|length }}</div></div>
+                    {% if my_folders|length > 0 %}
+                        {% for folder in my_folders %}
+                            <div class="fav-folder drg" folder-id="{{ folder.folder_id}}" folder-rank="{% firstof folder.rank 999 %}"><i class="fas fa-folder"></i><span>{{ folder.name }}</span><div class="fav-count">{{ folder.favorites|length }}</div>{% if authorized %} <div class="folder-grip drg-hdl"><i class="fas fa-grip-lines"></i></div>{% endif %}</div>
+                        {% endfor %}
+                    {% endif %}
+                    {% if authorized %}
+                        <div class="fav-folder fav-folder-new" data-toggle="clps" data-target="#fav-folder-new"><i class="fas fa-folder-plus"></i>New Folder</div>
+                        <div class="clps" id="fav-folder-new">
+                            <form asp-page-handler="CreateFolder" method="post" id="CreateFolderForm">
+                                <input class="slim submit" type="nice-input" id="Folder_FolderName" name="Folder.FolderName" class="submit" data-initial-content="Folder Name" required />
+                                <input type="hidden" id="Folder_UserId" name="Folder.UserId" value="@ViewBag.UserId" />
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="favs-colTwo">
+                <div class="favs{% if authorized %} disabled{% endif %}}" ss-container>
+                    <div id="favs-none" {% if my_favorites|length > 0 %} style="display:none;"{% endif %}>
+                        <h5>No favorites here! ¯\_(ツ)_/¯</h5><br>
+                        {% if authorized %}
+                            <form asp-page-handler="DeleteFolder" method="post" id="DeleteFolderForm" style="display:none">
+                                <h6>Want to<button type="submit" class="btn btn-link shake"><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg></button>this folder?</h6>
+                                <input type="hidden" id="Folder_UserFavoriteFolderId" name="Folder.UserFavoriteFolderId" value="" />
+                            </form>
+                        {% endif %}
+                    </div>
+
+                    {% for fav in my_favorites %}
+                        <div class="fav drg" folder-id="{% firstof folder.folder_id 0 %}" item-rank="{% firstof folder.rank 999 %}" fav-id="{{ fav.favorite_id }}">
+                            <div class="fav-links">
+                                <!-- should be disabled if viewing another profile. add "disabled" class. -->
+                                <div class="fav-star">
+                                    <i fav-type="{{ fav.type|lower }}" object-id="{{ fav.favorite_id }}" class="far fa-star favorite"></i>
+                                </div>
+                                <div class="fav-share darken" data-toggle="mdl" data-target="shareModal" data-name='{{ favorite.name}}' data-url="/{{favorite.atlas_url}}">
+                                    <i class="fas fa-share"></i>
+                                </div>
+                                <div class="fav-drg drg-hdl darken">
+                                    <i class="fas fa-grip-lines"></i>
+                                </div>
+                            </div>
+                            <div class="fav-body">
+
+                                <h5 class="fav-title"  data-toggle="clps" data-target="clps-@q.FavoriteId">
+                                    {% if fav.item_type|lower == "search" %}
+                                        <span class="darken">{{ fav.name }}</span>
+                                    {% else %}
+                                        <span class="darken">{{ fav.name }} {% if fav.system_identifier and fav.system_id %}&nbsp;({{ fav.system_identifier}} {{ fav.system_id}}){% endif %}</span>
+                                    {% endif %}
+                                    <div class="fav-type">
+
+                                        {% if fav.certification_tag == "Analytics Certified" %}
+                                            <span class="srch-fieldHunterGreen">{{ fav.certification_tag }}</span>
+                                        {% elif fav.certification_tag == "Analytics Reviewed" %}
+                                            <span class="srch-fieldGreen">{{ fav.certification_tag }}</span>
+                                        {% elif fav.certification_tag == "Epic Released" %}
+                                            <span class="srch-fieldOrange">{{ fav.certification_tag }}</span>
+                                        {% elif fav.certification_tag == "Legacy" %}
+                                            <span class="srch-fieldOrange">{{ fav.certification_tag }}</span>
+                                        {% elif fav.certification_tag == "High Risk" %}
+                                            <span class="srch-fieldRed">{{ fav.certification_tag }}</span>
+                                        {% endif %}
+
+
+
+                                        {% if fav.item_type|lower == "search" %}
+                                            <span>Search Filter?</span>
+                                        {% endif %}
+                                        <span>{{ fav.item_type }}</span>
+                                    </div>
+                                </h5>
+                                <!-- <h5 class="fav-nav">
+                                    <a href="{{ fav.atlas_url }}">Open In Atlas</a>
+                                    @if (q.ReportUrl != null && q.ReportUrl != "")
+                                    {
+                                        <a class="ml-3" target="_blank" rel="noopener" href="@q.ReportUrl">Run Report</a>
+                                    }
+                                    @if (q.EditReportUrl != null && ViewBag.Permissions.Contains(38))
+                                    {
+                                        <a class="ml-3" target="_blank" rel="noopener" href="@q.EditReportUrl">Edit Report</a>
+                                    }
+                                    @if (q.ManageReportUrl != null && ViewBag.Permissions.Contains(38))
+                                    {
+                                        <a class="ml-3" target="_blank" rel="noopener" href="@q.ManageReportUrl">Manage Report</a>
+                                    }
+                                </h5> -->
+                                <div class="clps fav-dtls" id="clps-{{ fav.favorite_id }}">
+                                    <div class="markdown noleft">
+                                        {% if fav.description %}
+                                            @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(q.Description))
+                                        {% else %}
+                                            Open in Atlas to see details.
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% elif top_run_reports|length > 0 %}
+            <div class="favs-none">
+                <div class="favs-noFavs" ss-container>
+                    <h3 class="favs-noFavsTitle">Your last run reports</h3>
+                    @foreach (var q in ViewBag.TopRunReports)
+                    {
+                        <div class="fav" >
+                            <div class="fav-body">
+                                <h5 class="fav-title"  data-toggle="clps" data-target="clps-@q.ItemId">
+                                    <span>
+                                        @q.Name @if (q.EpicRecordId != null && q.EpicRecordId != "")
+                                        {<span> (@q.EpicMasterFile @q.EpicRecordId)</span>}
+                                    </span>
+                                </h5>
+                                <h5 class="fav-nav">
+                                    <a href="Reports?id=@q.ItemId">Open Documentation</a>
+                                        @if (q.ReportUrl != null && q.ReportUrl != "")
+                                        {
+                                            <a class="ml-5" target="_blank" href="@q.ReportUrl">Run Report</a>
+                                        }
+                                        @if (q.EditReportUrl != null && ViewBag.Permissions.Contains(38))
+                                        {
+                                            <a class="ml-5" target="_blank" href="@q.EditReportUrl">Edit Report</a>
+                                        }
+                                </h5>
+                                <div class="clps fav-dtls" id="clps-@q.ItemId">
+                                    @if (q.Description != null && q.Description != "")
+                                    {
+                                        <div class="markdown noleft">
+                                            @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(q.Description))
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        {% else %}
+            <h4>Search to get started!</h4>
+        {% endif %}
+        <script>
+            (function(){
+               document.dispatchEvent(new CustomEvent('related-reports'));
+            })();
+
+            (function(){
+                var d = document;
+                @if(ViewBag.AdLists != null){
+                    @:d.getElementById("AdColTwo").innerHTML +='@foreach(var ad in ViewBag.AdLists){@if(ad.Column == 2){<div class="col" data-ajax="yes" data-url="@ad.Url"></div>}}';
+                    @:d.dispatchEvent(new CustomEvent('load-ajax-content'));
+                }
+            })()
+        </script>
+
+    </div>
+{% endwith %}
