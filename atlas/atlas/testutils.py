@@ -111,6 +111,8 @@ class AtlasBrowserStackTestCase(StaticLiveServerTestCase):
         desired_cap["build"] = build_name
         desired_cap["project"] = project_name
         desired_cap["browserstack.local"] = "true"
+        desired_cap["browserstack.console"] = "true"
+        desired_cap["browserstack.networkLogs"] = "true"
 
         cls.selenium = webdriver.Remote(
             command_executor="https://"
@@ -121,7 +123,8 @@ class AtlasBrowserStackTestCase(StaticLiveServerTestCase):
             desired_capabilities=desired_cap,
         )
 
-        cls.selenium.implicitly_wait(10)
+        if desired_cap["browser"] != "edge":
+            cls.selenium.implicitly_wait(10)
 
     def login(self, username="user@user.user"):
         """Login function for dev auth."""

@@ -1,5 +1,5 @@
 
-|travis| |codecov| |codacy| |codeql| |climate| |quality| |docs| |demo|
+|travis| |codecov| |codacy| |codeql| |climate| |quality| |docs| |demo| |browserstack|
 
 Atlas of Information Management
 ===============================
@@ -221,3 +221,9 @@ to create cache:
 
 .. |demo| image:: https://github.com/Riverside-Healthcare/Atlas-Py/actions/workflows/demo.yml/badge.svg
    :target: https://atlas-py.herokuapp.com
+
+.. |browserstack| image:: https://automate.browserstack.com/badge.svg?badge_key=SWVldTlYclVWZEJ5R0NQUFRTMlltSTlNQ2JRaEF1ek9NeWd1L0FjYWt1cz0tLUcyRUhJUGprRDVmTnlyUytOQmpkVWc9PQ==--017a6b444f1f4d88941b98cea65cbce32c651a58
+   :target: https://automate.browserstack.com/public-build/SWVldTlYclVWZEJ5R0NQUFRTMlltSTlNQ2JRaEF1ek9NeWd1L0FjYWt1cz0tLUcyRUhJUGprRDVmTnlyUytOQmpkVWc9PQ==--017a6b444f1f4d88941b98cea65cbce32c651a58
+
+
+

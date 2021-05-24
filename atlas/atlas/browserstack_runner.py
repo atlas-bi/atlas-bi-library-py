@@ -4,8 +4,6 @@ A custom test runner is used so that we can run the tests
 with multiple browser configurations.
 """
 # pylint: disable=C0115
-import os
-
 from browserstack.local import Local
 from django.conf import settings
 from django.test.runner import DiscoverRunner

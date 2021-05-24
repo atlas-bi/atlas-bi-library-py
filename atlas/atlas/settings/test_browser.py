@@ -34,7 +34,7 @@ BROWSERSTACK_CAPS.append(
         "os_version": "10",
         "os": "Windows",
         "browser": "edge",
-        "browser_version": "latest",
+        "browser_version": "90.0",
     }
 )
 
@@ -44,7 +44,7 @@ BROWSERSTACK_CAPS.append(
         "os_version": "10",
         "os": "Windows",
         "browser": "ie",
-        "browser_version": "11",
+        "browser_version": "11.0",
     }
 )
 
@@ -54,7 +54,7 @@ BROWSERSTACK_CAPS.append(
         "os_version": "7",
         "os": "Windows",
         "browser": "ie",
-        "browser_version": "11",
+        "browser_version": "11.0",
     }
 )
 
@@ -174,7 +174,7 @@ BROWSERSTACK_CAPS.append(
         "realMobile": "true",
         "os_version": "10.0",
         "browserName": "android",
-        "device": "Samsun Galaxy Tab S7",
+        "device": "Samsung Galaxy Tab S7",
     }
 )
 
