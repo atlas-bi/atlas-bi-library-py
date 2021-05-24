@@ -56,10 +56,6 @@ jobs:
     env:
     - BROWSERSTACK_BUILD_NAME="$TRAVIS_COMMIT"
     - BROWSERSTACK_PROJECT_NAME="Atlas Py"
-    addons:
-      postgresql: '13'
-      browserstack:
-        username: "$BROWSERSTACK_USERNAME"
     script:
     - tox -e clean,browsertest,cov
 services:
@@ -79,6 +75,3 @@ notifications:
   email:
     on_success: change
     on_failure: always
-env:
-  global:
-    secure: CRoFEWUzQxkdqlDZK72wd4e/llKuc6YYJ+KLd+UHfYzZZvj1HQgLM0kx34PkdGpn0mWh6XOAc7xsFRMZYTURfvJz2pDE81WZVe6cjUzPVL6rXL/hIUDQFBFZ89Px8zmGsK2WWFmW0Y9+AozbQTtUFUxOJK8Myh5bJ4Ui855HfzDkP5CGu974u+KEx18YAk8Ck7Ds/vbcUe1LUSO4oI1eY8NfuqYUV4EERAMEa2V4F0uIdz3dvAmzNP5t30z6HajSJ+VDucTXZ4irII6rPZY1I7bpByQbPqLVUYiHfe1y7MAvGfplMb8areIAd7FfmMTAdkdiG5S9D2AoAGkD8bADflcliB/JPtYRHryCY+g2DbfbbB+h2WPheoV6cVZaKbeam2aFCck0b6NMSUgtLlAc9W+K40Dz8PDkvovAMbhbC/DveFXRgMrbf9IMovrezjjrmuNYs+x85vQ7mHvLXj5vFXNfb5/yaTOsztu2DrT45TBTnik3ChssqDXQhE238P9JxrNEvAbaCBIx7xXspX5stbI6ayrvTwU2DIgWDLLhTuII2l5Vsv7Q+g+Utk4oigk8cBsi8LQQlUFCA/40R1YTz+KUnj1R0KjNn/p/Wm2cc/qfkFSSbzd4Hk5KReGtpBqNXFPEd4Rb26QS5zmAoYyvduFGAerJNF2YUj97Qa6M2KQ=
