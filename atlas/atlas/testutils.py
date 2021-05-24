@@ -111,7 +111,7 @@ class AtlasBrowserStackTestCase(StaticLiveServerTestCase):
         desired_cap["build"] = build_name
         desired_cap["project"] = project_name
         desired_cap["browserstack.local"] = "true"
-        desired_cap["browserstack.console"] = "true"
+        desired_cap["browserstack.console"] = "errors"
         desired_cap["browserstack.networkLogs"] = "true"
 
         cls.selenium = webdriver.Remote(
