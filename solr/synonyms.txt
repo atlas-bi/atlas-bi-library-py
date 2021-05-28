@@ -1,0 +1,95 @@
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#-----------------------------------------------------------------------
+#some test synonym mappings unlikely to appear in real input text
+aaafoo => aaabar
+bbbfoo => bbbfoo bbbbar
+cccfoo => cccbar cccbaz
+fooaaa,baraaa,bazaaa
+
+# Some synonym groups specific to this example
+GB,gib,gigabyte,gigabytes
+MB,mib,megabyte,megabytes
+Television, Televisions, TV, TVs
+#notice we use "gib" instead of "GiB" so any WordDelimiterGraphFilter coming
+#after us won't split it into two words.
+
+# Synonym mappings can be used for spelling correction too
+pixima => pixma
+
+
+carity,clarity
+
+covid,covid-19,corona virus, covid 19, covid dashboard, covid dash, covid department, sars, corona
+ip => inpatient
+w/ => with
+w/0 => without
+ed => emergency department
+ltc => long term care
+rmc => riverside medical center
+adt,admissions,discharges,transfers
+hb => hospital billing
+tran,trans,transfer,transfers
+los => length of stay
+hh, home health, rmc hh, homehealth
+lt, longterm, long term
+bcma => barcoded medication administration
+rx, prescription, medication,drugs, perscription
+rvu => relative value unit
+obs => observation
+dept,depart,department
+mrsa => methicillin resistant staphyloccocus aureus
+mh => mental health
+raf,hcc,hierarchical condition category
+pacu => postanesthesia care unit
+rac,pfs,recovery audit contractor
+ascus => atypical squamous cells of unknown significance
+losi => length of stay index
+hf => heart failure
+mdro => multi drug resistant organisms
+bh => behavioral health
+mssa => methicillin susceptible staphylococcus aureus
+ect => electroconvulsive therapy
+op => operation
+mdro => multi drug resistant organisms
+mg => milligram
+nhsn => national healthcare safety network
+qi,quality improvement, quality initiative, quality indicator
+mst => malnutrition screening tool
+ccl => cardiac cath lab
+ar,accounts receivable, accounts recievable
+iru => interventional radiology unit
+gme, graduate medical education, student doctors, medical students
+aim => current hospitalist group
+hcc => hierarchical condition category
+cac => childrens asthma care
+cms,medicare, medicaid, center for medicare and medicaid services
+hf, heart failure
+vte => venous thromboembolism
+ccm => critical care medicine
+wm => weight management
+mr => medical record
+pm => pain management
+exec => executive
+sbo => single billing office
+es => epic scheduling
+inv => inventory
+cv => cardiovascular
+an => anesthesia
+ris => radiology information system
+evs => environmental services
+pn => pneumonia
+ami => heart attach
+atb => ageed trial balance
+pb => professional billing
+pcp => primary care provider
