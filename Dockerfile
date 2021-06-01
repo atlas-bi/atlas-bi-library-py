@@ -4,6 +4,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
+RUN adduser solr && usermost -a -G sudo solr
+
 RUN apt-get update -qq \
      && apt-get install -yqq --no-install-recommends apt-utils curl pkg-config postgresql-contrib build-essential openjdk-11-jdk wget lsof unixodbc-dev unixodbc libpq-dev \
      && apt-get clean \
