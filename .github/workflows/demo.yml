@@ -1,4 +1,4 @@
-name: "Demo"
+name: demo
 
 on:
   schedule:
@@ -13,15 +13,17 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v2
 
-      - name: copy gitignore
-        run: cp .gitignore ./atlas/.gitignore
-
+      - name: Reset database
+        uses: weareangular/heroku-gh-actions@master
+        with:
+          args: pg:reset DATABASE --app ${{ secrets.HEROKU_APP_NAME }} --confirm ${{ secrets.HEROKU_APP_NAME }}
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       - name: Deploy to Heroku
-        uses: nyakaz73/heroku-django-deploy@v0.68
+        uses: gonuit/heroku-docker-deploy@v1.3.3
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
-          heroku_email_address: ${{ secrets.HEROKU_EMAIL }}
-          use_git: true
-          working-directory: ./atlas
-          force_push: true
+          email: ${{ secrets.HEROKU_EMAIL }}
+          dockerfile_name: Dockerfile
+          docker_options: --no-cache
