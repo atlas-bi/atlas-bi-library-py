@@ -42,9 +42,9 @@
                             <div class="fav-links">
                                 <!-- should be disabled if viewing another profile. add "disabled" class. -->
                                 <div class="fav-star">
-                                    <i fav-type="{{ fav.type|lower }}" object-id="{{ fav.favorite_id }}" class="far fa-star favorite"></i>
+                                    <i fav-type="{{ fav.item_type|lower }}" object-id="{{ fav.favorite_id }}" class="far fa-star favorite"></i>
                                 </div>
-                                <div class="fav-share darken" data-toggle="mdl" data-target="shareModal" data-name='{{ favorite.name}}' data-url="/{{favorite.atlas_url}}">
+                                <div class="fav-share darken" data-toggle="mdl" data-target="shareModal" data-name='{{ fav.name}}' data-url="/{{fav.atlas_url}}">
                                     <i class="fas fa-share"></i>
                                 </div>
                                 <div class="fav-drg drg-hdl darken">

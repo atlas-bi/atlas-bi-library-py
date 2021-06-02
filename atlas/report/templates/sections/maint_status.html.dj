@@ -1,0 +1,5 @@
+<div>
+    {% if maint_status %}
+        <span class="text-alert">This report is past due for maintenance!</span>
+    {% endif %}
+</div>

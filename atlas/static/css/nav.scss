@@ -29,11 +29,13 @@
   padding: 0 10px;
   position: relative;
   z-index: 999;
+
   svg {
     fill: $color-text-dark-grey;
     height: 17px;
     width: 17px;
   }
+
   &:hover {
     svg {
       fill: $color-text-light-grey;
@@ -47,10 +49,12 @@
   top: 116px;
   width: auto;
   z-index: 1;
+
   &.sticky {
     position: fixed;
     top: 42px;
   }
+
   a {
     border: 1px solid #eee;
     border-radius: 20px;
@@ -61,20 +65,37 @@
     padding-top: 10px;
     width: 39px;
   }
+
   .nav-linkDisabled svg {
     opacity: 0.7;
     cursor: default;
   }
+
   .nav-link {
     svg {
       fill: $color-text-light-grey;
     }
+
     &:hover svg {
       fill: $color-text-dark-grey;
     }
+
     &.favorite svg {
       fill: $color-text-gold-med !important;
     }
+
+    .nav-linkRun {
+      svg {
+        fill: #25c83a;
+      }
+    }
+
+    .nav-linkRun:hover {
+      svg {
+        fill: #12a127;
+      }
+    }
+
     &.favorite:hover svg {
       fill: $color-text-gold !important;
     }
@@ -84,6 +105,7 @@
 .nav {
   padding: 15px;
   width: 100%;
+
   .nav-title {
     color: $color-text-dark-grey;
     display: inline-block;
@@ -92,6 +114,7 @@
     font-stretch: expanded;
     position: relative;
     text-decoration: none;
+
     .nav-a {
       font-family: $font-atlas-a;
       font-size: 80px;
@@ -100,16 +123,19 @@
       position: absolute;
       top: -19px;
     }
+
     &:hover {
       color: $color-text-light-grey;
       text-decoration: none;
     }
   }
+
   .nav-links {
     display: inline-block;
     float: right;
     padding-top: 10px;
   }
+
   .new-mail-badge {
     background-color: #fc433a;
     border: 1px solid #f4f5f6;
@@ -126,11 +152,13 @@
     right: 0;
     top: -4px;
   }
+
   .nav-dropBox {
     display: none;
     padding-top: 15px;
     position: absolute;
     z-index: 1;
+
     a {
       color: $color-text-dark-grey;
       display: block;
@@ -138,17 +166,20 @@
       padding: 10px;
       text-decoration: none;
       white-space: nowrap;
+
       &:hover {
         color: $color-text-light-grey;
         text-decoration: none;
       }
     }
   }
+
   .nav-drop {
     &:hover {
       .nav-dropBox {
         display: block;
       }
+
       .nav-dropLiner {
         background-color: $color-background-white;
         border: 1px solid #6c757d;

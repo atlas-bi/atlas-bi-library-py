@@ -1,0 +1,41 @@
+{% load markdown %}
+<h3 class="pageSection-title">Description</h3>
+
+{% if report.docs.description %}
+    <h4>Developer Description</h4>
+    <div class="markdown">
+        {{ report.docs.description|markdown|safe }}
+    </div>
+{% endif %}
+{% if report.docs.assumptions %}
+    <h4>Key Assumptions</h4>
+    <div class="markdown">
+        {{ report.docs.assumptions|markdown|safe }}
+    </div>
+{% endif %}
+
+{% if report.description %}
+    <h4>System Description</h4>
+    <div class="markdown">
+        {{ report.description|markdown|safe }}
+    </div>
+{% endif %}
+
+{% if report.detailed_description %}
+    <h4>System Detailed Description</h4>
+    <div class="markdown">
+        {{ report.detailed_description|markdown|safe }}
+    </div>
+{% endif %}
+
+{% if report.system_description %}
+    <h4 class="drop" data-toggle="clps" data-target="collapseTerm27">Repository Description<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"></path></svg></h4>
+
+    <div id="collapseTerm27" class="clps {% if not report.docs.description and not report.docs.assumptions %}clps-o{% endif %}" role="tabpanel">
+        <div class="drop-box">
+            <div class="markdown">
+                {{ report.system_description|markdown|safe }}
+            </div>
+        </div>
+    </div>
+{% endif %}

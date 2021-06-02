@@ -21,8 +21,10 @@ from django.db import models
 
 class ReportGroupMemberships(models.Model):
     membership_id = models.AutoField(db_column="MembershipId", primary_key=True)
-    group_id = models.ForeignKey("Usergroups", models.DO_NOTHING, db_column="GroupId")
-    report_id = models.ForeignKey("Reports", models.DO_NOTHING, db_column="ReportId")
+    group = models.ForeignKey("UserGroups", models.DO_NOTHING, db_column="GroupId")
+    report = models.ForeignKey(
+        "Reports", models.DO_NOTHING, db_column="ReportId", related_name="groups"
+    )
     etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
 
     class Meta:
@@ -33,7 +35,7 @@ class ReportGroupMemberships(models.Model):
 class Reports(models.Model):
     report_id = models.AutoField(db_column="ReportObjectID", primary_key=True)
     report_key = models.TextField(db_column="ReportObjectBizKey", blank=True, null=True)
-    type_id = models.ForeignKey(
+    type = models.ForeignKey(
         "ReportTypes",
         models.DO_NOTHING,
         db_column="ReportObjectTypeID",
@@ -110,6 +112,9 @@ class Reports(models.Model):
 
     def __str__(self):
         return self.title or self.name
+
+    def system_run_url(self, in_system):
+        return "123.123"
 
     def system_viewer_url(self, in_system):
         """Build system record viewer url."""
@@ -212,6 +217,7 @@ class ReportQueries(models.Model):
         db_column="ReportObjectId",
         blank=True,
         null=True,
+        related_name="queries",
     )
     query = models.TextField(db_column="Query", blank=True, null=True)
     etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
@@ -219,6 +225,9 @@ class ReportQueries(models.Model):
     class Meta:
         managed = False
         db_table = "ReportObjectQuery"
+
+    def __str__(self):
+        return self.query
 
 
 class ReportRuns(models.Model):
@@ -281,6 +290,9 @@ class ReportTypes(models.Model):
     class Meta:
         managed = False
         db_table = "ReportObjectType"
+
+    def __str__(self):
+        return self.name
 
 
 class Users(AbstractUser):
@@ -423,7 +435,7 @@ class Users(AbstractUser):
         return self.build_full_name()
 
 
-class Usergroups(models.Model):
+class UserGroups(models.Model):
     group_id = models.AutoField(db_column="GroupId", primary_key=True)
     account_name = models.TextField(db_column="AccountName", blank=True, null=True)
     group_name = models.TextField(db_column="GroupName", blank=True, null=True)
@@ -437,6 +449,9 @@ class Usergroups(models.Model):
         managed = False
         db_table = "UserGroups"
 
+    def __str__(self):
+        return self.group_name
+
 
 class UserGroupMemberships(models.Model):
     membership_id = models.AutoField(db_column="MembershipId", primary_key=True)
@@ -444,7 +459,7 @@ class UserGroupMemberships(models.Model):
         Users, models.DO_NOTHING, db_column="UserId", blank=True, null=True
     )
     group_id = models.ForeignKey(
-        Usergroups, models.DO_NOTHING, db_column="GroupId", blank=True, null=True
+        UserGroups, models.DO_NOTHING, db_column="GroupId", blank=True, null=True
     )
     etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
 
@@ -928,11 +943,11 @@ class DpMilestonetemplates(models.Model):
 class ProjectReports(models.Model):
     annotation_id = models.AutoField(db_column="ReportAnnotationID", primary_key=True)
     annotation = models.TextField(db_column="Annotation", blank=True, null=True)
-    report = models.OneToOneField(
+    report = models.ForeignKey(
         "Reports",
         models.DO_NOTHING,
         db_column="ReportId",
-        related_name="report_projects",
+        related_name="projects",
         blank=True,
         null=True,
     )
@@ -958,7 +973,7 @@ class ProjectTerms(models.Model):
     termannotationid = models.AutoField(db_column="TermAnnotationID", primary_key=True)
     annotation = models.TextField(db_column="Annotation", blank=True, null=True)
 
-    term = models.OneToOneField(
+    term = models.ForeignKey(
         "Terms",
         models.DO_NOTHING,
         db_column="TermId",
@@ -1026,7 +1041,7 @@ class ProjectComments(models.Model):
         db_table = "Dp_DataProjectConversationMessage"
 
 
-class EstimatedRunFrequency(models.Model):
+class RunFrequency(models.Model):
     frequency_id = models.AutoField(
         db_column="EstimatedRunFrequencyID", primary_key=True
     )
@@ -1037,6 +1052,9 @@ class EstimatedRunFrequency(models.Model):
     class Meta:
         managed = False
         db_table = "EstimatedRunFrequency"
+
+    def __str__(self):
+        return self.name
 
 
 class FinancialImpact(models.Model):
@@ -1059,6 +1077,9 @@ class Fragility(models.Model):
         managed = False
         db_table = "Fragility"
 
+    def __str__(self):
+        return self.name
+
 
 class FragilityTag(models.Model):
     tag_id = models.AutoField(db_column="FragilityTagID", primary_key=True)
@@ -1067,6 +1088,9 @@ class FragilityTag(models.Model):
     class Meta:
         managed = False
         db_table = "FragilityTag"
+
+    def __str__(self):
+        return self.name
 
 
 class Globalsitesettings(models.Model):
@@ -1207,15 +1231,22 @@ class MailRecipientsDeleted(models.Model):
         db_table = "Mail_Recipients_Deleted"
 
 
-class Maintenancelog(models.Model):
-    maintenancelogid = models.AutoField(db_column="MaintenanceLogID", primary_key=True)
-    maintainerid = models.IntegerField(db_column="MaintainerID", blank=True, null=True)
-    maintenancedate = models.DateTimeField(
+class MaintenanceLogs(models.Model):
+    log_id = models.AutoField(db_column="MaintenanceLogID", primary_key=True)
+    maintainer = models.ForeignKey(
+        "Users",
+        models.DO_NOTHING,
+        db_column="MaintainerID",
+        blank=True,
+        null=True,
+        related_name="report_maintenance_logs",
+    )
+    maintained_at = models.DateTimeField(
         db_column="MaintenanceDate", blank=True, null=True
     )
-    comment = models.TextField(db_column="Comment", blank=True, null=True)
-    maintenancelogstatusid = models.ForeignKey(
-        "Maintenancelogstatus",
+    comments = models.TextField(db_column="Comment", blank=True, null=True)
+    status = models.ForeignKey(
+        "MaintenancelogStatus",
         models.DO_NOTHING,
         db_column="MaintenanceLogStatusID",
         blank=True,
@@ -1225,28 +1256,31 @@ class Maintenancelog(models.Model):
     class Meta:
         managed = False
         db_table = "MaintenanceLog"
+        ordering = ["maintained_at"]
 
 
 class MaintenanceLogStatus(models.Model):
-    maintenancelogstatus_id = models.AutoField(
-        db_column="MaintenanceLogStatusID", primary_key=True
-    )
+    status_id = models.AutoField(db_column="MaintenanceLogStatusID", primary_key=True)
     name = models.TextField(db_column="MaintenanceLogStatusName")
 
     class Meta:
         managed = False
         db_table = "MaintenanceLogStatus"
 
+    def __str__(self):
+        return self.name
+
 
 class MaintenanceSchedule(models.Model):
-    maintenanceschedule_id = models.AutoField(
-        db_column="MaintenanceScheduleID", primary_key=True
-    )
+    schedule_id = models.AutoField(db_column="MaintenanceScheduleID", primary_key=True)
     name = models.TextField(db_column="MaintenanceScheduleName")
 
     class Meta:
         managed = False
         db_table = "MaintenanceSchedule"
+
+    def __str__(self):
+        return self.name
 
 
 class Organizationalvalue(models.Model):
@@ -1259,15 +1293,21 @@ class Organizationalvalue(models.Model):
         managed = False
         db_table = "OrganizationalValue"
 
+    def __str__(self):
+        return self.name
 
-class Reportmanageenginetickets(models.Model):
-    manageengineticketsid = models.AutoField(
-        db_column="ManageEngineTicketsId", primary_key=True
-    )
-    ticketnumber = models.IntegerField(db_column="TicketNumber", blank=True, null=True)
+
+class ReportTickets(models.Model):
+    ticket_id = models.AutoField(db_column="ManageEngineTicketsId", primary_key=True)
+    number = models.IntegerField(db_column="TicketNumber", blank=True, null=True)
     description = models.TextField(db_column="Description", blank=True, null=True)
-    reportobjectid = models.IntegerField(
-        db_column="ReportObjectId", blank=True, null=True
+    report_id = models.OneToOneField(
+        "ReportDocs",
+        models.DO_NOTHING,
+        db_column="ReportObjectId",
+        blank=True,
+        null=True,
+        related_name="tickets",
     )
     ticketurl = models.TextField(db_column="TicketUrl", blank=True, null=True)
 
@@ -1275,78 +1315,110 @@ class Reportmanageenginetickets(models.Model):
         managed = False
         db_table = "ReportManageEngineTickets"
 
+    def __str__(self):
+        return self.number
 
-class ReportobjectconversationmessageDoc(models.Model):
-    messageid = models.AutoField(db_column="MessageID", primary_key=True)
-    conversationid = models.ForeignKey(
-        "ReportobjectconversationDoc", models.DO_NOTHING, db_column="ConversationID"
+
+class ReportCommentStream(models.Model):
+    stream_id = models.AutoField(db_column="ConversationID", primary_key=True)
+    report_id = models.ForeignKey(
+        "Reports", models.DO_NOTHING, db_column="ReportObjectID"
     )
-    userid = models.IntegerField(db_column="UserID")
-    messagetext = models.TextField(db_column="MessageText")
-    postdatetime = models.DateTimeField(db_column="PostDateTime")
-    username = models.TextField(db_column="Username", blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = "ReportObjectConversationMessage_doc"
-
-
-class ReportobjectconversationDoc(models.Model):
-    conversationid = models.AutoField(db_column="ConversationID", primary_key=True)
-    reportobjectid = models.IntegerField(db_column="ReportObjectID")
 
     class Meta:
         managed = False
         db_table = "ReportObjectConversation_doc"
 
 
-class Reportobjectdocfragilitytags(models.Model):
-    reportobjectid = models.OneToOneField(
-        "ReportDocs", models.DO_NOTHING, db_column="ReportObjectID", primary_key=True
+class ReportComments(models.Model):
+    comment_id = models.AutoField(db_column="MessageID", primary_key=True)
+    stream_id = models.ForeignKey(
+        "ReportCommentStream", models.DO_NOTHING, db_column="ConversationID"
     )
-    fragilitytagid = models.ForeignKey(
-        FragilityTag, models.DO_NOTHING, db_column="FragilityTagID"
+    user_id = models.ForeignKey(
+        "Users",
+        models.DO_NOTHING,
+        related_name="user_report_comments",
+        db_column="UserID",
+        blank=True,
+        null=True,
+    )
+    message = models.TextField(db_column="MessageText")
+    posted_at = models.DateTimeField(db_column="PostDateTime")
+
+    class Meta:
+        managed = False
+        db_table = "ReportObjectConversationMessage_doc"
+
+
+class ReportFragilityTags(models.Model):
+    link_id = models.AutoField(db_column="LinkId", primary_key=True)
+    report = models.ForeignKey(
+        "ReportDocs",
+        models.DO_NOTHING,
+        db_column="ReportObjectID",
+        related_name="fragility_tags",
+    )
+    fragility_tag = models.ForeignKey(
+        FragilityTag,
+        models.DO_NOTHING,
+        db_column="FragilityTagID",
+        related_name="reports",
     )
 
     class Meta:
         managed = False
         db_table = "ReportObjectDocFragilityTags"
-        unique_together = (("reportobjectid", "fragilitytagid"),)
+        unique_together = (("report", "fragility_tag"),)
 
 
-class Reportobjectdocmaintenancelogs(models.Model):
-    reportobjectid = models.OneToOneField(
-        "ReportDocs", models.DO_NOTHING, db_column="ReportObjectID", primary_key=True
+class ReportMaintenanceLogs(models.Model):
+    link_id = models.AutoField(db_column="LinkId", primary_key=True)
+    report = models.ForeignKey(
+        "ReportDocs", models.DO_NOTHING, db_column="ReportObjectID", related_name="logs"
     )
-    maintenancelogid = models.ForeignKey(
-        Maintenancelog, models.DO_NOTHING, db_column="MaintenanceLogID"
+    log = models.ForeignKey(
+        MaintenanceLogs,
+        models.DO_NOTHING,
+        db_column="MaintenanceLogID",
+        related_name="reports",
     )
 
     class Meta:
         managed = False
         db_table = "ReportObjectDocMaintenanceLogs"
-        unique_together = (("reportobjectid", "maintenancelogid"),)
+        unique_together = (("report", "log"),)
+        ordering = ["-log__maintained_at"]
 
 
 class ReportTerms(models.Model):
-    report_doc = models.OneToOneField(
+    link_id = models.AutoField(db_column="LinkId", primary_key=True)
+    report = models.ForeignKey(
         "ReportDocs",
         models.DO_NOTHING,
         db_column="ReportObjectID",
-        primary_key=True,
-        related_name="report_terms",
+        related_name="terms",
     )
-    term = models.ForeignKey("Terms", models.DO_NOTHING, db_column="TermId")
+    term = models.ForeignKey(
+        "Terms", models.DO_NOTHING, db_column="TermId", related_name="reports"
+    )
 
     class Meta:
         managed = False
         db_table = "ReportObjectDocTerms"
-        unique_together = (("report_doc", "term"),)
+        unique_together = (("report", "term"),)
 
 
 class ReportImages(models.Model):
     image_id = models.AutoField(db_column="ImageID", primary_key=True)
-    report_id = models.IntegerField(db_column="ReportObjectID")
+    report_id = models.ForeignKey(
+        Reports,
+        db_column="ReportObjectID",
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name="imgs",
+    )
     image_rank = models.IntegerField(db_column="ImageOrdinal")
     image_data = models.BinaryField(db_column="ImageData")
     image_source = models.TextField(db_column="ImageSource", blank=True, null=True)
@@ -1433,8 +1505,8 @@ class ReportDocs(models.Model):
         blank=True,
         null=True,
     )
-    run_freq = models.ForeignKey(
-        EstimatedRunFrequency,
+    frequency = models.ForeignKey(
+        RunFrequency,
         models.DO_NOTHING,
         db_column="EstimatedRunFrequencyID",
         blank=True,
@@ -1487,7 +1559,7 @@ class ReportDocs(models.Model):
         "Reports",
         models.DO_NOTHING,
         db_column="ReportObjectID",
-        related_name="report_docs",
+        related_name="docs",
         primary_key=True,
     )
 
@@ -1772,6 +1844,9 @@ class Terms(models.Model):
     class Meta:
         managed = False
         db_table = "Term"
+
+    def __str__(self):
+        return self.name
 
 
 class TermCommentStream(models.Model):

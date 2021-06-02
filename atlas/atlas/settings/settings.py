@@ -170,7 +170,10 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "atlas.context_processors.settings",
             ],
-            "libraries": {"markdown": "atlas.templatetags.markdown"},
+            "libraries": {
+                "markdown": "atlas.templatetags.markdown",
+                "dates": "atlas.templatetags.dates",
+            },
             "debug": DEBUG,
         },
     },

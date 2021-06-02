@@ -23,10 +23,7 @@
 
 
 
-{% compress css file extra %}
-    {% block start_css %}
-    {% endblock start_css %}
-{% endcompress %}
+
 
 {% compress css file differed %}
     <link rel="stylesheet" href="/static/css/page-effects.scss"   type="text/x-scss" charset="utf-8"/>

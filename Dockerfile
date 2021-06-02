@@ -23,7 +23,9 @@ RUN echo 'vm.swappiness = 1' >> /etc/sysctl.conf \
     && /opt/solr/bin/solr config -c atlas -p 8983 -action set-user-property -property update.autoCreateFields -value false
 
 # copy solr config
-COPY /solr /var/solr/data/atlas/conf/.
+COPY /solr/managed-schema /var/solr/data/atlas/conf/managed-schema
+COPY /solr/solrconfig.xml /var/solr/data/atlas/conf/solrconfig.xml
+COPY /solr/synonyms.txt /var/solr/data/atlas/conf/synonyms.txt
 
 WORKDIR /app
 

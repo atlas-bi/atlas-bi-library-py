@@ -16,6 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 @import "./include/color.scss";
+
 .report-query,
 .report-term {
   background-color: rgba(0, 0, 0, 0.03);
@@ -39,6 +40,7 @@
 .maint-log {
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 3px;
+  margin-bottom: 20px;
 }
 
 .maint-logHeader {

@@ -9,39 +9,64 @@
   "devDependencies": {
     "eslint": "^7.17.0",
     "jshint": "^2.12.0",
-    "prettier": "^2.3.0",
-    "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-standard": "^22.0.0",
-    "stylelint-prettier": "^1.2.0"
+    "eslint-plugin-jsdoc": "^35.1.2"
   },
   "eslintConfig": {
+    "plugins": [
+        "jsdoc"
+    ],
+    "rules": {
+        "jsdoc/check-access": 1,
+        "jsdoc/check-alignment": 1,
+        "jsdoc/check-param-names": 0,
+        "jsdoc/check-property-names": 1,
+        "jsdoc/check-syntax": 1,
+        "jsdoc/check-tag-names": 1,
+        "jsdoc/check-types": 1,
+        "jsdoc/check-values": 1,
+        "jsdoc/empty-tags": 1,
+        "jsdoc/implements-on-classes": 1,
+        "jsdoc/multiline-blocks": 1,
+        "jsdoc/newline-after-description": 1,
+        "jsdoc/no-multi-asterisks": 1,
+        "jsdoc/no-undefined-types": 1,
+        "jsdoc/require-jsdoc": 1,
+        "jsdoc/require-param": 0,
+        "jsdoc/require-param-description": 1,
+        "jsdoc/require-param-name": 1,
+        "jsdoc/require-param-type": 1,
+        "jsdoc/require-property": 1,
+        "jsdoc/require-property-description": 1,
+        "jsdoc/require-property-name": 1,
+        "jsdoc/require-property-type": 1,
+        "jsdoc/require-returns": 0,
+        "jsdoc/require-returns-check": 1,
+        "jsdoc/require-returns-description": 1,
+        "jsdoc/require-returns-type": 1,
+        "jsdoc/require-yields": 1,
+        "jsdoc/require-yields-check": 1,
+        "jsdoc/tag-lines": 1,
+        "jsdoc/valid-types": 1
+    }
   },
   "jshintConfig": {
     "laxbreak": true
   },
   "license": "AGPL-3.0-or-later",
   "name": "atlas",
-  "prettier": {
-    "printWidth": 99,
-    "tabWidth": 2
-  },
   "repository": {
     "private": true
   },
   "stylelint": {
     "extends": [
-      "stylelint-config-standard",
-      "stylelint-config-prettier"
-    ],
+      "stylelint-config-standard"
+     ],
     "ignoreFiles": [
       "*.min.css",
       "lib/*.css"
     ],
-    "plugins": [
-      "stylelint-prettier"
-    ],
     "rules": {
-      "prettier/prettier": true,
       "selector-type-no-unknown": [
         true,
         {

@@ -104,6 +104,38 @@ section {
   letter-spacing: 0.3px;
 }
 
+.pageNav-badgeOrange {
+  margin-right: 10px;
+  border: 2px solid #ffc107;
+  border-radius: 3px;
+  padding: 0 5px;
+  color: #ffc107;
+}
+
+.pageNav-badgeRed {
+  margin-right: 10px;
+  border: 2px solid #ff6961;
+  border-radius: 3px;
+  padding: 0 5px;
+  color: #ff6961;
+}
+
+.pageNav-badgeGreen {
+  margin-right: 10px;
+  border: 2px solid rgb(41, 206, 66);
+  border-radius: 3px;
+  padding: 0 5px;
+  color: rgb(41, 206, 66);
+}
+
+.pageNav-badgeHunterGreen {
+  margin-right: 10px;
+  border: 2px solid #22aa36;
+  border-radius: 3px;
+  padding: 0 5px;
+  color: #22aa36;
+}
+
 .pageNav .pageNav-link + .pageNav-link::before {
   color: $color-text-dark-grey;
   content: "/";
@@ -125,8 +157,12 @@ section {
   right: 25px;
   text-align: center;
   text-decoration: none;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, visibility 0.15s;
+  transition:
+    color 0.15s ease-in-out,
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out,
+    visibility 0.15s;
   user-select: none;
   vertical-align: middle;
   visibility: hidden;

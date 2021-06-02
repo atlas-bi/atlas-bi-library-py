@@ -3,6 +3,11 @@
 
 {% include 'head.html.dj' %}
 
+{% compress css file extra %}
+    {% block start_css %}
+    {% endblock start_css %}
+{% endcompress %}
+
 {% csrf_token %}
 
 {% compress js inline %}
@@ -47,8 +52,7 @@
             <div class="body-main">
                 <!-- search -->
                 {% if 19 in permissions %}
-                <!-- or title.startswith("Search") -->
-                    <div class='clps {% if title == ""  %}clps-o {% endif %}' id="sr-cls">
+                    <div class='clps {% if title|slice:":4" == "Home" or title|slice:":6" == "Search" %}clps-o {% endif %}' id="sr-cls">
                         <div class="sr-grp">
                             <input type="text" placeholder="type to search.." value='{{ search_string }}' maxlength="80" required />
                             <!--<icon class="sr-fav"><i class="far fa-star"></i></icon>-->

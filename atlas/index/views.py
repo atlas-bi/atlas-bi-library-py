@@ -9,6 +9,7 @@ def index(request):
         "permissions": request.user.get_permissions(),
         "user": request.user,
         "favorites": request.user.get_favorites(),
+        "title": "Home",
     }
 
     return render(request, "index.html.dj", context)

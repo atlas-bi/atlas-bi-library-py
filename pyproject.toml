@@ -49,7 +49,7 @@ django-redis-sessions = "^0.6.2"
 django-compression-middleware = "^0.4.1"
 dataclasses = { version = "*", python = ">=3.6,<3.7" }
 toml = { version = "^0.10.2", optional = true }
-relative-to-now = "^0.0.5"
+relative-to-now = "^0.0.8"
 djangosaml2 = "^1.0.4"
 django-mathfilters = "^1.0.0"
 Django = "^3.2"

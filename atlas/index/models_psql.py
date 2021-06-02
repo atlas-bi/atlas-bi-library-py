@@ -19,7 +19,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-class Usergroups(models.Model):
+class UserGroups(models.Model):
     group_id = models.AutoField(primary_key=True)
     account_name = models.TextField(blank=True, null=True)
     group_name = models.TextField(blank=True, null=True)
@@ -29,11 +29,14 @@ class Usergroups(models.Model):
     etl_date = models.DateTimeField(blank=True, null=True)
     epic_id = models.TextField(blank=True, null=True)
 
+    def __str__(self):
+        return self.group_name
+
 
 class Reports(models.Model):
     report_id = models.AutoField(primary_key=True)
     report_key = models.TextField(blank=True, null=True)
-    type_id = models.ForeignKey(
+    type = models.ForeignKey(
         "ReportTypes", blank=True, null=True, on_delete=models.CASCADE
     )
     name = models.TextField(blank=True, null=True)
@@ -156,8 +159,10 @@ class Reports(models.Model):
 
 class ReportGroupMemberships(models.Model):
     membership_id = models.AutoField(primary_key=True)
-    group_id = models.ForeignKey("Usergroups", on_delete=models.CASCADE)
-    report_id = models.ForeignKey("Reports", on_delete=models.CASCADE)
+    group_id = models.ForeignKey("UserGroups", on_delete=models.CASCADE)
+    report_id = models.ForeignKey(
+        "Reports", on_delete=models.CASCADE, related_name="groups"
+    )
     etl_date = models.DateTimeField(blank=True, null=True)
 
 
@@ -173,10 +178,17 @@ class ReportHierarchies(models.Model):
 class ReportQueries(models.Model):
     query_id = models.AutoField(primary_key=True)
     report_id = models.ForeignKey(
-        Reports, blank=True, null=True, on_delete=models.CASCADE
+        Reports,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name="queries",
     )
     query = models.TextField(blank=True, null=True)
     etl_date = models.DateTimeField(blank=True, null=True)
+
+    def __str__(self):
+        return self.query
 
 
 class ReportRuns(models.Model):
@@ -220,6 +232,9 @@ class ReportTypes(models.Model):
     code = models.TextField(blank=True, null=True)
 
     etl_date = models.DateTimeField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Users(AbstractUser):
@@ -362,7 +377,7 @@ class UserGroupMemberships(models.Model):
     membership_id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(Users, blank=True, null=True, on_delete=models.CASCADE)
     group_id = models.ForeignKey(
-        Usergroups, blank=True, null=True, on_delete=models.CASCADE
+        UserGroups, blank=True, null=True, on_delete=models.CASCADE
     )
     etl_date = models.DateTimeField(blank=True, null=True)
 
@@ -706,10 +721,10 @@ class DpMilestonetemplates(models.Model):
 class ProjectReports(models.Model):
     annotation_id = models.AutoField(primary_key=True)
     annotation = models.TextField(blank=True, null=True)
-    report = models.OneToOneField(
+    report = models.ForeignKey(
         "Reports",
         on_delete=models.CASCADE,
-        related_name="report_projects",
+        related_name="projects",
         blank=True,
         null=True,
     )
@@ -730,7 +745,7 @@ class ProjectTerms(models.Model):
     termannotationid = models.AutoField(primary_key=True)
     annotation = models.TextField(blank=True, null=True)
 
-    term = models.OneToOneField(
+    term = models.ForeignKey(
         "Terms",
         on_delete=models.CASCADE,
         related_name="terms",
@@ -747,7 +762,7 @@ class ProjectTerms(models.Model):
     rank = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
-        return self.report
+        return self.project
 
 
 class ProjectCommentStream(models.Model):
@@ -777,9 +792,12 @@ class ProjectComments(models.Model):
     posted_at = models.DateTimeField(blank=True, null=True)
 
 
-class EstimatedRunFrequency(models.Model):
+class RunFrequency(models.Model):
     frequency_id = models.AutoField(primary_key=True)
     name = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
 
 
 class FinancialImpact(models.Model):
@@ -794,10 +812,16 @@ class Fragility(models.Model):
     fragility_id = models.AutoField(primary_key=True)
     name = models.TextField(blank=True, null=True)
 
+    def __str__(self):
+        return self.name
+
 
 class FragilityTag(models.Model):
     tag_id = models.AutoField(primary_key=True)
     name = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Globalsitesettings(models.Model):
@@ -895,95 +919,146 @@ class MailRecipientsDeleted(models.Model):
     togroupid = models.IntegerField(blank=True, null=True)
 
 
-class Maintenancelog(models.Model):
-    maintenancelogid = models.AutoField(primary_key=True)
-    maintainerid = models.IntegerField(blank=True, null=True)
-    maintenancedate = models.DateTimeField(blank=True, null=True)
-    comment = models.TextField(blank=True, null=True)
-    maintenancelogstatusid = models.ForeignKey(
-        "Maintenancelogstatus",
+class MaintenanceLogs(models.Model):
+    log_id = models.AutoField(primary_key=True)
+    maintainer = models.ForeignKey(
+        "Users",
         on_delete=models.CASCADE,
         blank=True,
         null=True,
+        related_name="report_maintenance_logs",
     )
+    maintained_at = models.DateTimeField(blank=True, null=True)
+    comments = models.TextField(blank=True, null=True)
+    status = models.ForeignKey(
+        "MaintenancelogStatus",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="logs",
+    )
+
+    class Meta:
+        ordering = ["maintained_at"]
 
 
 class MaintenanceLogStatus(models.Model):
-    maintenancelogstatus_id = models.AutoField(primary_key=True)
+    status_id = models.AutoField(primary_key=True)
     name = models.TextField()
+
+    def __str__(self):
+        return self.name
 
 
 class MaintenanceSchedule(models.Model):
-    maintenanceschedule_id = models.AutoField(primary_key=True)
+    schedule_id = models.AutoField(primary_key=True)
     name = models.TextField()
+
+    def __str__(self):
+        return self.name
 
 
 class Organizationalvalue(models.Model):
     organizationalvalue_id = models.AutoField(primary_key=True)
     name = models.TextField(blank=True, null=True)
 
+    def __str__(self):
+        return self.name
 
-class Reportmanageenginetickets(models.Model):
-    manageengineticketsid = models.AutoField(primary_key=True)
-    ticketnumber = models.IntegerField(blank=True, null=True)
+
+class ReportTickets(models.Model):
+    ticket_id = models.AutoField(primary_key=True)
+    number = models.IntegerField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    reportobjectid = models.IntegerField(blank=True, null=True)
-    ticketurl = models.TextField(blank=True, null=True)
-
-
-class ReportobjectconversationmessageDoc(models.Model):
-    messageid = models.AutoField(primary_key=True)
-    conversationid = models.ForeignKey(
-        "ReportobjectconversationDoc",
+    report_id = models.OneToOneField(
+        "ReportDocs",
+        blank=True,
+        null=True,
         on_delete=models.CASCADE,
+        related_name="tickets",
     )
-    userid = models.IntegerField()
-    messagetext = models.TextField()
-    postdatetime = models.DateTimeField()
-    username = models.TextField(blank=True, null=True)
+    url = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.number
 
 
-class ReportobjectconversationDoc(models.Model):
-    conversationid = models.AutoField(primary_key=True)
+class ReportCommentStream(models.Model):
+    stream_id = models.AutoField(primary_key=True)
     reportobjectid = models.IntegerField()
+    report_id = models.ForeignKey("Reports", on_delete=models.CASCADE)
 
 
-class Reportobjectdocfragilitytags(models.Model):
-    reportobjectid = models.OneToOneField(
-        "ReportDocs", primary_key=True, on_delete=models.CASCADE
-    )
-    fragilitytagid = models.ForeignKey(
-        FragilityTag,
+class ReportComments(models.Model):
+    comment_id = models.AutoField(primary_key=True)
+    stream_id = models.ForeignKey(
+        "ReportCommentStream",
         on_delete=models.CASCADE,
     )
-
-
-class Reportobjectdocmaintenancelogs(models.Model):
-    reportobjectid = models.OneToOneField(
-        "ReportDocs", primary_key=True, on_delete=models.CASCADE
-    )
-    maintenancelogid = models.ForeignKey(
-        Maintenancelog,
+    user_id = models.ForeignKey(
+        "Users",
         on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="user_report_comments",
     )
+    message = models.TextField()
+    posted_at = models.DateTimeField()
+
+
+class ReportFragilityTags(models.Model):
+    link_id = models.AutoField(primary_key=True)
+    report = models.ForeignKey(
+        "ReportDocs", on_delete=models.CASCADE, related_name="fragility_tags"
+    )
+    fragility_tag = models.ForeignKey(
+        FragilityTag, on_delete=models.CASCADE, related_name="reports"
+    )
+
+    class Meta:
+        unique_together = (("report", "fragility_tag"),)
+
+
+class ReportMaintenanceLogs(models.Model):
+    link_id = models.AutoField(primary_key=True)
+    report = models.ForeignKey(
+        "ReportDocs", on_delete=models.CASCADE, related_name="logs"
+    )
+    log = models.ForeignKey(
+        MaintenanceLogs, on_delete=models.CASCADE, related_name="reports"
+    )
+
+    class Meta:
+        unique_together = (("report", "log"),)
+        ordering = ["-log__maintained_at"]
 
 
 class ReportTerms(models.Model):
-    report_doc = models.OneToOneField(
+    link_id = models.AutoField(primary_key=True)
+    report = models.ForeignKey(
         "ReportDocs",
-        primary_key=True,
         on_delete=models.CASCADE,
-        related_name="report_terms",
+        related_name="terms",
     )
     term = models.ForeignKey(
         "Terms",
         on_delete=models.CASCADE,
+        related_name="reports",
     )
+
+    class Meta:
+        unique_together = (("report", "term"),)
 
 
 class ReportImages(models.Model):
     image_id = models.AutoField(primary_key=True)
-    report_id = models.IntegerField()
+    report_id = models.ForeignKey(
+        Reports,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name="imgs",
+    )
     image_rank = models.IntegerField()
     image_data = models.BinaryField()
     image_source = models.TextField(blank=True, null=True)
@@ -1045,8 +1120,8 @@ class ReportDocs(models.Model):
         blank=True,
         null=True,
     )
-    run_freq = models.ForeignKey(
-        EstimatedRunFrequency,
+    frequency = models.ForeignKey(
+        RunFrequency,
         on_delete=models.CASCADE,
         blank=True,
         null=True,
@@ -1086,7 +1161,7 @@ class ReportDocs(models.Model):
 
     report = models.OneToOneField(
         "Reports",
-        related_name="report_docs",
+        related_name="docs",
         primary_key=True,
         on_delete=models.CASCADE,
     )
@@ -1261,6 +1336,9 @@ class Terms(models.Model):
         if self._modified_at:
             return datetime.strftime(self._modified_at, "%d/%m/%y")
         return ""
+
+    def __str__(self):
+        return self.name
 
 
 class TermCommentStream(models.Model):

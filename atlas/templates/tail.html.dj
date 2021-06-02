@@ -35,7 +35,7 @@
 <script type="text/javascript" src="/static/js/essential.js" defer></script>
 <script type="text/javascript" src="/static/js/utility/lazyload.js" defer></script>
 <script type="text/javascript" src="/static/js/utility/crumbs.js" defer></script>
-<script type="text/javascript" src="/static/js/search.js" defer></script>
+<script type="text/javascript" src="/static/js/solr.js" defer></script>
 {% endcompress %}
 
 {% compress js file ie11 %}
@@ -60,7 +60,9 @@
 {% endcompress %}
 
 {% compress js file code %}
-<script type="text/javascript" src="/static/lib/highlight/highlight.js" defer></script>
+<script type="text/javascript" src="/static/lib/highlight/highlight.js" ></script>
+{% endcompress %}
+{% compress js file scroll %}
 <script type="text/javascript" src="/static/lib/scrollbars/simple-scrollbar.js" defer></script>
 {% endcompress %}
 
@@ -77,4 +79,4 @@
 
 
 {% block js %}
-    {% endblock js %}
+{% endblock js %}

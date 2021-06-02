@@ -9,7 +9,7 @@ from django.shortcuts import render
 
 
 @login_required
-def index(request):
+def index(request, search_string=None):
 
     context = {
         "permissions": request.user.get_permissions(),
