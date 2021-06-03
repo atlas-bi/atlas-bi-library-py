@@ -87,16 +87,18 @@
 .mailbox-filters-outer {
   height: 30px;
   background: rgb(208, 208, 208);
-  background: -moz-linear-gradient(
-    180deg,
-    rgba(208, 208, 208, 1) 35%,
-    rgba(201, 201, 201, 1) 100%
-  );
-  background: -webkit-linear-gradient(
-    180deg,
-    rgba(208, 208, 208, 1) 35%,
-    rgba(201, 201, 201, 1) 100%
-  );
+  background:
+    -moz-linear-gradient(
+      180deg,
+      rgba(208, 208, 208, 1) 35%,
+      rgba(201, 201, 201, 1) 100%
+    );
+  background:
+    -webkit-linear-gradient(
+      180deg,
+      rgba(208, 208, 208, 1) 35%,
+      rgba(201, 201, 201, 1) 100%
+    );
   background: linear-gradient(180deg, rgba(208, 208, 208, 1) 35%, rgba(201, 201, 201, 1) 100%);
   filter: progid:dximagetransform.microsoft.gradient(startColorstr="#d0d0d0", endColorstr="#c9c9c9", GradientType=1);
 }

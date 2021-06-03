@@ -74,7 +74,8 @@
             "icon"
           ]
         }
-      ]
+      ],
+      "rule-empty-line-before": null
     }
   }
 }

@@ -20,7 +20,7 @@ class AtlasTestCase(TestCase):
     fixtures = [
         "userroles.yaml",
         "rolepermissions.yaml",
-        "estimatedrunfrequency.yaml",
+        "runfrequency.yaml",
         "financialimpact.yaml",
         "fragility.yaml",
         "fragilitytag.yaml",
@@ -77,7 +77,7 @@ class AtlasBrowserStackTestCase(StaticLiveServerTestCase):
     fixtures = [
         "userroles.yaml",
         "rolepermissions.yaml",
-        "estimatedrunfrequency.yaml",
+        "runfrequency.yaml",
         "financialimpact.yaml",
         "fragility.yaml",
         "fragilitytag.yaml",
