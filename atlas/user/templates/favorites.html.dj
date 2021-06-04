@@ -1,3 +1,4 @@
+{% load markdown %}
 {% load user_tags %}
 
 {% with permissions|authorized as authorized %}
@@ -53,11 +54,11 @@
                             </div>
                             <div class="fav-body">
 
-                                <h5 class="fav-title"  data-toggle="clps" data-target="clps-@q.FavoriteId">
+                                <h5 class="fav-title"  data-toggle="clps" data-target="clps-{{ fav.favorite_id}}">
                                     {% if fav.item_type|lower == "search" %}
-                                        <span class="darken">{{ fav.name }}</span>
+                                        <span class="darken">{{ fav }}</span>
                                     {% else %}
-                                        <span class="darken">{{ fav.name }} {% if fav.system_identifier and fav.system_id %}&nbsp;({{ fav.system_identifier}} {{ fav.system_id}}){% endif %}</span>
+                                        <span class="darken">{{ fav }} {% if fav.system_identifier and fav.system_id %}&nbsp;({{ fav.system_identifier}} {{ fav.system_id }}){% endif %}</span>
                                     {% endif %}
                                     <div class="fav-type">
 
@@ -78,28 +79,25 @@
                                         {% if fav.item_type|lower == "search" %}
                                             <span>Search Filter?</span>
                                         {% endif %}
-                                        <span>{{ fav.item_type }}</span>
+                                        <span>{{ fav.item_type|title }}</span>
                                     </div>
                                 </h5>
-                                <!-- <h5 class="fav-nav">
+                                <h5 class="fav-nav">
                                     <a href="{{ fav.atlas_url }}">Open In Atlas</a>
-                                    @if (q.ReportUrl != null && q.ReportUrl != "")
-                                    {
-                                        <a class="ml-3" target="_blank" rel="noopener" href="@q.ReportUrl">Run Report</a>
-                                    }
-                                    @if (q.EditReportUrl != null && ViewBag.Permissions.Contains(38))
-                                    {
-                                        <a class="ml-3" target="_blank" rel="noopener" href="@q.EditReportUrl">Edit Report</a>
-                                    }
-                                    @if (q.ManageReportUrl != null && ViewBag.Permissions.Contains(38))
-                                    {
-                                        <a class="ml-3" target="_blank" rel="noopener" href="@q.ManageReportUrl">Manage Report</a>
-                                    }
-                                </h5> -->
+                                    {% if fav.report_url %}
+                                        <a class="ml-3" target="_blank" rel="noopener" href="{{ fav.report_url }}">Run Report</a>
+                                    {% endif %}
+                                    {% if 38 in permissions and fav.system_editor_url %}
+                                        <a class="ml-3" target="_blank" rel="noopener" href="{{ fav.system_editor_url }}">Edit Report</a>
+                                    {% endif %}
+                                    {% if 38 in permissions and fav.system_manage_url %}
+                                        <a class="ml-3" target="_blank" rel="noopener" href="{{ fav.system_manage_url }}">Manage Report</a>
+                                    {% endif %}
+                                </h5>
                                 <div class="clps fav-dtls" id="clps-{{ fav.favorite_id }}">
                                     <div class="markdown noleft">
                                         {% if fav.description %}
-                                            @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(q.Description))
+                                        {{ fav.description|markdown|safe }}
                                         {% else %}
                                             Open in Atlas to see details.
                                         {% endif %}

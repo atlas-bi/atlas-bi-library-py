@@ -18,8 +18,8 @@
     <span class="listDetails-title">Report Last Modified</span>
     <span>
         {{ report.modified_at|relative }}
-        {% if report.modified_by.exists or report.created_by.exists %}
-            <span class="text-light">&nbsp;&middot;&nbsp;<a href="/users/{{ report.modified_by.user_id|default:report.created_by.user_id }}">{{ report.modified_by|default:report.created_by }}</a></span>
+        {% if report.modified_by or report.created_by %}
+            <span class="text-light">&nbsp;&middot;&nbsp;<a href="/users/{% if report.modified_by %}{{ report.modified_by.user_id}}{% else %}{{ report.created_by.user_id }}{% endif %}">{{ report.modified_by|default:report.created_by }}</a></span>
         {% endif %}
     </span>
 
@@ -27,23 +27,23 @@
         <span class="listDetails-title">Documentation Last Modified</span>
         <span>
             {{ report.docs.modified_at|relative }}
-            {% if report.docs.modified_by.exists or report.docs.created_by.exists %}
-                <span class="text-light">&nbsp;&middot;&nbsp;<a href="/users/{{ report.docs.modified_by.user_id|default:report.docs.created_by.user_id }}">{{  report.docs.modified_by|default:report.docs.created_by }}</a></span>
+            {% if report.docs.modified_by or report.docs.created_by %}
+                <span class="text-light">&nbsp;&middot;&nbsp;<a href="/users/{% if report.docs.modified_by %}{{ report.docs.modified_by.user_id }}{% else %}{{ report.docs.created_by.user_id }}{% endif %}">{{  report.docs.modified_by|default:report.docs.created_by }}</a></span>
             {% endif %}
         </span>
     {% endif %}
 
-    {% if report.created_by.exists %}
+    {% if report.created_by %}
         <span class="listDetails-title">Report Author</span>
         <a href="/users/{{ report.created_by.user_id }}">{{ report.created_by }}</a>
     {% endif %}
 
-    {% if report.docs.requester.exists %}
+    {% if report.docs.requester %}
         <span class="listDetails-title">Report Requester</span>
         <a href="/users/{{ report.docs.requester.user_id }}">{{ report.docs.requester }}</a>
     {% endif %}
 
-    {% if report.docs.ops_owner.exists %}
+    {% if report.docs.ops_owner %}
         <span class="listDetails-title">Operational Owner</span>
         <a href="/users/{{ report.docs.ops_owner.user_id }}">{{ report.docs.ops_owner }}</a>
     {% endif %}

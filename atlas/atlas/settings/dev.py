@@ -49,6 +49,7 @@ DATABASES = {
 INSTALLED_APPS.append("debug_toolbar")
 COMPRESS_ENABLED = False
 
+
 # import custom overrides
 try:
     from .dev_cust import *

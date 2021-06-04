@@ -45,7 +45,7 @@
 {% compress js file main %}
 
 
-<!--<script type="text/javascript" src="/static/js/utility/modal.js" defer></script>-->
+<script type="text/javascript" src="/static/js/utility/modal.js" defer></script>
 <script type="text/javascript" src="/static/js/page.js" defer></script>
 <script type="text/javascript" src="/static/js/hyperspace.js" defer></script>
 <script type="text/javascript" src="/static/js/ajax-content.js" defer></script>
@@ -76,7 +76,3 @@
 <script type="text/javascript" src="/static/js/utility/charts.js" defer></script>
 <script type="text/javascript" src="/static/js/analytics.js" defer></script>
 {% endcompress %}
-
-
-{% block js %}
-{% endblock js %}

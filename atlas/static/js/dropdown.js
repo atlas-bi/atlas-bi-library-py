@@ -35,6 +35,9 @@
     }
   });
 
+  /**
+   *
+   */
   function load(el) {
     if (typeof el !== "undefined") {
       new build(el);
@@ -58,6 +61,9 @@
     					div.dd-rslt
     */
 
+  /**
+   *
+   */
   function build(b) {
     //var inputs = d.querySelectorAll('[type="dynamic-dropdown"]')
     var s, o;
@@ -437,7 +443,7 @@
         p = this.ddPhdr,
         q,
         sa = this.searchArea,
-        url = "/Search?handler=ValueList&s=" + sa,
+        url = "/search/lookup/" + sa,
         data,
         result = "",
         el,
@@ -458,7 +464,7 @@
             "Content-Type",
             "application/x-www-form-urlencoded; charset=UTF-8"
           );
-          q.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+          q.setRequestHeader("X-CSRFToken", csrftoken);
           q.send();
 
           q.onload = function () {
@@ -478,6 +484,9 @@
           };
         }
 
+        /**
+         *
+         */
         function load(data) {
           data = JSON.parse(data);
           if (data.length === 0) {
@@ -596,7 +605,7 @@
               userDrop =
                 '<div class="mlbx-usrDrp"><i class="fas fa-angle-down fa-sm"></i><div class="mlbx-usrDrpCtr"><div class="mlbx-usrDrpItm mail-new-message" data-from="Analytics" data-fromid="45781">New Mail</div>' +
                 split +
-                '<div class="separator"></div><div class="mlbx-usrDrpItm"><a class="ajax" href="/users?id=45781">Open Profile</a></div></div></div>';
+                '<div class="separator"></div><div class="mlbx-usrDrpItm"><a class="ajax" href="#">Open Profile</a></div></div></div>';
             }
 
             ipt.insertAdjacentHTML(

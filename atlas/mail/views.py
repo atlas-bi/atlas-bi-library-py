@@ -13,3 +13,8 @@ def index(request):
 def check(request):
 
     return HttpResponse("Hello")
+
+
+@login_required
+def mailbox(request):
+    return HttpResponse("Hello")

@@ -9,7 +9,7 @@ skip_covered = True
 omit =
     */test*
     */asgi.py
-    */wsgi.py
+    */wsgi*.py
     settings/
     */models-dev.py
     */manage.py
@@ -17,6 +17,8 @@ omit =
     */routers.py
     */migrations*
     index/models_sqlsvr.py
+    atlas/browserstack_runner.py
+    atlas/no_pass_auth.py
     analytics*
     index*
     mail*

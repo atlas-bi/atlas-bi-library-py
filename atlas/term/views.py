@@ -41,21 +41,21 @@ def item(request, term_id):
     related_reports = (
         Reports.objects.filter(
             # linked terms
-            Q(report_docs__report_terms__term_id=term_id)
+            Q(docs__terms__term_id=term_id)
             |
             # parent linked terms
-            Q(parent__child__report_docs__report_terms__term_id=term_id)
+            Q(parent__child__docs__terms__term_id=term_id)
             |
             # grandparent linked terms
-            Q(parent__child__parent__child__report_docs__report_terms__term_id=term_id)
+            Q(parent__child__parent__child__docs__terms__term_id=term_id)
             |
             # great grandparent linked terms
             # pylint: disable=C0301
             Q(
-                parent__child__parent__child__parent__child__report_docs__report_terms__term_id=term_id  # noqa: E501
+                parent__child__parent__child__parent__child__docs__terms__term_id=term_id  # noqa: E501
             )
         )
-        .filter(Q(report_docs__hidden="N") | Q(report_docs__hidden__isnull=True))
+        .filter(Q(docs__hidden="N") | Q(docs__hidden__isnull=True))
         .filter(visible="Y")
     ).distinct()
 

@@ -156,6 +156,9 @@ class Reports(models.Model):
             )
         return None
 
+    def system_run_url(self):
+        return None
+
 
 class ReportGroupMemberships(models.Model):
     membership_id = models.AutoField(primary_key=True)
@@ -1399,12 +1402,30 @@ class UserFavorites(models.Model):
         null=True,
     )
 
+    class Meta:
+        ordering = ["item_rank"]
+
     @property
     def atlas_url(self):
-        return "{}/{}".format(
+        return "{}s/{}".format(
             self.item_type,
             self.item_id,
         )
+
+    @property
+    def system_run_url(self):
+        if self.item_type.lower() == "report":
+            return Reports.objects.get(report_id=self.item_id).system_run_url()
+
+    @property
+    def system_manage_url(self):
+        if self.item_type.lower() == "report":
+            return Reports.objects.get(report_id=self.item_id).system_manage_url()
+
+    @property
+    def system_editor_url(self):
+        if self.item_type.lower() == "report":
+            return Reports.objects.get(report_id=self.item_id).system_editor_url()
 
     @property
     def system_id(self):
@@ -1430,6 +1451,35 @@ class UserFavorites(models.Model):
             )
 
         return None
+
+    @property
+    def description(self):
+        if self.item_type.lower() == "report":
+            report = Reports.objects.get(report_id=self.item_id)
+            return (
+                report.docs.description
+                or report.description
+                or report.detailed_descripion
+                or report.docs.assumptions
+            )
+        elif self.item_type.lower() == "term":
+            term = Terms.objects.get(term_id=self.item_id)
+            return term.summary or term.technical_definition
+        elif self.item_type.lower() == "project":
+            project = Projects.objects.get(project_id=self.item_id)
+            return project.purpose or project.description
+        elif self.item_type.lower() == "initiative":
+            return Initiatives.objects.get(initiative_id=self.item_id).description
+
+    def __str__(self):
+        if self.item_type.lower() == "report":
+            return str(Reports.objects.get(report_id=self.item_id))
+        elif self.item_type.lower() == "term":
+            return str(Terms.objects.get(term_id=self.item_id).name)
+        elif self.item_type.lower() == "project":
+            return str(Projects.objects.get(project_id=self.item_id))
+        elif self.item_type.lower() == "initiative":
+            return str(Initiatives.objects.get(initiative_id=self.item_id))
 
 
 class UserPreferences(models.Model):

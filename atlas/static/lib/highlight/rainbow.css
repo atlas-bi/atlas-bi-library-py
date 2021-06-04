@@ -1,10 +1,17 @@
+/*
+
+Style with support for rainbow parens
+
+*/
+
 .hljs {
-  background: #474949;
-  color: #d1d9e1;
   display: block;
   overflow-x: auto;
   padding: 0.5em;
+  background: #474949;
+  color: #d1d9e1;
 }
+
 
 .hljs-comment,
 .hljs-quote {
@@ -17,7 +24,7 @@
 .hljs-literal,
 .hljs-type,
 .hljs-addition {
-  color: #c9c;
+  color: #cc99cc;
 }
 
 .hljs-number,
@@ -43,13 +50,13 @@
 .hljs-template-variable,
 .hljs-selector-id,
 .hljs-class .hljs-title {
-  color: #fc6;
+   color: #ffcc66;
 }
 
 .hljs-section,
 .hljs-name,
 .hljs-strong {
-  font-weight: 700;
+  font-weight: bold;
 }
 
 .hljs-symbol,

@@ -63,3 +63,9 @@ def search(request, search_string):
                         )
 
     return JsonResponse(my_json, safe=False)
+
+
+@login_required
+def lookup(request, lookup):
+    my_json = {}
+    return JsonResponse(my_json, safe=False)

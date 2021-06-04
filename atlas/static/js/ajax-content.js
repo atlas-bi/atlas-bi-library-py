@@ -118,7 +118,6 @@
     }
 
     if (id) el.setAttribute("id", id);
-
     el.style.visibility = "hidden";
     el.style.transition = "visibility 0.3s ease-in-out";
     var q = el.clientHeight;

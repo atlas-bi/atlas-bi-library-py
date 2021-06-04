@@ -10,20 +10,44 @@ from index.models import ReportComments, ReportDocs, ReportImages, Reports, Term
 @login_required
 def index(request, report_id):
 
-    report = Reports.objects.get(report_id=report_id)
+    report = (
+        Reports.objects.select_related("docs")
+        .select_related("created_by")
+        .select_related("modified_by")
+        .select_related("docs__modified_by")
+        .select_related("docs__created_by")
+        .select_related("docs__requester")
+        .select_related("docs__ops_owner")
+        .select_related("type")
+        .prefetch_related("queries")
+        .prefetch_related("imgs")
+        .prefetch_related("docs__logs")
+        .prefetch_related("docs__logs__log")
+        .prefetch_related("docs__logs__log__maintainer")
+        .prefetch_related("docs__fragility_tags")
+        .prefetch_related("docs__fragility_tags__fragility_tag")
+        .prefetch_related("groups")
+        .prefetch_related("groups__group")
+        .prefetch_related("projects")
+        .get(report_id=report_id)
+    )
+
     parents = (
         Reports.objects.filter(parent__child=report_id)
         .exclude(type_id=12)
         .filter(visible="Y")
         .exclude(docs__hidden="Y")
+        .prefetch_related("imgs")
         .order_by("name")
         .all()
     )
+
     children = (
         Reports.objects.filter(child__parent=report_id)
         .exclude(system_identifier="IDK")
         .filter(visible="Y")
         .exclude(docs__hidden="Y")
+        .prefetch_related("imgs")
         .order_by("name")
         .all()
     )
@@ -119,36 +143,38 @@ def maint_status(request, report_id):
     report = ReportDocs.objects.filter(report_id=report_id).exclude(
         maintenance_schedule__schedule_id=5
     )
+
     past_due = False
 
     if report.exists():
 
         report = report.first()
+        next_date = today
+        if report.logs.filter(log__status__status_id__in=[1, 2]).exists():
 
-        last_maintained = (
-            report.logs.filter(log__status__status_id__in=[1, 2])
-            .latest("log__maintained_at")
-            .log.maintained_at
-            or today
-        )
+            last_maintained = (
+                report.logs.filter(log__status__status_id__in=[1, 2])
+                .latest("log__maintained_at")
+                .log.maintained_at
+            )
 
-        # quarterly
-        if report.maintenance_schedule_id == 1:
-            next_date = last_maintained + relativedelta(months=3)
-        # semi-yearly
-        elif report.maintenance_schedule_id == 2:
-            next_date = last_maintained + relativedelta(months=6)
-        # yearly
-        elif report.maintenance_schedule_id == 3:
-            next_date = last_maintained + relativedelta(years=1)
-        # bi-yearly
-        elif report.maintenance_schedule_id == 4:
-            next_date = last_maintained + relativedelta(years=2)
-        # otherwise.. past due
-        else:
-            next_date = last_maintained
+            # quarterly
+            if report.maintenance_schedule_id == 1:
+                next_date = last_maintained + relativedelta(months=3)
+            # semi-yearly
+            elif report.maintenance_schedule_id == 2:
+                next_date = last_maintained + relativedelta(months=6)
+            # yearly
+            elif report.maintenance_schedule_id == 3:
+                next_date = last_maintained + relativedelta(years=1)
+            # bi-yearly
+            elif report.maintenance_schedule_id == 4:
+                next_date = last_maintained + relativedelta(years=2)
+            # otherwise.. past due
+            else:
+                next_date = last_maintained
 
-        if next_date < today:
+        if next_date <= today:
             past_due = True
 
     return render(

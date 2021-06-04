@@ -41,7 +41,7 @@
 
         {% if child.imgs.all|length == 1 %}
             <div class="pop text-center" style="max-height:400px;">
-                <img class="img-responsive" data-src="/reports/{{ child.report_id }}/image/{{ child.imgs.all.0.image_id }}" alt="Image loading.." style="max-width: 78%;max-height: 290px;min-height: 1px;" src="/img/loader.gif">
+                <img class="img-responsive" data-src="/reports/{{ child.report_id }}/image/{{ child.imgs.all.0.image_id }}" alt="Image loading.." style="max-width: 78%;max-height: 290px;min-height: 1px;" src="/static/img/loader.gif">
             </div>
         {% elif child.imgs.all|length > 1 %}
             <div class="crsl">
@@ -88,7 +88,7 @@
         </h5>
         {% if parent.imgs.all.count == 1 %}
             <div class="pop text-center" style="max-height:400px">
-                <img class=" img-responsive" data-src="/reports/{{ parent.report_id }}/image/{{ parent.imgs.all.0.image_id }}" alt="Image loading.." style="max-width: 78%;max-height: 290px" src="/img/loader.gif" >
+                <img class=" img-responsive" data-src="/reports/{{ parent.report_id }}/image/{{ parent.imgs.all.0.image_id }}" alt="Image loading.." style="max-width: 78%;max-height: 290px" src="/static/img/loader.gif" >
             </div>
         {% elif parent.imgs.all.count > 1 %}
             <div class="crsl">
