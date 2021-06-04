@@ -185,9 +185,6 @@ class Reports(models.Model):
             )
         return None
 
-    def system_run_url(self):
-        return None
-
 
 class ReportHierarchies(models.Model):
     parent = models.OneToOneField(
