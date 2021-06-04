@@ -7,7 +7,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
 RUN apt-get update -qq \
      && apt-get install -yqq --no-install-recommends apt-utils curl pkg-config postgresql-contrib build-essential openjdk-11-jdk wget lsof unixodbc-dev unixodbc libpq-dev \
      && apt-get clean \
-     && apt-get autoclean
+     && apt-get autoclean \
+     && rm -rf /var/lib/apt/lists/*
 
 RUN wget https://archive.apache.org/dist/lucene/solr/8.8.2/solr-8.8.2.tgz \
     && tar xzf solr-8.8.2.tgz solr-8.8.2/bin/install_solr_service.sh --strip-components=2 \
@@ -35,6 +36,8 @@ RUN pip install -r requirements.txt \
     && pip install gunicorn
 
 COPY /atlas .
+
+COPY release_tasks.sh .
 
 CMD /opt/solr/bin/solr start -force -noprompt -v && gunicorn atlas.wsgi-demo --workers 4 -b 0.0.0.0:$PORT --log-file -
 
