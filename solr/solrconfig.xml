@@ -867,6 +867,7 @@
       <str name="fq">orphan:N</str>
       <str name="facet">on</str>
       <str name="facet.limit">10</str>
+      <str name="facet.field">type</str>
       <str name="facet.field">visibility_text</str>
       <str name="facet.range">created</str>
       <str name="facet.field">documented</str>
@@ -906,6 +907,7 @@
       <str name="fq">type:terms</str>
       <str name="facet">on</str>
       <str name="facet.limit">10</str>
+      <str name="facet.field">type</str>
       <str name="facet.field">approved_text</str>
       <str name="facet.field">related_reports_text</str>
       <str name="facet.range">approval_date</str>
@@ -930,6 +932,7 @@
       <str name="fq">type:initiatives</str>
       <str name="facet">on</str>
       <str name="facet.limit">10</str>
+      <str name="facet.field">type</str>
       <str name="facet.field">financial_impact_text</str>
       <str name="facet.field">strategic_importance_text</str>
       <str name="facet.field">updated_by_text</str>
@@ -953,6 +956,7 @@
       <str name="fq">type:projects</str>
       <str name="facet">on</str>
       <str name="facet.limit">10</str>
+      <str name="facet.field">type</str>
       <str name="facet.range">last_updated</str>
       <str name="facet.field">updated_by_text</str>
       <str name="facet.field">related_reports_text</str>

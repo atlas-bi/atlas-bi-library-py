@@ -1,23 +1,10 @@
 import json
 
 import requests
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render
-
-# Create your views here.
-
-
-@login_required
-def index(request, search_string=None):
-
-    context = {
-        "permissions": request.user.get_permissions(),
-        "user": request.user,
-        "favorites": request.user.get_favorites(),
-    }
-
-    return render(request, "search.html.dj", context)
 
 
 def template(request):
@@ -29,7 +16,7 @@ def template(request):
 
 
 @login_required
-def search(request, search_string):
+def index(request, search_type="query", search_string=""):
     """Atlas Search.
 
     - search requests data from solr
@@ -40,16 +27,29 @@ def search(request, search_string):
 
     """
 
+    if request.method == "GET":
+        context = {
+            "permissions": request.user.get_permissions(),
+            "user": request.user,
+            "favorites": request.user.get_favorites(),
+        }
+
+        return render(request, "search.html.dj", context)
+
     permissions = request.user.get_permissions()
     user = request.user
     favorites = request.user.get_favorites()
-
-    search_type = request.GET.get("type", default="query")
-
-    my_json = requests.get(
-        "http://solr.riversidehealthcare.net:8983/solr/atlas/%s?q=*%s*~"
-        % (search_type, search_string)
-    ).json()
+    print(
+        "%s%s?q=*%s*~"
+        % (settings.SOLR_URL, search_type.replace("terms", "aterms"), search_string)
+    )
+    try:
+        my_json = requests.get(
+            "%s%s?q=*%s*~"
+            % (settings.SOLR_URL, search_type.replace("terms", "aterms"), search_string)
+        ).json()
+    except:
+        my_json = {}
 
     if my_json.get("facet_counts"):
         for attr, value in my_json.get("facet_counts").items():
@@ -61,6 +61,9 @@ def search(request, search_string):
                         my_json.get("facet_counts").get(attr)[sub_attr] = dict(
                             zip(sub_value[::2], sub_value[1::2])
                         )
+
+    # pass back search filters
+    my_json["search_filters"] = {"type": search_type or "query"}
 
     return JsonResponse(my_json, safe=False)
 

@@ -292,6 +292,8 @@ ORG_NAME = "Riverside Healthcare"
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
+SOLR_URL = "http://localhost:8983/solr/atlas/"
+
 # import custom overrides
 try:
     from .settings_cust import *
