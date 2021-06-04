@@ -84,7 +84,7 @@ plugins:
   radon:
     enabled: true
   scss-lint:
-    enabled: true
+    enabled: false # conflicts with stylelint
   shellcheck:
     enabled: true
   sonar-python:
