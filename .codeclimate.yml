@@ -61,6 +61,7 @@ exclude_patterns:
 - "**/spec/"
 - "**/test/"
 - "**/tests/"
+- "**/solr/"
 - "Tests/"
 - "**/vendor/"
 - "**/*_test.go"
