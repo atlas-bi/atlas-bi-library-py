@@ -837,7 +837,7 @@
 
   <!-- A request handler that returns indented JSON by default -->
   <requestHandler name="/query" class="solr.SearchHandler">
-    <lst name="defaults">
+    <lst name="appends">
       <str name="echoParams">explicit</str>
       <str name="wt">json</str>
       <str name="indent">true</str>
@@ -846,6 +846,7 @@
       <str name="fq">orphan:N</str>
       <str name="facet">on</str>
       <str name="facet.limit">10</str>
+      <str name="facet.mincount">1</str>
       <str name="facet.field">type</str>
       <str name="facet.range">last_updated</str>
       <str name="facet.range.start">NOW/MONTH-12MONTH</str>
@@ -857,17 +858,18 @@
     </lst>
   </requestHandler>
   <requestHandler name="/reports" class="solr.SearchHandler">
-    <lst name="defaults">
+    <lst name="appends">
       <str name="echoParams">explicit</str>
       <str name="wt">json</str>
       <str name="indent">true</str>
       <str name="fl">id name description type documented atlas_id</str>
-      <str name="fq">type:reports</str>
+      <str name="fq">{!tag=type}type:reports</str>
       <str name="fq">visible:Y</str>
       <str name="fq">orphan:N</str>
       <str name="facet">on</str>
       <str name="facet.limit">10</str>
-      <str name="facet.field">type</str>
+      <str name="facet.mincount">1</str>
+      <str name="facet.field">{!ex=type}type</str>
       <str name="facet.field">visibility_text</str>
       <str name="facet.range">created</str>
       <str name="facet.field">documented</str>
@@ -899,15 +901,16 @@
     </lst>
   </requestHandler>
   <requestHandler name="/aterms" class="solr.SearchHandler">
-    <lst name="defaults">
+    <lst name="appends">
       <str name="echoParams">explicit</str>
       <str name="wt">json</str>
       <str name="indent">true</str>
       <str name="fl">id name description type atlas_id</str>
-      <str name="fq">type:terms</str>
+      <str name="fq">{!tag=dt}type:terms</str>
       <str name="facet">on</str>
       <str name="facet.limit">10</str>
-      <str name="facet.field">type</str>
+      <str name="facet.mincount">1</str>
+      <str name="facet.field">{!ex=dt}type</str>
       <str name="facet.field">approved_text</str>
       <str name="facet.field">related_reports_text</str>
       <str name="facet.range">approval_date</str>
@@ -924,15 +927,16 @@
     </lst>
   </requestHandler>
   <requestHandler name="/initiatives" class="solr.SearchHandler">
-    <lst name="defaults">
+    <lst name="appends">
       <str name="echoParams">explicit</str>
       <str name="wt">json</str>
       <str name="indent">true</str>
       <str name="fl">id name description type atlas_id</str>
-      <str name="fq">type:initiatives</str>
+      <str name="fq">{!tag=dt}type:initiatives</str>
       <str name="facet">on</str>
       <str name="facet.limit">10</str>
-      <str name="facet.field">type</str>
+      <str name="facet.mincount">1</str>
+      <str name="facet.field">{!ex=dt}type</str>
       <str name="facet.field">financial_impact_text</str>
       <str name="facet.field">strategic_importance_text</str>
       <str name="facet.field">updated_by_text</str>
@@ -948,15 +952,16 @@
     </lst>
   </requestHandler>
   <requestHandler name="/projects" class="solr.SearchHandler">
-    <lst name="defaults">
+    <lst name="appends">
       <str name="echoParams">explicit</str>
       <str name="wt">json</str>
       <str name="indent">true</str>
       <str name="fl">id name description type atlas_id</str>
-      <str name="fq">type:projects</str>
+      <str name="fq">{!tag=dt}type:projects</str>
       <str name="facet">on</str>
       <str name="facet.limit">10</str>
-      <str name="facet.field">type</str>
+      <str name="facet.mincount">1</str>
+      <str name="facet.field">{!ex=dt}type</str>
       <str name="facet.range">last_updated</str>
       <str name="facet.field">updated_by_text</str>
       <str name="facet.field">related_reports_text</str>

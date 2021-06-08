@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 
 
 def template(request):
@@ -15,7 +16,8 @@ def template(request):
     return render(None, "template.html")
 
 
-@login_required
+# @login_required
+@csrf_exempt
 def index(request, search_type="query", search_string=""):
     """Atlas Search.
 
@@ -36,17 +38,43 @@ def index(request, search_type="query", search_string=""):
 
         return render(request, "search.html.dj", context)
 
-    permissions = request.user.get_permissions()
-    user = request.user
-    favorites = request.user.get_favorites()
+    # permissions = request.user.get_permissions()
+    # user = request.user
+    # favorites = request.user.get_favorites()
+    search_filters = ""
+    for key, value in dict(request.GET).items():
+        search_filters += "&fq={}:{}".format(
+            key,
+            value[0],
+        )
+
+    print(search_filters)
+    # example query
+    #
+    # q=mainquery
+    #   &fq=status:public
+    #   &fq={!tag=dt}doctype:pdf
+    #   &facet=true
+    #   &facet.field={!ex=dt}doctype
+
     print(
-        "%s%s?q=*%s*~"
-        % (settings.SOLR_URL, search_type.replace("terms", "aterms"), search_string)
+        "%s%s?q=*%s*~%s"
+        % (
+            settings.SOLR_URL,
+            search_type.replace("terms", "aterms"),
+            search_string,
+            search_filters,
+        )
     )
     try:
         my_json = requests.get(
-            "%s%s?q=*%s*~"
-            % (settings.SOLR_URL, search_type.replace("terms", "aterms"), search_string)
+            "%s%s?q=*%s*~%s"
+            % (
+                settings.SOLR_URL,
+                search_type.replace("terms", "aterms"),
+                search_string,
+                search_filters,
+            )
         ).json()
     except:
         my_json = {}
@@ -64,6 +92,9 @@ def index(request, search_type="query", search_string=""):
 
     # pass back search filters
     my_json["search_filters"] = {"type": search_type or "query"}
+
+    for key, value in dict(request.GET).items():
+        my_json["search_filters"][key] = value[0]
 
     return JsonResponse(my_json, safe=False)
 

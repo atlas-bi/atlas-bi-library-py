@@ -12,10 +12,10 @@
             <div class="srch-fltr">
                 {{#each this }}
                     {{#if this }}
-                    <div class='form-check search-filter' group="{{filter_name_lower @../key }}" group-value="{{filter_name_lower @key }}">
-                        <input type="checkbox"/>
+                    <div class='form-check search-filter' group="{{@../key }}" group-value="{{@key }}">
+                        <input type="checkbox" {{filter_type ../../search_filters @../key @key}}/>
                         <input type="hidden" />
-                        <label>{{filter_name @key }}{{@search_filters.type }}<span class="search-filterQty">{{ this }}</span></label>
+                        <label>{{filter_name @key }}<span class="search-filterQty">{{ this }}</span></label>
                     </div>
                     {{/if}}
                 {{/each}}

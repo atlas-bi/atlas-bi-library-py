@@ -54,11 +54,16 @@
     return toTitleCase(aString);
   });
 
+  Handlebars.registerHelper("filter_type", function (types, key, match, options) {
+    console.log(types,key,match)
+    return types[key] == match ? "checked" : "";
+  });
+
   Handlebars.registerHelper("filter_name_lower", function(str) {
     return str.toLowerCase();
   });
   Handlebars.registerHelper("filter_exists", function(context) {
-    return  Object.entries(context).map(function(o) { return o[1]; }).reduce(function(a, b){return a+b;}) > 0;
+    return  Object.entries(context).map(function(o) { return o[1]; }).length > 0 ? Object.entries(context).map(function(o) { return o[1]; }).reduce(function(a, b){return a+b;}) > 0 : true;
   });
   /**
    * Build search results from json result.
@@ -119,9 +124,7 @@
         // so we will uncheck the other types, and also reset all checkboxes.
         if (input.parentElement.hasAttribute("group") && input.parentElement.getAttribute("group") === "type"){
           var types = d.querySelectorAll('.search-filter input:checked');
-          console.log(types)
           for(var i=0; i < types.length;i++){
-            console.log(types[i] != input)
             if(types[i] != input){
               types[i].checked = false;
             }
@@ -179,13 +182,25 @@
     // get any checked filters and add to search query.
     // 1. get type
     var type = d.querySelector('.search-filter[group="type"][group-value] input:checked') ? d.querySelector('.search-filter[group="type"][group-value] input:checked').parentElement.getAttribute('group-value') : 'query';
-    console.log(type)
-    d.querySelectorAll('.search-filter input:checked');
-
 
     var search_text = d.querySelector(".sr-grp input").value;
 
-    search_url += type + "/" + search_text
+    search_url += type + "/" + search_text;
+
+    // 2. get filters
+    var filters = d.querySelectorAll('.search-filter[group]:not([group="type"])[group-value] input:checked');
+    console.log(filters)
+
+    for (var x = 0; x<filters.length; x++){
+        var el = filters[x].parentElement;
+      console.log(el)
+      if(x===0) {
+        search_url += "?";
+      } else {
+        search_url += "&";
+      }
+      search_url += el.getAttribute('group') + "=" + el.getAttribute('group-value')
+    }
 
     w.oldPopState = d.location.pathname;
     // history.pushState(
