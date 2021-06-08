@@ -42,20 +42,32 @@ def index(request, search_type="query", search_string=""):
     # user = request.user
     # favorites = request.user.get_favorites()
     search_filters = ""
-    for key, value in dict(request.GET).items():
-        search_filters += "&fq={}:{}".format(
-            key,
-            value[0],
-        )
+    for key, values in dict(request.GET).items():
+        # it is possible to have multiple filters
+        # per field
+        if key != "visibility_text" and key != "start":
+            search_filters += "&fq=(%s)" % " OR ".join(
+                "{!tag=%s}%s:%s"
+                % (
+                    key,
+                    key,
+                    value,
+                )
+                for value in values
+            )
 
-    print(search_filters)
-    # example query
-    #
-    # q=mainquery
-    #   &fq=status:public
-    #   &fq={!tag=dt}doctype:pdf
-    #   &facet=true
-    #   &facet.field={!ex=dt}doctype
+    # if we are searching reports and did not explicitly add "visibility_text:N" then add "visibility_text:Y"
+
+    if "visibility_text" not in dict(request.GET) or dict(request.GET).get(
+        "visibility_text"
+    ) == ["Y"]:
+        search_filters += "&fq=({!tag=visibility_text}visibility_text:Y)"
+    else:
+        search_filters += "&fq=({!tag=visibility_text}visibility_text:Y OR {!tag=visibility_text}visibility_text:N)"
+
+    # pagination
+    if "start" in dict(request.GET):
+        search_filters += "&start=%s" % dict(request.GET).get("start")[0]
 
     print(
         "%s%s?q=*%s*~%s"
@@ -68,10 +80,11 @@ def index(request, search_type="query", search_string=""):
     )
     try:
         my_json = requests.get(
-            "%s%s?q=*%s*~%s"
+            "%s%s?q=(%s OR *%s*~)%s&rq={!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=3}&rqq=(documented:1 OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y)"
             % (
                 settings.SOLR_URL,
                 search_type.replace("terms", "aterms"),
+                search_string,
                 search_string,
                 search_filters,
             )
@@ -93,9 +106,10 @@ def index(request, search_type="query", search_string=""):
     # pass back search filters
     my_json["search_filters"] = {"type": search_type or "query"}
 
-    for key, value in dict(request.GET).items():
-        my_json["search_filters"][key] = value[0]
+    for key, values in dict(request.GET).items():
+        my_json["search_filters"][key] = values
 
+    print(my_json["search_filters"])
     return JsonResponse(my_json, safe=False)
 
 

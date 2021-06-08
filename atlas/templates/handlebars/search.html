@@ -107,10 +107,13 @@
                         </div>
                     </div>
                 </div>
-             {{/each}}
+            {{/each}}
 
-                 <partial name="Partials/_Pagination" />
-           {{#unless response.numFound }}
+            {% endverbatim %}
+                {% include "handlebars/search_pagination.html" %}
+            {% verbatim %}
+
+            {{#unless response.numFound }}
                 <div class="srch-none">
                     <h5>Not finding what you are looking for?<br><a href="http://reports.riversidehealthcare.net/" target="_blank">Request a New Report here.</a></h5>
                     <p>

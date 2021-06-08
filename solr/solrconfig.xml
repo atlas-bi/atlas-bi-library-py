@@ -837,7 +837,7 @@
 
   <!-- A request handler that returns indented JSON by default -->
   <requestHandler name="/query" class="solr.SearchHandler">
-    <lst name="appends">
+    <lst name="defaults">
       <str name="echoParams">explicit</str>
       <str name="wt">json</str>
       <str name="indent">true</str>
@@ -848,53 +848,51 @@
       <str name="facet.limit">10</str>
       <str name="facet.mincount">1</str>
       <str name="facet.field">type</str>
+      <str name="facet.field">{!ex=certification_text}certification_text</str>
       <str name="facet.range">last_updated</str>
       <str name="facet.range.start">NOW/MONTH-12MONTH</str>
       <str name="facet.range.end">NOW/MONTH</str>
       <str name="facet.range.gap">+1MONTH</str>
       <str name="facet.field">updated_by_text</str>
-      <str name="facet.field">report_type_text</str>
-      <str name="facet.field">related_terms_text</str>
+      <str name="facet.field">{!key=report_type}report_type_short_text</str>
     </lst>
   </requestHandler>
   <requestHandler name="/reports" class="solr.SearchHandler">
     <lst name="appends">
+        <str name="fq">{!tag=type}type:reports</str>
+    </lst>
+    <lst name="defaults">
       <str name="echoParams">explicit</str>
       <str name="wt">json</str>
       <str name="indent">true</str>
       <str name="fl">id name description type documented atlas_id</str>
-      <str name="fq">{!tag=type}type:reports</str>
-      <str name="fq">visible:Y</str>
+      <str name="fq">{!tag=visibility_text}visible:Y</str>
       <str name="fq">orphan:N</str>
       <str name="facet">on</str>
-      <str name="facet.limit">10</str>
-      <str name="facet.mincount">1</str>
       <str name="facet.field">{!ex=type}type</str>
-      <str name="facet.field">visibility_text</str>
+      <str name="facet.field">{!ex=certification_text}certification_text</str>
+      <str name="facet.field">{!ex=visibility_text}visibility_text</str>
       <str name="facet.range">created</str>
-      <str name="facet.field">documented</str>
-      <str name="facet.field">source_server_text</str>
-      <str name="facet.field">source_database_text</str>
-      <str name="facet.field">report_type_text</str>
+      <str name="facet.field">{!ex=documented}documented</str>
+      <str name="facet.field">{!ex=source_server_text}source_server_text</str>
+      <str name="facet.field">{!ex=source_database_text}source_database_text</str>
+      <str name="facet.field">{!ex=report_type_short_text}report_type_short_text</str>
       <str name="facet.range">report_last_updated</str>
-      <str name="facet.field">report_last_updated_by_text</str>
-      <str name="facet.field">epic_master_file_text</str>
+      <str name="facet.field">{!ex=report_last_updated_by_text}report_last_updated_by_text</str>
+      <str name="facet.field">{!ex=epic_master_file_text}epic_master_file_text</str>
       <str name="facet.range">last_load_date</str>
       <str name="facet.range">last_updated</str>
-      <str name="facet.field">created_by_text</str>
-      <str name="facet.field">updated_by_text</str>
-      <str name="facet.field">operations_owner_text</str>
-      <str name="facet.field">requester_text</str>
-      <str name="facet.field">organizational_value_text</str>
-      <str name="facet.field">estimated_run_frequency_text</str>
-      <str name="facet.field">fragility_text</str>
-      <str name="facet.field">executive_visibility_text</str>
-      <str name="facet.field">maintenance_schedule_text</str>
-      <str name="facet.field">enabled_for_hyperspace_text</str>
-      <str name="facet.field">do_not_purge_text</str>
-      <str name="facet.field">related_terms_text</str>
-      <str name="facet.field">related_projects_text</str>
-      <str name="facet.field">related_initiatives_text</str>
+      <str name="facet.field">{!ex=created_by_text}created_by_text</str>
+      <str name="facet.field">{!ex=updated_by_text}updated_by_text</str>
+      <str name="facet.field">{!ex=operations_owner_text}operations_owner_text</str>
+      <str name="facet.field">{!ex=requester_text}requester_text</str>
+      <str name="facet.field">{!ex=organizational_value_text}organizational_value_text</str>
+      <str name="facet.field">{!ex=estimated_run_frequency_text}estimated_run_frequency_text</str>
+      <str name="facet.field">{!ex=fragility_text}fragility_text</str>
+      <str name="facet.field">{!ex=executive_visibility_text}executive_visibility_text</str>
+      <str name="facet.field">{!ex=maintenance_schedule_text}maintenance_schedule_text</str>
+      <str name="facet.field">{!ex=enabled_for_hyperspace_text}enabled_for_hyperspace_text</str>
+      <str name="facet.field">{!ex=do_not_purge_text}do_not_purge_text</str>
       <str name="facet.range.start">NOW/MONTH-12MONTH</str>
       <str name="facet.range.end">NOW/MONTH</str>
       <str name="facet.range.gap">+1MONTH</str>
@@ -902,14 +900,15 @@
   </requestHandler>
   <requestHandler name="/aterms" class="solr.SearchHandler">
     <lst name="appends">
+      <str name="fq">{!tag=dt}type:terms</str>
+    </lst>
+    <lst name="defaults">
       <str name="echoParams">explicit</str>
       <str name="wt">json</str>
       <str name="indent">true</str>
       <str name="fl">id name description type atlas_id</str>
-      <str name="fq">{!tag=dt}type:terms</str>
       <str name="facet">on</str>
       <str name="facet.limit">10</str>
-      <str name="facet.mincount">1</str>
       <str name="facet.field">{!ex=dt}type</str>
       <str name="facet.field">approved_text</str>
       <str name="facet.field">related_reports_text</str>
@@ -919,8 +918,6 @@
       <str name="facet.range">valid_to</str>
       <str name="facet.field">updated_by_text</str>
       <str name="facet.Range">last_updated</str>
-      <str name="facet.field">related_projects_text</str>
-      <str name="facet.field">related_initiatives_text</str>
       <str name="facet.range.start">NOW/MONTH-12MONTH</str>
       <str name="facet.range.end">NOW/MONTH</str>
       <str name="facet.range.gap">+1MONTH</str>
@@ -928,22 +925,20 @@
   </requestHandler>
   <requestHandler name="/initiatives" class="solr.SearchHandler">
     <lst name="appends">
+      <str name="fq">{!tag=dt}type:initiatives</str>
+    </lst>
+    <lst name="defaults">
       <str name="echoParams">explicit</str>
       <str name="wt">json</str>
       <str name="indent">true</str>
       <str name="fl">id name description type atlas_id</str>
-      <str name="fq">{!tag=dt}type:initiatives</str>
       <str name="facet">on</str>
       <str name="facet.limit">10</str>
-      <str name="facet.mincount">1</str>
       <str name="facet.field">{!ex=dt}type</str>
       <str name="facet.field">financial_impact_text</str>
       <str name="facet.field">strategic_importance_text</str>
       <str name="facet.field">updated_by_text</str>
       <str name="facet.range">last_updated</str>
-      <str name="facet.field">related_projects_text</str>
-      <str name="facet.field">related_terms_text</str>
-      <str name="facet.field">related_reports_text</str>
       <str name="facet.field">operations_owner_text</str>
       <str name="facet.field">executive_owner_text</str>
       <str name="facet.range.start">NOW/MONTH-12MONTH</str>
@@ -953,18 +948,18 @@
   </requestHandler>
   <requestHandler name="/projects" class="solr.SearchHandler">
     <lst name="appends">
+      <str name="fq">{!tag=dt}type:projects</str>
+    </lst>
+    <lst name="defaults">
       <str name="echoParams">explicit</str>
       <str name="wt">json</str>
       <str name="indent">true</str>
       <str name="fl">id name description type atlas_id</str>
-      <str name="fq">{!tag=dt}type:projects</str>
       <str name="facet">on</str>
       <str name="facet.limit">10</str>
-      <str name="facet.mincount">1</str>
       <str name="facet.field">{!ex=dt}type</str>
       <str name="facet.range">last_updated</str>
       <str name="facet.field">updated_by_text</str>
-      <str name="facet.field">related_reports_text</str>
       <str name="facet.field">operations_owner_text</str>
       <str name="facet.field">analytics_owner_text</str>
       <str name="facet.field">executive_owner_text</str>

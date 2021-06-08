@@ -189,6 +189,7 @@
   <field name="created_by" type="text_en"/>
   <field name="created_by_id" type="plong"/>
   <field name="data_manager" type="text_en"/>
+  <field name="certification" type="text_en"/>
   <field name="description" type="text_en" multiValued="true" stored="true" indexed="true" />
   <field name="documented" type="plong" />
   <field name="do_not_purge" type="text_en" />
@@ -219,6 +220,7 @@
   <field name="report_last_updated" type="pdate"/>
   <field name="report_last_updated_by" type="text_en" />
   <field name="report_type" type="text_en"/>
+  <field name="report_type_short" type="text_en"/>
   <field name="requester" type="text_en" />
   <field name="source_database" type="text_en"/>
   <field name="source_server" type="text_en"/>
@@ -241,10 +243,12 @@
   <field name="type" type="text_general"/>
   <field name="all_text" type="text_en" uninvertible="true" multiValued="true" indexed="true" stored="false" />
   <field name="run_user_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="certification_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="run_user_id_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="updated_by_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="report_type_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
-  <field name="related_terms_text" type="non_split_text" indexed="true" stored="false" multiValued="true" /> 
+  <field name="report_type_short_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="related_terms_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="visibility_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="orphaned_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="source_server_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
@@ -316,6 +320,7 @@
   <copyField source="description" dest="description_str" maxChars="256"/>
   <copyField source="id" dest="id_str" maxChars="256"/>
   <copyField source="type" dest="type_str" maxChars="256"/>
+  <copyField source="certification" dest="certification_str" maxChars="256"/>
   <copyField source="linked_name" dest="linked_name_str" maxChars="256"/>
   <copyField source="related_initiatives" dest="related_initiatives_str" maxChars="256"/>
   <copyField source="linked_description" dest="linked_description_str" maxChars="256"/>
@@ -333,7 +338,8 @@
   <copyField source="created_by" dest="created_by_str" maxChars="256"/>
   <copyField source="run_user" dest="run_user_str" maxChars="256"/>
   <copyField source="report_type" dest="report_type_str" maxChars="256"/>
-  <copyField source="requester" dest="report_type_str" maxChars="256" />
+  <copyField source="report_type_short" dest="report_type_str" maxChars="256"/>
+  <copyField source="requester" dest="requester_str" maxChars="256" />
   <copyField source="orphan" dest="orphan_str" maxChars="256"/>
   <copyField source="name" dest="name_str" maxChars="256"/>
   <copyField source="approved" dest="approved_str" maxChars="256"/>
@@ -349,6 +355,7 @@
   <copyField source="related_terms" dest="all_text" />
   <copyField source="description" dest="all_text" />
   <copyField source="type" dest="all_text" />
+  <copyField source="certification" dest="all_text" />
   <copyField source="linked_name" dest="all_text" />
   <copyField source="related_initiatives" dest="all_text" />
   <copyField source="linked_description" dest="all_text" />
@@ -364,6 +371,7 @@
   <copyField source="epic_template" dest="all_text" />
   <copyField source="created_by" dest="all_text" />
   <copyField source="report_type" dest="all_text" />
+  <copyField source="report_type_short" dest="all_text" />
   <copyField source="name" dest="all_text" />
   <copyField source="approved_by" dest="all_text" />
   <copyField source="related_projects" dest="all_text" />
@@ -373,6 +381,7 @@
 
   <copyField source="updated_by" dest="updated_by_text" />
   <copyField source="report_type" dest="report_type_text" />
+  <copyField source="report_type_short" dest="report_type_short_text" />
   <copyField source="related_terms" dest="related_terms_text" />
   <copyField source="related_reports" dest="related_reports_text" />
   <copyField source="visible" dest="visibility_text" />

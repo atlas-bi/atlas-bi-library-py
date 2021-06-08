@@ -54,9 +54,100 @@
     return toTitleCase(aString);
   });
 
+  Handlebars.registerHelper("addition", function (a,b) {
+    return a + b;
+  });
+
+
+
+  Handlebars.registerHelper("get_page", function (b) {
+    if(b !== 0){
+      return Math.ceil(b/10);
+    }
+    else {
+      return 1;
+    }
+  });
+
+
+  Handlebars.registerHelper("get_pages", function (results, start) {
+    console.log(results, start)
+    // current page
+    page = start !== 0 ? Math.ceil(start/10) : 1;
+    console.log('current_page',page)
+    pages = results > 10 ? Math.ceil(results / 10) : 1;
+    console.log("pages",pages)
+    page_list = []
+    for(var x=1;x<=pages;x++){
+      if (
+          x <= Math.max(page + 2, 5) &&
+          (x >= Math.max(page - 2, 0) || pages - x < 5)
+        ) {
+        page_list.push(x)
+      }
+
+    }
+    console.log('page_list', page_list)
+    return page_list;
+    // get three pages on each side, or up to 6 if we are at start/end of results.
+  });
+
+
   Handlebars.registerHelper("filter_type", function (types, key, match, options) {
-    console.log(types,key,match)
-    return types[key] == match ? "checked" : "";
+    return types[key] && types[key].indexOf(match) != -1 ? "checked" : "";
+  });
+
+  Handlebars.registerHelper("filter_open_collapse", function (my_item, my_list, options) {
+
+    /**
+     * idealy we do not want to show a bunch of search filters with 0... or
+     * a million valid search filters. Only show the first 5, or first couple
+     * that are not 0.
+     *
+     * if 0index is < 5
+     * if my_item == 5 and 0index >=5
+     */
+    var zero_index = Object.entries(my_list).map(function(o){return o[1]}).findIndex(function(o){return o===0})
+    zero_index = zero_index === -1 ? my_item + 1 : zero_index
+    if (my_item == 5 && zero_index >= 5 || zero_index <5 && my_item == zero_index){
+      return options.fn(this);
+    }
+    return options.inverse(this);
+  });
+
+  Handlebars.registerHelper("filter_close_collapse", function (my_item, my_list, options) {
+    var zero_index = Object.entries(my_list).map(function(o){return o[1]}).findIndex(function(o){return o===0})
+    if (my_item == Object.entries(my_list).length-1 && (my_item >= 5 || (zero_index <= 5 && zero_index != -1))){
+      return options.fn(this);
+    }
+    return options.inverse(this);
+  });
+
+  Handlebars.registerHelper('if_cond', function (v1, operator, v2, options) {
+    switch (operator) {
+        case '==':
+            return (v1 == v2) ? options.fn(this) : options.inverse(this);
+        case '===':
+            return (v1 === v2) ? options.fn(this) : options.inverse(this);
+        case '!=':
+            return (v1 != v2) ? options.fn(this) : options.inverse(this);
+        case '!==':
+            return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+        case '<':
+            return (v1 < v2) ? options.fn(this) : options.inverse(this);
+        case '<=':
+            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+        case '>':
+            return (v1 > v2) ? options.fn(this) : options.inverse(this);
+        case '>=':
+            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+        case '&&':
+            return (v1 && v2) ? options.fn(this) : options.inverse(this);
+        case '||':
+            return (v1 || v2) ? options.fn(this) : options.inverse(this);
+        default:
+            return options.inverse(this);
+    }
   });
 
   Handlebars.registerHelper("filter_name_lower", function(str) {
@@ -94,7 +185,7 @@
   d
     .querySelector(".sr-grp input")
     .addEventListener("input", function () {
-      search();
+      search(1);
     });
 
   // hide search suggestions/history on scroll
@@ -109,6 +200,15 @@
     }
   );
 
+  /**
+   * changing pages
+   */
+   d.addEventListener('click',function(e){
+    if(e.target.closest('.page-link')) {
+      console.log(e.target.closest('.page-link').value)
+      search(e.target.closest('.page-link').value);
+    }
+   })
  /**
   * When a search filter is applied.
   */
@@ -136,7 +236,7 @@
         }
         console.log('filter clicked');
         setTimeout(function(){
-          search();
+          search(1);
         },0)
       }
 
@@ -160,7 +260,7 @@
   /**
    *
    */
-  function search(){
+  function search(page){
     var t0 = performance.now();
 
     remove_side_nav();
@@ -199,7 +299,12 @@
       } else {
         search_url += "&";
       }
-      search_url += el.getAttribute('group') + "=" + el.getAttribute('group-value')
+      search_url += el.getAttribute('group') + "=" + el.getAttribute('group-value');
+    }
+
+    if(page != 'undefined' && page > 1){
+      search_url += (search_url.indexOf("?") != -1) ? "&" : "?"
+      search_url += "start=" + (page * 10);
     }
 
     w.oldPopState = d.location.pathname;

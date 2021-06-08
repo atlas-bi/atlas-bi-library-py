@@ -1,0 +1,20 @@
+{% verbatim %}
+
+{{#if_cond response.numFound  '>' 10 }}
+    {{#with (get_page response.start) as | page |}}
+    <form id="searchPagination" style="margin-bottom:50px">
+        <nav aria-label="navigation">
+            <ul class="pagination pt-4" style="justify-content:center!important">
+                {{#each (get_pages ../response.numFound ../response.start)}}
+                    {{#if_cond this '==' page}}
+                        <li class="page-item disabled"><button class="page-link" type="button" name="p" value="{{this}}">{{this}}</button></li>
+                    {{^}}
+                        <li class="page-item"><button class="page-link" type="button" name="p" value="{{this}}">{{this}}</button></li>
+                    {{/if_cond}}
+                {{/each}}
+            </ul>
+        </nav>
+    </form>
+    {{/with}}
+{{/if_cond}}
+{% endverbatim %}
