@@ -166,7 +166,6 @@
     return str.toLowerCase();
   });
   Handlebars.registerHelper("filter_exists", function(context, group, filters) {
-    console.log(context, group, filters)
     // if sum is 0 (no matches in group), then the filter will be hidden.
     // but we should still show the filter if any options are checked regardless.
 
@@ -308,11 +307,10 @@
 
     // 2. get filters
     var filters = d.querySelectorAll('.search-filter[group]:not([group="type"])[group-value] input:checked');
-    console.log(filters)
+
 
     for (var x = 0; x<filters.length; x++){
         var el = filters[x].parentElement;
-      console.log(el)
       if(x===0) {
         search_url += "?";
       } else {

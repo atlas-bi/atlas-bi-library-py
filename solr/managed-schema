@@ -243,7 +243,7 @@
   <field name="type" type="text_general"/>
   <field name="all_text" type="text_en" uninvertible="true" multiValued="true" indexed="true" stored="false" />
   <field name="run_user_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
-  <field name="certification_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="certification_text" type="non_split_text" indexed="true" stored="false" multiValued="false" />
   <field name="run_user_id_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="updated_by_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="report_type_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
