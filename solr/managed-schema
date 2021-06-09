@@ -189,7 +189,7 @@
   <field name="created_by" type="text_en"/>
   <field name="created_by_id" type="plong"/>
   <field name="data_manager" type="text_en"/>
-  <field name="certification" type="text_en"/>
+  <field name="certification" type="text_general"  stored="true" indexed="true" />
   <field name="description" type="text_en" multiValued="true" stored="true" indexed="true" />
   <field name="documented" type="plong" />
   <field name="do_not_purge" type="text_en" />
@@ -414,4 +414,5 @@
   <copyField source="analytics_owner" dest="analytics_owner_text" />
   <copyField source="data_manager" dest="data_manager_text" />
   <copyField source="fragility_tags" dest="fragility_tags_text" />
+  <copyField source="certification" dest="certification_text" />
 </schema>

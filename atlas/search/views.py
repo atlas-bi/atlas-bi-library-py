@@ -70,20 +70,25 @@ def index(request, search_type="query", search_string=""):
         search_filters += "&start=%s" % dict(request.GET).get("start")[0]
 
     print(
-        "%s%s?q=*%s*~%s"
+        "%s%s?q=({!boost b=runs}name:%s^4 OR {!boost b=runs}name:*%s*~^2 OR %s OR *%s*~)%s&rq={!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=5}&rqq=(documented:1 OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y)"
         % (
             settings.SOLR_URL,
             search_type.replace("terms", "aterms"),
+            search_string,
+            search_string,
+            search_string,
             search_string,
             search_filters,
         )
     )
     try:
         my_json = requests.get(
-            "%s%s?q=(%s OR *%s*~)%s&rq={!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=3}&rqq=(documented:1 OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y)"
+            "%s%s?q=(name:%s^4 OR name:*%s*~^3 OR %s^2 OR *%s*~)%s&rq={!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=10}&rqq=(documented:1 OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y OR certification_text:Analytics Certified)"
             % (
                 settings.SOLR_URL,
                 search_type.replace("terms", "aterms"),
+                search_string,
+                search_string,
                 search_string,
                 search_string,
                 search_filters,

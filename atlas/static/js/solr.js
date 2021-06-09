@@ -50,8 +50,17 @@
   /**
    * Register handlerbars custom helpers.
    */
-  Handlebars.registerHelper("filter_name", function (aString) {
-    return toTitleCase(aString);
+  Handlebars.registerHelper("titleCase", function (aString) {
+    // fix single line values
+    aString = aString=='Y' ? 'Yes' : aString;
+    aString = aString=='N' ? 'No' : aString;
+    aString = aString=='1' ? 'Yes' : aString;
+    aString = aString=='0' ? 'No' : aString;
+    if (typeof aString == "string"){
+          return toTitleCase(aString);
+    }
+    return toTitleCase(aString[0])
+
   });
 
   Handlebars.registerHelper("addition", function (a,b) {
@@ -71,12 +80,11 @@
 
 
   Handlebars.registerHelper("get_pages", function (results, start) {
-    console.log(results, start)
     // current page
     page = start !== 0 ? Math.ceil(start/10) : 1;
-    console.log('current_page',page)
+
     pages = results > 10 ? Math.ceil(results / 10) : 1;
-    console.log("pages",pages)
+
     page_list = []
     for(var x=1;x<=pages;x++){
       if (
@@ -87,7 +95,7 @@
       }
 
     }
-    console.log('page_list', page_list)
+
     return page_list;
     // get three pages on each side, or up to 6 if we are at start/end of results.
   });
@@ -150,10 +158,22 @@
     }
   });
 
+  Handlebars.registerHelper('if_in', function (v1, v2, options) {
+    return JSON.parse(v2).indexOf(v1[0]) != -1 ? options.fn(this) : options.inverse(this);
+  })
+
   Handlebars.registerHelper("filter_name_lower", function(str) {
     return str.toLowerCase();
   });
-  Handlebars.registerHelper("filter_exists", function(context) {
+  Handlebars.registerHelper("filter_exists", function(context, group, filters) {
+    console.log(context, group, filters)
+    // if sum is 0 (no matches in group), then the filter will be hidden.
+    // but we should still show the filter if any options are checked regardless.
+
+    if(filters.hasOwnProperty(group) || group == 'type'){
+      return true;
+    }
+
     return  Object.entries(context).map(function(o) { return o[1]; }).length > 0 ? Object.entries(context).map(function(o) { return o[1]; }).reduce(function(a, b){return a+b;}) > 0 : true;
   });
   /**
@@ -205,7 +225,6 @@
    */
    d.addEventListener('click',function(e){
     if(e.target.closest('.page-link')) {
-      console.log(e.target.closest('.page-link').value)
       search(e.target.closest('.page-link').value);
     }
    })

@@ -33,24 +33,32 @@
                                 {{#if documented}}
                                     <span class="text-success"><i class="fas fa-check"></i></span>
                                 {{/if}}
-                                <!-- no longer know what field we matched in solr -->
-                                <!--<span class="srch-field" style="margin-left:6px;margin-right:0px">@this.SearchField</span>-->
-                                 {{ name }} {{#if this.epic_record_id}}{{ this.epic_master_file }} {{ this.epic_record_id }}{{/if}}
+                                {{#if_in this.type '["terms","projects","initiatives"]' }}
+                                    <span class="text-success"><i class="fas fa-check"></i></span>
+                                {{/if_in}}
+                                {{ name }} {{#if this.epic_record_id}}{{ this.epic_master_file }} {{ this.epic_record_id }}{{/if}}
                             </span>
                             <div class="fav-type">
-                                {{#if this.epic_released }}
-                                    <span class="srch-field">Epic Released</span>
+                                {{#if certification }}
+                                    {{#if_cond certification '==' "Analytics Certified"}}
+                                        <span class="srch-fieldHunterGreen">{{certification }}</span>
+                                    {{/if_cond}}
+                                    {{#if_cond certification '==' "Analytics Reviewed"}}
+                                        <span class="srch-fieldGreen">{{certification }}</span>
+                                    {{/if_cond}}
+                                    {{#if_cond certification '==' "Epic Released"}}
+                                        <span class="srch-fieldOrange">{{certification }}</span>
+                                    {{/if_cond}}
+                                    {{#if_cond certification '==' "Legacy"}}
+                                        <span class="srch-fieldOrange">{{certification }}</span>
+                                    {{/if_cond}}
+                                    {{#if_cond certification '==' "High Risk"}}
+                                        <span class="srch-fieldRed">{{certification }}</span>
+                                    {{/if_cond}}
+
                                 {{/if}}
 
-                                {{#if this.orphan }}
-                                    <span class="srch-field">Orphan</span>
-                                {{/if}}
-
-                                {{#if this.hidden }}
-                                    <span class="srch-field">Hidden</span>
-                                {{/if}}
-
-                                <span class="srch-field">{{ type }}</span>
+                                <span class="srch-field">{{titleCase type }}</span>
                             </div>
                         </h5>
                         <h5 class="fav-nav">
