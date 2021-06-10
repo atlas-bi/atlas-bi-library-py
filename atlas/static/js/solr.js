@@ -101,31 +101,47 @@
   });
 
 
-  Handlebars.registerHelper("filter_type", function (types, key, match, options) {
-    return types[key] && types[key].indexOf(match) != -1 ? "checked" : "";
+  Handlebars.registerHelper("filter_type", function (my_filters, my_facet, my_filter, options) {
+    return my_filters[my_facet] && my_filters[my_facet].indexOf(my_filter) != -1 ? "checked" : "";
   });
 
-  Handlebars.registerHelper("filter_open_collapse", function (my_item, my_list, options) {
-
+  Handlebars.registerHelper("filter_open_collapse", function (my_index, my_facets, my_facet, my_filter, my_filters, options) {
     /**
      * idealy we do not want to show a bunch of search filters with 0... or
      * a million valid search filters. Only show the first 5, or first couple
      * that are not 0.
+     * however, not any group that has a filter, or on type
      *
      * if 0index is < 5
-     * if my_item == 5 and 0index >=5
+     * if my_index == 5 and 0index >=5
      */
-    var zero_index = Object.entries(my_list).map(function(o){return o[1]}).findIndex(function(o){return o===0})
-    zero_index = zero_index === -1 ? my_item + 1 : zero_index
-    if (my_item == 5 && zero_index >= 5 || zero_index <5 && my_item == zero_index){
+    // never collapse the type box
+    if(my_facet == 'type'){
+      return options.inverse(this);
+    }
+    // get index of any checked boxes
+    var checked_index = my_filters[my_facet] ? Object.keys(my_facets).indexOf(my_filters[my_facet][0]) : -1
+
+    var zero_index = Object.entries(my_facets).map(function(o){return o[1]}).findIndex(function(o){return o===0})
+
+    zero_index = zero_index === -1 ? my_index + 1 : zero_index
+    // add one to the checked index, so that we hide the next element.
+    zero_index = Math.max(checked_index+1, zero_index);
+    if (my_index == 5 && zero_index >= 5 || zero_index <5 && my_index == zero_index){
       return options.fn(this);
     }
     return options.inverse(this);
   });
 
-  Handlebars.registerHelper("filter_close_collapse", function (my_item, my_list, options) {
-    var zero_index = Object.entries(my_list).map(function(o){return o[1]}).findIndex(function(o){return o===0})
-    if (my_item == Object.entries(my_list).length-1 && (my_item >= 5 || (zero_index <= 5 && zero_index != -1))){
+  Handlebars.registerHelper("filter_close_collapse", function (my_index, my_facets,my_facet, my_filter, my_filters, options) {
+    // never collapse the type box
+    if(my_facet == 'type'){
+      return options.inverse(this);
+    }
+    var checked_index = my_filters[my_facet] ? Object.keys(my_facets).indexOf(my_filters[my_facet][0]) : -1
+    var zero_index = Object.entries(my_facets).map(function(o){return o[1]}).findIndex(function(o){return o===0})
+    //zero_index = Math.max(checked_index+1, zero_index);
+    if (my_index == Object.entries(my_facets).length-1 && (my_index >= 5 || (zero_index <= 5 && zero_index != -1))){
       return options.fn(this);
     }
     return options.inverse(this);
@@ -165,15 +181,16 @@
   Handlebars.registerHelper("filter_name_lower", function(str) {
     return str.toLowerCase();
   });
-  Handlebars.registerHelper("filter_exists", function(context, group, filters) {
+
+  Handlebars.registerHelper("filter_exists", function(my_facets, my_facet, my_filters) {
     // if sum is 0 (no matches in group), then the filter will be hidden.
     // but we should still show the filter if any options are checked regardless.
 
-    if(filters.hasOwnProperty(group) || group == 'type'){
+    if(my_filters.hasOwnProperty(my_facet) || my_facet == 'type'){
       return true;
     }
 
-    return  Object.entries(context).map(function(o) { return o[1]; }).length > 0 ? Object.entries(context).map(function(o) { return o[1]; }).reduce(function(a, b){return a+b;}) > 0 : true;
+    return  Object.entries(my_facets).map(function(o) { return o[1]; }).length > 0 ? Object.entries(my_facets).map(function(o) { return o[1]; }).reduce(function(a, b){return a+b;}) > 0 : true;
   });
   /**
    * Build search results from json result.

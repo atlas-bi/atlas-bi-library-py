@@ -31,7 +31,9 @@
                         <h5 class="fav-title" data-toggle="clps" data-target="clps-{{ this.id }}">
                             <span>
                                 {{#if documented}}
-                                    <span class="text-success"><i class="fas fa-check"></i></span>
+                                    {{#if_in this.type '["reports"]' }}
+                                        <span class="text-success"><i class="fas fa-check"></i></span>
+                                    {{/if_in}}
                                 {{/if}}
                                 {{#if_in this.type '["terms","projects","initiatives"]' }}
                                     <span class="text-success"><i class="fas fa-check"></i></span>
