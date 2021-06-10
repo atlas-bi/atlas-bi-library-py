@@ -71,7 +71,7 @@ def index(request, search_type="query", search_string=""):
 
     try:
         my_json = requests.get(
-            '%s%s?q=(name:"%s"^4 OR name:"*%s*~"^3 OR "%s"^2 OR "*%s*~")%s&rq={!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=10}&rqq=(documented:1 OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y OR certification_text:"Analytics Certified")'
+            '%s%s?q=(name:(%s)^4 OR name:*(%s)*~^3 OR (%s)^2 OR *(%s)*~)%s&rq={!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=10}&rqq=(documented:1 OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y OR certification_text:"Analytics Certified")'
             % (
                 settings.SOLR_URL,
                 search_type.replace("terms", "aterms"),
