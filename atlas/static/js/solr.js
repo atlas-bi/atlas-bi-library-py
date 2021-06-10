@@ -59,7 +59,7 @@
     if (typeof aString == "string"){
           return toTitleCase(aString);
     }
-    return toTitleCase(aString[0])
+    return toTitleCase(aString[0]);
 
   });
 
@@ -85,13 +85,13 @@
 
     pages = results > 10 ? Math.ceil(results / 10) : 1;
 
-    page_list = []
+    page_list = [];
     for(var x=1;x<=pages;x++){
       if (
           x <= Math.max(page + 2, 5) &&
           (x >= Math.max(page - 2, 0) || pages - x < 5)
         ) {
-        page_list.push(x)
+        page_list.push(x);
       }
 
     }
@@ -120,11 +120,11 @@
       return options.inverse(this);
     }
     // get index of any checked boxes
-    var checked_index = my_filters[my_facet] ? Object.keys(my_facets).indexOf(my_filters[my_facet][0]) : -1
+    var checked_index = my_filters[my_facet] ? Object.keys(my_facets).indexOf(my_filters[my_facet][0]) : -1;
 
-    var zero_index = Object.entries(my_facets).map(function(o){return o[1]}).findIndex(function(o){return o===0})
+    var zero_index = Object.entries(my_facets).map(function(o){return o[1];}).findIndex(function(o){return o===0;});
 
-    zero_index = zero_index === -1 ? my_index + 1 : zero_index
+    zero_index = zero_index === -1 ? my_index + 1 : zero_index;
     // add one to the checked index, so that we hide the next element.
     zero_index = Math.max(checked_index+1, zero_index);
     if (my_index == 5 && zero_index >= 5 || zero_index <5 && my_index == zero_index){
@@ -138,9 +138,7 @@
     if(my_facet == 'type'){
       return options.inverse(this);
     }
-    var checked_index = my_filters[my_facet] ? Object.keys(my_facets).indexOf(my_filters[my_facet][0]) : -1
-    var zero_index = Object.entries(my_facets).map(function(o){return o[1]}).findIndex(function(o){return o===0})
-    //zero_index = Math.max(checked_index+1, zero_index);
+    var zero_index = Object.entries(my_facets).map(function(o){return o[1];}).findIndex(function(o){return o===0;});
     if (my_index == Object.entries(my_facets).length-1 && (my_index >= 5 || (zero_index <= 5 && zero_index != -1))){
       return options.fn(this);
     }
@@ -176,7 +174,7 @@
 
   Handlebars.registerHelper('if_in', function (v1, v2, options) {
     return JSON.parse(v2).indexOf(v1[0]) != -1 ? options.fn(this) : options.inverse(this);
-  })
+  });
 
   Handlebars.registerHelper("filter_name_lower", function(str) {
     return str.toLowerCase();
@@ -243,7 +241,7 @@
     if(e.target.closest('.page-link')) {
       search(e.target.closest('.page-link').value);
     }
-   })
+   });
  /**
   * When a search filter is applied.
   */
@@ -272,7 +270,7 @@
         console.log('filter clicked');
         setTimeout(function(){
           search(1);
-        },0)
+        },0);
       }
 
     }, true
@@ -337,7 +335,7 @@
     }
 
     if(page != 'undefined' && page > 1){
-      search_url += (search_url.indexOf("?") != -1) ? "&" : "?"
+      search_url += (search_url.indexOf("?") != -1) ? "&" : "?";
       search_url += "start=" + (page * 10);
     }
 
