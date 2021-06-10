@@ -791,6 +791,8 @@ class Projects(models.Model):
         null=True,
     )
 
+    hidden = models.CharField(max_length=1, blank=True, null=True)
+
     @property
     def modified_at(self):
         if self._modified_at:
@@ -977,7 +979,7 @@ class ProjectTerms(models.Model):
         "Terms",
         models.DO_NOTHING,
         db_column="TermId",
-        related_name="terms",
+        related_name="projects",
         blank=True,
         null=True,
     )
@@ -987,7 +989,7 @@ class ProjectTerms(models.Model):
         db_column="DataProjectId",
         blank=True,
         null=True,
-        related_name="term_annotations",
+        related_name="terms",
     )
     rank = models.IntegerField(db_column="Rank", blank=True, null=True)
 

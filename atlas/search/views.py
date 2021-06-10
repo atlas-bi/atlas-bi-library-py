@@ -1,11 +1,11 @@
-import json
-
 import requests
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+from index.models import Projects
 
 
 def template(request):
@@ -47,7 +47,7 @@ def index(request, search_type="query", search_string=""):
         # per field
         if key != "visibility_text" and key != "start":
             search_filters += "&fq=%s" % " OR ".join(
-                '{!tag=%s}%s:"%s"'
+                "{!tag=%s}%s:%s"
                 % (
                     key,
                     key,
@@ -71,7 +71,7 @@ def index(request, search_type="query", search_string=""):
 
     try:
         my_json = requests.get(
-            '%s%s?q=(name:(%s)^4 OR name:*(%s)*~^3 OR (%s)^2 OR *(%s)*~)%s&rq={!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=10}&rqq=(documented:1 OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y OR certification_text:"Analytics Certified")'
+            '%s%s?q=(name:(%s)^4 OR name:*(%s)*^3 OR (%s)^2 OR *(%s)*~)%s&rq={!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=10}&rqq=(documented:1 OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y OR certification_text:"Analytics Certified")'
             % (
                 settings.SOLR_URL,
                 search_type.replace("terms", "aterms"),
@@ -82,7 +82,7 @@ def index(request, search_type="query", search_string=""):
                 search_filters,
             )
         ).json()
-    except:
+    except BaseException:
         my_json = {}
 
     if my_json.get("facet_counts"):
@@ -102,7 +102,30 @@ def index(request, search_type="query", search_string=""):
     for key, values in dict(request.GET).items():
         my_json["search_filters"][key] = values
 
-    print(my_json["search_filters"])
+    # get terms from results
+    term_ids = []
+    report_ids = []
+
+    for doc in my_json.get("response").get("docs"):
+        if doc.get("type")[0] == "reports":
+            report_ids.append(doc.get("atlas_id")[0])
+        elif doc.get("type")[0] == "terms":
+            term_ids.append(doc.get("atlas_id")[0])
+
+    # get projects from results
+    projects = (
+        Projects.objects.filter(
+            Q(terms__term__term_id__in=term_ids)
+            | Q(reports__report__report_id__in=report_ids)
+        )
+        .filter(Q(hidden__isnull=True) | Q(hidden="N"))
+        .all()
+        .values("project_id", "purpose", "description", "name")
+        .distinct()
+    )
+
+    my_json["projects"] = [project for project in projects]
+
     return JsonResponse(my_json, safe=False)
 
 

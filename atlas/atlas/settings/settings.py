@@ -132,6 +132,7 @@ INSTALLED_APPS = [
     "initiative.apps.InitiativeConfig",
     "project.apps.ProjectConfig",
     "user.apps.UserConfig",
+    "etl.apps.EtlConfig",
 ]
 
 MIDDLEWARE = [
@@ -293,6 +294,11 @@ ORG_NAME = "Riverside Healthcare"
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 SOLR_URL = "http://localhost:8983/solr/atlas/"
+
+# Celery configuration
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
 
 # import custom overrides
 try:

@@ -2,8 +2,6 @@
 
 import os
 
-from selenium import webdriver
-
 from .settings import *
 
 
@@ -23,7 +21,10 @@ AUTHENTICATION_BACKENDS = ("atlas.no_pass_auth.Backend",)
 
 LOGIN_URL = "/accounts/login/"
 
-# docker run --name postgresql-container -p 5432:5432 -e POSTGRES_HOST_AUTH_METHOD=trust -d postgres
+"""
+docker run --name postgresql-container -p 5432:5432 -e POSTGRES_HOST_AUTH_METHOD=trust -d postgres
+"""
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
