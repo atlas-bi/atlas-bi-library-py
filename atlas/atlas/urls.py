@@ -29,6 +29,7 @@ urlpatterns = [
     path("user/", include("user.urls")),
     path("search/", include("search.urls")),
     path("projects/", include("project.urls")),
+    path("etl/", include("etl.urls")),
 ]
 
 

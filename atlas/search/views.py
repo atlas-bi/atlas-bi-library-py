@@ -1,3 +1,6 @@
+import copy
+
+import pysolr
 import requests
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -27,6 +30,8 @@ def index(request, search_type="query", search_string=""):
         - add "favorite" column
         - add run url, based on permissions
 
+    Still need to add facet ranges
+
     """
 
     if request.method == "GET":
@@ -38,95 +43,114 @@ def index(request, search_type="query", search_string=""):
 
         return render(request, "search.html.dj", context)
 
-    # permissions = request.user.get_permissions()
-    # user = request.user
-    # favorites = request.user.get_favorites()
-    search_filters = ""
+    solr = pysolr.Solr(
+        settings.SOLR_URL, search_handler=search_type.replace("terms", "aterms")
+    )
+
+    search_string = "name:({search})^4 OR name:*({search})*^3 OR ({search})^2 OR *({search})*~".format(
+        search=search_string
+    )
+    filter_query = []
+
     for key, values in dict(request.GET).items():
         # it is possible to have multiple filters
         # per field
         if key != "visibility_text" and key != "start":
-            search_filters += "&fq=%s" % " OR ".join(
-                "{!tag=%s}%s:%s"
-                % (
-                    key,
-                    key,
-                    value,
+            filter_query.append(
+                "%s"
+                % " OR ".join(
+                    "{!tag=%s}%s:%s"
+                    % (
+                        key,
+                        key,
+                        value,
+                    )
+                    for value in values
                 )
-                for value in values
             )
-    print(search_filters)
-    # if we are searching reports and did not explicitly add "visibility_text:N" then add "visibility_text:Y"
 
     if "visibility_text" not in dict(request.GET) or dict(request.GET).get(
         "visibility_text"
     ) == ["Y"]:
-        search_filters += "&fq=({!tag=visibility_text}visibility_text:Y)"
+        filter_query.append("{!tag=visibility_text}visibility_text:Y")
     else:
-        search_filters += "&fq=({!tag=visibility_text}visibility_text:Y OR {!tag=visibility_text}visibility_text:N)"
+        filter_query.append(
+            "{!tag=visibility_text}visibility_text:Y OR {!tag=visibility_text}visibility_text:N"
+        )
+
+    print(filter_query)
 
     # pagination
+    start = 0
     if "start" in dict(request.GET):
-        search_filters += "&start=%s" % dict(request.GET).get("start")[0]
+        start = dict(request.GET).get("start")[0]
 
-    try:
-        my_json = requests.get(
-            '%s%s?q=(name:(%s)^4 OR name:*(%s)*^3 OR (%s)^2 OR *(%s)*~)%s&rq={!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=10}&rqq=(documented:1 OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y OR certification_text:"Analytics Certified")'
-            % (
-                settings.SOLR_URL,
-                search_type.replace("terms", "aterms"),
-                search_string,
-                search_string,
-                search_string,
-                search_string,
-                search_filters,
-            )
-        ).json()
-    except BaseException:
-        my_json = {}
+    results = solr.search(
+        search_string,
+        fq=(",".join(filter_query)),
+        rq="{!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=10}",
+        rqq='(documented:1 OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y OR certification_text:"Analytics Certified")',
+        start=start,
+    )
+    print(len(results))
 
-    if my_json.get("facet_counts"):
-        for attr, value in my_json.get("facet_counts").items():
+    output = {}
+    output["docs"] = results.docs
+    output["stats"] = (
+        results.stats.get("stats_fields", {}) if hasattr(results, "stats") else ""
+    )
+    output["facets"] = {}
+    output["hits"] = results.hits
+
+    print(results.stats)
+    print(results.qtime)
+    print(results.nextCursorMark)
+    print(results.grouped)
+
+    if hasattr(results, "facets"):
+        output["facets"] = copy.deepcopy(results.facets)
+        for attr, value in results.facets.get("facet_fields").items():
             if value:
-                for sub_attr, sub_value in (
-                    my_json.get("facet_counts").get(attr).items()
-                ):
-                    if isinstance(sub_value, list):
-                        my_json.get("facet_counts").get(attr)[sub_attr] = dict(
-                            zip(sub_value[::2], sub_value[1::2])
-                        )
+                output["facets"]["facet_fields"][attr] = {}
+
+                fields = results.facets.get("facet_fields").get(attr)
+                for num, field in enumerate(fields[::2]):
+                    output["facets"]["facet_fields"][attr][field] = fields[
+                        (num * 2) + 1
+                    ]
 
     # pass back search filters
-    my_json["search_filters"] = {"type": search_type or "query"}
+    output["search_filters"] = {"type": search_type or "query"}
 
     for key, values in dict(request.GET).items():
-        my_json["search_filters"][key] = values
+        output["search_filters"][key] = values
 
-    # get terms from results
-    term_ids = []
-    report_ids = []
+    # get project from results.. if not searching projects
+    if search_type != "projects":
+        term_ids = []
+        report_ids = []
 
-    for doc in my_json.get("response").get("docs"):
-        if doc.get("type")[0] == "reports":
-            report_ids.append(doc.get("atlas_id")[0])
-        elif doc.get("type")[0] == "terms":
-            term_ids.append(doc.get("atlas_id")[0])
+        for doc in results.docs:
+            if doc.get("type")[0] == "reports":
+                report_ids.append(doc.get("atlas_id")[0])
+            elif doc.get("type")[0] == "terms":
+                term_ids.append(doc.get("atlas_id")[0])
 
-    # get projects from results
-    projects = (
-        Projects.objects.filter(
-            Q(terms__term__term_id__in=term_ids)
-            | Q(reports__report__report_id__in=report_ids)
+        # get projects from results
+        projects = (
+            Projects.objects.filter(
+                Q(terms__term__term_id__in=term_ids)
+                | Q(reports__report__report_id__in=report_ids)
+            )
+            .filter(Q(hidden__isnull=True) | Q(hidden="N"))
+            .all()
+            .values("project_id", "purpose", "description", "name")
+            .distinct()
         )
-        .filter(Q(hidden__isnull=True) | Q(hidden="N"))
-        .all()
-        .values("project_id", "purpose", "description", "name")
-        .distinct()
-    )
 
-    my_json["projects"] = [project for project in projects]
+        output["projects"] = [project for project in projects]
 
-    return JsonResponse(my_json, safe=False)
+    return JsonResponse(output, safe=False)
 
 
 @login_required

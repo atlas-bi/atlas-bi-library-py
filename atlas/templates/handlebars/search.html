@@ -54,7 +54,7 @@
 
 
 
-            {{#each response.docs }}
+            {{#each docs }}
                 <div class="srch-result">
 
                     <!-- fav links -->
@@ -169,7 +169,7 @@
                 {% include "handlebars/search_pagination.html" %}
             {% verbatim %}
 
-            {{#unless response.numFound }}
+            {{#unless hits }}
                 <div class="srch-none">
                     <h5>Not finding what you are looking for?<br><a href="http://reports.riversidehealthcare.net/" target="_blank">Request a New Report here.</a></h5>
                     <p>

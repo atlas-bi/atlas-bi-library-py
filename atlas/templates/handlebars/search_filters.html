@@ -1,7 +1,7 @@
 {% verbatim %}
 <h2 class="fav-col-title">Filters</h2>
 <form id="searchForm">
-    {{#each facet_counts.facet_fields }}
+    {{#each facets.facet_fields }}
         {{#if (filter_exists this @key ../search_filters) }}
             <h5 class="search-fltrTitle">{{titleCase @key }}</h5>
             <div class="srch-fltr">

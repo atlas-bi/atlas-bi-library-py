@@ -122,6 +122,8 @@ INSTALLED_APPS = [
     "compressor",
     "djangosaml2",
     "mathfilters",
+    "django_celery_results",
+    "django_celery_beat",
     # Atlas specific
     "index.apps.IndexConfig",
     "mail.apps.MailConfig",
@@ -299,6 +301,8 @@ SOLR_URL = "http://localhost:8983/solr/atlas/"
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
+CELERY_RESULT_BACKEND = "django-db"
 
 # import custom overrides
 try:
