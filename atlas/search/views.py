@@ -92,7 +92,6 @@ def index(request, search_type="query", search_string=""):
         rqq='(documented:1 OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y OR certification_text:"Analytics Certified")',
         start=start,
     )
-    print(len(results))
 
     output = {}
     output["docs"] = results.docs
