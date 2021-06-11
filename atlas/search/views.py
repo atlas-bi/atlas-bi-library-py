@@ -102,11 +102,6 @@ def index(request, search_type="query", search_string=""):
     output["facets"] = {}
     output["hits"] = results.hits
 
-    print(results.stats)
-    print(results.qtime)
-    print(results.nextCursorMark)
-    print(results.grouped)
-
     if hasattr(results, "facets"):
         output["facets"] = copy.deepcopy(results.facets)
         for attr, value in results.facets.get("facet_fields").items():
