@@ -82,6 +82,7 @@ celery = "^5.1.0"
 django-celery-results = "^2.0.1"
 django-celery-beat = "^2.2.0"
 pysolr = {git = "https://github.com/christopherpickering/pysolr.git"}
+simplejson = "^3.17.2"
 
 [tool.poetry.extras]
 test = ["Pygments", "toml", "coverage", "selenium", "browserstack-local"]
