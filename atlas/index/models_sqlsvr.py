@@ -106,6 +106,9 @@ class Reports(models.Model):
         managed = False
         db_table = "ReportObject"
 
+    def has_docs(self):
+        return hasattr(self, "docs")
+
     @property
     def friendly_name(self):
         return self.title or self.name

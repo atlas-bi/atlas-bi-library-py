@@ -48,6 +48,31 @@ def index(request, search_type="query", search_string=""):
         settings.SOLR_URL, search_handler=search_type.replace("terms", "aterms")
     )
 
+    RESERVED_CHARACTERS = (
+        "\\",
+        "+",
+        "-",
+        "&&",
+        "||",
+        "!",
+        "(",
+        ")",
+        "{",
+        "}",
+        "[",
+        "]",
+        "^",
+        '"',
+        "~",
+        "*",
+        "?",
+        ":",
+        "/",
+    )
+    # clean search string
+    for char in RESERVED_CHARACTERS:
+        search_string = search_string.replace(char, "\\%s" % char)
+
     # build the solr search string
     search_string = "name:({search})^4 OR name:*({search})*^3 OR ({search})^2 OR *({search})*~".format(
         search=search_string
