@@ -6,15 +6,15 @@ from django.http import HttpResponse
 @login_required
 def index(request):
 
-    return HttpResponse("Hello")
+    return HttpResponse("<div></div>")
 
 
 @login_required
 def check(request):
 
-    return HttpResponse("Hello")
+    return HttpResponse("<div></div>")
 
 
 @login_required
 def mailbox(request):
-    return HttpResponse("Hello")
+    return HttpResponse("<div></div>")

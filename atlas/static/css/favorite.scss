@@ -285,6 +285,7 @@
   pointer-events: auto;
   transition: visibility 0.2s;
   visibility: hidden;
+  padding-left: 1px; // fix issue in safary w/ first px remaining visable.
 }
 
 .folder-grip > * {

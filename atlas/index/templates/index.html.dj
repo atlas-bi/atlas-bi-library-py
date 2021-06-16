@@ -5,18 +5,18 @@
         <h2 class="pageTitle-head"><span>Hi, {{ user.first_name }}</span></h2>
         <div class="tab">
             <a class="tab-lnk active" href="#favorites">Favorites</a>
-            <a class="tab-lnk" href="#mail">Mail</a>
+           <!-- <a class="tab-lnk" href="#mail">Mail</a> -->
         </div>
     </div>
 
     <section class="tab-cnt">
         <div class="tab-dta active" id="favorites">
             <h3 class="pageSection-title">My Favorites</h3>
-            <div data-ajax="yes" data-url="/user/favorites"></div>
+            <div data-ajax="yes" data-url="/users/favorites"></div>
         </div>
-        <div class="tab-dta" id="mail">
+       <!-- <div class="tab-dta" id="mail">
             <div data-ajax="yes" data-url="/mail/get_mailbox"></div>
-        </div>
+        </div> -->
     </section>
 
 {% endblock body %}

@@ -11,15 +11,14 @@
                     <div class="fav-folder active fav-show-all"><i class="fas fa-folder-open"></i>All<div class="fav-count">{{ my_favorites|length }}</div></div>
                     {% if my_folders|length > 0 %}
                         {% for folder in my_folders %}
-                            <div class="fav-folder drg" folder-id="{{ folder.folder_id}}" folder-rank="{% firstof folder.rank 999 %}"><i class="fas fa-folder"></i><span>{{ folder.name }}</span><div class="fav-count">{{ folder.favorites|length }}</div>{% if authorized %} <div class="folder-grip drg-hdl"><i class="fas fa-grip-lines"></i></div>{% endif %}</div>
+                            <div class="fav-folder drg" folder-id="{{ folder.folder_id}}" folder-rank="{% firstof folder.rank 999 %}"><i class="fas fa-folder"></i><span>{{ folder.name }}</span><div class="fav-count">{{ folder.favorites.count }}</div>{% if authorized %} <div class="folder-grip drg-hdl"><i class="fas fa-grip-lines"></i></div>{% endif %}</div>
                         {% endfor %}
                     {% endif %}
                     {% if authorized %}
                         <div class="fav-folder fav-folder-new" data-toggle="clps" data-target="#fav-folder-new"><i class="fas fa-folder-plus"></i>New Folder</div>
                         <div class="clps" id="fav-folder-new">
-                            <form asp-page-handler="CreateFolder" method="post" id="CreateFolderForm">
-                                <input class="slim submit" type="nice-input" id="Folder_FolderName" name="Folder.FolderName" class="submit" data-initial-content="Folder Name" required />
-                                <input type="hidden" id="Folder_UserId" name="Folder.UserId" value="@ViewBag.UserId" />
+                            <form action="/users/favorites_create_folder" method="post" id="CreateFolderForm">
+                                <input class="slim submit" type="nice-input" name="folder_name" class="submit" data-initial-content="Folder Name" required />
                             </form>
                         </div>
                     {% endif %}
@@ -31,9 +30,9 @@
                     <div id="favs-none" {% if my_favorites|length > 0 %} style="display:none;"{% endif %}>
                         <h5>No favorites here! ¯\_(ツ)_/¯</h5><br>
                         {% if authorized %}
-                            <form asp-page-handler="DeleteFolder" method="post" id="DeleteFolderForm" style="display:none">
+                            <form action="/users/favorites_delete_folder" method="post" id="DeleteFolderForm" style="display:none">
                                 <h6>Want to<button type="submit" class="btn btn-link shake"><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg></button>this folder?</h6>
-                                <input type="hidden" id="Folder_UserFavoriteFolderId" name="Folder.UserFavoriteFolderId" value="" />
+                                <input type="hidden" name="folder_id" value="{{ folder.folder_id }}" />
                             </form>
                         {% endif %}
                     </div>
@@ -149,19 +148,21 @@
         {% else %}
             <h4>Search to get started!</h4>
         {% endif %}
-        <script>
-            (function(){
-               document.dispatchEvent(new CustomEvent('related-reports'));
-            })();
+        <!--
+        // <script>
+        //     (function(){
+        //        document.dispatchEvent(new CustomEvent('related-reports'));
+        //     })();
 
-            (function(){
-                var d = document;
-                @if(ViewBag.AdLists != null){
-                    @:d.getElementById("AdColTwo").innerHTML +='@foreach(var ad in ViewBag.AdLists){@if(ad.Column == 2){<div class="col" data-ajax="yes" data-url="@ad.Url"></div>}}';
-                    @:d.dispatchEvent(new CustomEvent('load-ajax-content'));
-                }
-            })()
-        </script>
+        //     (function(){
+        //         var d = document;
+        //         @if(ViewBag.AdLists != null){
+        //             @:d.getElementById("AdColTwo").innerHTML +='@foreach(var ad in ViewBag.AdLists){@if(ad.Column == 2){<div class="col" data-ajax="yes" data-url="@ad.Url"></div>}}';
+        //             @:d.dispatchEvent(new CustomEvent('load-ajax-content'));
+        //         }
+        //     })()
+        // </script>
+        -->
 
     </div>
 {% endwith %}

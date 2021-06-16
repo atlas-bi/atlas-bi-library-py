@@ -81,7 +81,7 @@ gunicorn = "^20.1.0"
 celery = "^5.1.0"
 django-celery-results = "^2.0.1"
 django-celery-beat = "^2.2.0"
-pysolr = "^3.9.0"
+pysolr = {git = "https://github.com/christopherpickering/pysolr.git"}
 
 [tool.poetry.extras]
 test = ["Pygments", "toml", "coverage", "selenium", "browserstack-local"]

@@ -1,10 +1,13 @@
 """Atlas User views."""
 
+import json
+
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.cache import never_cache
-from index.models import UserFavoriteFolders, UserFavorites, UserPreferences, UserRoles
+from index.models import FavoriteFolders, Favorites, UserPreferences, UserRoles
 
 from atlas.decorators import admin_required
 
@@ -46,12 +49,8 @@ def preference_video(request, state):
 @never_cache
 def favorites(request):
     """Get users favorites."""
-    my_favorites = UserFavorites.objects.filter(user_id=request.user).order_by(
-        "item_rank"
-    )
-    my_folders = UserFavoriteFolders.objects.filter(user_id=request.user).order_by(
-        "rank"
-    )
+    my_favorites = Favorites.objects.filter(user=request.user)
+    my_folders = FavoriteFolders.objects.filter(user=request.user)
 
     context = {
         "permissions": request.user.get_permissions(),
@@ -62,3 +61,89 @@ def favorites(request):
     }
 
     return render(request, "favorites.html.dj", context)
+
+
+@login_required
+def favorites_create_folder(request):
+    """Add a new folder for favorites."""
+    data = json.loads(request.body.decode("UTF-8"))
+
+    if request.method == "POST" and "folder_name" in data:
+
+        folder = FavoriteFolders(name=data["folder_name"], user=request.user)
+        folder.save()
+
+        return JsonResponse({"folder_id": folder.folder_id}, status=200)
+
+    return JsonResponse({"error": "failed to created folder."}, status=500)
+
+
+def favorites_delete_folder(request):
+    """Delete a favorites folder."""
+    data = json.loads(request.body.decode("UTF-8"))
+
+    if request.method == "POST" and "folder_id" in data:
+        # remove any report links to this folder
+        Favorites.objects.filter(folder__folder_id=data["folder_id"]).update(
+            folder=None
+        )
+
+        # remove the folder
+        FavoriteFolders.objects.get(folder_id=data["folder_id"]).delete()
+
+        return JsonResponse({"folder_id": data["folder_id"]}, status=200)
+    return JsonResponse({"error": "failed to delete folder."}, status=500)
+
+
+def favorites_reorder_folder(request):
+    """Change the order of a users favorites."""
+    data = json.loads(request.body.decode("UTF-8"))
+
+    if request.method == "POST":
+        for folder in data:
+            FavoriteFolders.objects.filter(user=request.user).filter(
+                folder_id=folder["folder_id"]
+            ).update(rank=folder["folder_rank"])
+
+        return JsonResponse({"success": "reordered folders."}, status=200)
+    return JsonResponse({"error": "failed to reorder folder."}, status=500)
+
+
+def favorites_reorder(request):
+    """Change the order of favorites."""
+    data = json.loads(request.body.decode("UTF-8"))
+
+    if request.method == "POST":
+
+        for favorite in data:
+            Favorites.objects.filter(user=request.user).filter(
+                favorite_id=favorite["favorite_id"]
+            ).update(rank=favorite["favorite_rank"])
+
+        return JsonResponse({"success": "reordered favorites."}, status=200)
+    return JsonResponse({"error": "failed to reorder favorites."}, status=500)
+
+
+def favorites_change_folder(request):
+    """Move a favorite between folders."""
+    data = json.loads(request.body.decode("UTF-8"))
+
+    Favorites.objects.filter(user=request.user).filter(
+        favorite_id=data["favorite_id"]
+    ).update(folder=data["folder_id"])
+
+    # return current folders and count
+
+    folder_counts = list(
+        FavoriteFolders.objects.filter(user=request.user)
+        .values("folder_id")
+        .annotate(count=Count("favorites"))
+    )
+
+    folder_counts.append(
+        {
+            "folder_id": "all",
+            "count": Favorites.objects.filter(user=request.user).count(),
+        }
+    )
+    return JsonResponse(folder_counts, safe=False, status=200)

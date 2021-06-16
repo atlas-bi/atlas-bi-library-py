@@ -26,7 +26,7 @@ urlpatterns = [
     path("reports/", include("report.urls")),
     path("initiatives/", include("initiative.urls")),
     path("terms/", include("term.urls")),
-    path("user/", include("user.urls")),
+    path("users/", include("user.urls")),
     path("search/", include("search.urls")),
     path("projects/", include("project.urls")),
     path("etl/", include("etl.urls")),

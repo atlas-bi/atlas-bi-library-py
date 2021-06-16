@@ -16,6 +16,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 (function () {
+  /**
+   *
+   */
   function closeModals(el) {
     if (typeof el == "undefined") {
       // hide all other modals
@@ -28,11 +31,14 @@
       el.dispatchEvent(new CustomEvent("mdl-close"));
     }
 
-    if (not(document.getElementsByClassName("mdl-o").length > 0)) {
+    if (!(document.getElementsByClassName("mdl-o").length > 0)) {
       document.getElementsByTagName("body")[0].classList.remove("b-mdl");
     }
   }
 
+  /**
+   *
+   */
   function showModal(el, e) {
     var d = document;
     d.getElementsByTagName("body")[0].classList.toggle("b-mdl");

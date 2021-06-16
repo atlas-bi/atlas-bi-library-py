@@ -1,7 +1,6 @@
 import copy
 
 import pysolr
-import requests
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -11,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from index.models import Projects
 
 
+@login_required
 def template(request):
     """Return search template.
 
@@ -19,8 +19,7 @@ def template(request):
     return render(None, "template.html")
 
 
-# @login_required
-@csrf_exempt
+@login_required
 def index(request, search_type="query", search_string=""):
     """Atlas Search.
 
@@ -29,6 +28,7 @@ def index(request, search_type="query", search_string=""):
     - modify json
         - add "favorite" column
         - add run url, based on permissions
+        - adds project ads
 
     Still need to add facet ranges
 
@@ -43,13 +43,17 @@ def index(request, search_type="query", search_string=""):
 
         return render(request, "search.html.dj", context)
 
+    # create a solr instance, based on the search type.
     solr = pysolr.Solr(
         settings.SOLR_URL, search_handler=search_type.replace("terms", "aterms")
     )
 
+    # build the solr search string
     search_string = "name:({search})^4 OR name:*({search})*^3 OR ({search})^2 OR *({search})*~".format(
         search=search_string
     )
+
+    # build solr fq (filter query)
     filter_query = []
 
     for key, values in dict(request.GET).items():
@@ -69,6 +73,7 @@ def index(request, search_type="query", search_string=""):
                 )
             )
 
+    # add visibility filter - by default only showing visible reports
     if "visibility_text" not in dict(request.GET) or dict(request.GET).get(
         "visibility_text"
     ) == ["Y"]:
@@ -77,8 +82,6 @@ def index(request, search_type="query", search_string=""):
         filter_query.append(
             "{!tag=visibility_text}visibility_text:Y OR {!tag=visibility_text}visibility_text:N"
         )
-
-    print(filter_query)
 
     # pagination
     start = 0
@@ -100,6 +103,7 @@ def index(request, search_type="query", search_string=""):
     )
     output["facets"] = {}
     output["hits"] = results.hits
+    output["start"] = start
 
     if hasattr(results, "facets"):
         output["facets"] = copy.deepcopy(results.facets)

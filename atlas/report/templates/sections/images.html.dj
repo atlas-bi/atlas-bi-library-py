@@ -5,7 +5,7 @@
         <img class="img-responsive" src="/reports/{{ report.report_id }}/image/{{ report.imgs.all.0.image_id }}" alt="Main report image" style="max-width: 98%;max-height: 390px;min-height: 1px;">
     </div>
 {% else %}
-    <div class="crsl">
+    <div class="crsl no-select">
         {% for img in report.imgs.all %}
             <div class="crsl-itm pop">
                 {% if forloop.counter0 > 0 %}

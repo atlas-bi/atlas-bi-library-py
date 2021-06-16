@@ -358,11 +358,11 @@ class Users(AbstractUser):
 
     def get_favorites(self):
         # return all favorites
-        return list(self.user_favorites.values_list("item_type", "item_id"))
+        return list(self.favorites.values_list("item_type", "item_id"))
 
     def has_favorite(self, item_type, item_id, obj=None):
         # check if they have a permission
-        return self.user_favorites.filter(item_type=item_type, item_id=item_id).exists()
+        return self.favorites.filter(item_type=item_type, item_id=item_id).exists()
 
     @property
     def active_role(self):
@@ -1883,50 +1883,52 @@ class TermComments(models.Model):
         db_table = "TermConversationMessage"
 
 
-class UserFavoriteFolders(models.Model):
+class FavoriteFolders(models.Model):
     folder_id = models.AutoField(db_column="UserFavoriteFolderId", primary_key=True)
     name = models.TextField(db_column="FolderName", blank=True, null=True)
-    user_id = models.ForeignKey(
+    user = models.ForeignKey(
         "Users",
         models.DO_NOTHING,
         db_column="UserId",
         blank=True,
         null=True,
-        related_name="user_favorite_folders",
+        related_name="favorite_folders",
     )
     rank = models.IntegerField(db_column="FolderRank", blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = "UserFavoriteFolders"
+        ordering = ["rank"]
 
 
-class UserFavorites(models.Model):
+class Favorites(models.Model):
     favorite_id = models.AutoField(db_column="UserFavoritesId", primary_key=True)
     item_type = models.TextField(db_column="ItemType", blank=True, null=True)
-    item_rank = models.IntegerField(db_column="ItemRank", blank=True, null=True)
+    rank = models.IntegerField(db_column="ItemRank", blank=True, null=True)
     item_id = models.IntegerField(db_column="ItemId", blank=True, null=True)
-    user_id = models.ForeignKey(
+    user = models.ForeignKey(
         "Users",
         models.DO_NOTHING,
         db_column="UserId",
         blank=True,
         null=True,
-        related_name="user_favorites",
+        related_name="favorites",
     )
     name = models.TextField(db_column="ItemName", blank=True, null=True)
-    folder_id = models.ForeignKey(
-        UserFavoriteFolders,
+    folder = models.ForeignKey(
+        FavoriteFolders,
         models.DO_NOTHING,
         db_column="FolderId",
         blank=True,
         null=True,
+        related_name="favorites",
     )
 
     class Meta:
         managed = False
         db_table = "UserFavorites"
-        ordering = ["item_rank"]
+        ordering = ["rank"]
 
     @property
     def atlas_url(self):

@@ -299,11 +299,11 @@ class Users(AbstractUser):
 
     def get_favorites(self):
         # return all favorites
-        return list(self.user_favorites.values_list("item_type", "item_id"))
+        return list(self.favorites.values_list("item_type", "item_id"))
 
     def has_favorite(self, item_type, item_id, obj=None):
         # check if they have a permission
-        return self.user_favorites.filter(item_type=item_type, item_id=item_id).exists()
+        return self.favorites.filter(item_type=item_type, item_id=item_id).exists()
 
     @property
     def active_role(self):
@@ -1369,41 +1369,45 @@ class TermComments(models.Model):
     posted_at = models.DateTimeField()
 
 
-class UserFavoriteFolders(models.Model):
+class FavoriteFolders(models.Model):
     folder_id = models.AutoField(primary_key=True)
     name = models.TextField(blank=True, null=True)
-    user_id = models.ForeignKey(
+    user = models.ForeignKey(
         "Users",
         models.DO_NOTHING,
         blank=True,
         null=True,
-        related_name="user_favorite_folders",
+        related_name="favorite_folders",
     )
     rank = models.IntegerField(blank=True, null=True)
 
+    class Meta:
+        ordering = ["rank"]
 
-class UserFavorites(models.Model):
+
+class Favorites(models.Model):
     favorites_id = models.AutoField(primary_key=True)
     item_type = models.TextField(blank=True, null=True)
-    item_rank = models.IntegerField(blank=True, null=True)
+    rank = models.IntegerField(blank=True, null=True)
     item_id = models.IntegerField(blank=True, null=True)
-    user_id = models.ForeignKey(
+    user = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        related_name="user_favorites",
+        related_name="favorites",
     )
     name = models.TextField(blank=True, null=True)
-    folder_id = models.ForeignKey(
-        UserFavoriteFolders,
+    folder = models.ForeignKey(
+        FavoriteFolders,
         on_delete=models.CASCADE,
         blank=True,
         null=True,
+        related_name="favorites",
     )
 
     class Meta:
-        ordering = ["item_rank"]
+        ordering = ["rank"]
 
     @property
     def atlas_url(self):

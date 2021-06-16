@@ -121,6 +121,9 @@
     }
   });
 
+  /**
+   *
+   */
   function showall(me) {
     var t = me || d.getElementsByClassName("fav-show-all")[0],
       i,
@@ -175,10 +178,10 @@
 
     if (
       (folderId !== null &&
-        d.querySelectorAll('.favs div[folder-id="' + folderId + '"]').length ===
+        d.querySelectorAll('.favs div[folder-id="' + folderId + '"]').length ==
           0) ||
       (folderId == null &&
-        d.querySelectorAll(".favs div[folder-id]").length === 0)
+        d.querySelectorAll(".favs div[folder-id]").length == 0)
     ) {
       i = nr.childNodes;
 
@@ -193,7 +196,7 @@
       a = nr.offsetHeight; // clear css cache
 
       nr.style.opacity = 1;
-      d.getElementById("Folder_UserFavoriteFolderId").value = folderId;
+      d.querySelector('#DeleteFolderForm input[name="folder_id"]').value = folderId;
     }
   }
 
@@ -204,54 +207,49 @@
 
       if (e.target.closest("#CreateFolderForm")) {
         e.preventDefault();
-        var i = e.target.getElementsByTagName("input")[0],
-          s = e.target.getElementsByTagName("span")[0],
-          v = i.value,
-          f = d.getElementById("fav-folders");
-        var input = $(this).find("input:first");
-        var name = input.val();
-        url = serialize(e.target);
-        q = new XMLHttpRequest();
-        q.open("post", e.target.getAttribute("action") + "&" + url, true);
-        q.setRequestHeader(
-          "Content-Type",
-          "application/x-www-form-urlencoded; charset=UTF-8"
-        );
-        q.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-        q.send();
+        var name = e.target.getElementsByTagName("input")[0].value;
 
+        q = new XMLHttpRequest();
+        q.open("post", e.target.getAttribute("action"), true);
+        q.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+        q.setRequestHeader("X-CSRFToken", csrftoken);
+        q.send(JSON.stringify({'folder_name': name}));
         q.onload = function () {
           var div = d.createElement("div");
           div.classList.add("fav-folder");
-          div.setAttribute("folder-id", q.responseText);
-          div.innerHTML =
-            '<i class="fas fa-folder mr-3"></i>' +
-            v +
-            '<div class="folder-grip"><i class="fas fa-grip-lines fa-folder"></i></div>';
-          var nf = f.getElementsByClassName("fav-folder-new")[0];
-          nf.parentElement.insertBefore(div, nf);
-          s.innerHTML = "";
+          div.classList.add("drg");
+
+          if("folder_id" in JSON.parse(q.responseText)){
+            div.setAttribute("folder-id", JSON.parse(q.responseText).folder_id);
+            div.innerHTML =
+              '<i class="fas fa-folder"></i><span>' +
+              name +
+              '</span><div class="fav-count">0</div><div class="folder-grip drg-hdl"><i class="fas fa-grip-lines"></i></div>';
+            var nf = d.getElementById("fav-folders").getElementsByClassName("fav-folder-new")[0];
+            nf.parentElement.insertBefore(div, nf);
+          }
+
+          else {alert(JSON.parse(q.responseText).error);}
+
+          e.target.getElementsByTagName("span")[0].innerHTML = "";
           document.dispatchEvent(
             new CustomEvent("clps-close", {
               cancelable: true,
               detail: {
-                el: d.getElementById("newfolder"),
+                el: d.getElementById("fav-folder-new"),
               },
             })
           );
         };
       } else if (e.target.closest("#DeleteFolderForm")) {
         e.preventDefault();
-        var folderId = d.getElementById("Folder_UserFavoriteFolderId").value;
-        url = serialize(e.target);
+        var folderId = e.target.closest("#DeleteFolderForm").querySelector('[name="folder_id"]').value;
+
         q = new XMLHttpRequest();
-        q.open("post", e.target.getAttribute("action") + "&" + url, true);
-        q.setRequestHeader(
-          "Content-Type",
-          "application/x-www-form-urlencoded; charset=UTF-8"
-        );
-        q.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-        q.send();
+        q.open("post", e.target.getAttribute("action"), true);
+        q.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+        q.setRequestHeader("X-CSRFToken", csrftoken);
+        q.send(JSON.stringify({'folder_id': folderId}));
 
         q.onload = function () {
           var m = d
@@ -274,6 +272,9 @@
     false
   );
 
+  /**
+   *
+   */
   function Reorder(el, x, y) {
     var e, r, i, l, f;
 
@@ -348,6 +349,9 @@
     false
   );
 
+  /**
+   *
+   */
   function getHoveredFolder(el, x, y) {
     if (el.classList.contains("fav")) {
       var i = d.querySelectorAll(
@@ -379,6 +383,9 @@
     }
   }
 
+  /**
+   *
+   */
   function UpdateFolderRank() {
     var array = [],
       g,
@@ -388,19 +395,22 @@
     for (g = 0; g < s.length; g++) {
       if (s[g].hasAttribute("folder-id")) {
         var item = {};
-        item.FolderId = s[g].getAttribute("folder-id");
-        item.FolderRank = g + 1;
+        item.folder_id = s[g].getAttribute("folder-id");
+        item.folder_rank = g + 1;
         array.push(item);
       }
     }
 
     q = new XMLHttpRequest();
-    q.open("post", "/Users?handler=ReorderFolders", true);
+    q.open("post", "/users/favorites_reorder_folder", true);
     q.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-    q.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+    q.setRequestHeader("X-CSRFToken", csrftoken);
     q.send(JSON.stringify(array));
   }
 
+  /**
+   *
+   */
   function UpdateFavRank() {
     var array = [],
       g,
@@ -410,28 +420,54 @@
     for (g = 0; g < s.length; g++) {
       if (s[g].hasAttribute("folder-id")) {
         var item = {};
-        item.FavoriteId = s[g].getAttribute("fav-id");
-        item.FavoriteRank = g + 1;
+        item.favorite_id = s[g].getAttribute("fav-id");
+        item.favorite_rank = g + 1;
         array.push(item);
       }
     }
 
     q = new XMLHttpRequest();
-    q.open("post", "/Users?handler=ReorderFavorites", true);
+    q.open("post", "/users/favorites_reorder", true);
     q.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-    q.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+    q.setRequestHeader("X-CSRFToken", csrftoken);
     q.send(JSON.stringify(array));
   }
 
+  /**
+   *
+   */
   function UpdateFavFolder(FavoriteId, FolderId) {
     var item = {},
       q;
-    item.FavoriteId = FavoriteId;
-    item.FolderId = FolderId;
+    item.favorite_id = FavoriteId;
+    item.folder_id = FolderId;
     q = new XMLHttpRequest();
-    q.open("post", "/Users?handler=UpdateFavoriteFolder", true);
+    q.open("post", "/users/favorites_change_folder", true);
     q.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-    q.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+    q.setRequestHeader("X-CSRFToken", csrftoken);
     q.send(JSON.stringify(item));
+    q.onload = function () {
+      // update folder counts
+      UpdateFavCounts(q.responseText)
+    }
+  }
+
+  /**
+   *
+   */
+  function UpdateFavCounts(data) {
+    // data should be folder_id: count, with one record
+    // beign a total count of folder_id=all.
+    data = JSON.parse(data);
+
+    for(var x=0; x<data.length; x++){
+      if(data[x]["folder_id"] == "all"){
+              document.querySelector('.favs-colOne .fav-folder.fav-show-all .fav-count').innerHTML = data[x]["count"];
+      }
+      else {
+        document.querySelector('.favs-colOne .fav-folder[folder-id="' + data[x]["folder_id"] + '"] .fav-count').innerHTML = data[x]["count"];
+      }
+    }
+
   }
 })();
