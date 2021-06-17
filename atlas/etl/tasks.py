@@ -1,8 +1,12 @@
+from datetime import datetime
+
+import pysolr
+import pytz
 from celery import shared_task
+from django.conf import settings
+from index.models import Initiatives
 
 
-# pylint: skip-file
-# flake8: noqa
 @shared_task
 def add(x, y):
     return x + y

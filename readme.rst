@@ -98,6 +98,10 @@ As an example, if you want to use an existing Atlas sql server database, you can
 
 .. code:: python
 
+    # stop multiple queries for db version
+    from sql_server.pyodbc.base import DatabaseWrapper
+    DatabaseWrapper.sql_server_version = 2017
+
     DATABSES = "default": {
         "ENGINE": "sql_server.pyodbc",
         "NAME": "atlas",
@@ -119,6 +123,12 @@ Running the app
 
     cd atlas && poetry run python manage.py runserver
 
+
+Starting Celery
+
+
+    poetry run celery -A atlas worker -l DEBUG
+    poetry run celery -A atlas beat -l DEBUG --scheduler django_celery_beat.schedulers:DatabaseScheduler
 
 Running tests
 #############

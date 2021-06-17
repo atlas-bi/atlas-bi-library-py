@@ -1,51 +1,30 @@
-"""Atlas ETL for Search."""
-import json
+"""Celery tasks to keep initiative search up to date."""
 from datetime import datetime
 
 import pysolr
 import pytz
+from celery import shared_task
 from django.conf import settings
-from django.http import HttpResponse
+from django.db.models.signals import post_delete, post_save
+from django.dispatch import receiver
 from index.models import Initiatives
 
-
-def index(request):
-    """Test solr connections."""
-
-    # will clear all and re-add
-    reset_initiatives()
-
-    return HttpResponse("ok")
-    #        print(docs)
-
-    ## daily drop and recreate
-    ## after ETL/db changes trigger an update.
-
-    ## if the report is changed to "exclude" from search, or becomes an orphan,
-    # make sure it is removed from the search index.
-
-    # after removing all records
-    # solr.optimize()
-
-    # 1 remove old report records from solr
-    # reports
-    # initiatives
-    # projects
-    # terms
-    # users
-
-    # for report_type in ['reports','initiatives','projects','terms','users']:
-    #     print(report_type)
-    #     print(solr.search(
-    #         "*:*",
-    #         fq="type:%s" % report_type,
-    #         fl="atlas_id",
-    #         start = 0,
-    #         rows=0).hits)
-
-    return HttpResponse("<body></body>")
+from ..functions import chunker
 
 
+@receiver(post_delete, sender=Initiatives)
+def deleted_initiative(sender, **kwargs):
+    """When initiative is delete, remove it from search."""
+    print(sender, **kwargs)
+
+
+@receiver(post_save, sender=Initiatives)
+def updated_initiative(sender, **kwargs):
+    """When initiative is updated, add it to search."""
+    print(sender, **kwargs)
+
+
+@shared_task
 def reset_initiatives():
     solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
 
@@ -159,11 +138,3 @@ def load_initiatives(initiatives):
     for doc in chunker(docs, 1):
         print("loading")
         solr.add(doc)
-
-
-def chunker(seq, size):
-    """Split big list into parts.
-
-    https://stackoverflow.com/a/434328/10265880
-    """
-    return (seq[pos : pos + size] for pos in range(0, len(seq), size))
