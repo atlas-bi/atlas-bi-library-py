@@ -192,17 +192,29 @@ sudo chmod 777 access.log
 sudo chmod 777 error.log
 
 
-# update hash in gunicorn files
+GUNICORN="atlas-py.$HASH.service"
 fmt_blue "Updating gunicorn service file"
 sed -i -e "s/hash/$HASH/g" publish/gunicorn.service
 
-# move in three service files
 fmt_blue "Installing gunicorn service file"
-sudo mv "publish/gunicorn.service" "/etc/systemd/system/atlas-py.$HASH.service"
+sudo mv "publish/gunicorn.service" "/etc/systemd/system/$GUNICORN"
 
-# start serice files and verify status
 fmt_blue "Starting gunicorn service"
-sudo systemctl start "atlas-py.$HASH.service" && sudo systemctl enable "atlas-py.$HASH.service" && sudo systemctl is-active "atlas-py.$HASH.service" | grep "inactive" > /dev/null && sudo systemctl status "atlas-py.$HASH.service" && ((ERROR++))
+sudo systemctl start "$GUNICORN" && sudo systemctl enable "$GUNICORN" && sudo systemctl is-active "$GUNICORN" | grep "inactive" > /dev/null && sudo systemctl status "$GUNICORN" && ((ERROR++))
+
+
+CELERY="atlas-py-celery.$HASH.service"
+
+fmt_blue "Updating celery service file"
+sed -i -e "s/hash/$HASH/g" publish/celery.service
+
+fmt_blue "Installing celery service file"
+sudo mv "publish/celery.service" "/etc/systemd/system/$CELERY"
+
+fmt_blue "Starting celery service"
+sudo systemctl start "$CELERY" && sudo systemctl enable "$CELERY" && sudo systemctl is-active "$CELERY" | grep "inactive" > /dev/null && sudo systemctl status "$CELERY" && ((ERROR++))
+
+
 
 # update nginx service files
 fmt_blue "Updating hash in nginx service file"
@@ -228,6 +240,13 @@ fmt_blue "Removing old gunicorn processes"
 sudo systemctl reset-failed
 (cd /etc/systemd/system/ && ls atlas-py*) | grep '^atlas-py' | grep -v "atlas-py.*$HASH" | xargs -i sh -c 'sudo systemctl disable {} || true && sudo systemctl stop {} || true && sudo rm -f /etc/systemd/system/{}'
 sudo systemctl reset-failed
+
+# remove old celery processes
+fmt_blue "Removing old gunicorn processes"
+sudo systemctl reset-failed
+(cd /etc/systemd/system/ && ls atlas-py-celery*) | grep '^atlas-py-celery' | grep -v "atlas-py-celery.*$HASH" | xargs -i sh -c 'sudo systemctl disable {} || true && sudo systemctl stop {} || true && sudo rm -f /etc/systemd/system/{}'
+sudo systemctl reset-failed
+
 
 # remove old instances of the website
 fmt_blue "Removing old website instances"

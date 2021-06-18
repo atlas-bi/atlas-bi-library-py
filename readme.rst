@@ -126,9 +126,9 @@ Running the app
 
 Starting Celery
 
-
-    poetry run celery -A atlas worker -l DEBUG
-    poetry run celery -A atlas beat -l DEBUG --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    # settings are specified on startup, not as env variable
+    DJANGO_SETTINGS_MODULE='atlas.settings.dev' poetry run celery -A atlas worker -l DEBUG
+    DJANGO_SETTINGS_MODULE='atlas.settings.dev' poetry run celery -A atlas beat -l DEBUG --scheduler django_celery_beat.schedulers:DatabaseScheduler
 
 Running tests
 #############

@@ -1,11 +1,6 @@
 """Celery Setup."""
 import os
 
-os.environ.setdefault(
-    "DJANGO_SETTINGS_MODULE",
-    os.environ.get("DJANGO_SETTINGS_MODULE", "atlas.settings.dev"),
-)
-
 from celery import Celery
 
 app = Celery("atlas")
