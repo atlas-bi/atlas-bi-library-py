@@ -133,7 +133,6 @@
 
       for (var x = 0; x < sc.length; x++) {
         var s = d.createElement("script");
-        console.log(sc[x].innerHTML)
         s.innerHTML = sc[x].innerHTML;
         s.type = "text/javascript";
         s.setAttribute("async", "true");

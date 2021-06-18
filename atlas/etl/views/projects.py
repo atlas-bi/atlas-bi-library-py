@@ -1,5 +1,4 @@
 """Atlas ETL for Search."""
-
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.utils import timezone
@@ -7,13 +6,13 @@ from django.views.decorators.cache import never_cache
 from django_celery_beat.models import PeriodicTask
 from django_celery_results.models import TaskResult
 
-from ..tasks.search.initiatives import reset_initiatives as task_reset_initiatives
+from ..tasks.search.projects import reset_projects as task_reset_projects
 from . import solr_schedule, task_status
 
 
 @never_cache
-def initiatives(request, arg):
-    """Search ETL for Initiatives.
+def projects(request, arg):
+    """Search ETL for projects.
 
     options:
         status: returns enabled/disabled status of ETL
@@ -21,25 +20,26 @@ def initiatives(request, arg):
         disable: disables the etl
         trigger: runs the etl
     """
-    task_name = "search initiatives"
-    task_function = "etl.tasks.search.initiatives.reset_initiatives"
+    task_name = "search projects"
+    task_function = "etl.tasks.search.projects.reset_projects"
 
     if arg == "status":
-        task = (
-            PeriodicTask.objects.filter(crontab=solr_schedule())
-            .filter(name=task_name)
-            .filter(task=task_function)
-        )
+        task = TaskResult.objects.filter(task_name=task_function)
 
         if task.exists():
             # get last task status
 
-            task_details = (
-                TaskResult.objects.filter(task_name=task.first().task).first().as_dict()
+            task_details = task.first().as_dict()
+            periodic = PeriodicTask.objects.filter(task=task_function)
+
+            status = (
+                task_status[periodic.first().enabled]
+                if periodic.exists()
+                else "warning"
             )
             return JsonResponse(
                 {
-                    "status": task_status[task.first().enabled],
+                    "status": status,
                     "message": "Last Status: %s; Last Run: %s"
                     % (
                         task_details["status"],
@@ -67,8 +67,8 @@ def initiatives(request, arg):
         return JsonResponse({"message": task.enabled})
 
     elif arg == "run":
-        """Reload initiatives now."""
-        task_reset_initiatives.delay()
+        """Reload projects now."""
+        task_reset_projects.delay()
 
         return redirect("/etl")
 

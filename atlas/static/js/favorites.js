@@ -448,8 +448,8 @@
     q.send(JSON.stringify(item));
     q.onload = function () {
       // update folder counts
-      UpdateFavCounts(q.responseText)
-    }
+      UpdateFavCounts(q.responseText);
+    };
   }
 
   /**
@@ -461,11 +461,11 @@
     data = JSON.parse(data);
 
     for(var x=0; x<data.length; x++){
-      if(data[x]["folder_id"] == "all"){
-              document.querySelector('.favs-colOne .fav-folder.fav-show-all .fav-count').innerHTML = data[x]["count"];
+      if(data[x].folder_id == "all"){
+              document.querySelector('.favs-colOne .fav-folder.fav-show-all .fav-count').innerHTML = data[x].count;
       }
       else {
-        document.querySelector('.favs-colOne .fav-folder[folder-id="' + data[x]["folder_id"] + '"] .fav-count').innerHTML = data[x]["count"];
+        document.querySelector('.favs-colOne .fav-folder[folder-id="' + data[x].folder_id + '"] .fav-count').innerHTML = data[x].count;
       }
     }
 

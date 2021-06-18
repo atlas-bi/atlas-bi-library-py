@@ -1,45 +1,54 @@
 <h3 class="title is-3">Scheduled Jobs</h3>
-<div class="table-container">
-    <table class="table is-narrow is-striped">
-        <thead>
-            <tr>
-                <td>name</td>
-                <td>task</td>
-                <td>delete</td>
-                <td>interval</td>
-                <td>crontab</td>
-                <td>args</td>
-                <td>kwargs</td>
-                <td>queue</td>
-                <td>one_off</td>
-                <td>start_time</td>
-                <td>enabled</td>
-                <td>last_run_at</td>
-                <td>total_run_count</td>
-                <td>date_changed</td>
-                <td>description</td>
-            </tr>
-        </thead>
-        <tbody>
-            {% for job in scheduled_jobs %}
-            <tr>
-                <td>{{job.name}}</td>
-                <td>{{job.task}}</td>
-                <td><a href="/etl/job/{{job.id}}/delete">Delete</a></td>
-                <td>{{job.interval}}</td>
-                <td>{{job.crontab}}</td>
-                <td>{{job.args}}</td>
-                <td>{{job.kwargs}}</td>
-                <td>{{job.queue}}</td>
-                <td>{{job.one_off}}</td>
-                <td>{{job.start_time}}</td>
-                <td>{{job.enabled}}</td>
-                <td>{{job.last_run_at}}</td>
-                <td>{{job.total_run_count}}</td>
-                <td>{{job.date_changed}}</td>
-                <td>{{job.description}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+
+{% if scheduled_jobs %}
+    <div class="table-container">
+        <table class="table is-narrow is-striped">
+            <thead>
+                <tr>
+                    <td>name</td>
+                    <td>task</td>
+                    <td>delete</td>
+                    <td>interval</td>
+                    <td>crontab</td>
+                    <td>args</td>
+                    <td>kwargs</td>
+                    <td>queue</td>
+                    <td>one_off</td>
+                    <td>start_time</td>
+                    <td>enabled</td>
+                    <td>last_run_at</td>
+                    <td>total_run_count</td>
+                    <td>date_changed</td>
+                    <td>description</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job in scheduled_jobs %}
+                <tr>
+                    <td>{{job.name}}</td>
+                    <td>{{job.task}}</td>
+                    <td><a href="/etl/job/{{job.id}}/delete">Delete</a></td>
+                    <td>{{job.interval}}</td>
+                    <td>{{job.crontab}}</td>
+                    <td>{{job.args}}</td>
+                    <td>{{job.kwargs}}</td>
+                    <td>{{job.queue}}</td>
+                    <td>{{job.one_off}}</td>
+                    <td>{{job.start_time}}</td>
+                    <td>{{job.enabled}}</td>
+                    <td>{{job.last_run_at}}</td>
+                    <td>{{job.total_run_count}}</td>
+                    <td>{{job.date_changed}}</td>
+                    <td>{{job.description}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="content">
+        <p>
+            No scheduled jobs.... <span data-color="warning">Is celery offline?</span>
+        </p>
+    </div>
+{% endif %}

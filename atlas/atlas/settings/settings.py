@@ -312,21 +312,6 @@ CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_IMPORTS = ["etl.tasks.search"]
 
 
-CELERY_APP = "atlas"
-
-CELERY_BIN = ".venv/bin/python -m celery"
-CELERYD_PID_FILE = "%n.pid"
-CELERYD_LOG_FILE = "%n%l.log"
-
-CELERY_CREATE_DIRS = True
-CELERY_CREATE_RUNDIR = True
-CELERY_CREATE_LOGDIR = True
-
-CELERYBEAT_PID_FILE = True
-CELERYBEAT_LOG_FILE = True
-CELERYBEAT_LOG_LEVEL = True
-
-
 # import custom overrides
 try:
     from .settings_cust import *

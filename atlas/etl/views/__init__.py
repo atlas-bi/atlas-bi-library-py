@@ -1,6 +1,6 @@
 from django_celery_beat.models import CrontabSchedule, PeriodicTask
 
-TASK_STATUS = {True: "success", False: "warning"}
+task_status = {True: "success", False: "warning"}
 
 
 def solr_schedule():

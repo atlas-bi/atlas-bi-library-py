@@ -61,7 +61,7 @@ class Reports(models.Model):
         null=True,
         on_delete=models.CASCADE,
     )
-    modified_at = models.DateTimeField(blank=True, null=True)
+    _modified_at = models.DateTimeField(blank=True, null=True)
     url = models.TextField(blank=True, null=True)
     system_identifier = models.CharField(max_length=3, blank=True, null=True)
     system_id = models.DecimalField(
@@ -159,6 +159,12 @@ class Reports(models.Model):
             )
         return None
 
+    @property
+    def modified_at(self):
+        if self._modified_at:
+            return datetime.strftime(self._modified_at, "%d/%m/%y")
+        return ""
+
     def system_run_url(self):
         return None
 
@@ -236,11 +242,15 @@ class ReportTypes(models.Model):
     type_id = models.AutoField(primary_key=True)
     name = models.TextField()
     code = models.TextField(blank=True, null=True)
-
+    short_name = models.TextField(blank=True, null=True)
     etl_date = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return self.name
+
+    @property
+    def short(self):
+        return self.short_name or self.name
 
 
 class Users(AbstractUser):
@@ -1041,7 +1051,7 @@ class ReportMaintenanceLogs(models.Model):
 
 class ReportTerms(models.Model):
     link_id = models.AutoField(primary_key=True)
-    report = models.ForeignKey(
+    report_doc = models.ForeignKey(
         "ReportDocs",
         on_delete=models.CASCADE,
         related_name="terms",
@@ -1049,11 +1059,11 @@ class ReportTerms(models.Model):
     term = models.ForeignKey(
         "Terms",
         on_delete=models.CASCADE,
-        related_name="reports",
+        related_name="report_docs",
     )
 
     class Meta:
-        unique_together = (("report", "term"),)
+        unique_together = (("report_doc", "term"),)
 
 
 class ReportImages(models.Model):
@@ -1145,8 +1155,8 @@ class ReportDocs(models.Model):
         blank=True,
         null=True,
     )
-    modified_at = models.DateTimeField(blank=True, null=True)
-    created_at = models.DateTimeField(blank=True, null=True)
+    _modified_at = models.DateTimeField(blank=True, null=True)
+    _created_at = models.DateTimeField(blank=True, null=True)
     created_by = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
@@ -1171,6 +1181,18 @@ class ReportDocs(models.Model):
         primary_key=True,
         on_delete=models.CASCADE,
     )
+
+    @property
+    def modified_at(self):
+        if self._modified_at:
+            return datetime.strftime(self._modified_at, "%d/%m/%y")
+        return ""
+
+    @property
+    def created_at(self):
+        if self._created_at:
+            return datetime.strftime(self._created_at, "%d/%m/%y")
+        return ""
 
 
 class RolePermissionLinks(models.Model):

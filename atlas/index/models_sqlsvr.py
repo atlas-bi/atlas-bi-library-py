@@ -70,7 +70,7 @@ class Reports(models.Model):
         blank=True,
         null=True,
     )
-    modified_at = models.DateTimeField(
+    _modified_at = models.DateTimeField(
         db_column="LastModifiedDate", blank=True, null=True
     )
     url = models.TextField(db_column="ReportObjectURL", blank=True, null=True)
@@ -188,6 +188,12 @@ class Reports(models.Model):
             )
         return None
 
+    @property
+    def modified_at(self):
+        if self._modified_at:
+            return datetime.strftime(self._modified_at, "%d/%m/%y")
+        return ""
+
 
 class ReportHierarchies(models.Model):
     parent = models.OneToOneField(
@@ -287,6 +293,7 @@ class ReportSubscriptions(models.Model):
 class ReportTypes(models.Model):
     type_id = models.AutoField(db_column="ReportObjectTypeID", primary_key=True)
     name = models.TextField(db_column="Name")
+    short_name = models.TextField(db_column="ShortName", blank=True, null=True)
     code = models.TextField(db_column="DefaultEpicMasterFile", blank=True, null=True)
     etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
 
@@ -296,6 +303,10 @@ class ReportTypes(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def short(self):
+        return self.short_name or self.name
 
 
 class Users(AbstractUser):
@@ -1398,20 +1409,20 @@ class ReportMaintenanceLogs(models.Model):
 
 class ReportTerms(models.Model):
     link_id = models.AutoField(db_column="LinkId", primary_key=True)
-    report = models.ForeignKey(
+    report_doc = models.ForeignKey(
         "ReportDocs",
         models.DO_NOTHING,
         db_column="ReportObjectID",
         related_name="terms",
     )
     term = models.ForeignKey(
-        "Terms", models.DO_NOTHING, db_column="TermId", related_name="reports"
+        "Terms", models.DO_NOTHING, db_column="TermId", related_name="report_docs"
     )
 
     class Meta:
         managed = False
         db_table = "ReportObjectDocTerms"
-        unique_together = (("report", "term"),)
+        unique_together = (("report_doc", "term"),)
 
 
 class ReportImages(models.Model):
@@ -1530,10 +1541,10 @@ class ReportDocs(models.Model):
         blank=True,
         null=True,
     )
-    modified_at = models.DateTimeField(
+    _modified_at = models.DateTimeField(
         db_column="LastUpdateDateTime", blank=True, null=True
     )
-    created_at = models.DateTimeField(
+    _created_at = models.DateTimeField(
         db_column="CreatedDateTime", blank=True, null=True
     )
     created_by = models.ForeignKey(
@@ -1571,6 +1582,18 @@ class ReportDocs(models.Model):
     class Meta:
         managed = False
         db_table = "ReportObject_doc"
+
+    @property
+    def modified_at(self):
+        if self._modified_at:
+            return datetime.strftime(self._modified_at, "%d/%m/%y")
+        return ""
+
+    @property
+    def modified_at(self):
+        if self._created_at:
+            return datetime.strftime(self._created_at, "%d/%m/%y")
+        return ""
 
 
 class RolePermissionLinks(models.Model):

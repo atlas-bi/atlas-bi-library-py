@@ -7,9 +7,9 @@ from celery import shared_task
 from django.conf import settings
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
+from django_chunked_iterator import batch_iterator
+from etl.tasks.functions import chunker, clean_doc
 from index.models import Initiatives
-
-from ..functions import chunker
 
 
 @receiver(post_delete, sender=Initiatives)
@@ -26,13 +26,17 @@ def updated_initiative(sender, **kwargs):
 
 @shared_task
 def reset_initiatives():
+    """Reset initiative group in solr.
+
+    1. Delete all initiatives from Solr
+    2. Query all existing initiatives
+    3. Load data to solr.
+    """
     solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
 
-    # daily delete all
-    # solr.delete(q='*:*')
-    # solr.optimize()
-
     solr.delete(q="type:initiatives")
+    solr.optimize()
+
     initiatives = (
         Initiatives.objects.select_related("ops_owner")
         .select_related("exec_owner")
@@ -51,10 +55,14 @@ def reset_initiatives():
 
 
 def load_initiatives(initiatives):
-    solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
+    """Load a group of initiatives to solr database.
+
+    1. Convert the objects to list of dicts
+    2. Bulk load to solr in batchs of x
+    """
     docs = []
 
-    for initiative in initiatives:
+    for initiative in batch_iterator(initiatives):
         doc = {
             "id": "/initiatives/%s" % initiative.initiative_id,
             "atlas_id": initiative.initiative_id,
@@ -63,78 +71,55 @@ def load_initiatives(initiatives):
             "visible": "Y",
             "orphan": "N",
             "runs": 10,
-        }
-        if initiative.ops_owner:
-            doc["operations_owner"] = str(initiative.ops_owner)
-        if initiative.description:
-            doc["description"] = initiative.description
-        if initiative.exec_owner:
-            doc["executive_owner"] = str(initiative.exec_owner)
-        if initiative.financial_impact:
-            doc["financial_impact"] = str(initiative.financial_impact)
-        if initiative.strategic_importance:
-            doc["strategic_importance"] = str(initiative.strategic_importance)
-        if initiative.modified_at:
-            doc["last_updated"] = datetime.strftime(
-                initiative._modified_at.astimezone(pytz.utc), "%Y-%m-%dT%H:%M:%SZ"
-            )
-        if initiative.modified_by:
-            doc["updated_by"] = str(initiative.modified_by)
-
-        if initiative.projects.exists():
-            doc["related_projects"] = []
-            doc["linked_description"] = []
-            for project in initiative.projects.all():
-
-                doc["related_projects"].append(str(project))
-                doc["linked_description"].append(
-                    (project.purpose or "") + "\n" + (project.description or "")
+            "operations_owner": str(initiative.ops_owner),
+            "description": initiative.description,
+            "executive_owner": str(initiative.exec_owner),
+            "financial_impact": str(initiative.financial_impact),
+            "strategic_importance": str(initiative.strategic_importance),
+            "last_updated": (
+                datetime.strftime(
+                    initiative._modified_at.astimezone(pytz.utc), "%Y-%m-%dT%H:%M:%SZ"
                 )
-                if project.terms.exists():
-                    if "related_terms" not in doc:
-                        doc["related_terms"] = []
-                    for term in project.terms.all():
-                        doc["related_terms"].append(str(term.term))
-                        doc["linked_description"].append(
-                            (term.term.summary or "")
-                            + "\n"
-                            + (term.term.technical_definition or "")
-                            + "\n"
-                            + (term.annotation or "")
-                        )
+                if initiative._modified_at
+                else None
+            ),
+            "updated_by": str(initiative.modified_by),
+            "related_projects": [],
+            "linked_description": [],
+            "related_terms": [],
+            "related_reports": [],
+            "linked_name": [],
+        }
 
-                if project.reports.exists():
-                    if "related_reports" not in doc:
-                        doc["related_reports"] = []
+        for project in initiative.projects.all():
 
-                    for report in project.reports.all():
+            doc["related_projects"].append(str(project))
+            doc["linked_description"].extend([project.purpose, project.description])
 
-                        doc["related_reports"].append(str(report.report))
+            for term in project.terms.all():
+                doc["related_terms"].append(str(term.term))
+                doc["linked_description"].extend(
+                    [term.term.summary, term.term.technical_definition, term.annotation]
+                )
 
-                        if "linked_name" not in doc:
-                            doc["linked_name"] = []
+            for report in project.reports.all():
 
-                        doc["linked_name"].append(report.report.name)
-                        doc["linked_name"].append(report.report.title)
+                doc["related_reports"].append(str(report.report))
 
-                        doc["linked_description"].append(
-                            (report.report.description or "")
-                            + "\n"
-                            + (report.report.detailed_description or "")
-                            + (
-                                (report.report.docs.description or "") + "\n"
-                                if report.report.has_docs()
-                                else ""
-                            )
-                            + (
-                                (report.report.docs.assumptions or "") + "\n"
-                                if report.report.has_docs()
-                                else ""
-                            )
-                        )
+                doc["linked_name"].extend([report.report.name, report.report.title])
 
-        docs.append(doc)
+                doc["linked_description"].extend(
+                    [report.report.description, report.report.detailed_description]
+                )
+
+                if report.report.has_docs():
+                    doc["linked_description"].extend(
+                        [report.report.docs.description, report.report.docs.assumptions]
+                    )
+
+        docs.append(clean_doc(doc))
+
+    solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
     # load the results in batches of 1k.
-    for doc in chunker(docs, 1):
-        print("loading")
+    for doc in chunker(docs, 1000):
         solr.add(doc)

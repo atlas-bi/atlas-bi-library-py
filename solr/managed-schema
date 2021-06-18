@@ -188,7 +188,7 @@
   <field name="run_user" type="text_en"/>
   <field name="created_by" type="text_en"/>
   <field name="created_by_id" type="plong"/>
-  <field name="data_manager" type="text_en"/>
+  <field name="data_owner" type="text_en"/>
   <field name="certification" type="text_general"  stored="true" indexed="true" />
   <field name="description" type="text_en" multiValued="true" stored="true" indexed="true" />
   <field name="documented" type="plong" />
@@ -274,7 +274,7 @@
   <field name="strategic_importance_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="executive_owner_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="analytics_owner_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
-  <field name="data_manager_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="data_owner_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="fragility_tags_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="report_last_updated_by_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="related_reports_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
@@ -329,7 +329,7 @@
   <copyField source="analytics_owner" dest="analytics_owner_str" maxChars="256"/>
   <copyField source="executive_owner" dest="executive_owner_str" maxChars="256"/>
   <copyField source="financial_impact" dest="financial_impact_str" maxChars="256"/>
-  <copyField source="data_manager" dest="data_manager_str" maxChars="256"/>
+  <copyField source="data_owner" dest="data_owner_str" maxChars="256"/>
   <copyField source="strategic_importance" dest="strategic_importance_str" maxChars="256"/>
   <copyField source="source_database" dest="source_database_str" maxChars="256"/>
   <copyField source="epic_master_file" dest="epic_master_file_str" maxChars="256"/>
@@ -365,7 +365,7 @@
   <copyField source="executive_owner" dest="all_text" />
   <copyField source="financial_impact" dest="all_text" />
   <copyField source="fragility" dest="all_text" />
-  <copyField source="data_manager" dest="all_text" />
+  <copyField source="data_owner" dest="all_text" />
   <copyField source="strategic_importance" dest="all_text" />
   <copyField source="epic_master_file" dest="all_text" />
   <copyField source="epic_template" dest="all_text" />
@@ -412,7 +412,7 @@
   <copyField source="strategic_importance" dest="strategic_importance_text" />
   <copyField source="executive_owner" dest="executive_owner_text" />
   <copyField source="analytics_owner" dest="analytics_owner_text" />
-  <copyField source="data_manager" dest="data_manager_text" />
+  <copyField source="data_owner" dest="data_owner_text" />
   <copyField source="fragility_tags" dest="fragility_tags_text" />
   <copyField source="certification" dest="certification_text" />
 </schema>

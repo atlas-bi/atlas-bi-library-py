@@ -4,17 +4,13 @@ import logging
 
 import pysolr
 from django.conf import settings
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
-from django.utils import timezone
 from django.views.decorators.cache import never_cache
-from django_celery_beat.models import CrontabSchedule, PeriodicTask
+from django_celery_beat.models import PeriodicTask
 from django_celery_results.models import TaskResult
 
 from atlas.celery import app as celery_app
-
-from ..tasks.search.initiatives import reset_initiatives as task_reset_initiatives
-from . import TASK_STATUS, solr_schedule
 
 
 @never_cache
@@ -68,6 +64,10 @@ def index(request):
 
 @never_cache
 def job_edit(request, job_id):
+    """View for editing jobs.
+
+    Currently will only delete a job.
+    """
     task = PeriodicTask.objects.filter(id=job_id).exclude(name="celery.backend_cleanup")
 
     if task.exists():
@@ -78,8 +78,9 @@ def job_edit(request, job_id):
 
 @never_cache
 def job_schedule(request):
+    """Get scheduled jobs."""
     context = {
-        "scheduled_jobs": PeriodicTask.objects.all(),
+        "scheduled_jobs": PeriodicTask.objects.filter(enabled=True),
     }
 
     return render(request, "etl/schedule.html.dj", context)

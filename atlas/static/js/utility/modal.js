@@ -31,7 +31,7 @@
       el.dispatchEvent(new CustomEvent("mdl-close"));
     }
 
-    if (!(document.getElementsByClassName("mdl-o").length > 0)) {
+    if (document.getElementsByClassName("mdl-o").length === 0) {
       document.getElementsByTagName("body")[0].classList.remove("b-mdl");
     }
   }
