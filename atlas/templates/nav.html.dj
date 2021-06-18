@@ -28,6 +28,11 @@
                             <a href="/analytics">Analytics</a>
                         {% endif %}
 
+                        {% if 36 in permissions %}
+                            <!-- permission should be added for etl -->
+                            <a href="/etl">ETL</a>
+                        {% endif %}
+
                         <a href="/tasks">Tasks</a>
                     </div>
                 </div>

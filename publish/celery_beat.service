@@ -1,0 +1,19 @@
+[Unit]
+Description=Celery Beat Service
+After=network.target
+
+[Service]
+Type=simple
+User=webapp
+Group=www-data
+WorkingDirectory=/home/websites/atlas/hash/atlas
+EnvironmentFile=/home/websites/atlas/hash/celery.conf
+
+
+ExecStart=/bin/sh -c 'DJANGO_SETTINGS_MODULE="atlas.settings.prod" ${CELERY_BIN} -A ${CELERY_APP} beat  \
+    --pidfile=${CELERYBEAT_PID_FILE} \
+    --logfile=${CELERYBEAT_LOG_FILE} --loglevel=${CELERYD_LOG_LEVEL}'
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

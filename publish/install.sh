@@ -182,6 +182,14 @@ venv/bin/poetry add gevent --quiet
 fmt_green "${UL}Env Info:"
 fmt_yellow "$(venv/bin/poetry env info)"
 
+# run migrations for celery
+fmt_blue "Running Migrations:"
+(cd atlas && ../venv/bin/poetry run python manage.py migrate django_celery_results)
+(cd atlas && ../venv/bin/poetry run python manage.py migrate django_celery_beat)
+
+# change ownership on sqlite db
+sudo chown -R webapp "/home/websites/$SITE/$HASH/atlas/db.sqlite3"
+
 # echo -e "\n${GREEN}Dep Info.${RESET}"
 # echo -e "$(venv/bin/poetry show --tree)"
 
@@ -204,15 +212,21 @@ sudo systemctl start "$GUNICORN" && sudo systemctl enable "$GUNICORN" && sudo sy
 
 
 CELERY="atlas-py-celery.$HASH.service"
+CELERY_BEAT="atlas-py-celery-beat.$HASH.service"
 
 fmt_blue "Updating celery service file"
 sed -i -e "s/hash/$HASH/g" publish/celery.service
+sed -i -e "s/hash/$HASH/g" publish/celery_beat.service
+sed -i -e "s/hash/$HASH/g" publish/celery.conf
 
 fmt_blue "Installing celery service file"
 sudo mv "publish/celery.service" "/etc/systemd/system/$CELERY"
+sudo mv "publish/celery.conf" .
+sudo mv "publish/celery_beat.service" "/etc/systemd/system/$CELERY_BEAT"
 
 fmt_blue "Starting celery service"
 sudo systemctl start "$CELERY" && sudo systemctl enable "$CELERY" && sudo systemctl is-active "$CELERY" | grep "inactive" > /dev/null && sudo systemctl status "$CELERY" && ((ERROR++))
+sudo systemctl start "$CELERY_BEAT" && sudo systemctl enable "$CELERY_BEAT" && sudo systemctl is-active "$CELERY_BEAT" | grep "inactive" > /dev/null && sudo systemctl status "$CELERY_BEAT" && ((ERROR++))
 
 
 
@@ -242,9 +256,10 @@ sudo systemctl reset-failed
 sudo systemctl reset-failed
 
 # remove old celery processes
-fmt_blue "Removing old gunicorn processes"
+fmt_blue "Removing old celery processes"
 sudo systemctl reset-failed
 (cd /etc/systemd/system/ && ls atlas-py-celery*) | grep '^atlas-py-celery' | grep -v "atlas-py-celery.*$HASH" | xargs -i sh -c 'sudo systemctl disable {} || true && sudo systemctl stop {} || true && sudo rm -f /etc/systemd/system/{}'
+(cd /etc/systemd/system/ && ls atlas-py-celery-beat*) | grep '^atlas-py-celery-beat' | grep -v "atlas-py-celery-beat.*$HASH" | xargs -i sh -c 'sudo systemctl disable {} || true && sudo systemctl stop {} || true && sudo rm -f /etc/systemd/system/{}'
 sudo systemctl reset-failed
 
 
@@ -276,11 +291,13 @@ ${BLUE}${UL}Nginx${RESET}
 ${RED}sudo${RESET} tail -F /var/log/nginx/error.log
 ${RED}sudo${RESET} systemctl status ${GREEN}nginx${RESET}
 
-${BLUE}${UL}Gunicorn${RESET}
-${RED}sudo${RESET} journalctl -u ${GREEN}gunicorn${RESET}
+${BLUE}${UL}Gunicorn and Celery${RESET}
+${RED}sudo${RESET} journalctl -xe${RESET}
 
 # check service status
-${RED}sudo${RESET} systemctl status ${GREEN}atlas-py.$HASH.service${RESET}
+${RED}sudo${RESET} systemctl status ${GREEN}$GUNICORN${RESET}
+${RED}sudo${RESET} systemctl status ${GREEN}$CELERY${RESET}
+${RED}sudo${RESET} systemctl status ${GREEN}$CELERY_BEAT${RESET}
 
 # read error logs
 ${RED}tail -300${RESET} /home/websites/$SITE/${GREEN}$HASH${RESET}/error.log${RESET}
