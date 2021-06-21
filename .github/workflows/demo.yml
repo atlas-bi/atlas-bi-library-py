@@ -19,11 +19,11 @@ jobs:
           args: pg:reset DATABASE --app ${{ secrets.HEROKU_APP_NAME }} --confirm ${{ secrets.HEROKU_APP_NAME }}
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-      - name: Deploy to Heroku
-        uses: gonuit/heroku-docker-deploy@v1.3.3
-        with:
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
-          email: ${{ secrets.HEROKU_EMAIL }}
-          dockerfile_name: Dockerfile
-          docker_options: --no-cache
+      # - name: Deploy to Heroku
+      #   uses: gonuit/heroku-docker-deploy@v1.3.3
+      #   with:
+      #     heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+      #     heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+      #     email: ${{ secrets.HEROKU_EMAIL }}
+      #     dockerfile_name: Dockerfile
+      #     docker_options: --no-cache
