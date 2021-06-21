@@ -32,11 +32,11 @@
 #SOLR_START_WAIT="$SOLR_STOP_WAIT"
 
 # Increase Java Heap as needed to support your indexing / query needs
-SOLR_HEAP="8g"
+#SOLR_HEAP="8g"
 
 # Expert: If you want finer control over memory options, specify them directly
 # Comment out SOLR_HEAP if you are using this though, that takes precedence
-#SOLR_JAVA_MEM="-Xms512m -Xmx512m"
+SOLR_JAVA_MEM="-Xms206m -Xmx206m"
 
 # Enable verbose GC logging...
 #  * If this is unset, various default options will be selected depending on which JVM version is in use
