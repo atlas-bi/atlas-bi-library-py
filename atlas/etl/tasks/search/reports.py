@@ -7,7 +7,7 @@ from celery import shared_task
 from django.conf import settings
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
-from django_chunked_iterator import batch_iterator
+from django_chunked_iterator import iterator
 from etl.tasks.functions import chunker, clean_doc
 from index.models import Reports
 
@@ -50,12 +50,13 @@ def reset_reports():
         .prefetch_related("docs__maintenance_schedule")
         .prefetch_related("docs__created_by")
         .prefetch_related("docs__modified_by")
-        .prefetch_related("docs__queries")
+        .prefetch_related("queries")
         .prefetch_related("docs__fragility_tags")
         .prefetch_related("docs__fragility_tags")
         .prefetch_related("docs__terms")
         .prefetch_related("projects")
-        .prefetch_related("projects__initiative")
+        .prefetch_related("projects__project")
+        .prefetch_related("projects__project__initiative")
         .all()
     )
 
@@ -70,7 +71,7 @@ def load_reports(reports):
     """
     docs = []
 
-    for report in batch_iterator(reports):
+    for report in iterator(reports):
         doc = {
             "id": "/reports/%s" % report.report_id,
             "atlas_id": report.report_id,
@@ -108,8 +109,10 @@ def load_reports(reports):
             "related_projects": [],
             "related_initiatives": [],
         }
+        for query in report.queries.all():
+            doc["query"].append(query.query)
 
-        if report.docs:
+        if report.has_docs():
             doc["description"].extend(
                 [report.docs.description, report.docs.assumptions]
             )
@@ -139,9 +142,6 @@ def load_reports(reports):
             doc["enabled_for_hyperspace"] = report.docs.enabled_for_hyperspace
             doc["do_not_purge"] = report.docs.do_not_purge
             doc["documented"] = "Y"
-
-            for query in report.docs.queries.all():
-                doc["query"].append(query.query)
 
             for tag_link in report.docs.fragility_tags.all():
                 doc["fragility_tags"].append(str(tag_link.fragility_tag))

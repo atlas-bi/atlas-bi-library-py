@@ -7,7 +7,7 @@ from celery import shared_task
 from django.conf import settings
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
-from django_chunked_iterator import batch_iterator
+from django_chunked_iterator import iterator
 from etl.tasks.functions import chunker, clean_doc
 from index.models import Initiatives
 
@@ -62,7 +62,7 @@ def load_initiatives(initiatives):
     """
     docs = []
 
-    for initiative in batch_iterator(initiatives):
+    for initiative in iterator(initiatives):
         doc = {
             "id": "/initiatives/%s" % initiative.initiative_id,
             "atlas_id": initiative.initiative_id,
