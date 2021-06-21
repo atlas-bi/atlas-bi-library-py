@@ -15,13 +15,15 @@ from index.models import Reports
 @receiver(post_delete, sender=Reports)
 def deleted_report(sender, **kwargs):
     """When report is delete, remove it from search."""
-    print(sender, **kwargs)
+    # print(sender, **kwargs)
+    print("ok")
 
 
 @receiver(post_save, sender=Reports)
 def updated_report(sender, **kwargs):
     """When report is updated, add it to search."""
-    print(sender, **kwargs)
+    # print(sender, **kwargs)
+    print("ok")
 
 
 @shared_task

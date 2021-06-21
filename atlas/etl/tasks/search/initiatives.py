@@ -15,13 +15,15 @@ from index.models import Initiatives
 @receiver(post_delete, sender=Initiatives)
 def deleted_initiative(sender, **kwargs):
     """When initiative is delete, remove it from search."""
-    print(sender, **kwargs)
+    # print(sender, **kwargs)
+    print("ok")
 
 
 @receiver(post_save, sender=Initiatives)
 def updated_initiative(sender, **kwargs):
     """When initiative is updated, add it to search."""
-    print(sender, **kwargs)
+    # print(sender, **kwargs)
+    print("ok")
 
 
 @shared_task

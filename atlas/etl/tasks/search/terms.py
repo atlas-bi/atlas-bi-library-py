@@ -15,13 +15,15 @@ from index.models import Terms
 @receiver(post_delete, sender=Terms)
 def deleted_term(sender, **kwargs):
     """When term is delete, remove it from search."""
-    print(sender, **kwargs)
+    # print(sender, **kwargs)
+    print("ok")
 
 
 @receiver(post_save, sender=Terms)
 def updated_term(sender, **kwargs):
     """When term is updated, add it to search."""
-    print(sender, **kwargs)
+    # print(sender, **kwargs)
+    print("ok")
 
 
 @shared_task

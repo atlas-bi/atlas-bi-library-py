@@ -15,13 +15,15 @@ from index.models import Projects
 @receiver(post_delete, sender=Projects)
 def deleted_project(sender, **kwargs):
     """When project is delete, remove it from search."""
-    print(sender, **kwargs)
+    # print(sender, **kwargs)
+    print("ok")
 
 
 @receiver(post_save, sender=Projects)
 def updated_project(sender, **kwargs):
     """When project is updated, add it to search."""
-    print(sender, **kwargs)
+    # print(sender, **kwargs)
+    print("ok")
 
 
 @shared_task
