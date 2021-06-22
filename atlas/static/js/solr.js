@@ -24,6 +24,15 @@
       cls = d.getElementById("sr-cls"),
       scls = d.getElementById("nav-search");
 
+  /**
+   * scroll to top when clicking search button
+   */
+   document.addEventListener('click', function(e){
+    if(e.target.closest('#nav-search')){
+      document.documentElement.scrollTop = document.body.scrollTop = 0;
+    }
+   })
+
 
   // load search template
   // ====================

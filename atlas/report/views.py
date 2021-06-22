@@ -55,7 +55,9 @@ def index(request, report_id):
 
     favorite = "yes" if request.user.has_favorite("report", report_id) else "no"
 
-    terms = Terms.objects.filter(report_docs__report__report_id=report_id).all()
+    terms = Terms.objects.filter(
+        report_docs__report_doc__report__report_id=report_id
+    ).all()
 
     # var report_terms = await (from r in _context.ReportObjectDocTerms
     #                           where r.ReportObjectId == id

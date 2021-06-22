@@ -6,6 +6,7 @@ python manage.py loaddata index/fixtures/*.yaml --settings atlas.settings.demo
 # after save events are added, as loaddata triggers those events.
 # will still need to start solr before load data however.
 /opt/solr/bin/solr start -force -noprompt -v
+export DJANGO_SETTINGS_MODULE="atlas.settings.demo" 
 python  manage.py  shell --command="import atlas; from etl.tasks.search import initiatives; initiatives.reset_initiatives()"
 python  manage.py  shell --command="import atlas; from etl.tasks.search import projects; projects.reset_projects()"
 python  manage.py  shell --command="import atlas; from etl.tasks.search import reports; reports.reset_reports()"

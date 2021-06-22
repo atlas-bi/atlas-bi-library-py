@@ -85,6 +85,7 @@ pysolr = {git = "https://github.com/christopherpickering/pysolr.git"}
 simplejson = "^3.17.2"
 django-chunked-iterator = "^0.6.1"
 
+
 [tool.poetry.extras]
 test = ["Pygments", "toml", "coverage", "selenium", "browserstack-local"]
 docs = ["Sphinx", "Pygments", "sphinx-autoapi", "sphinx-book-theme", "sphinx-copybutton", "sphinx-inline-tabs", "sphinx-panels", "myst-parser", "sphinxcontrib-youtube", "furo", "colorama"]
