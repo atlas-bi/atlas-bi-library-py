@@ -20,7 +20,7 @@ def deleted_initiative(sender, **kwargs):
 
 
 @receiver(post_save, sender=Initiatives)
-def updated_initiative(sender, **kwargs):
+def updated_initiative(sender, instance, **kwargs):
     """When initiative is updated, add it to search."""
     # print(sender, **kwargs)
     print("ok")

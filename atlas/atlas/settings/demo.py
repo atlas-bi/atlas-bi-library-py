@@ -43,6 +43,7 @@ SESSION_REDIS = {
     "retry_on_timeout": False,
 }
 
+CELERY_BROKER_URL = os.environ.get("REDIS_URL", "redis://localhost:6379")
 
 DEMO = True
 
