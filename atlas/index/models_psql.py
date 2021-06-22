@@ -162,7 +162,7 @@ class Reports(models.Model):
     @property
     def modified_at(self):
         if self._modified_at:
-            return datetime.strftime(self._modified_at, "%d/%m/%y")
+            return datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
     def system_run_url(self):
@@ -464,19 +464,19 @@ class ProjectAgreements(models.Model):
     @property
     def met_at(self):
         if self._met_at:
-            return datetime.strftime(self._met_at, "%d/%m/%y")
+            return datetime.strftime(self._met_at, "%m/%d/%y")
         return ""
 
     @property
     def effective_from(self):
         if self._effective_from:
-            return datetime.strftime(self._effective_from, "%d/%m/%y")
+            return datetime.strftime(self._effective_from, "%m/%d/%y")
         return ""
 
     @property
     def modified_at(self):
         if self._modified_at:
-            return datetime.strftime(self._modified_at, "%d/%m/%y")
+            return datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
 
@@ -573,7 +573,7 @@ class Initiatives(models.Model):
     @property
     def modified_at(self):
         if self._modified_at:
-            return datetime.strftime(self._modified_at, "%d/%m/%y")
+            return datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
 
@@ -644,7 +644,7 @@ class Projects(models.Model):
     @property
     def modified_at(self):
         if self._modified_at:
-            return datetime.strftime(self._modified_at, "%d/%m/%y")
+            return datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
     def __str__(self):
@@ -749,7 +749,7 @@ class ProjectReports(models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        related_name="reports",
+        related_name="report_annotations",
     )
     rank = models.IntegerField(blank=True, null=True)
 
@@ -764,7 +764,7 @@ class ProjectTerms(models.Model):
     term = models.ForeignKey(
         "Terms",
         on_delete=models.CASCADE,
-        related_name="terms",
+        related_name="projects",
         blank=True,
         null=True,
     )
@@ -778,7 +778,7 @@ class ProjectTerms(models.Model):
     rank = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
-        return self.project
+        return self.term.name
 
 
 class ProjectCommentStream(models.Model):
@@ -1185,13 +1185,13 @@ class ReportDocs(models.Model):
     @property
     def modified_at(self):
         if self._modified_at:
-            return datetime.strftime(self._modified_at, "%d/%m/%y")
+            return datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
     @property
     def created_at(self):
         if self._created_at:
-            return datetime.strftime(self._created_at, "%d/%m/%y")
+            return datetime.strftime(self._created_at, "%m/%d/%y")
         return ""
 
 
@@ -1344,25 +1344,25 @@ class Terms(models.Model):
     @property
     def approved_at(self):
         if self._approved_at:
-            return datetime.strftime(self._approved_at, "%d/%m/%y")
+            return datetime.strftime(self._approved_at, "%m/%d/%y")
         return ""
 
     @property
     def valid_from(self):
         if self._valid_from:
-            return datetime.strftime(self._valid_from, "%d/%m/%y")
+            return datetime.strftime(self._valid_from, "%m/%d/%y")
         return ""
 
     @property
     def valid_to(self):
         if self._valid_to:
-            return datetime.strftime(self._valid_to, "%d/%m/%y")
+            return datetime.strftime(self._valid_to, "%m/%d/%y")
         return ""
 
     @property
     def modified_at(self):
         if self._modified_at:
-            return datetime.strftime(self._modified_at, "%d/%m/%y")
+            return datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
     def __str__(self):

@@ -41,7 +41,7 @@
 
         <div class="pageNav">
             <a href="#about" class="pageNav-link">About</a>
-            {% if project.reports or project.terms %}
+            {% if project.report_annotations or project.term_annotationss %}
                 <a href="#links" class="pageNav-link">Linked Content</a>
             {% endif %}
             {% if project.attachments %}
@@ -64,9 +64,8 @@
 
     <section class="pageSection">
         <span class="location" id="links"></span>
-        {% if project.reports or project.terms %}
+        {% if project.report_annotations or project.term_annotationss %}
             {% include "project_links.html.dj" %}
-            <partial name="Details/_Links.cshtml"></partial>
         {% endif %}
     </section>
 

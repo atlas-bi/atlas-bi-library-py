@@ -191,7 +191,7 @@ class Reports(models.Model):
     @property
     def modified_at(self):
         if self._modified_at:
-            return datetime.strftime(self._modified_at, "%d/%m/%y")
+            return datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
 
@@ -565,19 +565,19 @@ class ProjectAgreements(models.Model):
     @property
     def met_at(self):
         if self._met_at:
-            return datetime.strftime(self._met_at, "%d/%m/%y")
+            return datetime.strftime(self._met_at, "%m/%d/%y")
         return ""
 
     @property
     def effective_from(self):
         if self._effective_from:
-            return datetime.strftime(self._effective_from, "%d/%m/%y")
+            return datetime.strftime(self._effective_from, "%m/%d/%y")
         return ""
 
     @property
     def modified_at(self):
         if self._modified_at:
-            return datetime.strftime(self._modified_at, "%d/%m/%y")
+            return datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
 
@@ -721,7 +721,7 @@ class Initiatives(models.Model):
     @property
     def modified_at(self):
         if self._modified_at:
-            return datetime.strftime(self._modified_at, "%d/%m/%y")
+            return datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
     class Meta:
@@ -810,7 +810,7 @@ class Projects(models.Model):
     @property
     def modified_at(self):
         if self._modified_at:
-            return datetime.strftime(self._modified_at, "%d/%m/%y")
+            return datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
     def __str__(self):
@@ -973,7 +973,7 @@ class ProjectReports(models.Model):
         db_column="DataProjectId",
         blank=True,
         null=True,
-        related_name="reports",
+        related_name="report_annotations",
     )
     rank = models.IntegerField(db_column="Rank", blank=True, null=True)
 
@@ -1003,12 +1003,12 @@ class ProjectTerms(models.Model):
         db_column="DataProjectId",
         blank=True,
         null=True,
-        related_name="terms",
+        related_name="term_annotations",
     )
     rank = models.IntegerField(db_column="Rank", blank=True, null=True)
 
     def __str__(self):
-        return self.report
+        return self.term.name
 
     class Meta:
         managed = False
@@ -1586,13 +1586,13 @@ class ReportDocs(models.Model):
     @property
     def modified_at(self):
         if self._modified_at:
-            return datetime.strftime(self._modified_at, "%d/%m/%y")
+            return datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
     @property
     def modified_at(self):
         if self._created_at:
-            return datetime.strftime(self._created_at, "%d/%m/%y")
+            return datetime.strftime(self._created_at, "%m/%d/%y")
         return ""
 
 

@@ -54,7 +54,7 @@ djangosaml2 = "^1.0.4"
 django-mathfilters = "^1.0.0"
 Django = "^3.2"
 psycopg2-binary = "^2.8.6"
-markdown-it-py = "^0.6.2"
+markdown-it-py = "^1.1.0"
 sphinx-autoapi = { version = "^1.5.1", optional = true }
 coverage = { version = "^5.3.1", optional = true }
 Pygments = { version = "^2.7.3", optional = true }
@@ -65,7 +65,7 @@ sphinx-book-theme = { version = "^0.0.39", optional = true }
 django-debug-toolbar = { version = "^3.2", optional = true }
 sphinx-inline-tabs = { version = "^2021.4.11-beta.9", python = ">=3.8,<4.0.0", optional = true }
 sphinx-panels = {version = "^0.5.2", optional = true }
-myst-parser = { version = "^0.13.7", optional = true }
+#myst-parser = { version = "^0.13.7", optional = true }
 sphinxcontrib-youtube = {git = "https://github.com/sphinx-contrib/youtube.git", optional = true }
 furo = { version = "^2021.2.28-beta.28", optional = true }
 colorama = { version = "^0.4.4", optional = true }
@@ -84,6 +84,8 @@ django-celery-beat = "^2.2.0"
 pysolr = {git = "https://github.com/christopherpickering/pysolr.git"}
 simplejson = "^3.17.2"
 django-chunked-iterator = "^0.6.1"
+linkify-it-py = "^1.0.1"
+mdit-py-plugins = "^0.2.8"
 
 
 [tool.poetry.extras]
