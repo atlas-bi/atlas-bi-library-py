@@ -6,7 +6,7 @@ python manage.py loaddata index/fixtures/*.yaml --settings atlas.settings.demo
 # after save events are added, as loaddata triggers those events.
 # will still need to start solr& celery before load data however.
 /opt/solr/bin/solr start -force -noprompt -v \
-&& (DJANGO_SETTINGS_MODULE='atlas.settings.dev' celery -A atlas worker -l DEBUG -E &) \
+&& (DJANGO_SETTINGS_MODULE='atlas.settings.demo' celery -A atlas worker -l DEBUG -E &) \
 && sleep 5 \
 && python  manage.py  shell --command="import atlas; from etl.tasks.search import initiatives; initiatives.reset_initiatives.delay()" \
 && python  manage.py  shell --command="import atlas; from etl.tasks.search import projects; projects.reset_projects.delay()" \
