@@ -12,6 +12,18 @@ from index.models import FavoriteFolders, Favorites, UserPreferences, UserRoles
 from atlas.decorators import admin_required
 
 
+@login_required
+def index(request):
+    """User profile page."""
+    context = {
+        "permissions": request.user.get_permissions(),
+        "user": request.user,
+        "favorites": request.user.get_favorites(),
+    }
+
+    return render(request, "user/index.html.dj", context)
+
+
 @admin_required
 @login_required
 def roles(request):

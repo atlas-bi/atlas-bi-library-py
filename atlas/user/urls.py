@@ -3,6 +3,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path("", views.index, name="user profile"),
     path("favorites", views.favorites, name="favorites"),
     path(
         "favorites_create_folder",
