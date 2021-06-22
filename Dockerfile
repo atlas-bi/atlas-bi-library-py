@@ -39,7 +39,8 @@ COPY /atlas .
 
 COPY release_tasks.sh .
 
-CMD /opt/solr/bin/solr start -force -noprompt -v && gunicorn atlas.wsgi-demo --workers 4 -b 0.0.0.0:$PORT --log-file -
+CMD DJANGO_SETTINGS_MODULE='atlas.settings.demo' celery -A atlas worker -l DEBUG -E --detach && \
+    /opt/solr/bin/solr start -force -noprompt -v && gunicorn atlas.wsgi-demo --workers 4 -b 0.0.0.0:$PORT --log-file -
 
 # heroku container: login
 # docker docker build   . -t atlas-py-test

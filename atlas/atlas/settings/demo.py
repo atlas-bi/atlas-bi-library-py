@@ -47,6 +47,8 @@ CELERY_BROKER_URL = os.environ.get("REDIS_URL", "redis://localhost:6379")
 
 DEMO = True
 
+LOGIN_TITLE = "Welcome to Atlas"
+
 
 class DisableMigrations:
     """Disable migrations to force a fresh db load."""

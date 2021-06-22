@@ -15,7 +15,16 @@
     <div class="login-cntr">
         <form action="" method="post" autocomplete="off">
              {% csrf_token %}
-            <h2 class="login-ttl">Atlas Dev</h2>
+            <h2 class="login-ttl">{{ settings.LOGIN_TITLE|default:"Atlas Dev"}}</h2>
+            {% if settings.DEMO %}
+            <p>
+                <pre class="login-subTtl">
+                    Demo Login Information:
+                    Basic User - user@user.user, pass: 123
+                    Admin User - admin@admin.admin, pass: 123
+                </pre>
+            </p>
+            {% endif %}
 
             <div class="login-inputGrp">
                 <div class="login-inputTtl" >Email</div>

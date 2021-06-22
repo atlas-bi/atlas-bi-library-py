@@ -7,7 +7,9 @@ def settings(request):
     """Return setting value... if allowed."""
     settings_in_templates = {}
     for attr in [
-        "ORG_NAME"
+        "ORG_NAME",
+        "LOGIN_TITLE",
+        "DEMO",
     ]:  # Write here the settings you want to expose to the templates.
         if hasattr(django_settings, attr):
             settings_in_templates[attr] = getattr(django_settings, attr)
