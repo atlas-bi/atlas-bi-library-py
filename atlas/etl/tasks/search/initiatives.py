@@ -45,11 +45,11 @@ def reset_initiatives():
         .select_related("financial_impact")
         .select_related("strategic_importance")
         .select_related("modified_by")
-        .prefetch_related("projects__terms")
-        .prefetch_related("projects__terms__term")
-        .prefetch_related("projects__reports")
-        .prefetch_related("projects__reports__report")
-        .prefetch_related("projects__reports__report__docs")
+        .prefetch_related("projects__term_annotations")
+        .prefetch_related("projects__term_annotations__term")
+        .prefetch_related("projects__report_annotations")
+        .prefetch_related("projects__report_annotations__report")
+        .prefetch_related("projects__report_annotations__report__docs")
         .all()
     )
 
@@ -98,25 +98,37 @@ def load_initiatives(initiatives):
             doc["related_projects"].append(str(project))
             doc["linked_description"].extend([project.purpose, project.description])
 
-            for term in project.terms.all():
-                doc["related_terms"].append(str(term.term))
+            for term_annotation in project.term_annotations.all():
+                doc["related_terms"].append(str(term_annotation.term))
                 doc["linked_description"].extend(
-                    [term.term.summary, term.term.technical_definition, term.annotation]
+                    [
+                        term_annotation.term.summary,
+                        term_annotation.term.technical_definition,
+                        term_annotation.annotation,
+                    ]
                 )
 
-            for report in project.reports.all():
+            for report_annotation in project.report_annotations.all():
 
-                doc["related_reports"].append(str(report.report))
+                doc["related_reports"].append(str(report_annotation.report))
 
-                doc["linked_name"].extend([report.report.name, report.report.title])
-
-                doc["linked_description"].extend(
-                    [report.report.description, report.report.detailed_description]
+                doc["linked_name"].extend(
+                    [report_annotation.report.name, report_annotation.report.title]
                 )
 
-                if report.report.has_docs():
+                doc["linked_description"].extend(
+                    [
+                        report_annotation.report.description,
+                        report_annotation.report.detailed_description,
+                    ]
+                )
+
+                if report_annotation.report.has_docs():
                     doc["linked_description"].extend(
-                        [report.report.docs.description, report.report.docs.assumptions]
+                        [
+                            report_annotation.report.docs.description,
+                            report_annotation.report.docs.assumptions,
+                        ]
                     )
 
         docs.append(clean_doc(doc))
