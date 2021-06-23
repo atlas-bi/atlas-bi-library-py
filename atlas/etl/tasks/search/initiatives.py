@@ -7,8 +7,8 @@ from celery import shared_task
 from django.conf import settings
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
-from django_chunked_iterator import iterator
-from etl.tasks.functions import chunker, clean_doc
+from django_chunked_iterator import batch_iterator
+from etl.tasks.functions import clean_doc
 from index.models import Initiatives
 
 
@@ -62,78 +62,81 @@ def load_initiatives(initiatives):
     1. Convert the objects to list of dicts
     2. Bulk load to solr in batchs of x
     """
-    docs = []
+    for initiative_batch in batch_iterator(initiatives, batch_size=1000):
+        # reset the batch. reports will be loaded to solr in batches
+        # of "batch_size"
+        docs = []
 
-    for initiative in iterator(initiatives):
-        doc = {
-            "id": "/initiatives/%s" % initiative.initiative_id,
-            "atlas_id": initiative.initiative_id,
-            "type": "initiatives",
-            "name": str(initiative),
-            "visible": "Y",
-            "orphan": "N",
-            "runs": 10,
-            "operations_owner": str(initiative.ops_owner),
-            "description": initiative.description,
-            "executive_owner": str(initiative.exec_owner),
-            "financial_impact": str(initiative.financial_impact),
-            "strategic_importance": str(initiative.strategic_importance),
-            "last_updated": (
-                datetime.strftime(
-                    initiative._modified_at.astimezone(pytz.utc), "%Y-%m-%dT%H:%M:%SZ"
-                )
-                if initiative._modified_at
-                else None
-            ),
-            "updated_by": str(initiative.modified_by),
-            "related_projects": [],
-            "linked_description": [],
-            "related_terms": [],
-            "related_reports": [],
-            "linked_name": [],
-        }
+        for initiative in initiative_batch:
+            doc = {
+                "id": "/initiatives/%s" % initiative.initiative_id,
+                "atlas_id": initiative.initiative_id,
+                "type": "initiatives",
+                "name": str(initiative),
+                "visible": "Y",
+                "orphan": "N",
+                "runs": 10,
+                "operations_owner": str(initiative.ops_owner),
+                "description": initiative.description,
+                "executive_owner": str(initiative.exec_owner),
+                "financial_impact": str(initiative.financial_impact),
+                "strategic_importance": str(initiative.strategic_importance),
+                "last_updated": (
+                    datetime.strftime(
+                        initiative._modified_at.astimezone(pytz.utc),
+                        "%Y-%m-%dT%H:%M:%SZ",
+                    )
+                    if initiative._modified_at
+                    else None
+                ),
+                "updated_by": str(initiative.modified_by),
+                "related_projects": [],
+                "linked_description": [],
+                "related_terms": [],
+                "related_reports": [],
+                "linked_name": [],
+            }
 
-        for project in initiative.projects.all():
+            for project in initiative.projects.all():
 
-            doc["related_projects"].append(str(project))
-            doc["linked_description"].extend([project.purpose, project.description])
+                doc["related_projects"].append(str(project))
+                doc["linked_description"].extend([project.purpose, project.description])
 
-            for term_annotation in project.term_annotations.all():
-                doc["related_terms"].append(str(term_annotation.term))
-                doc["linked_description"].extend(
-                    [
-                        term_annotation.term.summary,
-                        term_annotation.term.technical_definition,
-                        term_annotation.annotation,
-                    ]
-                )
-
-            for report_annotation in project.report_annotations.all():
-
-                doc["related_reports"].append(str(report_annotation.report))
-
-                doc["linked_name"].extend(
-                    [report_annotation.report.name, report_annotation.report.title]
-                )
-
-                doc["linked_description"].extend(
-                    [
-                        report_annotation.report.description,
-                        report_annotation.report.detailed_description,
-                    ]
-                )
-
-                if report_annotation.report.has_docs():
+                for term_annotation in project.term_annotations.all():
+                    doc["related_terms"].append(str(term_annotation.term))
                     doc["linked_description"].extend(
                         [
-                            report_annotation.report.docs.description,
-                            report_annotation.report.docs.assumptions,
+                            term_annotation.term.summary,
+                            term_annotation.term.technical_definition,
+                            term_annotation.annotation,
                         ]
                     )
 
-        docs.append(clean_doc(doc))
+                for report_annotation in project.report_annotations.all():
 
-    solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
-    # load the results in batches of 1k.
-    for doc in chunker(docs, 1000):
+                    doc["related_reports"].append(str(report_annotation.report))
+
+                    doc["linked_name"].extend(
+                        [report_annotation.report.name, report_annotation.report.title]
+                    )
+
+                    doc["linked_description"].extend(
+                        [
+                            report_annotation.report.description,
+                            report_annotation.report.detailed_description,
+                        ]
+                    )
+
+                    if report_annotation.report.has_docs():
+                        doc["linked_description"].extend(
+                            [
+                                report_annotation.report.docs.description,
+                                report_annotation.report.docs.assumptions,
+                            ]
+                        )
+
+            docs.append(clean_doc(doc))
+
+        solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
+
         solr.add(doc)
