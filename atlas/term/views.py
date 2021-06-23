@@ -116,7 +116,7 @@ def comments_delete(request, term_id, comment_id):
 @never_cache
 @login_required
 def comments(request, term_id):
-    """Return term comments."""
+    """Return a terms comments."""
     if request.method == "GET":
         term_comments = (
             TermComments.objects.filter(stream__term_id=term_id)
