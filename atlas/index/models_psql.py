@@ -641,6 +641,8 @@ class Projects(models.Model):
         null=True,
     )
 
+    hidden = models.CharField(max_length=1, blank=True, null=True)
+
     @property
     def modified_at(self):
         if self._modified_at:

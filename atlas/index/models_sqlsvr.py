@@ -805,7 +805,12 @@ class Projects(models.Model):
         null=True,
     )
 
-    hidden = models.CharField(max_length=1, blank=True, null=True)
+    hidden = models.CharField(
+        max_length=1,
+        blank=True,
+        null=True,
+        db_column="Hidden",
+    )
 
     @property
     def modified_at(self):
