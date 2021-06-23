@@ -162,8 +162,8 @@ def index(request, search_type="query", search_string=""):
         # get projects from results
         projects = (
             Projects.objects.filter(
-                Q(terms__term__term_id__in=term_ids)
-                | Q(reports__report__report_id__in=report_ids)
+                Q(term_annotations__term__term_id__in=term_ids)
+                | Q(report_annotations__report__report_id__in=report_ids)
             )
             .filter(Q(hidden__isnull=True) | Q(hidden="N"))
             .all()

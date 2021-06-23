@@ -5,25 +5,37 @@ import pysolr
 import pytz
 from celery import shared_task
 from django.conf import settings
-from django.db.models.signals import post_delete, post_save
+from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from django_chunked_iterator import iterator
 from etl.tasks.functions import chunker, clean_doc
 from index.models import Terms
 
 
-@receiver(post_delete, sender=Terms)
-def deleted_term(sender, **kwargs):
+@receiver(pre_delete, sender=Terms)
+def deleted_term(sender, instance, **kwargs):
     """When term is delete, remove it from search."""
-    # print(sender, **kwargs)
-    print("ok")
+    delete_term.delay(instance.term_id)
 
 
 @receiver(post_save, sender=Terms)
-def updated_term(sender, **kwargs):
+def updated_term(sender, instance, **kwargs):
     """When term is updated, add it to search."""
-    # print(sender, **kwargs)
-    print("ok")
+    load_term.delay(instance.term_id)
+
+
+@shared_task
+def delete_term(term_id):
+    """Celery task to remove a term from search."""
+    solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
+
+    solr.delete(q="type:terms AND atlas_id:%s" % term_id)
+
+
+@shared_task
+def load_term(term_id):
+    """Celery task to reload a term in search."""
+    load_terms(term_id)
 
 
 @shared_task
@@ -36,9 +48,18 @@ def reset_terms():
     """
     solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
 
-    solr.delete(q="type:aterms")
+    solr.delete(q="type:terms")
     solr.optimize()
 
+    load_terms()
+
+
+def load_terms(term_id=None):
+    """Load a group of terms to solr database.
+
+    1. Convert the objects to list of dicts
+    2. Bulk load to solr in batchs of x
+    """
     terms = (
         Terms.objects.select_related("approved_by")
         .select_related("modified_by")
@@ -48,21 +69,14 @@ def reset_terms():
         .prefetch_related("projects")
         .prefetch_related("projects__project")
         .prefetch_related("projects__project__initiative")
-        .all()
     )
 
-    load_terms(terms)
+    if term_id:
+        terms = terms.filter(term_id=term_id)
 
-
-def load_terms(terms):
-    """Load a group of terms to solr database.
-
-    1. Convert the objects to list of dicts
-    2. Bulk load to solr in batchs of x
-    """
     docs = []
 
-    for term in iterator(terms):
+    for term in iterator(terms.all()):
         doc = {
             "id": "/terms/%s" % term.term_id,
             "atlas_id": term.term_id,

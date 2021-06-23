@@ -31,6 +31,9 @@
 
   var test = 0;
 
+  /**
+   *
+   */
   function load() {
     // wait for codemirror to load
     if (test === 50) {
@@ -46,6 +49,9 @@
     }
   }
 
+  /**
+   *
+   */
   function l() {
     var editor = Array.prototype.slice.call(
         document.querySelectorAll(".editor:not(.loaded)")
@@ -57,6 +63,9 @@
     }
   }
 
+  /**
+   *
+   */
   function e(b) {
     this.mdrequest = null;
     this.target = b;
@@ -246,9 +255,10 @@
       var a = this;
 
       k(function () {
-        var data = {
-          md: a.mirror.getValue(),
-        };
+        // var data = {
+        //   md: a.mirror.getValue(),
+        // };
+        /*
         if (a.mdrequest) {
           a.mdrequest.abort();
         }
@@ -260,11 +270,13 @@
         );
         a.mdrequest.setRequestHeader("X-Requested-With", "XMLHttpRequest");
         a.mdrequest.send(JSON.stringify(data));
-        a.mdrequest.onload = function () {
-          a.editorPrevText.innerHTML = a.mdrequest.responseText;
+        a.mdrequest.onload = function () {*/
+          var md = window.markdownit();
+
+          a.editorPrevText.innerHTML = md.render(a.mirror.getValue());//a.mdrequest.responseText;
           document.dispatchEvent(new CustomEvent("code-highlight"));
           document.dispatchEvent(new CustomEvent("load-charts"));
-        };
+        // };
       });
     },
     // button events

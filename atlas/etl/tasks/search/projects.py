@@ -83,7 +83,7 @@ def load_projects(projects):
             "data_owner": str(project.data_owner),
             "financial_impact": str(project.financial_impact),
             "strategic_importance": str(project.strategic_importance),
-            "external_documentation_url": project.external_documentation_url,
+            "external_url": project.external_documentation_url,
             "last_updated": (
                 datetime.strftime(
                     project._modified_at.astimezone(pytz.utc), "%Y-%m-%dT%H:%M:%SZ"

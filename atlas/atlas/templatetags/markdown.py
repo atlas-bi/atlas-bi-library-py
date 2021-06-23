@@ -1,7 +1,4 @@
 """Custom template tag to render markdown."""
-import re
-
-import mdit_py_plugins
 from django import template
 from markdown_it import MarkdownIt
 from mdit_py_plugins.anchors import anchors_plugin

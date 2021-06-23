@@ -31,7 +31,7 @@
     if(e.target.closest('#nav-search')){
       document.documentElement.scrollTop = document.body.scrollTop = 0;
     }
-   })
+   });
 
 
   // load search template

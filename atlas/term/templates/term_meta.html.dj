@@ -13,12 +13,11 @@
     {% if term.external_standard_url %}
         <span class="listDetails-title">External Standard URL</span>
         <span><a href="{{ term.external_standard_url }}" target="_blank" rel="noopener">{{ term.external_standard_url }}</a></span>
-    {% else %}
-        <span class="listDetails-title">Has External Standard</span>
-        <span>No</span>
     {% endif %}
-    <span class="listDetails-title">Valid From</span>
-    <span>{{ term.valid_from }}</span>
+    {% if term.valid_from %}
+        <span class="listDetails-title">Valid From</span>
+        <span>{{ term.valid_from }}</span>
+    {% endif %}
     <span class="listDetails-title">Last Updated By</span>
     <span>{{ term.modified_by.full_name }}</span>
     <span class="listDetails-title">Last Updated</span>

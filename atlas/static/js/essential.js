@@ -16,6 +16,28 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * Serialize all form data into a JSON string
+ *
+ * @param {HTMLFormElement} form The form to serialize
+ * @returns {string} The serialized form data
+ */
+function serializeJSON (form) {
+  // Create a new FormData object
+  var formData = new FormData(form);
+
+  // Create an object to hold the name/value pairs
+  var pairs = {};
+
+  // Add each name/value pair to the object
+  for (es = formData.entries(); !(e = es.next()).done && (pair = e.value);) {
+        pairs[pair[0]] = pair[1];
+    }
+
+  // Return the JSON string
+  return JSON.stringify(pairs, null, 2);
+}
+
 var serialize = function serialize(form) {
   // Setup our serialized data
   var serialized = []; // Loop through each field in the form
@@ -74,6 +96,9 @@ var debounce = function debounce(func, wait, immediate) {
   };
 };
 
+/**
+ *
+ */
 function setCookie(name, value, days) {
   var expires = "",
     date = new Date();
@@ -85,6 +110,9 @@ function setCookie(name, value, days) {
   document.cookie = name + "=" + (value || "") + expires + "; path=/";
 }
 
+/**
+ *
+ */
 function getCookie(name) {
   var nameEQ = name + "=";
   var ca = document.cookie.split(";");
@@ -102,6 +130,9 @@ function getCookie(name) {
   return null;
 }
 
+/**
+ *
+ */
 function getOffset(element) {
   if (!element.getClientRects().length) {
     return {
@@ -118,6 +149,9 @@ function getOffset(element) {
   };
 }
 
+/**
+ *
+ */
 function getUrlVars(url) {
   url = url || window.location.href;
   var vars = {},
@@ -180,6 +214,9 @@ var cache = {
     loadScripts(document.getElementsByClassName("polyfillScripts"));
   }
 
+  /**
+   *
+   */
   function loadScripts(els) {
     els = els ? Array.prototype.slice.call(els) : [];
 
@@ -205,6 +242,9 @@ var cache = {
     }
   }
 
+  /**
+   *
+   */
   function showScrollToTop() {
     if (window.pageYOffset > 50) {
       document.getElementById("back-to-top").style.visibility = "visible";
@@ -221,6 +261,9 @@ var cache = {
     }
   });
 
+  /**
+   *
+   */
   function downloadJSAtOnload() {
     loadScripts(
       Array.prototype.slice.call(

@@ -12,7 +12,7 @@
             {% for report in related_reports %}
               <tr>
                 <td>
-                    <a  href="\reports\{{ report.report_id }}">{{ report.name }}</a>
+                    <a  href="\reports\{{ report.report_id }}">{{ report }}</a>
                 </td>
                 <td>
                     {% if report.run_url %}

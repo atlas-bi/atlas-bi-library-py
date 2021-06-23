@@ -27,17 +27,18 @@
           c = d.getElementsByClassName("comments")[0],
           url,
           q;
-        url = serialize(t);
+        json = serializeJSON(t);
         c.style.opacity = 0;
         c.style.transition = "opacity 0.1s ease-in-out";
         q = new XMLHttpRequest();
-        q.open("post", t.getAttribute("action") + "&" + url, true);
+        q.open("post", t.getAttribute("action"), true);
+        q.setRequestHeader("X-CSRFToken", csrftoken);
         q.setRequestHeader(
           "Content-Type",
           "application/x-www-form-urlencoded; charset=UTF-8"
         );
         q.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-        q.send();
+        q.send(json);
 
         q.onload = function () {
           c.innerHTML = q.responseText;

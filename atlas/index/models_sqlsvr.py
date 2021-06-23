@@ -1842,7 +1842,7 @@ class Terms(models.Model):
         null=True,
     )
     _modified_at = models.DateTimeField(
-        db_column="LastUpdatedDateTime", blank=True, null=True
+        db_column="LastUpdatedDateTime", blank=True, null=True, auto_now=True
     )
 
     @property
@@ -1879,7 +1879,12 @@ class Terms(models.Model):
 
 class TermCommentStream(models.Model):
     stream_id = models.AutoField(db_column="TermConversationId", primary_key=True)
-    term_id = models.ForeignKey(Terms, models.DO_NOTHING, db_column="TermId")
+    term = models.ForeignKey(
+        Terms,
+        models.DO_NOTHING,
+        db_column="TermId",
+        related_name="comment_streams",
+    )
 
     class Meta:
         managed = False
@@ -1890,19 +1895,22 @@ class TermComments(models.Model):
     comment_id = models.AutoField(
         db_column="TermConversationMessageID", primary_key=True
     )
-    stream_id = models.ForeignKey(
-        TermCommentStream, models.DO_NOTHING, db_column="TermConversationId"
+    stream = models.ForeignKey(
+        TermCommentStream,
+        models.DO_NOTHING,
+        db_column="TermConversationId",
+        related_name="comments",
     )
-    user_id = models.ForeignKey(
+    user = models.ForeignKey(
         "Users",
         models.DO_NOTHING,
         db_column="UserId",
         blank=True,
         null=True,
-        related_name="user_term_comments",
+        related_name="term_comments",
     )
     message = models.CharField(db_column="MessageText", max_length=4000)
-    posted_at = models.DateTimeField(db_column="PostDateTime")
+    posted_at = models.DateTimeField(db_column="PostDateTime", auto_now=True)
 
     class Meta:
         managed = False

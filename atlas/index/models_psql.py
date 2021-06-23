@@ -1339,7 +1339,7 @@ class Terms(models.Model):
         blank=True,
         null=True,
     )
-    _modified_at = models.DateTimeField(blank=True, null=True)
+    _modified_at = models.DateTimeField(blank=True, null=True, auto_now=True)
 
     @property
     def approved_at(self):
@@ -1371,27 +1371,29 @@ class Terms(models.Model):
 
 class TermCommentStream(models.Model):
     stream_id = models.AutoField(primary_key=True)
-    term_id = models.ForeignKey(
+    term = models.ForeignKey(
         Terms,
         on_delete=models.CASCADE,
+        related_name="comment_streams",
     )
 
 
 class TermComments(models.Model):
     comment_id = models.AutoField(primary_key=True)
-    stream_id = models.ForeignKey(
+    stream = models.ForeignKey(
         TermCommentStream,
         on_delete=models.CASCADE,
+        related_name="comments",
     )
-    user_id = models.ForeignKey(
+    user = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        related_name="user_term_comments",
+        related_name="term_comments",
     )
     message = models.CharField(max_length=4000)
-    posted_at = models.DateTimeField()
+    posted_at = models.DateTimeField(auto_now=True)
 
 
 class FavoriteFolders(models.Model):
