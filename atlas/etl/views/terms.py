@@ -67,7 +67,7 @@ def terms(request, arg):
         return JsonResponse({"message": task.enabled})
 
     elif arg == "run":
-        """Reload terms now."""
+        # Reload terms now.
         task_reset_terms.delay()
 
         return redirect("/etl")

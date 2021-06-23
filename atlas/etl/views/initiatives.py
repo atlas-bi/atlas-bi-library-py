@@ -67,7 +67,7 @@ def initiatives(request, arg):
         return JsonResponse({"message": task.enabled})
 
     elif arg == "run":
-        """Reload initiatives now."""
+        # Reload initiatives now.
         task_reset_initiatives.delay()
 
         return redirect("/etl")

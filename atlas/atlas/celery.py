@@ -1,6 +1,4 @@
 """Celery Setup."""
-import os
-
 from celery import Celery
 
 app = Celery("atlas")

@@ -1589,12 +1589,6 @@ class ReportDocs(models.Model):
             return datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
-    @property
-    def modified_at(self):
-        if self._created_at:
-            return datetime.strftime(self._created_at, "%m/%d/%y")
-        return ""
-
 
 class RolePermissionLinks(models.Model):
     permissionlinks_id = models.AutoField(

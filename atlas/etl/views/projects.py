@@ -67,7 +67,7 @@ def projects(request, arg):
         return JsonResponse({"message": task.enabled})
 
     elif arg == "run":
-        """Reload projects now."""
+        # Reload projects now.
         task_reset_projects.delay()
 
         return redirect("/etl")

@@ -67,7 +67,7 @@ def reports(request, arg):
         return JsonResponse({"message": task.enabled})
 
     elif arg == "run":
-        """Reload reports now."""
+        # Reload reports now.
         task_reset_reports.delay()
 
         return redirect("/etl")
