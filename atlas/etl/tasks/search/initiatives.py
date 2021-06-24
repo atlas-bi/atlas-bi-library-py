@@ -1,4 +1,6 @@
 """Celery tasks to keep initiative search up to date."""
+import contextlib
+
 import pysolr
 from celery import shared_task
 from django.conf import settings
@@ -6,7 +8,7 @@ from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from django_chunked_iterator import batch_iterator
 from etl.tasks.functions import clean_doc, solr_date
-from index.models import Initiatives
+from index.models import Initiatives, ReportDocs
 
 
 @receiver(pre_delete, sender=Initiatives)
@@ -73,23 +75,16 @@ def load_initiatives(initiative_id=None):
     if initiative_id:
         initiatives = initiatives.filter(initiative_id=initiative_id)
 
-    for initiative_batch in batch_iterator(initiatives, batch_size=1000):
-        # reset the batch. reports will be loaded to solr in batches
-        # of "batch_size"
-        process_initiative_batch(initiative_batch)
+    # reset the batch. reports will be loaded to solr in batches
+    # of "batch_size"
+    list(map(solr_load_batch, batch_iterator(initiatives.all(), batch_size=1000)))
 
 
-def process_initiative_batch(initiative_batch):
-    """Process a batch load."""
-    docs = []
-
-    for initiative in initiative_batch:
-
-        docs.append(build_doc(initiative))
-
+def solr_load_batch(batch):
+    """Process batch."""
     solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
 
-    solr.add(docs)
+    solr.add(list(map(build_doc, batch)))
 
 
 def build_doc(initiative):
@@ -119,9 +114,6 @@ def build_doc(initiative):
     for project in initiative.projects.all():
         doc = build_initiative_project_doc(project, doc)
 
-    for report_annotation in project.report_annotations.all():
-        doc = build_initiative_report_doc(report_annotation, doc)
-
     return clean_doc(doc)
 
 
@@ -139,6 +131,9 @@ def build_initiative_project_doc(project, doc):
                 term_annotation.annotation,
             ]
         )
+
+    for report_annotation in project.report_annotations.all():
+        doc = build_initiative_report_doc(report_annotation, doc)
 
     return doc
 
@@ -158,7 +153,7 @@ def build_initiative_report_doc(report_annotation, doc):
         ]
     )
 
-    if report_annotation.report.has_docs():
+    with contextlib.suppress(AttributeError):
         doc["linked_description"].extend(
             [
                 report_annotation.report.docs.description,

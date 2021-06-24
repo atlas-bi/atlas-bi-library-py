@@ -1,4 +1,6 @@
 """Celery tasks to keep term search up to date."""
+import contextlib
+
 import pysolr
 from celery import shared_task
 from django.conf import settings
@@ -71,24 +73,16 @@ def load_terms(term_id=None):
     if term_id:
         terms = terms.filter(term_id=term_id)
 
-    for term_batch in batch_iterator(terms.all(), batch_size=1000):
-        # reset the batch. reports will be loaded to solr in batches
-        # of "batch_size"
-        process_term_batch(term_batch)
+    # reset the batch. reports will be loaded to solr in batches
+    # of "batch_size"
+    list(map(solr_load_batch, batch_iterator(terms.all(), batch_size=1000)))
 
 
-def process_term_batch(term_batch):
-    """Process a batch load."""
-    docs = []
-
-    for term in term_batch:
-
-        docs.append(build_doc(term))
-
-    # load the results in batches of 1k.
+def solr_load_batch(batch):
+    """Process batch."""
     solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
 
-    solr.add(docs)
+    solr.add(list(map(build_doc, batch)))
 
 
 def build_doc(term):
@@ -120,46 +114,36 @@ def build_doc(term):
     }
 
     for project_link in term.projects.all():
-        doc = build_term_project_doc(project_link, doc)
+        """Build term project doc."""
+        doc["related_projects"].append(str(project_link.project))
+        doc["linked_description"].extend(
+            [project_link.project.description, project_link.annotation]
+        )
+
+        with contextlib.suppress(AttributeError):
+            doc["related_initiatives"].append(str(project_link.project.initiative))
+            doc["linked_description"].append(
+                project_link.project.initiative.description
+            )
 
     for report_doc_link in term.report_docs.all():
-        doc = build_term_report_doc(report_doc_link, doc)
+        """Build term report doc."""
+        doc["related_reports"].append(str(report_doc_link.report_doc.report))
+
+        doc["linked_name"].extend(
+            [
+                report_doc_link.report_doc.report.name,
+                report_doc_link.report_doc.report.title,
+            ]
+        )
+
+        doc["linked_description"].extend(
+            [
+                report_doc_link.report_doc.description,
+                report_doc_link.report_doc.assumptions,
+                report_doc_link.report_doc.report.description,
+                report_doc_link.report_doc.report.detailed_description,
+            ]
+        )
 
     return clean_doc(doc)
-
-
-def build_term_project_doc(project_link, doc):
-    """Build term project doc."""
-    doc["related_projects"].append(str(project_link.project))
-    doc["linked_description"].extend(
-        [project_link.project.description, project_link.annotation]
-    )
-
-    if project_link.project.initiative:
-        doc["related_initiatives"].append(str(project_link.project.initiative))
-        doc["linked_description"].append(project_link.project.initiative.description)
-
-    return doc
-
-
-def build_term_report_doc(report_doc_link, doc):
-    """Build term report doc."""
-    doc["related_reports"].append(str(report_doc_link.report_doc.report))
-
-    doc["linked_name"].extend(
-        [
-            report_doc_link.report_doc.report.name,
-            report_doc_link.report_doc.report.title,
-        ]
-    )
-
-    doc["linked_description"].extend(
-        [
-            report_doc_link.report_doc.description,
-            report_doc_link.report_doc.assumptions,
-            report_doc_link.report_doc.report.description,
-            report_doc_link.report_doc.report.detailed_description,
-        ]
-    )
-
-    return doc

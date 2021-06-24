@@ -1,4 +1,6 @@
 """Celery tasks to keep report search up to date."""
+import contextlib
+
 import pysolr
 from celery import shared_task
 from django.conf import settings
@@ -82,24 +84,16 @@ def load_reports(report_id=None):
     if report_id:
         reports = reports.filter(report_id=report_id)
 
-    for report_batch in batch_iterator(reports, batch_size=1000):
-        # reset the batch. reports will be loaded to solr in batches
-        # of "batch_size"
-        process_report_batch(report_batch)
+    # reset the batch. reports will be loaded to solr in batches
+    # of "batch_size"
+    list(map(solr_load_batch, batch_iterator(reports.all(), batch_size=1000)))
 
 
-def process_report_batch(report_batch):
-    """Process report batch."""
-    docs = []
-
-    for report in report_batch:
-
-        docs.append(build_doc(report))
-
-    # load the results in batches of 1k.
+def solr_load_batch(batch):
+    """Process batch."""
     solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
 
-    solr.add(docs)
+    solr.add(list(map(build_doc, batch)))
 
 
 def build_doc(report):
@@ -136,7 +130,8 @@ def build_doc(report):
         "related_initiatives": [],
     }
 
-    doc = build_report_doc(report, doc) if report.has_docs() else doc
+    with contextlib.suppress(AttributeError):
+        doc = build_report_doc(report, doc)
 
     for project_link in report.projects.all():
         doc = build_report_project_docs(project_link, doc)
@@ -185,7 +180,7 @@ def build_report_project_docs(project_link, doc):
         ]
     )
 
-    if project_link.project.initiative:
+    with contextlib.suppress(AttributeError):
         doc["related_initiatives"].append(str(project_link.project.initiative))
         doc["linked_description"].append(project_link.project.initiative.description)
 

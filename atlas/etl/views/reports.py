@@ -2,10 +2,9 @@
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.views.decorators.cache import never_cache
-from django_celery_beat.models import PeriodicTask
 
 from ..tasks.search.reports import reset_reports as task_reset_reports
-from . import build_task_status, solr_schedule
+from . import build_task_status, toggle_task_status
 
 
 @never_cache
@@ -25,16 +24,9 @@ def reports(request, arg):
         return JsonResponse(build_task_status(task_name, task_function))
 
     elif arg in ["enable", "disable"]:
-        task = PeriodicTask.objects.get_or_create(
-            crontab=solr_schedule(),
-            name=task_name,
-            task=task_function,
-        )[0]
-
-        task.enabled = bool(arg == "enable")
-        task.save()
-
-        return JsonResponse({"message": task.enabled})
+        return JsonResponse(
+            {"message": toggle_task_status(task_name, task_function, arg)}
+        )
 
     elif arg == "run":
         # Reload reports now.

@@ -1,5 +1,5 @@
 """Functions shared between ETL steps."""
-import datetime
+from datetime import datetime
 
 import pytz
 
@@ -29,9 +29,9 @@ def clean_doc(doc):
 
 def solr_date(date):
     """Convert datetime to solr date format."""
-    if isinstance(date, datetime.datetime):
+    if isinstance(date, datetime):
         return datetime.strftime(
-            date._modified_at.astimezone(pytz.utc),
+            date.astimezone(pytz.utc),
             "%Y-%m-%dT%H:%M:%SZ",
         )
 

@@ -1,3 +1,4 @@
+"""ETL View functions."""
 from django.utils import timezone
 from django_celery_beat.models import CrontabSchedule, PeriodicTask
 from django_celery_results.models import TaskResult
@@ -39,3 +40,17 @@ def build_task_status(task_name, task_function):
             timezone.datetime.strftime(task_details["date_done"], "%m/%d/%Y"),
         ),
     }
+
+
+def toggle_task_status(task_name, task_function, arg):
+    """Toggle a task status."""
+    task = PeriodicTask.objects.get_or_create(
+        crontab=solr_schedule(),
+        name=task_name,
+        task=task_function,
+    )[0]
+
+    task.enabled = bool(arg == "enable")
+    task.save()
+
+    return task.enabled

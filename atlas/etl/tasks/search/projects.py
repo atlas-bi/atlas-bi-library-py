@@ -1,4 +1,6 @@
 """Celery tasks to keep project search up to date."""
+import contextlib
+
 import pysolr
 from celery import shared_task
 from django.conf import settings
@@ -76,24 +78,16 @@ def load_projects(project_id=None):
     if project_id:
         projects = projects.filter(project_id=project_id)
 
-    for project_batch in batch_iterator(projects):
-        # reset the batch. reports will be loaded to solr in batches
-        # of "batch_size"
-        process_project_batch(project_batch)
+    # reset the batch. reports will be loaded to solr in batches
+    # of "batch_size"
+    list(map(solr_load_batch, batch_iterator(projects.all(), batch_size=1000)))
 
 
-def process_project_batch(project_batch):
-    """Process a batch load."""
-    docs = []
-
-    for project in project_batch:
-
-        docs.append(build_doc(project))
-
-    # load the results in batches of 1k.
+def solr_load_batch(batch):
+    """Process batch."""
     solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
 
-    solr.add(docs)
+    solr.add(list(map(build_doc, batch)))
 
 
 def build_doc(project):
@@ -123,7 +117,7 @@ def build_doc(project):
         "linked_description": [],
     }
 
-    if project.initiative:
+    with contextlib.suppress(AttributeError):
         doc["related_initiatives"].append(str(project.initiative))
         doc["linked_description"].append(project.initiative.description)
 
@@ -165,7 +159,7 @@ def build_project_report_doc(report_annotation, doc):
         ]
     )
 
-    if report_annotation.report.has_docs():
+    with contextlib.suppress(AttributeError):
         doc["linked_description"].extend(
             [
                 report_annotation.report.docs.description,

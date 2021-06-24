@@ -1114,7 +1114,6 @@ class Reportobjectweightedrunrank(models.Model):
 
 
 class ReportDocs(models.Model):
-    # doc_id = models.IntegerField( primary_key=True)
     ops_owner = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
