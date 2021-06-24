@@ -1,29 +1,38 @@
 """Celery tasks to keep initiative search up to date."""
-from datetime import datetime
-
 import pysolr
-import pytz
 from celery import shared_task
 from django.conf import settings
-from django.db.models.signals import post_delete, post_save
+from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from django_chunked_iterator import batch_iterator
 from etl.tasks.functions import clean_doc, solr_date
 from index.models import Initiatives
 
 
-@receiver(post_delete, sender=Initiatives)
-def deleted_initiative(sender, **kwargs):
+@receiver(pre_delete, sender=Initiatives)
+def deleted_initiative(sender, instance, **kwargs):
     """When initiative is delete, remove it from search."""
-    # print(sender, **kwargs)
-    print("ok")
+    delete_initiative.delay(instance.initiative_id)
 
 
 @receiver(post_save, sender=Initiatives)
 def updated_initiative(sender, instance, **kwargs):
     """When initiative is updated, add it to search."""
-    # print(sender, **kwargs)
-    print("ok")
+    load_initiative.delay(instance.initiative_id)
+
+
+@shared_task
+def delete_initiative(initiative_id):
+    """Celery task to remove a initiative from search."""
+    solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
+
+    solr.delete(q="type:initiatives AND atlas_id:%s" % initiative_id)
+
+
+@shared_task
+def load_initiative(initiative_id):
+    """Celery task to reload a initiative in search."""
+    load_initiatives(initiative_id)
 
 
 @shared_task
@@ -39,6 +48,15 @@ def reset_initiatives():
     solr.delete(q="type:initiatives")
     solr.optimize()
 
+    load_initiatives()
+
+
+def load_initiatives(initiative_id=None):
+    """Load a group of initiatives to solr database.
+
+    1. Convert the objects to list of dicts
+    2. Bulk load to solr in batchs of x
+    """
     initiatives = (
         Initiatives.objects.select_related("ops_owner")
         .select_related("exec_owner")
@@ -50,86 +68,102 @@ def reset_initiatives():
         .prefetch_related("projects__report_annotations")
         .prefetch_related("projects__report_annotations__report")
         .prefetch_related("projects__report_annotations__report__docs")
-        .all()
     )
 
-    load_initiatives(initiatives)
+    if initiative_id:
+        initiatives = initiatives.filter(initiative_id=initiative_id)
 
-
-def load_initiatives(initiatives):
-    """Load a group of initiatives to solr database.
-
-    1. Convert the objects to list of dicts
-    2. Bulk load to solr in batchs of x
-    """
     for initiative_batch in batch_iterator(initiatives, batch_size=1000):
         # reset the batch. reports will be loaded to solr in batches
         # of "batch_size"
-        docs = []
+        process_initiative_batch(initiative_batch)
 
-        for initiative in initiative_batch:
-            doc = {
-                "id": "/initiatives/%s" % initiative.initiative_id,
-                "atlas_id": initiative.initiative_id,
-                "type": "initiatives",
-                "name": str(initiative),
-                "visible": "Y",
-                "orphan": "N",
-                "runs": 10,
-                "operations_owner": str(initiative.ops_owner),
-                "description": initiative.description,
-                "executive_owner": str(initiative.exec_owner),
-                "financial_impact": str(initiative.financial_impact),
-                "strategic_importance": str(initiative.strategic_importance),
-                "last_updated": solr_date(initiative._modified_at),
-                "updated_by": str(initiative.modified_by),
-                "related_projects": [],
-                "linked_description": [],
-                "related_terms": [],
-                "related_reports": [],
-                "linked_name": [],
-            }
 
-            for project in initiative.projects.all():
+def process_initiative_batch(initiative_batch):
+    """Process a batch load."""
+    docs = []
 
-                doc["related_projects"].append(str(project))
-                doc["linked_description"].extend([project.purpose, project.description])
+    for initiative in initiative_batch:
 
-                for term_annotation in project.term_annotations.all():
-                    doc["related_terms"].append(str(term_annotation.term))
-                    doc["linked_description"].extend(
-                        [
-                            term_annotation.term.summary,
-                            term_annotation.term.technical_definition,
-                            term_annotation.annotation,
-                        ]
-                    )
+        docs.append(build_doc(initiative))
 
-                for report_annotation in project.report_annotations.all():
+    solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
 
-                    doc["related_reports"].append(str(report_annotation.report))
+    solr.add(docs)
 
-                    doc["linked_name"].extend(
-                        [report_annotation.report.name, report_annotation.report.title]
-                    )
 
-                    doc["linked_description"].extend(
-                        [
-                            report_annotation.report.description,
-                            report_annotation.report.detailed_description,
-                        ]
-                    )
+def build_doc(initiative):
+    """Build initiative doc."""
+    doc = {
+        "id": "/initiatives/%s" % initiative.initiative_id,
+        "atlas_id": initiative.initiative_id,
+        "type": "initiatives",
+        "name": str(initiative),
+        "visible": "Y",
+        "orphan": "N",
+        "runs": 10,
+        "operations_owner": str(initiative.ops_owner),
+        "description": initiative.description,
+        "executive_owner": str(initiative.exec_owner),
+        "financial_impact": str(initiative.financial_impact),
+        "strategic_importance": str(initiative.strategic_importance),
+        "last_updated": solr_date(initiative._modified_at),
+        "updated_by": str(initiative.modified_by),
+        "related_projects": [],
+        "linked_description": [],
+        "related_terms": [],
+        "related_reports": [],
+        "linked_name": [],
+    }
 
-                    if report_annotation.report.has_docs():
-                        doc["linked_description"].extend(
-                            [
-                                report_annotation.report.docs.description,
-                                report_annotation.report.docs.assumptions,
-                            ]
-                        )
+    for project in initiative.projects.all():
+        doc = build_initiative_project_doc(project, doc)
 
-            docs.append(clean_doc(doc))
+    for report_annotation in project.report_annotations.all():
+        doc = build_initiative_report_doc(report_annotation, doc)
 
-        solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
+    return clean_doc(doc)
 
-        solr.add(doc)
+
+def build_initiative_project_doc(project, doc):
+    """Build initiative project doc."""
+    doc["related_projects"].append(str(project))
+    doc["linked_description"].extend([project.purpose, project.description])
+
+    for term_annotation in project.term_annotations.all():
+        doc["related_terms"].append(str(term_annotation.term))
+        doc["linked_description"].extend(
+            [
+                term_annotation.term.summary,
+                term_annotation.term.technical_definition,
+                term_annotation.annotation,
+            ]
+        )
+
+    return doc
+
+
+def build_initiative_report_doc(report_annotation, doc):
+    """Build initiative report doc."""
+    doc["related_reports"].append(str(report_annotation.report))
+
+    doc["linked_name"].extend(
+        [report_annotation.report.name, report_annotation.report.title]
+    )
+
+    doc["linked_description"].extend(
+        [
+            report_annotation.report.description,
+            report_annotation.report.detailed_description,
+        ]
+    )
+
+    if report_annotation.report.has_docs():
+        doc["linked_description"].extend(
+            [
+                report_annotation.report.docs.description,
+                report_annotation.report.docs.assumptions,
+            ]
+        )
+
+    return doc

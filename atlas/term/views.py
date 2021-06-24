@@ -160,40 +160,35 @@ def comments(request, term_id):
 @login_required
 def edit(request, term_id=None):
     """Save term edits."""
-    if request.method == "POST":
-        if term_id:
-            term = Terms.objects.get(term_id=term_id)
-        else:
-            term = Terms()
+    if request.method == "GET":
+        return redirect(index)
 
-        term.name = request.POST.get("name", "")
-        term.summary = request.POST.get("summary", "")
-        term.technical_definition = request.POST.get("technical_definition", "")
+    term = Terms.objects.get(term_id=term_id) if term_id else Terms()
+    term.name = request.POST.get("name", "")
+    term.summary = request.POST.get("summary", "")
+    term.technical_definition = request.POST.get("technical_definition", "")
 
-        if term.approved == "N" and request.POST.get("approved", "N") == "Y":
-            # add date if term is now approved
-            term._approved_at = timezone.now()
-        elif term.approved == "N" and request.POST.get("approved", "N") == "Y":
-            # remove date it term is now not approved
-            term._approved_at = None
+    if term.approved == "N" and request.POST.get("approved", "N") == "Y":
+        # add date if term is now approved
+        term._approved_at = timezone.now()
+    elif term.approved == "Y" and request.POST.get("approved", "N") == "N":
+        # remove date it term is now not approved
+        term._approved_at = None
 
-        term.approved = request.POST.get("approved", "N")
+    term.approved = request.POST.get("approved", "N")
 
-        if request.POST.get("external_documentation_url"):
-            term.external_documentation_url = request.POST.get(
-                "external_documentation_url"
-            )
-            term.has_external_standard = "Y"
+    if request.POST.get("external_documentation_url"):
+        term.external_documentation_url = request.POST.get("external_documentation_url")
+        term.has_external_standard = "Y"
 
-        if request.POST.get("valid_from", "") != "":
-            term._valid_from = request.POST.get("valid_from")
+    if request.POST.get("valid_from", "") != "":
+        term._valid_from = request.POST.get("valid_from")
 
-        term.modified_by = request.user
+    term.modified_by = request.user
 
-        term.save()
+    term.save()
 
-        return redirect(item, term.term_id)
-    return redirect(index)
+    return redirect(item, term.term_id)
 
 
 @login_required

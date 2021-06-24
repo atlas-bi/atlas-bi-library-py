@@ -1,29 +1,38 @@
 """Celery tasks to keep report search up to date."""
-from datetime import datetime
-
 import pysolr
-import pytz
 from celery import shared_task
 from django.conf import settings
-from django.db.models.signals import post_delete, post_save
+from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from django_chunked_iterator import batch_iterator
 from etl.tasks.functions import clean_doc, solr_date
 from index.models import Reports
 
 
-@receiver(post_delete, sender=Reports)
-def deleted_report(sender, **kwargs):
+@receiver(pre_delete, sender=Reports)
+def deleted_report(sender, instance, **kwargs):
     """When report is delete, remove it from search."""
-    # print(sender, **kwargs)
-    print("ok")
+    delete_report.delay(instance.report_id)
 
 
 @receiver(post_save, sender=Reports)
-def updated_report(sender, **kwargs):
+def updated_report(sender, instance, **kwargs):
     """When report is updated, add it to search."""
-    # print(sender, **kwargs)
-    print("ok")
+    load_report.delay(instance.report_id)
+
+
+@shared_task
+def delete_report(report_id):
+    """Celery task to remove a report from search."""
+    solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
+
+    solr.delete(q="type:reports AND atlas_id:%s" % report_id)
+
+
+@shared_task
+def load_report(report_id):
+    """Celery task to reload a report in search."""
+    load_reports(report_id)
 
 
 @shared_task
@@ -39,6 +48,15 @@ def reset_reports():
     solr.delete(q="type:reports")
     solr.optimize()
 
+    load_reports()
+
+
+def load_reports(report_id=None):
+    """Load a group of reports to solr database.
+
+    1. Convert the objects to list of dicts
+    2. Bulk load to solr in batchs of x
+    """
     reports = (
         Reports.objects.select_related("created_by")
         .select_related("modified_by")
@@ -59,107 +77,116 @@ def reset_reports():
         .prefetch_related("projects")
         .prefetch_related("projects__project")
         .prefetch_related("projects__project__initiative")
-        .all()
     )
 
-    load_reports(reports)
+    if report_id:
+        reports = reports.filter(report_id=report_id)
 
-
-def load_reports(reports):
-    """Load a group of reports to solr database.
-
-    1. Convert the objects to list of dicts
-    2. Bulk load to solr in batchs of x
-    """
     for report_batch in batch_iterator(reports, batch_size=1000):
         # reset the batch. reports will be loaded to solr in batches
         # of "batch_size"
-        docs = []
+        process_report_batch(report_batch)
 
-        for report in report_batch:
-            doc = {
-                "id": "/reports/%s" % report.report_id,
-                "atlas_id": report.report_id,
-                "type": "reports",
-                "source_server": report.system_server,
-                "source_database": report.system_db,
-                "name": str(report),
-                "description": [
-                    report.description,
-                    report.detailed_description,
-                    report.system_description,
-                ],
-                "certification": report.certification_tag,
-                "report_type": report.type.short,
-                "author": str(report.created_by),
-                "report_last_updated_by": str(report.modified_by),
-                "report_last_updated": solr_date(report._modified_at),
-                "epic_master_file": report.system_identifier,
-                "epic_record_id": report.system_id,
-                "visible": report.visible,
-                "orphan": report.orphan or "N",
-                "runs": 10,
-                "epic_template": report.system_template_id,
-                "last_load_date": solr_date(report.etl_date),
-                "query": [],
-                "fragility_tags": [],
-                "related_terms": [],
-                "linked_description": [],
-                "related_projects": [],
-                "related_initiatives": [],
-            }
-            for query in report.queries.all():
-                doc["query"].append(query.query)
 
-            if report.has_docs():
-                doc["description"].extend(
-                    [report.docs.description, report.docs.assumptions]
-                )
-                doc["operations_owner"] = str(report.docs.ops_owner)
-                doc["requester"] = str(report.docs.requester)
-                doc["created"] = solr_date(report.docs._created_at)
-                doc["organizational_value"] = str(report.docs.org_value)
-                doc["estimated_run_frequency"] = str(report.docs.frequency)
-                doc["fragility"] = str(report.docs.fragility)
-                doc["executive_visibility"] = report.docs.executive_report or "N"
-                doc["maintenance_schedule"] = str(report.docs.maintenance_schedule)
-                doc["last_updated"] = solr_date(report.docs._modified_at)
-                doc["created_by"] = str(report.docs.created_by)
-                doc["updated_by"] = str(report.docs.modified_by)
-                doc["enabled_for_hyperspace"] = report.docs.enabled_for_hyperspace
-                doc["do_not_purge"] = report.docs.do_not_purge
-                doc["documented"] = "1"
+def process_report_batch(report_batch):
+    """Process report batch."""
+    docs = []
 
-                for tag_link in report.docs.fragility_tags.all():
-                    doc["fragility_tags"].append(str(tag_link.fragility_tag))
+    for report in report_batch:
 
-                for term_link in report.docs.terms.all():
-                    doc["related_terms"].append(str(term_link.term))
-                    doc["linked_description"].extend(
-                        [term_link.term.summary, term_link.term.technical_definition]
-                    )
+        docs.append(build_doc(report))
 
-            for project_link in report.projects.all():
-                doc["related_projects"].append(str(project_link.project))
-                doc["linked_description"].extend(
-                    [
-                        project_link.project.description,
-                        project_link.project.purpose,
-                        project_link.annotation,
-                    ]
-                )
+    # load the results in batches of 1k.
+    solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
 
-                if project_link.project.initiative:
-                    doc["related_initiatives"].append(
-                        str(project_link.project.initiative)
-                    )
-                    doc["linked_description"].append(
-                        project_link.project.initiative.description
-                    )
+    solr.add(docs)
 
-            docs.append(clean_doc(doc))
 
-        # load the results in batches of 1k.
-        solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
+def build_doc(report):
+    """Build a report doc."""
+    doc = {
+        "id": "/reports/%s" % report.report_id,
+        "atlas_id": report.report_id,
+        "type": "reports",
+        "source_server": report.system_server,
+        "source_database": report.system_db,
+        "name": str(report),
+        "description": [
+            report.description,
+            report.detailed_description,
+            report.system_description,
+        ],
+        "certification": report.certification_tag,
+        "report_type": report.type.short,
+        "author": str(report.created_by),
+        "report_last_updated_by": str(report.modified_by),
+        "report_last_updated": solr_date(report._modified_at),
+        "epic_master_file": report.system_identifier,
+        "epic_record_id": report.system_id,
+        "visible": report.visible,
+        "orphan": report.orphan or "N",
+        "runs": 10,
+        "epic_template": report.system_template_id,
+        "last_load_date": solr_date(report.etl_date),
+        "query": [query.query for query in report.queries.all()],
+        "fragility_tags": [],
+        "related_terms": [],
+        "linked_description": [],
+        "related_projects": [],
+        "related_initiatives": [],
+    }
 
-        solr.add(docs)
+    doc = build_report_doc(report, doc) if report.has_docs() else doc
+
+    for project_link in report.projects.all():
+        doc = build_report_project_docs(project_link, doc)
+
+    return clean_doc(doc)
+
+
+def build_report_doc(report, doc):
+    """Build doc from report docs."""
+    doc["description"].extend([report.docs.description, report.docs.assumptions])
+    doc["operations_owner"] = str(report.docs.ops_owner)
+    doc["requester"] = str(report.docs.requester)
+    doc["created"] = solr_date(report.docs._created_at)
+    doc["organizational_value"] = str(report.docs.org_value)
+    doc["estimated_run_frequency"] = str(report.docs.frequency)
+    doc["fragility"] = str(report.docs.fragility)
+    doc["executive_visibility"] = report.docs.executive_report or "N"
+    doc["maintenance_schedule"] = str(report.docs.maintenance_schedule)
+    doc["last_updated"] = solr_date(report.docs._modified_at)
+    doc["created_by"] = str(report.docs.created_by)
+    doc["updated_by"] = str(report.docs.modified_by)
+    doc["enabled_for_hyperspace"] = report.docs.enabled_for_hyperspace
+    doc["do_not_purge"] = report.docs.do_not_purge
+    doc["documented"] = "1"
+    doc["fragility_tags"].extend(
+        [str(tag_link.fragility_tag) for tag_link in report.docs.fragility_tags.all()]
+    )
+
+    for term_link in report.docs.terms.all():
+        doc["related_terms"].append(str(term_link.term))
+        doc["linked_description"].extend(
+            [term_link.term.summary, term_link.term.technical_definition]
+        )
+
+    return doc
+
+
+def build_report_project_docs(project_link, doc):
+    """Build report project docs."""
+    doc["related_projects"].append(str(project_link.project))
+    doc["linked_description"].extend(
+        [
+            project_link.project.description,
+            project_link.project.purpose,
+            project_link.annotation,
+        ]
+    )
+
+    if project_link.project.initiative:
+        doc["related_initiatives"].append(str(project_link.project.initiative))
+        doc["linked_description"].append(project_link.project.initiative.description)
+
+    return doc

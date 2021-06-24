@@ -146,43 +146,47 @@ def maint_status(request, report_id):
         maintenance_schedule__schedule_id=5
     )
 
-    past_due = False
+    context = {"maint_status": False}
 
-    if report.exists():
+    if not report.exists() or (
+        report.exists()
+        and report.logs.filter(log__status__status_id__in=[1, 2]).exists()
+    ):
+        return render(
+            request,
+            "sections/maint_status.html.dj",
+            context,
+        )
 
-        report = report.first()
-        next_date = today
-        if report.logs.filter(log__status__status_id__in=[1, 2]).exists():
+    report = report.first()
 
-            last_maintained = (
-                report.logs.filter(log__status__status_id__in=[1, 2])
-                .latest("log__maintained_at")
-                .log.maintained_at
-            )
+    last_maintained = (
+        report.logs.filter(log__status__status_id__in=[1, 2])
+        .latest("log__maintained_at")
+        .log.maintained_at
+    )
 
-            # quarterly
-            if report.maintenance_schedule_id == 1:
-                next_date = last_maintained + relativedelta(months=3)
-            # semi-yearly
-            elif report.maintenance_schedule_id == 2:
-                next_date = last_maintained + relativedelta(months=6)
-            # yearly
-            elif report.maintenance_schedule_id == 3:
-                next_date = last_maintained + relativedelta(years=1)
-            # bi-yearly
-            elif report.maintenance_schedule_id == 4:
-                next_date = last_maintained + relativedelta(years=2)
-            # otherwise.. past due
-            else:
-                next_date = last_maintained
+    maint_lookup = {
+        # quarterly
+        1: last_maintained + relativedelta(months=3),
+        # semi-yearly
+        2: last_maintained + relativedelta(months=6),
+        # yearly
+        3: last_maintained + relativedelta(years=1),
+        # bi-yearly
+        4: last_maintained + relativedelta(years=2),
+    }
 
-        if next_date <= today:
-            past_due = True
+    # lookup, otherwise past due
+    next_date = maint_lookup.get(report.maintenance_schedule_id, last_maintained)
+
+    if next_date <= today:
+        context["maint_status"] = True
 
     return render(
         request,
         "sections/maint_status.html.dj",
-        {"maint_status": past_due},
+        context,
     )
 
 

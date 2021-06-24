@@ -1,3 +1,4 @@
+"""Atlas Search."""
 import copy
 
 import pysolr
@@ -32,22 +33,7 @@ def index(request, search_type="query", search_string=""):
     Still need to add facet ranges
 
     """
-
-    if request.method == "GET":
-        context = {
-            "permissions": request.user.get_permissions(),
-            "user": request.user,
-            "favorites": request.user.get_favorites(),
-        }
-
-        return render(request, "search.html.dj", context)
-
-    # create a solr instance, based on the search type.
-    solr = pysolr.Solr(
-        settings.SOLR_URL, search_handler=search_type.replace("terms", "aterms")
-    )
-
-    RESERVED_CHARACTERS = (
+    reserved_characters = (
         "\\",
         "+",
         "-",
@@ -68,39 +54,42 @@ def index(request, search_type="query", search_string=""):
         ":",
         "/",
     )
+
+    if request.method == "GET":
+        context = {
+            "permissions": request.user.get_permissions(),
+            "user": request.user,
+            "favorites": request.user.get_favorites(),
+        }
+
+        return render(request, "search.html.dj", context)
+
+    request_dict = dict(request.GET)
+
+    # create a solr instance, based on the search type.
+    solr = pysolr.Solr(
+        settings.SOLR_URL, search_handler=search_type.replace("terms", "aterms")
+    )
+
     # clean search string
-    for char in RESERVED_CHARACTERS:
-        search_string = search_string.replace(char, "\\%s" % char)
+    for char in reserved_characters:
+        search_string = (
+            search_string.replace(char, "\\%s" % char)
+            if char in search_string
+            else search_string
+        )
 
     # build the solr search string
-    search_string = "name:({search})^4 OR name:*({search})*^3 OR ({search})^2 OR *({search})*~".format(
+    # pylint: disable=C0301
+    search_string = "name:({search})^4 OR name:*({search})*^3 OR ({search})^2 OR *({search})*~".format(  # noqa: E501
         search=search_string
     )
 
     # build solr fq (filter query)
-    filter_query = []
-
-    for key, values in dict(request.GET).items():
-        # it is possible to have multiple filters
-        # per field
-        if key != "visibility_text" and key != "start":
-            filter_query.append(
-                "%s"
-                % " OR ".join(
-                    "{!tag=%s}%s:%s"
-                    % (
-                        key,
-                        key,
-                        value,
-                    )
-                    for value in values
-                )
-            )
+    filter_query = build_filter_query(request_dict.items())
 
     # add visibility filter - by default only showing visible reports
-    if "visibility_text" not in dict(request.GET) or dict(request.GET).get(
-        "visibility_text"
-    ) == ["Y"]:
+    if request_dict.get("visibility_text", "Y") == ["Y"]:
         filter_query.append("{!tag=visibility_text}visibility_text:Y")
     else:
         filter_query.append(
@@ -108,26 +97,26 @@ def index(request, search_type="query", search_string=""):
         )
 
     # pagination
-    start = 0
-    if "start" in dict(request.GET):
-        start = dict(request.GET).get("start")[0]
+    start = request_dict.get("start", [0])[0]
 
+    # pylint: disable=C0301
     results = solr.search(
         search_string,
         fq=(",".join(filter_query)),
         rq="{!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=10}",
-        rqq='(documented:1 OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y OR certification_text:"Analytics Certified")',
+        rqq='(documented:1 OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y OR certification_text:"Analytics Certified")',  # noqa: E501
         start=start,
     )
 
-    output = {}
-    output["docs"] = results.docs
-    output["stats"] = (
-        results.stats.get("stats_fields", {}) if hasattr(results, "stats") else ""
-    )
-    output["facets"] = {}
-    output["hits"] = results.hits
-    output["start"] = start
+    output = {
+        "docs": results.docs,
+        "stats": results.stats.get("stats_fields", {})
+        if hasattr(results, "stats")
+        else "",
+        "facets": {},
+        "hits": results.hits,
+        "start": start,
+    }
 
     if hasattr(results, "facets"):
         output["facets"] = copy.deepcopy(results.facets)
@@ -144,7 +133,7 @@ def index(request, search_type="query", search_string=""):
     # pass back search filters
     output["search_filters"] = {"type": search_type or "query"}
 
-    for key, values in dict(request.GET).items():
+    for key, values in request_dict.items():
         output["search_filters"][key] = values
 
     # get project from results.. if not searching projects
@@ -170,12 +159,36 @@ def index(request, search_type="query", search_string=""):
             .distinct()
         )
 
-        output["projects"] = [project for project in projects]
+        output["projects"] = list(projects)
 
     return JsonResponse(output, safe=False)
 
 
+def build_filter_query(request_items):
+    """Build filter query from items."""
+    filter_query = []
+    for key, values in request_items:
+        # it is possible to have multiple filters
+        # per field
+        if key != "visibility_text" and key != "start":
+            filter_query.append(
+                "%s"
+                % " OR ".join(
+                    "{!tag=%s}%s:%s"
+                    % (
+                        key,
+                        key,
+                        value,
+                    )
+                    for value in values
+                )
+            )
+
+    return filter_query
+
+
 @login_required
 def lookup(request, lookup):
-    my_json = {}
+    """Mini search for dropdowns."""
+    my_json = {"lookup": lookup}
     return JsonResponse(my_json, safe=False)
