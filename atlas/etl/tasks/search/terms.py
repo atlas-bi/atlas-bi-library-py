@@ -114,7 +114,7 @@ def build_doc(term):
     }
 
     for project_link in term.projects.all():
-        """Build term project doc."""
+        # Build term project doc.
         doc["related_projects"].append(str(project_link.project))
         doc["linked_description"].extend(
             [project_link.project.description, project_link.annotation]
@@ -127,7 +127,7 @@ def build_doc(term):
             )
 
     for report_doc_link in term.report_docs.all():
-        """Build term report doc."""
+        # Build term report doc.
         doc["related_reports"].append(str(report_doc_link.report_doc.report))
 
         doc["linked_name"].extend(

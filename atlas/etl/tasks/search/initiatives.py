@@ -8,7 +8,7 @@ from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from django_chunked_iterator import batch_iterator
 from etl.tasks.functions import clean_doc, solr_date
-from index.models import Initiatives, ReportDocs
+from index.models import Initiatives
 
 
 @receiver(pre_delete, sender=Initiatives)
