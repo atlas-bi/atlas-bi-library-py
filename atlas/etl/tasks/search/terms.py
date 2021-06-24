@@ -8,7 +8,7 @@ from django.conf import settings
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from django_chunked_iterator import batch_iterator
-from etl.tasks.functions import clean_doc
+from etl.tasks.functions import clean_doc, solr_date
 from index.models import Terms
 
 
@@ -90,39 +90,15 @@ def load_terms(term_id=None):
                 "runs": 10,
                 "description": [term.summary, term.technical_definition],
                 "approved": term.approved or "N",
-                "approval_date": (
-                    datetime.strftime(
-                        term._approved_at.astimezone(pytz.utc), "%Y-%m-%dT%H:%M:%SZ"
-                    )
-                    if term._approved_at
-                    else None
-                ),
+                "approval_date": solr_date(term._approved_at),
                 "approved_by": str(term.approved_by),
                 "has_external_standard": "Y"
                 if bool(term.has_external_standard)
                 else "N",
                 "external_url": term.has_external_standard,
-                "valid_from": (
-                    datetime.strftime(
-                        term._valid_from.astimezone(pytz.utc), "%Y-%m-%dT%H:%M:%SZ"
-                    )
-                    if term._valid_from
-                    else None
-                ),
-                "valid_to": (
-                    datetime.strftime(
-                        term._valid_to.astimezone(pytz.utc), "%Y-%m-%dT%H:%M:%SZ"
-                    )
-                    if term._valid_to
-                    else None
-                ),
-                "last_updated": (
-                    datetime.strftime(
-                        term._modified_at.astimezone(pytz.utc), "%Y-%m-%dT%H:%M:%SZ"
-                    )
-                    if term._modified_at
-                    else None
-                ),
+                "valid_from": solr_date(term._valid_from),
+                "valid_to": solr_date(term._valid_to),
+                "last_updated": solr_date(term._modified_at),
                 "updated_by": str(term.modified_by),
                 "related_projects": [],
                 "related_initiatives": [],

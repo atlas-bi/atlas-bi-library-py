@@ -8,7 +8,7 @@ from django.conf import settings
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from django_chunked_iterator import batch_iterator
-from etl.tasks.functions import clean_doc
+from etl.tasks.functions import clean_doc, solr_date
 from index.models import Projects
 
 
@@ -88,13 +88,7 @@ def load_projects(projects):
                 "financial_impact": str(project.financial_impact),
                 "strategic_importance": str(project.strategic_importance),
                 "external_url": project.external_documentation_url,
-                "last_updated": (
-                    datetime.strftime(
-                        project._modified_at.astimezone(pytz.utc), "%Y-%m-%dT%H:%M:%SZ"
-                    )
-                    if project._modified_at
-                    else None
-                ),
+                "last_updated": solr_date(project._modified_at),
                 "updated_by": str(project.modified_by),
                 "related_initiatives": [],
                 "related_terms": [],

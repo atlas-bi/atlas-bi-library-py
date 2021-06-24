@@ -1,4 +1,7 @@
 """Functions shared between ETL steps."""
+import datetime
+
+import pytz
 
 
 def chunker(seq, size):
@@ -22,3 +25,14 @@ def clean_doc(doc):
     return {
         k: clean_list(v) for k, v in doc.items() if clean_list(v) not in [None, "None"]
     }
+
+
+def solr_date(date):
+    """Convert datetime to solr date format."""
+    if isinstance(date, datetime.datetime):
+        return datetime.strftime(
+            date._modified_at.astimezone(pytz.utc),
+            "%Y-%m-%dT%H:%M:%SZ",
+        )
+
+    return None

@@ -8,7 +8,7 @@ from django.conf import settings
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from django_chunked_iterator import batch_iterator
-from etl.tasks.functions import clean_doc
+from etl.tasks.functions import clean_doc, solr_date
 from index.models import Reports
 
 
@@ -93,24 +93,14 @@ def load_reports(reports):
                 "report_type": report.type.short,
                 "author": str(report.created_by),
                 "report_last_updated_by": str(report.modified_by),
-                "report_last_updated": (
-                    datetime.strftime(
-                        report._modified_at.astimezone(pytz.utc), "%Y-%m-%dT%H:%M:%SZ"
-                    )
-                    if report._modified_at
-                    else None
-                ),
+                "report_last_updated": solr_date(report._modified_at),
                 "epic_master_file": report.system_identifier,
                 "epic_record_id": report.system_id,
                 "visible": report.visible,
                 "orphan": report.orphan or "N",
                 "runs": 10,
                 "epic_template": report.system_template_id,
-                "last_load_date": datetime.strftime(
-                    report.etl_date.astimezone(pytz.utc), "%Y-%m-%dT%H:%M:%SZ"
-                )
-                if report.etl_date
-                else None,
+                "last_load_date": solr_date(report.etl_date),
                 "query": [],
                 "fragility_tags": [],
                 "related_terms": [],
@@ -127,27 +117,13 @@ def load_reports(reports):
                 )
                 doc["operations_owner"] = str(report.docs.ops_owner)
                 doc["requester"] = str(report.docs.requester)
-                doc["created"] = (
-                    datetime.strftime(
-                        report.docs._created_at.astimezone(pytz.utc),
-                        "%Y-%m-%dT%H:%M:%SZ",
-                    )
-                    if report.docs._created_at
-                    else None
-                )
+                doc["created"] = solr_date(report.docs._created_at)
                 doc["organizational_value"] = str(report.docs.org_value)
                 doc["estimated_run_frequency"] = str(report.docs.frequency)
                 doc["fragility"] = str(report.docs.fragility)
                 doc["executive_visibility"] = report.docs.executive_report or "N"
                 doc["maintenance_schedule"] = str(report.docs.maintenance_schedule)
-                doc["last_updated"] = (
-                    datetime.strftime(
-                        report.docs._modified_at.astimezone(pytz.utc),
-                        "%Y-%m-%dT%H:%M:%SZ",
-                    )
-                    if report.docs._modified_at
-                    else None
-                )
+                doc["last_updated"] = solr_date(report.docs._modified_at)
                 doc["created_by"] = str(report.docs.created_by)
                 doc["updated_by"] = str(report.docs.modified_by)
                 doc["enabled_for_hyperspace"] = report.docs.enabled_for_hyperspace

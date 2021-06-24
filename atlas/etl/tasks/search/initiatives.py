@@ -8,7 +8,7 @@ from django.conf import settings
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from django_chunked_iterator import batch_iterator
-from etl.tasks.functions import clean_doc
+from etl.tasks.functions import clean_doc, solr_date
 from index.models import Initiatives
 
 
@@ -81,14 +81,7 @@ def load_initiatives(initiatives):
                 "executive_owner": str(initiative.exec_owner),
                 "financial_impact": str(initiative.financial_impact),
                 "strategic_importance": str(initiative.strategic_importance),
-                "last_updated": (
-                    datetime.strftime(
-                        initiative._modified_at.astimezone(pytz.utc),
-                        "%Y-%m-%dT%H:%M:%SZ",
-                    )
-                    if initiative._modified_at
-                    else None
-                ),
+                "last_updated": solr_date(initiative._modified_at),
                 "updated_by": str(initiative.modified_by),
                 "related_projects": [],
                 "linked_description": [],
