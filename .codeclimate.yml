@@ -79,6 +79,8 @@ plugins:
     enabled: true
     plugins:
       - django
+      - celery
+    django_settings_module: atlas.settings.prod
     checks:
       wrong-import-order:
         enabled: false
