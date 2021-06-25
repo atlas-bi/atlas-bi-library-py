@@ -148,9 +148,13 @@ def maint_status(request, report_id):
 
     context = {"maint_status": False}
 
-    if not report.exists() or (
-        report.exists()
-        and report.logs.filter(log__status__status_id__in=[1, 2]).exists()
+    if (
+        not report.exists()
+        or (report.exists() and not hasattr(report, "logs"))
+        or (
+            report.exists()
+            and report.logs.filter(log__status__status_id__in=[1, 2]).exists()
+        )
     ):
         return render(
             request,

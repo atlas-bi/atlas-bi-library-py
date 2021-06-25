@@ -97,9 +97,6 @@ class Reports(models.Model):
 
         return None
 
-    def has_docs(self):
-        return hasattr(self, "docs")
-
     def system_editor_url(self, in_system, domain):
         """Build system editor url."""
         url = None

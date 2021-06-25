@@ -74,14 +74,14 @@ def index(request, search_type="query", search_string=""):
     with contextlib.suppress(AttributeError):
         output["facets"] = copy.deepcopy(results.facets)
 
-        for attr, value in results.facets.get("facet_fields").items():
-            if value:
-                fields = results.facets.get("facet_fields").get(attr)
+        for attr, _value in clean_dict(
+            results.facets.get("facet_fields").items()
+        ).items():
+            fields = results.facets.get("facet_fields").get(attr)
 
-                output["facets"]["facet_fields"][attr] = {
-                    field: fields[(num * 2) + 1]
-                    for num, field in enumerate(fields[::2])
-                }
+            output["facets"]["facet_fields"][attr] = {
+                field: fields[(num * 2) + 1] for num, field in enumerate(fields[::2])
+            }
 
     # break early if project, otherwise get project ads.
     if search_type == "projects":
@@ -90,6 +90,11 @@ def index(request, search_type="query", search_string=""):
     output["projects"] = build_project_ads(results.docs)
 
     return JsonResponse(output, safe=False)
+
+
+def clean_dict(my_dict):
+    """Remove none values from dict."""
+    return {attr: value for attr, value in my_dict if value}
 
 
 def build_project_ads(docs):
@@ -156,6 +161,9 @@ def build_search_string(search_string):
 
 def build_filter_query(request_dict):
     """Build filter query from items."""
+    if not request_dict:
+        return request_dict
+
     filter_query = []
 
     # add visibility filter - by default only showing visible reports

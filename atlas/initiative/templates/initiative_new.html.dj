@@ -1,0 +1,47 @@
+<div class="mdl" id="newModal" tabindex="-1">
+    <div class="mdl-d editorMdl">
+        <div class="mdl-c editorMdl-inner">
+            <div class="editorMdl-title">
+                <h2>Create a New Initiative<button type="button" data-dismiss="mdl" data-tooltip="Close">&times;</button></h2>
+                <div id="editorMdl-titleSave">changes saved.</div>
+            </div>
+            <div class="editorMdl-cnt" ss-container>
+                <div class="editorMdl-cntLiner">
+                    <form action="/initiatives/new" method="post" >
+                        {% csrf_token %}
+                        <h3>Details</h3>
+                        <div class="listDetails">
+
+                            <label>Name</label>
+                            <input name="name" data-initial-content="Name" required />
+
+                            <label>External Contacts</label>
+                            <select type="dynamic-dropdown" name="linked_contents" search-area="ext-cont" method="fullList"></select>
+
+                            <label>Operations Owner</label>
+                            <input type="dynamic-dropdown" name="ops_owner_id" search-area="UserSearch" />
+
+                            <label>Executive Owner</label>
+                            <input type="dynamic-dropdown" name="exec_owner_id" search-area="UserSearch" />
+
+                            <label>Financial Impact</label>
+                            <input type="dynamic-dropdown" asp-for="DpDataInitiative.FinancialImpact" search-area="financial-impact" method="fullList" />
+
+                            <label>Strategic Importance</label>
+                            <input type="dynamic-dropdown" asp-for="DpDataInitiative.StrategicImportance" search-area="strategic-importance" method="fullList"  />
+
+
+                            <label>Linked Projects</label>
+                            <select type="dynamic-dropdown" asp-for="LinkedDataProjects" id="linked-data-projects" search-area="ProjectSearch"></select>
+                        </div>
+
+                        <h3>Description</h3>
+                        <div class="editor" data-inputName="DpDataInitiative.Description" data-inputId="DpDataInitiative_Description"></div>
+
+                        <h3><button class="editor-save" type="submit">Save</button></h3>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
