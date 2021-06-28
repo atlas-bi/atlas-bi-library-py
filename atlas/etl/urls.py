@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import base, initiatives, projects, reports, terms
+from .views import base, initiatives, projects, reports, terms, users
 
 urlpatterns = [
     path("", base.index, name="index"),
@@ -10,6 +10,11 @@ urlpatterns = [
         "search/initiatives/<str:arg>",
         initiatives.initiatives,
         name="search initiatives",
+    ),
+    path(
+        "search/users/<str:arg>",
+        users.users,
+        name="search users",
     ),
     path(
         "search/projects/<str:arg>",

@@ -2,7 +2,7 @@
     <div class="mdl-d editorMdl">
         <div class="mdl-c editorMdl-inner">
             <div class="editorMdl-title">
-                <h2>Create a New Initiative<button type="button" data-dismiss="mdl" data-tooltip="Close">&times;</button></h2>
+                <h2 class="editorMdl-titleText">Create a New Initiative<button type="button" class="editorMdl-close" data-dismiss="mdl" data-tooltip="Close">&times;</button></h2>
                 <div id="editorMdl-titleSave">changes saved.</div>
             </div>
             <div class="editorMdl-cnt" ss-container>
@@ -25,18 +25,18 @@
                             <input type="dynamic-dropdown" name="exec_owner_id" search-area="UserSearch" />
 
                             <label>Financial Impact</label>
-                            <input type="dynamic-dropdown" asp-for="DpDataInitiative.FinancialImpact" search-area="financial-impact" method="fullList" />
+                            <input type="dynamic-dropdown" name="financial_impact" search-area="financial-impact" method="fullList" />
 
                             <label>Strategic Importance</label>
-                            <input type="dynamic-dropdown" asp-for="DpDataInitiative.StrategicImportance" search-area="strategic-importance" method="fullList"  />
+                            <input type="dynamic-dropdown" name="strategic_importance" search-area="strategic-importance" method="fullList"  />
 
 
                             <label>Linked Projects</label>
-                            <select type="dynamic-dropdown" asp-for="LinkedDataProjects" id="linked-data-projects" search-area="ProjectSearch"></select>
+                            <select type="dynamic-dropdown" name="linked_data_projects" id="linked-data-projects" search-area="ProjectSearch"></select>
                         </div>
 
                         <h3>Description</h3>
-                        <div class="editor" data-inputName="DpDataInitiative.Description" data-inputId="DpDataInitiative_Description"></div>
+                        <div class="editor" data-inputName="description" data-inputId="description"></div>
 
                         <h3><button class="editor-save" type="submit">Save</button></h3>
                     </form>

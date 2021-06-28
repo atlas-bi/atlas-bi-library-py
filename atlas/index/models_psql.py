@@ -264,7 +264,7 @@ class Users(AbstractUser):
     phone = models.TextField(blank=True, null=True)
     email = models.TextField(blank=True, null=True)
     base = models.TextField(blank=True, null=True)
-    epicid = models.TextField(blank=True, null=True)
+    system_id = models.TextField(blank=True, null=True)
     etl_date = models.DateTimeField(blank=True, null=True)
     last_login = models.DateTimeField(blank=True, null=True)
     is_active = True
@@ -685,7 +685,7 @@ class ProjectMilestoneFrequency(models.Model):
 class DpMilestonetasks(models.Model):
     milestonetaskid = models.AutoField(primary_key=True)
     milestonetemplateid = models.ForeignKey(
-        "DpMilestonetemplates",
+        "ProjectMilestoneTemplates",
         on_delete=models.CASCADE,
         blank=True,
         null=True,
@@ -719,8 +719,8 @@ class DpMilestonetaskscompleted(models.Model):
     duedate = models.DateTimeField(blank=True, null=True)
 
 
-class DpMilestonetemplates(models.Model):
-    milestonetemplateid = models.AutoField(primary_key=True)
+class ProjectMilestoneTemplates(models.Model):
+    template_id = models.AutoField(primary_key=True)
     name = models.TextField(blank=True, null=True)
     milestonetypeid = models.ForeignKey(
         ProjectMilestoneFrequency,
@@ -973,8 +973,8 @@ class MaintenanceSchedule(models.Model):
         return self.name
 
 
-class Organizationalvalue(models.Model):
-    organizationalvalue_id = models.AutoField(primary_key=True)
+class OrganizationalValue(models.Model):
+    value_id = models.AutoField(primary_key=True)
     name = models.TextField(blank=True, null=True)
 
     def __str__(self):
@@ -1129,7 +1129,7 @@ class ReportDocs(models.Model):
     description = models.TextField(blank=True, null=True)
     assumptions = models.TextField(blank=True, null=True)
     org_value = models.ForeignKey(
-        Organizationalvalue,
+        OrganizationalValue,
         on_delete=models.CASCADE,
         blank=True,
         null=True,
@@ -1305,7 +1305,7 @@ class Shareditems(models.Model):
 
 
 class StrategicImportance(models.Model):
-    strategic_importance_id = models.AutoField(primary_key=True)
+    importance_id = models.AutoField(primary_key=True)
     name = models.TextField(blank=True, null=True)
 
     def __str__(self):

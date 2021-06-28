@@ -195,7 +195,7 @@
   <field name="do_not_purge" type="text_en" />
   <field name="enabled_for_hyperspace" type="text_en" />
   <field name="epic_master_file" type="text_en"/>
-  <field name="epic_record_id" type="plongs"/>
+  <field name="epic_record_id" type="text_en"/>
   <field name="epic_template" type="text_en" />
   <field name="executive_owner" type="text_en"/>
   <field name="executive_visibility" type="text_en" />
@@ -237,6 +237,8 @@
   <field name="_text_" type="text_general" multiValued="true" indexed="true" stored="false"/>
   <field name="_version_" type="plong" indexed="false" stored="false"/>
   <field name="atlas_id" type="plongs"/>
+  <field name="employee_id" type="text_en"/>
+  <field name="email" type="text_en"/>
   <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
   <field name="linked_description" type="text_en" multiValued="true" />
   <field name="linked_name" type="text_en" multiValued="true"/>
@@ -378,6 +380,9 @@
   <copyField source="estimated_run_frequency" dest="all_text" />
   <copyField source="maintenance_schedule" dest="all_text" />
   <copyField source="query" dest="all_text" />
+  <copyField source="email" dest="all_text" />
+  <copyField source="employee_id" dest="all_text" />
+  <copyField source="epic_record_id" dest="all_text" />
 
   <copyField source="updated_by" dest="updated_by_text" />
   <copyField source="report_type" dest="report_type_text" />

@@ -5,7 +5,6 @@
                 <h2 class="editorMdl-titleText">Create a New Term<button type="button" class="editorMdl-close" data-dismiss="mdl" data-tooltip="Close">&times;</button></h2>
                 <div id="editorMdl-titleSave">changes saved.</div>
             </div>
-
             <div class="editorMdl-cnt" ss-container>
                 <div class="editorMdl-cntLiner">
                     <form action="/terms/new" method="post">

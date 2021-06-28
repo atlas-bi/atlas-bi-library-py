@@ -9,7 +9,21 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render
-from index.models import Projects
+from index.models import (
+    FinancialImpact,
+    Fragility,
+    FragilityTag,
+    InitiativeContacts,
+    MaintenanceLogStatus,
+    MaintenanceSchedule,
+    OrganizationalValue,
+    ProjectMilestoneFrequency,
+    ProjectMilestoneTemplates,
+    Projects,
+    RunFrequency,
+    StrategicImportance,
+    UserRoles,
+)
 
 
 @login_required
@@ -154,8 +168,13 @@ def build_search_string(search_string):
     for char in reserved_characters:
         search_string = search_string.replace(char, "\\%s" % char)
 
-    return "name:({search})^4 OR name:*({search})*^3 OR ({search})^2 OR *({search})*~".format(
-        search=search_string
+    # change search terms to fuzzy.. allow changing up to 1/2 the word
+    search_string_fuzzy = " ".join(
+        item + "~" + str(len(item) // 2) for item in search_string.split(" ")
+    )
+
+    return "name:({search})^4 OR name:({search_fuzzy})^3 OR ({search})^2 OR ({search_fuzzy})".format(
+        search=search_string, search_fuzzy=search_string_fuzzy
     )
 
 
@@ -174,8 +193,8 @@ def build_filter_query(request_dict):
             "{!tag=visibility_text}visibility_text:Y OR {!tag=visibility_text}visibility_text:N"
         )
 
-    request_dict = request_dict.pop("visibility_text", None)
-    request_dict = request_dict.pop("start", None)
+    request_dict = request_dict.pop("visibility_text")
+    request_dict = request_dict.pop("start")
 
     for key, values in request_dict.items():
         # it is possible to have multiple filters
@@ -199,5 +218,77 @@ def build_filter_query(request_dict):
 @login_required
 def lookup(request, lookup):
     """Mini search for dropdowns."""
-    my_json = {"lookup": lookup}
-    return JsonResponse(my_json, safe=False)
+    lookup_values = []
+    if lookup == "org-value":
+        lookup_values = [
+            {"ObjectId": value.value_id, "Name": value.name}
+            for value in OrganizationalValue.objects.all()
+        ]
+
+    elif lookup == "run-freq":
+        lookup_values = [
+            {"ObjectId": value.frequency_id, "Name": value.name}
+            for value in RunFrequency.objects.all()
+        ]
+
+    elif lookup == "fragility":
+        lookup_values = [
+            {"ObjectId": value.fragility_id, "Name": value.name}
+            for value in Fragility.objects.all()
+        ]
+
+    elif lookup == "maint-sched":
+        lookup_values = [
+            {"ObjectId": value.schedule_id, "Name": value.name}
+            for value in MaintenanceSchedule.objects.all()
+        ]
+
+    elif lookup == "ro-fragility":
+        lookup_values = [
+            {"ObjectId": value.tag_id, "Name": value.name}
+            for value in FragilityTag.objects.all()
+        ]
+
+    elif lookup == "maint-log-stat":
+        lookup_values = [
+            {"ObjectId": value.status_id, "Name": value.name}
+            for value in MaintenanceLogStatus.objects.all()
+        ]
+
+    elif lookup == "ext-cont":
+        lookup_values = [
+            {"ObjectId": value.contact_id, "Name": value.name}
+            for value in InitiativeContacts.objects.all()
+        ]
+
+    elif lookup == "mile-temp":
+        lookup_values = [
+            {"ObjectId": value.frequency_id, "Name": value.name}
+            for value in ProjectMilestoneFrequency.objects.all()
+        ]
+
+    elif lookup == "mile-type":
+        lookup_values = [
+            {"ObjectId": value.template_id, "Name": value.name}
+            for value in ProjectMilestoneTemplates.objects.all()
+        ]
+
+    elif lookup == "user-roles":
+        lookup_values = [
+            {"ObjectId": value.role_id, "Name": value.name}
+            for value in UserRoles.objects.all()
+        ]
+
+    elif lookup == "financial-impact":
+        lookup_values = [
+            {"ObjectId": value.impact_id, "Name": value.name}
+            for value in FinancialImpact.objects.all()
+        ]
+
+    elif lookup == "strategic-importance":
+        lookup_values = [
+            {"ObjectId": value.importance_id, "Name": value.name}
+            for value in StrategicImportance.objects.all()
+        ]
+
+    return JsonResponse(lookup_values, safe=False)

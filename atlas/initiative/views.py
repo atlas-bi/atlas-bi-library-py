@@ -1,11 +1,10 @@
 """Atlas Initiative views."""
-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
-from index.models import Initiatives
+from django.utils import timezone
+from index.models import Initiatives, Projects
 
 
-# Create your views here.
 @login_required
 def index(request):
     """Return main initiative list."""
@@ -52,3 +51,42 @@ def item(request, initiative_id):
         "initiative.html.dj",
         context,
     )
+
+
+@login_required
+def edit(request, initiative_id=None):
+    """Save initiative edits."""
+    if request.method == "GET":
+        return redirect(index)
+
+    initiative = (
+        Initiatives.objects.get(initiative_id=initiative_id)
+        if initiative_id
+        else Initiatives()
+    )
+    initiative.name = request.POST.get("name", "")
+    initiative.description = request.POST.get("description", "")
+
+    initiative.modified_by = request.user
+
+    initiative.save()
+
+    return redirect(item, initiative.initiative_id)
+
+
+@login_required
+def delete(request, initiative_id):
+    """Delete a initiative.
+
+    1. comments
+    2. comment streams
+    3. report doc initiative links
+    4. project annotations
+    5. initiative
+    """
+    Projects.objects.filter(initiative__initiative_id=initiative_id).update(
+        initiative=None
+    )
+    Initiatives.objects.get(initiative_id=initiative_id).delete()
+
+    return redirect(index)

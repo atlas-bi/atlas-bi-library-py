@@ -320,7 +320,7 @@ class Users(AbstractUser):
     phone = models.TextField(db_column="Phone", blank=True, null=True)
     email = models.TextField(db_column="Email", blank=True, null=True)
     base = models.TextField(db_column="Base", blank=True, null=True)
-    epicid = models.TextField(db_column="EpicId", blank=True, null=True)
+    system_id = models.TextField(db_column="EpicId", blank=True, null=True)
     etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
     last_login = models.DateTimeField(db_column="LastLogin", blank=True, null=True)
     is_active = True
@@ -880,7 +880,7 @@ class ProjectMilestoneFrequency(models.Model):
 class DpMilestonetasks(models.Model):
     milestonetaskid = models.AutoField(db_column="MilestoneTaskId", primary_key=True)
     milestonetemplateid = models.ForeignKey(
-        "DpMilestonetemplates",
+        "ProjectMilestoneTemplates",
         models.DO_NOTHING,
         db_column="MilestoneTemplateId",
         blank=True,
@@ -933,10 +933,8 @@ class DpMilestonetaskscompleted(models.Model):
         db_table = "DP_MilestoneTasksCompleted"
 
 
-class DpMilestonetemplates(models.Model):
-    milestonetemplateid = models.AutoField(
-        db_column="MilestoneTemplateId", primary_key=True
-    )
+class ProjectMilestoneTemplates(models.Model):
+    template_id = models.AutoField(db_column="MilestoneTemplateId", primary_key=True)
     name = models.TextField(db_column="Name", blank=True, null=True)
     milestonetypeid = models.ForeignKey(
         ProjectMilestoneFrequency,
@@ -1301,10 +1299,8 @@ class MaintenanceSchedule(models.Model):
         return self.name
 
 
-class Organizationalvalue(models.Model):
-    organizationalvalue_id = models.AutoField(
-        db_column="OrganizationalValueID", primary_key=True
-    )
+class OrganizationalValue(models.Model):
+    value_id = models.AutoField(db_column="OrganizationalValueID", primary_key=True)
     name = models.TextField(db_column="OrganizationalValueName", blank=True, null=True)
 
     class Meta:
@@ -1516,7 +1512,7 @@ class ReportDocs(models.Model):
     )
     assumptions = models.TextField(db_column="KeyAssumptions", blank=True, null=True)
     org_value = models.ForeignKey(
-        Organizationalvalue,
+        OrganizationalValue,
         models.DO_NOTHING,
         db_column="OrganizationalValueID",
         blank=True,
@@ -1782,7 +1778,7 @@ class Shareditems(models.Model):
 
 
 class StrategicImportance(models.Model):
-    strategic_importance_id = models.AutoField(
+    importance_id = models.AutoField(
         db_column="StrategicImportanceId", primary_key=True
     )
     name = models.TextField(db_column="Name", blank=True, null=True)

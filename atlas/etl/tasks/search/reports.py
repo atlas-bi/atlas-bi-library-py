@@ -11,12 +11,6 @@ from etl.tasks.functions import clean_doc, solr_date
 from index.models import Reports
 
 
-@receiver(pre_delete, sender=Reports)
-def deleted_report(sender, instance, **kwargs):
-    """When report is delete, remove it from search."""
-    delete_report.delay(instance.report_id)
-
-
 @receiver(post_save, sender=Reports)
 def updated_report(sender, instance, **kwargs):
     """When report is updated, add it to search."""
