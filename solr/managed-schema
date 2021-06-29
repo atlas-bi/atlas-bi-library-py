@@ -198,6 +198,7 @@
   <field name="epic_record_id" type="text_en"/>
   <field name="epic_template" type="text_en" />
   <field name="executive_owner" type="text_en"/>
+  <field name="user_roles" type="text_en" multiValued="true" stored="true" indexed="true" />
   <field name="executive_visibility" type="text_en" />
   <field name="estimated_run_frequency" type="text_en" />
   <field name="external_url" type="text_en"/>
@@ -320,6 +321,7 @@
   <copyField source="related_reports" dest="related_Reports_str" maxChars="256"/>
   <copyField source="related_terms" dest="related_Terms_str" maxChars="256"/>
   <copyField source="description" dest="description_str" maxChars="256"/>
+  <copyField source="user_roles" dest="user_roles_str" maxChars="256" />
   <copyField source="id" dest="id_str" maxChars="256"/>
   <copyField source="type" dest="type_str" maxChars="256"/>
   <copyField source="certification" dest="certification_str" maxChars="256"/>
@@ -356,6 +358,7 @@
   <copyField source="related_reports" dest="all_text" />
   <copyField source="related_terms" dest="all_text" />
   <copyField source="description" dest="all_text" />
+  <copyField source="user_roles" dest="all_text" />
   <copyField source="type" dest="all_text" />
   <copyField source="certification" dest="all_text" />
   <copyField source="linked_name" dest="all_text" />

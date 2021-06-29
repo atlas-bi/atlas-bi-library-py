@@ -1,5 +1,24 @@
-"""Term app tests."""
-from index.models import Terms
+"""Term app tests.
+
+
+Run test for this app with::
+
+    poetry run coverage erase; \
+    poetry run coverage run -p manage.py test term/ --no-input --pattern="test_views.py" --settings atlas.settings.test; \
+    poetry run coverage combine; \
+    poetry run coverage report --include "term*" -m
+
+"""
+from django.utils import timezone
+from index.models import (
+    Projects,
+    ProjectTerms,
+    ReportDocs,
+    ReportTerms,
+    TermComments,
+    TermCommentStream,
+    Terms,
+)
 
 from atlas.testutils import AtlasTestCase
 
@@ -71,3 +90,295 @@ class TermTestCase(AtlasTestCase):
         self.login()
         term = Terms.objects.first()
         assert self.client.get("/terms/%s/comments" % term.term_id).status_code == 200
+
+    def test_create_comments(self):
+        """Check that we can create comments."""
+        self.login()
+        term = Terms.objects.first()
+        data = {"message": "new comment"}
+        self.assertEqual(
+            self.client.post(
+                "/terms/%s/comments" % term.term_id,
+                data=data,
+                content_type="application/json",
+            ).status_code,
+            302,
+        )
+
+        # assert that the comment stream was created
+        self.assertTrue(
+            TermCommentStream.objects.filter(term_id=term.term_id)
+            .filter(comments__message=data["message"])
+            .exists()
+        )
+
+        # assert that the comment was created
+        self.assertTrue(
+            TermComments.objects.filter(stream__term_id=term.term_id)
+            .filter(message=data["message"])
+            .exists()
+        )
+
+        # attempt to add a second stream and verify it
+        data = {"message": "new comment two"}
+        self.assertEqual(
+            self.client.post(
+                "/terms/%s/comments" % term.term_id,
+                data=data,
+                content_type="application/json",
+            ).status_code,
+            302,
+        )
+        self.assertTrue(
+            TermComments.objects.filter(stream__term_id=term.term_id)
+            .filter(message=data["message"])
+            .exists()
+        )
+        self.assertTrue(
+            TermCommentStream.objects.filter(term_id=term.term_id)
+            .filter(comments__message=data["message"])
+            .exists()
+        )
+
+        # attempt to add another comment to the streamand verify it is there
+        stream = (
+            TermComments.objects.filter(stream__term_id=term.term_id)
+            .filter(message=data["message"])
+            .first()
+        )
+        data = {"message": "stream reply", "stream": stream.stream_id}
+        self.assertEqual(
+            self.client.post(
+                "/terms/%s/comments" % term.term_id,
+                data=data,
+                content_type="application/json",
+            ).status_code,
+            302,
+        )
+        self.assertTrue(
+            TermComments.objects.filter(stream__term_id=term.term_id)
+            .filter(message=data["message"])
+            .filter(stream_id=stream.stream_id)
+            .exists()
+        )
+        self.assertTrue(
+            TermCommentStream.objects.filter(term_id=term.term_id)
+            .filter(comments__message=data["message"])
+            .filter(stream_id=stream.stream_id)
+            .exists()
+        )
+
+        # attempt to delete a comment and verify it is gone
+        comment = TermComments.objects.filter(stream__term_id=term.term_id).first()
+        self.assertTrue(
+            self.client.post(
+                "/terms/%s/comments/%s/delete"
+                % (
+                    term.term_id,
+                    comment.comment_id,
+                ),
+                content_type="application/json",
+            ),
+            302,
+        )
+
+        # attempt to delete a stream
+        comment = TermComments.objects.filter(stream__term_id=term.term_id).first()
+        data = {"stream": comment.stream_id}
+        self.assertTrue(
+            self.client.post(
+                "/terms/%s/comments/%s/delete"
+                % (
+                    term.term_id,
+                    comment.comment_id,
+                ),
+                data=data,
+                content_type="application/json",
+            ),
+            302,
+        )
+
+        # add a comment with no message
+        self.assertEqual(
+            self.client.post(
+                "/terms/%s/comments" % term.term_id, content_type="application/json"
+            ).status_code,
+            302,
+        )
+
+    def test_create_term(self):
+        """Check that we can create and edit terms."""
+        self.login()
+
+        # first with all details
+        data = {
+            "name": "test term",
+            "summary": "term summary",
+            "technical_definition": "term deff",
+        }
+        response = self.client.post("/terms/new", data=data, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        last_url = response.redirect_chain[-1][0]
+        term_id = last_url[last_url.rindex("/") + 1 :]
+
+        # verify that the new term exists
+        term = Terms.objects.get(term_id=term_id)
+
+        # check name, summary, tech def
+        self.assertEqual(term.name, data["name"])
+        self.assertEqual(term.summary, data["summary"])
+        self.assertEqual(term.technical_definition, data["technical_definition"])
+
+        # verify it is not approved
+        self.assertEqual(term.approved, "N")
+        self.assertEqual(term._approved_at, None)
+
+        # verify there is no documentation
+        self.assertEqual(term.external_standard_url, None)
+        self.assertEqual(term.has_external_standard, None)
+
+        # check that get sends us back to the term.
+        self.assertEqual(self.client.get("/terms/new").status_code, 302)
+
+        # approve the term
+        data["approved"] = "Y"
+
+        response = self.client.post("/terms/%s/edit" % term_id, data=data, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        # refresh term instance
+        term = Terms.objects.get(term_id=term_id)
+
+        # verify that it is approved
+        self.assertEqual(term.approved, "Y")
+        self.assertTrue(term._approved_at != None)
+
+        # unapprove the term
+        data["approved"] = "N"
+        response = self.client.post("/terms/%s/edit" % term_id, data=data, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        # refresh term instance
+        term = Terms.objects.get(term_id=term_id)
+
+        # verify that it is not approved
+        self.assertEqual(term.approved, "N")
+        self.assertEqual(term._approved_at, None)
+
+        # add external documentation
+        data["external_standard_url"] = "out://er.space"
+        response = self.client.post("/terms/%s/edit" % term_id, data=data, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        # refresh term instance
+        term = Terms.objects.get(term_id=term_id)
+
+        # verify it is there
+        self.assertEqual(term.external_standard_url, data["external_standard_url"])
+        self.assertEqual(term.has_external_standard, "Y")
+
+        # remove external documentation
+        data.pop("external_standard_url")
+        response = self.client.post("/terms/%s/edit" % term_id, data=data, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        # refresh term instance
+        term = Terms.objects.get(term_id=term_id)
+
+        # verify that it is gone
+        self.assertEqual(term.external_standard_url, None)
+        self.assertEqual(term.has_external_standard, None)
+
+        # check valid from
+        data["valid_from"] = timezone.now()
+        response = self.client.post("/terms/%s/edit" % term_id, data=data, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        # refresh term instance
+        term = Terms.objects.get(term_id=term_id)
+
+        # check date
+        self.assertEqual(term._valid_from, data["valid_from"])
+
+        data.pop("valid_from")
+        response = self.client.post("/terms/%s/edit" % term_id, data=data, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        # refresh term instance
+        term = Terms.objects.get(term_id=term_id)
+
+        # verify that it is gone
+        self.assertEqual(term._valid_from, None)
+
+    def test_delete_term(self):
+        """Try to delete a term."""
+        self.login()
+
+        # first with all details
+        data = {
+            "name": "test term",
+            "summary": "term summary",
+            "technical_definition": "term deff",
+        }
+        response = self.client.post("/terms/new", data=data, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        last_url = response.redirect_chain[-1][0]
+        term_id = last_url[last_url.rindex("/") + 1 :]
+
+        # add a comment
+        data = {"message": "new comment"}
+        self.assertEqual(
+            self.client.post(
+                "/terms/%s/comments" % term_id,
+                data=data,
+                content_type="application/json",
+            ).status_code,
+            302,
+        )
+
+        # add a report link
+        report_doc = ReportDocs.objects.first()
+        ReportTerms(report_doc=report_doc, term_id=term_id).save()
+
+        # verify it exists
+        self.assertEqual(
+            ReportTerms.objects.filter(report_doc=report_doc)
+            .filter(term_id=term_id)
+            .exists(),
+            True,
+        )
+
+        # add a project link
+        project = Projects.objects.first()
+
+        ProjectTerms(project=project, term_id=term_id).save()
+
+        # verify it exists
+        self.assertEqual(
+            ProjectTerms.objects.filter(project=project)
+            .filter(term_id=term_id)
+            .exists(),
+            True,
+        )
+
+        # delete the term
+        response = self.client.get("/terms/%s/delete" % term_id, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        # verify that report link is gone
+        self.assertEqual(
+            ReportTerms.objects.filter(report_doc=report_doc)
+            .filter(term_id=term_id)
+            .exists(),
+            False,
+        )
+
+        # verify that the project link is gone
+        self.assertEqual(
+            ProjectTerms.objects.filter(project=project)
+            .filter(term_id=term_id)
+            .exists(),
+            False,
+        )

@@ -307,6 +307,10 @@ class Users(AbstractUser):
             )
         )
 
+    def get_roles(self):
+        """Get users roles."""
+        return list(self.role_links.values_list("role__name"))
+
     def get_favorites(self):
         # return all favorites
         return list(self.favorites.values_list("item_type", "item_id"))
@@ -522,12 +526,26 @@ class InitiativeContacts(models.Model):
 
 class InitiativeContactLinks(models.Model):
     link_id = models.AutoField(primary_key=True)
-    initiative_id = models.ForeignKey(
-        "Initiatives", blank=True, null=True, on_delete=models.CASCADE
+    initiative = models.ForeignKey(
+        "Initiatives",
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name="contact_links",
     )
-    contact_id = models.ForeignKey(
-        InitiativeContacts, blank=True, null=True, on_delete=models.CASCADE
+    contact = models.ForeignKey(
+        InitiativeContacts,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name="initiative_links",
     )
+
+    def __str__(self):
+        return "{} @{}".format(
+            self.contact.name,
+            self.contact.company,
+        )
 
 
 class Initiatives(models.Model):
@@ -1527,19 +1545,19 @@ class UserPreferences(models.Model):
 
 class UserRolelinks(models.Model):
     rolelinks_id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(
+    user = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
         blank=True,
         null=True,
         related_name="role_links",
     )
-    role_id = models.ForeignKey(
+    role = models.ForeignKey(
         "UserRoles",
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        related_name="role_links",
+        related_name="role_users",
     )
 
 

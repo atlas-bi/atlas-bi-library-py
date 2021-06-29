@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.views.decorators.cache import never_cache
 from index.models import (
     FinancialImpact,
     Fragility,
@@ -35,6 +36,7 @@ def template(request):
     return render(None, "template.html")
 
 
+@never_cache
 @login_required
 def index(request, search_type="query", search_string=""):
     """Atlas Search.
@@ -140,7 +142,7 @@ def build_project_ads(docs):
     )
 
 
-def build_search_string(search_string):
+def build_search_string(search_string, search_type=None):
     """Escape invalid chars."""
     reserved_characters = (
         "\\",
@@ -164,16 +166,24 @@ def build_search_string(search_string):
         "/",
     )
 
+    def build_fuzzy(sub_str):
+        """Add fuzzy option."""
+        if len(sub_str) > 1:
+            fuzy_type = "~" if sub_str is None else "*~"
+            return sub_str + fuzy_type + str(max(len(sub_str) // 3, 1))
+
+        return sub_str
+
     # clean search string
     for char in reserved_characters:
         search_string = search_string.replace(char, "\\%s" % char)
 
     # change search terms to fuzzy.. allow changing up to 1/2 the word
     search_string_fuzzy = " ".join(
-        item + "~" + str(len(item) // 2) for item in search_string.split(" ")
+        build_fuzzy(item) for item in search_string.split(" ")
     )
 
-    return "name:({search})^4 OR name:({search_fuzzy})^3 OR ({search})^2 OR ({search_fuzzy})".format(
+    return "name:({search})^6 OR name:({search_fuzzy})^3 OR ({search})^5 OR ({search_fuzzy})".format(
         search=search_string, search_fuzzy=search_string_fuzzy
     )
 
@@ -215,6 +225,39 @@ def build_filter_query(request_dict):
     return ",".join(filter_query)
 
 
+@never_cache
+@login_required
+def user_lookup(request):
+    """User lookup."""
+    search_string = build_search_string(request.GET.get("s", ""), search_type="fuzzy")
+
+    solr = pysolr.Solr(settings.SOLR_URL, search_handler="users")
+
+    results = solr.search(build_search_string(search_string), **{"rows": 20})
+
+    output = [
+        {"ObjectId": item.get("atlas_id"), "Name": item.get("name")} for item in results
+    ]
+    return JsonResponse(output, safe=False)
+
+
+@never_cache
+@login_required
+def project_lookup(request):
+    """Project lookup."""
+    search_string = build_search_string(request.GET.get("s", ""), search_type="fuzzy")
+
+    solr = pysolr.Solr(settings.SOLR_URL, search_handler="projects")
+
+    results = solr.search(build_search_string(search_string), **{"rows": 20})
+
+    output = [
+        {"ObjectId": item.get("atlas_id"), "Name": item.get("name")} for item in results
+    ]
+    return JsonResponse(output, safe=False)
+
+
+@never_cache
 @login_required
 def lookup(request, lookup):
     """Mini search for dropdowns."""

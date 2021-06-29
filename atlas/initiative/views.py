@@ -66,11 +66,16 @@ def edit(request, initiative_id=None):
     )
     initiative.name = request.POST.get("name", "")
     initiative.description = request.POST.get("description", "")
-
+    initiative.ops_owner_id = request.POST.get("ops_owner_id")
+    initiative.exec_owner_id = request.POST.get("exec_owner_id")
+    initiative.financial_impact_id = request.POST.get("financial_impact")
+    initiative.strategic_importance_id = request.POST.get("strategic_importance")
     initiative.modified_by = request.user
-
     initiative.save()
 
+    Projects.objects.filter(
+        project_id__in=request.POST.getlist("linked_data_projects")
+    ).update(initiative=initiative)
     return redirect(item, initiative.initiative_id)
 
 

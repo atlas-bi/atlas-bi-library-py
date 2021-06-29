@@ -1,4 +1,24 @@
 {% extends 'layout.html.dj' %}
+{% load compress %}
+{% if 22 in permissions or 21 in permissions %}
+    {% block start_css %}
+        {{ block.super }}
+        <link rel="stylesheet" href="/static/lib/codemirror/mycss.css" type="text/css" />
+        <link rel="stylesheet" href="/static/css/live-editor.scss" type="text/x-scss" />
+    {% endblock start_css %}
+{% endif %}
+
+
+{% block modals %}
+    {{ block.super }}
+    {% if 22 in permissions %}
+        {% include "initiative_edit.html.dj" %}
+    {% endif %}
+    {% if 21 in permissions %}
+        {% include "initiative_new.html.dj" %}
+    {% endif %}
+{% endblock modals %}
+
 
 {% block side_links %}
     {% if 22 in permissions %}
@@ -51,3 +71,34 @@
     {% include "initiative_details.html.dj" %}
 
 {% endblock body %}
+
+
+{% block js %}
+    {% compress js file flowchart %}
+        <script src="/static/lib/flowchart/raphael.min.js"></script>
+        <script src="/static/lib/flowchart/flowchart.min.js"></script>
+        <script src="/static/lib/flowchart/custom.js"></script>
+    {% endcompress %}
+
+    <script>hljs.highlightAll();</script>
+    {% if 20 in permissions %}
+
+        {% compress js file editor %}
+            <script src="/static/lib/codemirror/codemirror.js" ></script>
+            <script src="/static/lib/codemirror/autorefresh.js" ></script>
+            <script src="/static/lib/codemirror/overlay.js" ></script>
+            <script src="/static/lib/codemirror/markdown.js" ></script>
+            <script src="/static/lib/codemirror/gfm.js" ></script>
+            <script src="/static/lib/codemirror/python.js" ></script>
+            <script src="/static/lib/codemirror/r.js" ></script>
+            <script src="/static/lib/codemirror/shell.js" ></script>
+            <script src="/static/lib/codemirror/sql.js" ></script>
+            <script src="/static/js/editor.js" ></script>
+            <script src="/static/js/utility/checkbox.js" ></script>
+        {% endcompress %}
+
+        {% compress js file report_editor %}
+            <script src="/static/js/reportEditor.js" async></script>
+        {% endcompress %}
+    {% endif %}
+{% endblock js %}

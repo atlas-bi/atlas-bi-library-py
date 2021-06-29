@@ -963,7 +963,7 @@
       <str name="facet.field">operations_owner_text</str>
       <str name="facet.field">analytics_owner_text</str>
       <str name="facet.field">executive_owner_text</str>
-      <str name="facet.field">data_manager_text</str>
+      <str name="facet.field">data_owner_text</str>
       <str name="facet.field">financial_impact_text</str>
       <str name="facet.field">strategic_importance_text</str>
       <str name="facet.range.start">NOW/MONTH-12MONTH</str>
@@ -981,6 +981,7 @@
       <str name="indent">true</str>
       <str name="fl">id name email epic_record_id type atlas_id</str>
       <str name="facet">on</str>
+      <str name="facet.field">user_roles</str>
       <str name="facet.limit">10</str>
       <str name="facet.field">{!ex=dt}type</str>
     </lst>

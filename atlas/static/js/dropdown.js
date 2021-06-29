@@ -774,12 +774,13 @@
             if (typeof q !== "undefined" && q !== null) q.abort();
 
             q = new XMLHttpRequest();
-            q.open("post", "/Search?handler=" + sa + "&" + url, true);
+            q.open("get", "/search/" + sa + "?" + url, true);
             q.setRequestHeader(
               "Content-Type",
               "application/x-www-form-urlencoded; charset=UTF-8"
             );
             q.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+            q.setRequestHeader("X-CSRFToken", csrftoken);
             q.send();
 
             q.onload = function () {

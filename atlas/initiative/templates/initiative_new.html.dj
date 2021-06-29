@@ -16,13 +16,13 @@
                             <input name="name" data-initial-content="Name" required />
 
                             <label>External Contacts</label>
-                            <select type="dynamic-dropdown" name="linked_contents" search-area="ext-cont" method="fullList"></select>
+                            <select type="dynamic-dropdown" name="linked_contacts" search-area="ext-cont" method="fullList"></select>
 
                             <label>Operations Owner</label>
-                            <input type="dynamic-dropdown" name="ops_owner_id" search-area="UserSearch" />
+                            <input type="dynamic-dropdown" name="ops_owner_id" search-area="user_lookup" />
 
                             <label>Executive Owner</label>
-                            <input type="dynamic-dropdown" name="exec_owner_id" search-area="UserSearch" />
+                            <input type="dynamic-dropdown" name="exec_owner_id" search-area="user_lookup" />
 
                             <label>Financial Impact</label>
                             <input type="dynamic-dropdown" name="financial_impact" search-area="financial-impact" method="fullList" />
@@ -32,7 +32,7 @@
 
 
                             <label>Linked Projects</label>
-                            <select type="dynamic-dropdown" name="linked_data_projects" id="linked-data-projects" search-area="ProjectSearch"></select>
+                            <select type="dynamic-dropdown" name="linked_data_projects" id="linked-data-projects" search-area="project_lookup"></select>
                         </div>
 
                         <h3>Description</h3>

@@ -80,6 +80,7 @@ def build_doc(user):
         "employee_id": user.employee_id,
         "email": user.email,
         "epic_record_id": user.system_id,
+        "user_roles": [role[0] for role in user.get_roles()],
         "visible": "Y",
         "orphan": "N",
         "runs": 10,

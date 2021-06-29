@@ -343,6 +343,10 @@ class Users(AbstractUser):
             or self.role_links.permission_links.filter(permissions_id=perm).exists()
         )
 
+    def get_roles(self):
+        """Get users roles."""
+        return list(self.role_links.values_list("role__name"))
+
     def get_permissions(self):
         # return all permissions
         if self.role_links.filter(role_id=1).exists():
@@ -645,20 +649,28 @@ class InitiativeContacts(models.Model):
 
 class InitiativeContactLinks(models.Model):
     link_id = models.AutoField(db_column="LinkId", primary_key=True)
-    initiative_id = models.ForeignKey(
+    initiative = models.ForeignKey(
         "Initiatives",
         models.DO_NOTHING,
         db_column="InitiativeId",
         blank=True,
         null=True,
+        related_name="contact_links",
     )
-    contact_id = models.ForeignKey(
+    contact = models.ForeignKey(
         InitiativeContacts,
         models.DO_NOTHING,
         db_column="ContactId",
         blank=True,
         null=True,
+        related_name="initiative_links",
     )
+
+    def __str__(self):
+        return "{} @{}".format(
+            self.contact.name,
+            self.contact.company,
+        )
 
     class Meta:
         managed = False
@@ -2051,7 +2063,7 @@ class UserPreferences(models.Model):
 
 class UserRolelinks(models.Model):
     rolelinks_id = models.AutoField(db_column="UserRoleLinksId", primary_key=True)
-    user_id = models.ForeignKey(
+    user = models.ForeignKey(
         "Users",
         models.DO_NOTHING,
         db_column="UserId",
@@ -2059,13 +2071,13 @@ class UserRolelinks(models.Model):
         null=True,
         related_name="role_links",
     )
-    role_id = models.ForeignKey(
+    role = models.ForeignKey(
         "UserRoles",
         models.DO_NOTHING,
         db_column="UserRolesId",
         blank=True,
         null=True,
-        related_name="role_links",
+        related_name="role_users",
     )
 
     class Meta:

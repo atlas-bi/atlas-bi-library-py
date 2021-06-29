@@ -14,7 +14,7 @@
 
                         <div class="listDetails">
                             <label>Name</label>
-                            <input name="name" value="{{ term }}"/>
+                            <input name="name" required value="{{ term }}"/>
 
                             <label>External Standard Link</label>
                             <input name="external_standard_url"  value="{{ term.external_standard_url|default:"" }}" />

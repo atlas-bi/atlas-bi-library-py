@@ -30,7 +30,6 @@ class AtlasTestCase(TestCase):
         "reporttypes.yaml",
         "rolepermissionlinks.yaml",
         "rolepermissions.yaml",
-        "seed.yaml",
         "strategicimportance.yaml",
         "userroles.yaml",
         "test.yaml",
