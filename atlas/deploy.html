@@ -175,65 +175,19 @@
         </label>
         <div class="section" id="deploy">
 <h1>Deploy<a class="headerlink" href="#deploy" title="Permalink to this headline">¶</a></h1>
-<div class="admonition attention">
-<p class="admonition-title">Attention</p>
-<p>Ensure that the destination server has the same .NET <em>version</em> <cite>Hosting Bundle</cite>.</p>
+<div class="section" id="setup-solr-search">
+<h2>Setup Solr Search<a class="headerlink" href="#setup-solr-search" title="Permalink to this headline">¶</a></h2>
+<p>Atlas uses two Solr Cores</p>
+<ul class="simple">
+<li><p>atlas</p></li>
+<li><p>atlas_lookups</p></li>
+</ul>
+<p>Create the cores</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">solr</span> <span class="n">create</span> <span class="o">-</span><span class="n">c</span> <span class="n">atlas</span>
+<span class="n">solr</span> <span class="n">create</span> <span class="o">-</span><span class="n">c</span> <span class="n">atlas_lookups</span>
+</pre></div>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This guide assumes you have already created the Atlas Databases and run the ETL.</p>
-</div>
-<div class="section" id="setup-iis">
-<h2>Setup IIS<a class="headerlink" href="#setup-iis" title="Permalink to this headline">¶</a></h2>
-<p>Open the <strong>Internet Information Services (IIS) Manager</strong> on your Windows Server.</p>
-<p>First, create a new site by right clicking on <strong>Site</strong> then <strong>Create New Site</strong>.</p>
-<div class="table-wrapper"><table class="docutils align-default">
-<colgroup>
-<col style="width: 100%"/>
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><div class="figure align-default">
-<img alt="Add website" src="../_images/add_website.png"/>
-</div>
-</td>
-</tr>
-</tbody>
-</table></div>
-<p>Next, fill out the require parameters. If you have setup a DNS you can enter it in the <strong>Host name</strong> box.</p>
-<div class="table-wrapper"><table class="docutils align-default">
-<colgroup>
-<col style="width: 100%"/>
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><div class="figure align-default">
-<img alt="Add website configuration" src="../_images/website_config.png"/>
-</div>
-</td>
-</tr>
-</tbody>
-</table></div>
-<div class="admonition attention">
-<p class="admonition-title">Attention</p>
-<p>Ideally you will add another binding for https. There are <a class="reference external" href="https://techexpert.tips/iis/enable-https-iis/">many tutorials</a> showing how to enable HTTPS.</p>
-</div>
-<p>Finally, verify that <strong>windows</strong> authentication is enabled.</p>
-<div class="table-wrapper"><table class="docutils align-default">
-<colgroup>
-<col style="width: 50%"/>
-<col style="width: 50%"/>
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><div class="figure align-default">
-<img alt="Open authentication settings" src="../_images/open_auth.png"/>
-</div>
-</td>
-<td><div class="figure align-default">
-<img alt="Verify windows authentication" src="../_images/windows_auth.png"/>
-</div>
-</td>
-</tr>
-</tbody>
-</table></div>
+<p>If you’re rather use different names for the cores, it is no problem, as long as you update the core name in Atlas settings.</p>
 </div>
 <div class="section" id="deploy-to-iis">
 <h2>Deploy to IIS<a class="headerlink" href="#deploy-to-iis" title="Permalink to this headline">¶</a></h2>
@@ -389,7 +343,7 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Deploy</a><ul>
-<li><a class="reference internal" href="#setup-iis">Setup IIS</a></li>
+<li><a class="reference internal" href="#setup-solr-search">Setup Solr Search</a></li>
 <li><a class="reference internal" href="#deploy-to-iis">Deploy to IIS</a></li>
 </ul>
 </li>
