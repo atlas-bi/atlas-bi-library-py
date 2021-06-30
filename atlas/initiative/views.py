@@ -1,7 +1,6 @@
 """Atlas Initiative views."""
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
-from django.utils import timezone
 from index.models import Initiatives, Projects
 
 

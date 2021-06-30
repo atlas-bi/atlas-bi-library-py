@@ -443,7 +443,7 @@
         p = this.ddPhdr,
         q,
         sa = this.searchArea,
-        url = "/search/lookup/" + sa,
+        url = "/search/" + sa,
         data,
         result = "",
         el,

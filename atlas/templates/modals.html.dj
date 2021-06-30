@@ -9,7 +9,7 @@
         <p>You are requesting access to "<span class="report-name-clean text-green"></span>".</p>
         <p>
         Please select your director
-        <input type='dynamic-dropdown' id="director-name" search-area='director' />
+        <input type='dynamic-dropdown' id="director-name" search-area='user_lookup/director' />
       </p>
       </div>
       <div class="mdl-f">

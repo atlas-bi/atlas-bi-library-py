@@ -1,10 +1,10 @@
 """Term app tests.
 
-
 Run test for this app with::
 
     poetry run coverage erase; \
-    poetry run coverage run -p manage.py test term/ --no-input --pattern="test_views.py" --settings atlas.settings.test; \
+    poetry run coverage run -p manage.py \
+        test term/ --no-input --pattern="test_views.py" --settings atlas.settings.test; \
     poetry run coverage combine; \
     poetry run coverage report --include "term*" -m
 
@@ -220,7 +220,7 @@ class TermTestCase(AtlasTestCase):
         self.assertEqual(response.status_code, 200)
 
         last_url = response.redirect_chain[-1][0]
-        term_id = last_url[last_url.rindex("/") + 1 :]
+        term_id = last_url[last_url.rindex("/") + 1 :]  # noqa: E203
 
         # verify that the new term exists
         term = Terms.objects.get(term_id=term_id)
@@ -252,7 +252,7 @@ class TermTestCase(AtlasTestCase):
 
         # verify that it is approved
         self.assertEqual(term.approved, "Y")
-        self.assertTrue(term._approved_at != None)
+        self.assertTrue(term._approved_at is not None)
 
         # unapprove the term
         data["approved"] = "N"
@@ -325,7 +325,7 @@ class TermTestCase(AtlasTestCase):
         self.assertEqual(response.status_code, 200)
 
         last_url = response.redirect_chain[-1][0]
-        term_id = last_url[last_url.rindex("/") + 1 :]
+        term_id = last_url[last_url.rindex("/") + 1 :]  # noqa: E203
 
         # add a comment
         data = {"message": "new comment"}

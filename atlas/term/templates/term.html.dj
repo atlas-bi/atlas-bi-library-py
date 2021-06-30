@@ -2,6 +2,7 @@
 
 {% if 13 in permissions and term.approved != "Y" or 11 in permissions and term.approved == "Y" %}
     {% block modals %}
+    {{ block.super }}
         {% include "term_editor.html.dj" %}
     {% endblock %}
 

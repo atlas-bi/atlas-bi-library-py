@@ -20,13 +20,22 @@ COPY /solr/solr.in.sh /etc/default/solr.in.sh
 # disable swappiness and autoschema
 RUN echo 'vm.swappiness = 1' >> /etc/sysctl.conf \
     && /opt/solr/bin/solr start -force -noprompt -v \
+    # primary search core
     && /opt/solr/bin/solr create -c atlas -force \
-    && /opt/solr/bin/solr config -c atlas -p 8983 -action set-user-property -property update.autoCreateFields -value false
+    && /opt/solr/bin/solr config -c atlas -p 8983 -action set-user-property -property update.autoCreateFields -value false \
+    # lookup search core
+    && /opt/solr/bin/solr create -c atlas_lookups -force \
+    && /opt/solr/bin/solr config -c atlas_lookups -p 8983 -action set-user-property -property update.autoCreateFields -value false
 
-# copy solr config
-COPY /solr/managed-schema /var/solr/data/atlas/conf/managed-schema
-COPY /solr/solrconfig.xml /var/solr/data/atlas/conf/solrconfig.xml
-COPY /solr/synonyms.txt /var/solr/data/atlas/conf/synonyms.txt
+# copy solr atlas config
+COPY /solr/atlas/managed-schema /var/solr/data/atlas/conf/managed-schema
+COPY /solr/atlas/solrconfig.xml /var/solr/data/atlas/conf/solrconfig.xml
+COPY /solr/atlas/synonyms.txt /var/solr/data/atlas/conf/synonyms.txt
+
+# copy solr atlas lookup config
+COPY /solr/atlas_lookups/managed-schema /var/solr/data/atlas_lookups/conf/managed-schema
+COPY /solr/atlas_lookups/solrconfig.xml /var/solr/data/atlas_lookups/conf/solrconfig.xml
+COPY /solr/atlas_lookups/synonyms.txt /var/solr/data/atlas_lookups/conf/synonyms.txt
 
 WORKDIR /app
 

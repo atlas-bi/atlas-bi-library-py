@@ -16,7 +16,7 @@
                             <input name="name" data-initial-content="Name" required />
 
                             <label>External Contacts</label>
-                            <select type="dynamic-dropdown" name="linked_contacts" search-area="ext-cont" method="fullList"></select>
+                            <select type="dynamic-dropdown" name="linked_contacts" search-area="lookup/initiative_contacts" method="fullList"></select>
 
                             <label>Operations Owner</label>
                             <input type="dynamic-dropdown" name="ops_owner_id" search-area="user_lookup" />
@@ -25,10 +25,10 @@
                             <input type="dynamic-dropdown" name="exec_owner_id" search-area="user_lookup" />
 
                             <label>Financial Impact</label>
-                            <input type="dynamic-dropdown" name="financial_impact" search-area="financial-impact" method="fullList" />
+                            <input type="dynamic-dropdown" name="financial_impact" search-area="lookup/financial_impact" method="fullList" />
 
                             <label>Strategic Importance</label>
-                            <input type="dynamic-dropdown" name="strategic_importance" search-area="strategic-importance" method="fullList"  />
+                            <input type="dynamic-dropdown" name="strategic_importance" search-area="lookup/strategic_importance" method="fullList"  />
 
 
                             <label>Linked Projects</label>

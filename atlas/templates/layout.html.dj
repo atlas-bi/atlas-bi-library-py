@@ -84,8 +84,8 @@
         </div>
 
         <!-- modals -->
-        {% include 'modals.html.dj' %}
         {% block modals %}
+            {% include 'modals.html.dj' %}
         {% endblock %}
 
         <!-- footer -->

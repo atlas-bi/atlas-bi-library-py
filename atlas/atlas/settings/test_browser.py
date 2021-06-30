@@ -179,3 +179,9 @@ BROWSERSTACK_CAPS.append(
 )
 
 TEST_RUNNER = "atlas.browserstack_runner.BrowserStackDiscoverRunner"
+
+# import custom overrides
+try:
+    from .test_browser_cust import *
+except ImportError:
+    pass

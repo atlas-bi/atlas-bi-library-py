@@ -56,7 +56,14 @@ def index(request):
     """Atlas ETL Dashboard."""
     context = {
         "history": [result.as_dict() for result in TaskResult.objects.all()[:10]],
-        "search_etls": ["reports", "projects", "terms", "initiatives", "users"],
+        "search_etls": [
+            "reports",
+            "projects",
+            "terms",
+            "initiatives",
+            "users",
+            "lookups",
+        ],
     }
 
     return render(request, "etl/index.html.dj", context)

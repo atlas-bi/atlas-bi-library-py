@@ -19,47 +19,26 @@
 Deploy
 ******
 
-.. attention::
-
-   Ensure that the destination server has the same .NET *version* `Hosting Bundle`.
-
-.. note::
-
-   This guide assumes you have already created the Atlas Databases and run the ETL.
-
-#########
-Setup IIS
-#########
-
-Open the **Internet Information Services (IIS) Manager** on your Windows Server.
-
-First, create a new site by right clicking on **Site** then **Create New Site**.
-
-.. list-table::
-
-   * - .. figure:: ../images/deploy/add_website.png
-          :alt: Add website
-
-Next, fill out the require parameters. If you have setup a DNS you can enter it in the **Host name** box.
-
-.. list-table::
-
-   * - .. figure:: ../images/deploy/website_config.png
-          :alt: Add website configuration
-
-.. attention::
-   Ideally you will add another binding for https. There are `many tutorials <https://techexpert.tips/iis/enable-https-iis/>`_ showing how to enable HTTPS.
+#################
+Setup Solr Search
+#################
 
 
-Finally, verify that **windows** authentication is enabled.
+Atlas uses two Solr Cores
 
-.. list-table::
+* atlas
+* atlas_lookups
 
-   * - .. figure:: ../images/deploy/open_auth.png
-          :alt: Open authentication settings
-     - .. figure:: ../images/deploy/windows_auth.png
-          :alt: Verify windows authentication
 
+Create the cores
+
+..  code::
+
+    solr create -c atlas
+    solr create -c atlas_lookups
+
+
+If you're rather use different names for the cores, it is no problem, as long as you update the core name in Atlas settings.
 
 #############
 Deploy to IIS

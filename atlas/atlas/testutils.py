@@ -101,6 +101,7 @@ class AtlasBrowserStackTestCase(StaticLiveServerTestCase):
 
         cls.cov = coverage.Coverage(config_file=rcfile, concurrency="thread")
         cls.cov.start()
+
         user_name = os.environ["BROWSERSTACK_USERNAME"]
         access_key = os.environ["BROWSERSTACK_ACCESS_KEY"]
         build_name = os.environ["BROWSERSTACK_BUILD_NAME"]
@@ -124,6 +125,21 @@ class AtlasBrowserStackTestCase(StaticLiveServerTestCase):
 
         if desired_cap.get("browser", "other") != "edge":
             cls.selenium.implicitly_wait(10)
+
+    def logs(self):
+        # check for error logs
+        logs = []
+        for log in self.selenium.get_log("browser"):
+            if log["level"] in ["ERROR", "WARNING", "SEVERE"]:
+                logs.append(log)
+
+        if len(logs) > 0:
+            self.selenium.execute_script(
+                'browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"failed", "reason": "console errors"}}'
+            )
+
+        print(logs)  # noqa: T001
+        return logs
 
     def login(self, username="user@user.user"):
         """Login function for dev auth."""

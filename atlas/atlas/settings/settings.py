@@ -296,6 +296,7 @@ ORG_NAME = "Riverside Healthcare"
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 SOLR_URL = "http://localhost:8983/solr/atlas/"
+SOLR_LOOKUP_URL = "http://localhost:8983/solr/atlas_lookups/"
 
 # Celery configuration
 CELERY_TIMEZONE = TIME_ZONE

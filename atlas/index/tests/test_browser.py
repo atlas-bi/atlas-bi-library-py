@@ -12,3 +12,6 @@ class IndexTestCase(AtlasBrowserStackTestCase):
     def test_test_login(self):
         """Verify that dev login method works."""
         self.login()
+
+
+# for log in driver.get_log('browser'): print(log)

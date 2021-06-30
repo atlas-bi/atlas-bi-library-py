@@ -4,7 +4,7 @@ import contextlib
 import pysolr
 from celery import shared_task
 from django.conf import settings
-from django.db.models.signals import post_save, pre_delete
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django_chunked_iterator import batch_iterator
 from etl.tasks.functions import clean_doc, solr_date

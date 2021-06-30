@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import base, initiatives, projects, reports, terms, users
+from .views import base, initiatives, lookups, projects, reports, terms, users
 
 urlpatterns = [
     path("", base.index, name="index"),
@@ -30,6 +30,11 @@ urlpatterns = [
         "search/reports/<str:arg>",
         reports.reports,
         name="search reports",
+    ),
+    path(
+        "search/lookups/<str:arg>",
+        lookups.lookups,
+        name="search lookups",
     ),
     path("job/<int:job_id>/delete", base.job_edit, name="job edit"),
     path("job/schedule", base.job_schedule, name="job schedule"),

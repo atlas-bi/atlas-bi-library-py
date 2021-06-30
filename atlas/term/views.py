@@ -172,7 +172,7 @@ def edit(request, term_id=None):
     term.summary = request.POST.get("summary", "")
     term.technical_definition = request.POST.get("technical_definition", "")
 
-    if (term.approved or "N") == "N" and request.POST.get("approved", "N") == "Y":
+    if term.approved != "Y" and request.POST.get("approved", "N") == "Y":
         # add date if term is now approved
         term._approved_at = timezone.now()
     elif term.approved == "Y" and request.POST.get("approved", "N") == "N":
@@ -180,19 +180,11 @@ def edit(request, term_id=None):
         term._approved_at = None
 
     term.approved = request.POST.get("approved", "N")
-
-    if request.POST.get("external_standard_url", "") != "":
-        term.external_standard_url = request.POST.get("external_standard_url")
-        term.has_external_standard = "Y"
-    else:
-        term.external_standard_url = None
-        term.has_external_standard = None
-
-    if request.POST.get("valid_from", "") != "":
-        term._valid_from = request.POST.get("valid_from")
-    else:
-        term._valid_from = None
-
+    term.external_standard_url = request.POST.get("external_standard_url", None)
+    term.has_external_standard = (
+        "Y" if bool(request.POST.get("external_standard_url", "")) else None
+    )
+    term._valid_from = request.POST.get("valid_from", None)
     term.modified_by = request.user
 
     term.save()

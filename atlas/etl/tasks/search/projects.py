@@ -4,14 +4,14 @@ import contextlib
 import pysolr
 from celery import shared_task
 from django.conf import settings
-from django.db.models.signals import post_delete, post_save
+from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from django_chunked_iterator import batch_iterator
 from etl.tasks.functions import clean_doc, solr_date
 from index.models import Projects
 
 
-@receiver(post_delete, sender=Projects)
+@receiver(pre_delete, sender=Projects)
 def deleted_project(sender, instance, **kwargs):
     """When project is delete, remove it from search."""
     delete_project.delay(instance.project_id)
