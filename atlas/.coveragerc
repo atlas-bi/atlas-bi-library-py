@@ -23,4 +23,5 @@ omit =
     index*
     mail*
     report*
+    etl*
     search*

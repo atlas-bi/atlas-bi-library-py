@@ -1,4 +1,13 @@
-"""Atlas Analytics tests."""
+"""Atlas Analytics tests.
+
+run with::
+
+    poetry run coverage erase; \
+    poetry run coverage run -p manage.py \
+        test analytics/ --no-input --pattern="test_views.py" --settings atlas.settings.test; \
+    poetry run coverage combine; \
+    poetry run coverage report --include "analytics*" -m
+"""
 # pylint: disable=C0115,C0103,C0301
 
 import json
@@ -8,15 +17,18 @@ from atlas.testutils import AtlasTestCase
 
 class AnalyticsTestCase(AtlasTestCase):
     def test_index_user(self):
-        """Basic users should be not authorized."""
+        """Basic users should be not authorized.
+
+        Expecting a 302 redirect back to login page.
+        """
         self.login()
-        response = self.client.get("/analytics", follow=True)
-        self.assertEqual(response.status_code, 404)
+        response = self.client.get("/analytics/")
+        self.assertEqual(response.status_code, 302)
 
     def test_index_admin(self):
         """Admin should have access."""
         self.login_admin()
-        response = self.client.get("/analytics", follow=True)
+        response = self.client.get("/analytics/")
         self.assertEqual(response.status_code, 200)
 
         self.verify_body_links(response.content)
