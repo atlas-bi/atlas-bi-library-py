@@ -35,7 +35,9 @@
 <script type="text/javascript" src="/static/js/essential.js" defer></script>
 <script type="text/javascript" src="/static/js/utility/lazyload.js" defer></script>
 <script type="text/javascript" src="/static/js/utility/crumbs.js" defer></script>
-<script type="text/javascript" src="/static/js/solr.js" defer></script>
+{% if 19 in permissions %}
+    <script type="text/javascript" src="/static/js/solr.js" defer></script>
+{% endif %}
 {% endcompress %}
 
 {% compress js file ie11 %}

@@ -3,9 +3,7 @@
 
 import os
 import re
-from pathlib import Path
 
-import coverage
 from bs4 import BeautifulSoup
 from django.conf import settings
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
@@ -96,12 +94,6 @@ class AtlasBrowserStackTestCase(StaticLiveServerTestCase):
         """Set up live server test."""
         super().setUpClass()
 
-        # create a live server connection
-        rcfile = str(Path(__file__).parent.parent / ".coveragerc")
-
-        cls.cov = coverage.Coverage(config_file=rcfile, concurrency="thread")
-        cls.cov.start()
-
         user_name = os.environ["BROWSERSTACK_USERNAME"]
         access_key = os.environ["BROWSERSTACK_ACCESS_KEY"]
         build_name = os.environ["BROWSERSTACK_BUILD_NAME"]
@@ -126,8 +118,8 @@ class AtlasBrowserStackTestCase(StaticLiveServerTestCase):
         if desired_cap.get("browser", "other") != "edge":
             cls.selenium.implicitly_wait(10)
 
-    def logs(self):
-        # check for error logs
+    def log_count(self):
+        """Check for error logs."""
         logs = []
         for log in self.selenium.get_log("browser"):
             if log["level"] in ["ERROR", "WARNING", "SEVERE"]:
@@ -139,7 +131,7 @@ class AtlasBrowserStackTestCase(StaticLiveServerTestCase):
             )
 
         print(logs)  # noqa: T001
-        return logs
+        return len(logs)
 
     def login(self, username="user@user.user"):
         """Login function for dev auth."""
@@ -173,12 +165,10 @@ class AtlasBrowserStackTestCase(StaticLiveServerTestCase):
 
         Hopefully avoid needing to repeat live_server_url constantly.
         """
-        return "http://{}{}".format(self.live_server_url, addr)
+        return "{}{}".format(self.live_server_url, addr)
 
     @classmethod
     def tearDownClass(cls):
         """Class cleanup."""
         cls.selenium.quit()
-        cls.cov.stop()
-        cls.cov.save()
         super().tearDownClass()

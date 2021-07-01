@@ -23,7 +23,6 @@
       i = grp.querySelector(".sr-grp input"),
       cls = d.getElementById("sr-cls"),
       scls = d.getElementById("nav-search");
-
   /**
    * scroll to top when clicking search button
    */

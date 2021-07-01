@@ -11,4 +11,6 @@ def authorized(value):
     :param value: list of permissions
     :returns: true/false if they have a 41
     """
-    return 41 in value
+    if value:
+        return 41 in value
+    return False

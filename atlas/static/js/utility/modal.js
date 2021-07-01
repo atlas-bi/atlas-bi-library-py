@@ -125,54 +125,59 @@
     },
     true
   );
-  document
-    .getElementById("shareModal")
-    .addEventListener("mdl-open", function (e) {
-      var button = e.detail.e,
-        name = button.getAttribute("data-name");
+  if(document
+    .getElementById("shareModal")){
+    document
+      .getElementById("shareModal")
+      .addEventListener("mdl-open", function (e) {
+        var button = e.detail.e,
+          name = button.getAttribute("data-name");
 
-      if (
-        !button.hasAttribute("data-url") ||
-        button.getAttribute("data-url") == null ||
-        button.getAttribute("data-url") == ""
-      ) {
-        url = window.location.href.replace(window.location.origin, "");
-      } else {
-        url = button.getAttribute("data-url");
-      }
+        if (
+          !button.hasAttribute("data-url") ||
+          button.getAttribute("data-url") == null ||
+          button.getAttribute("data-url") == ""
+        ) {
+          url = window.location.href.replace(window.location.origin, "");
+        } else {
+          url = button.getAttribute("data-url");
+        }
 
-      var modal = this;
-      modal.querySelector(".mlbx-newMsgSubjIpt").innerHTML = "Share: " + name;
-      modal.querySelector(".mlbx-newMsgMsg").innerHTML =
-        "<div>Hi!<br>I would like to share this " +
-        button.getAttribute("data-type") +
-        " with you.</div><br><a href='" +
-        url +
-        "'>" +
-        name +
-        "</a><br><br><div>Check it out sometime!</div><br><div>Regards!<br>" +
-        modal.querySelector(".mlbx-newMsgSender span:nth-child(2)").innerHTML;
-      modal.querySelector(".mlbx-shareName").value = name;
-      modal.querySelector(".mlbx-shareUrl").value = url;
+        var modal = this;
+        modal.querySelector(".mlbx-newMsgSubjIpt").innerHTML = "Share: " + name;
+        modal.querySelector(".mlbx-newMsgMsg").innerHTML =
+          "<div>Hi!<br>I would like to share this " +
+          button.getAttribute("data-type") +
+          " with you.</div><br><a href='" +
+          url +
+          "'>" +
+          name +
+          "</a><br><br><div>Check it out sometime!</div><br><div>Regards!<br>" +
+          modal.querySelector(".mlbx-newMsgSender span:nth-child(2)").innerHTML;
+        modal.querySelector(".mlbx-shareName").value = name;
+        modal.querySelector(".mlbx-shareUrl").value = url;
 
-      // remove an "to" recips.
-      var toName = modal.querySelectorAll(".dd-itm");
-      for (var x = 0; x < toName.length; x++) {
-        toName[x].parentElement.removeChild(toName[x]);
-      }
-      var toId = modal.querySelectorAll(".dd-hdn option");
-      for (x = 0; x < toId.length; x++) {
-        toId[x].parentElement.removeChild(toId[x]);
-      }
-      document.dispatchEvent(
-        new CustomEvent("dropdown", {
-          cancelable: true,
-          detail: {
-            el: modal.querySelector("#new_msg_dynamic-dropdown:not(.dd-hdn)"),
-          },
-        })
-      );
-    });
+        // remove an "to" recips.
+        var toName = modal.querySelectorAll(".dd-itm");
+        for (var x = 0; x < toName.length; x++) {
+          toName[x].parentElement.removeChild(toName[x]);
+        }
+        var toId = modal.querySelectorAll(".dd-hdn option");
+        for (x = 0; x < toId.length; x++) {
+          toId[x].parentElement.removeChild(toId[x]);
+        }
+        document.dispatchEvent(
+          new CustomEvent("dropdown", {
+            cancelable: true,
+            detail: {
+              el: modal.querySelector("#new_msg_dynamic-dropdown:not(.dd-hdn)"),
+            },
+          })
+        );
+      });
+    }
+  if(document
+    .getElementById("shareFeedback")) {
   document
     .getElementById("shareFeedback")
     .addEventListener("mdl-open", function (e) {
@@ -198,8 +203,10 @@
       );
       modal.querySelector(".share-feedback").setAttribute("report-name", name);
     });
-
-  document
+    }
+    if(document
+    .getElementById("requestAccessModal")){
+       document
     .getElementById("requestAccessModal")
     .addEventListener("mdl-open", function (e) {
       var button = e.detail.e;
@@ -208,6 +215,8 @@
 
       modal.querySelector(".report-name-clean").innerHTML = name;
     });
+    }
+ 
   document.addEventListener("modal-close", function () {
     closeModals();
   });

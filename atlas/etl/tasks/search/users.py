@@ -8,11 +8,11 @@ from django_chunked_iterator import batch_iterator
 from etl.tasks.functions import clean_doc
 from index.models import Users
 
-
-@receiver(post_save, sender=Users)
-def updated_user(sender, instance, **kwargs):
-    """When user is updated, add it to search."""
-    load_user.delay(instance.user_id)
+# this is somehow causing an endless loop when logging in?!
+# @receiver(post_save, sender=Users)
+# def updated_user(sender, instance, **kwargs):
+#     """When user is updated, add it to search."""
+#     load_user.delay(instance.user_id)
 
 
 @shared_task

@@ -3,6 +3,8 @@
 A custom test runner is used so that we can run the tests
 with multiple browser configurations.
 """
+from pathlib import Path
+
 # pylint: disable=C0115
 from browserstack.local import Local
 from django.conf import settings
@@ -21,6 +23,7 @@ class BrowserStackDiscoverRunner(DiscoverRunner):
         bs_local = Local()
         bs_local_args = {"forcelocal": "true"}
         bs_local.start(**bs_local_args)
+
         print(
             "Browser stack is %srunning..." % ("" if bs_local.isRunning() else "not ")
         )  # noqa: T001
@@ -34,4 +37,5 @@ class BrowserStackDiscoverRunner(DiscoverRunner):
 
         # return last result.. not sure how to merge them
         bs_local.stop()
+
         return result

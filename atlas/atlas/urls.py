@@ -13,9 +13,14 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import logging
+
 import djangosaml2
 from django.conf import settings as django_settings
+from django.http import HttpResponse
 from django.urls import include, path
+
+logger = logging.getLogger(__name__)
 
 urlpatterns = [
     path("", include("index.urls")),
@@ -45,3 +50,45 @@ if (
     import debug_toolbar
 
     urlpatterns += (path("__debug__/", include(debug_toolbar.urls)),)
+
+import sys
+import traceback
+
+
+def full_stack():
+    """Return full stack trace of an exception.
+
+    :returns: full stack trace of an exception.
+    """
+    exc = sys.exc_info()[0]
+    if exc is not None:
+        frame = sys.exc_info()[-1].tb_frame.f_back
+        stack = traceback.extract_stack(frame)
+    else:
+        stack = traceback.extract_stack()[:-1]  # last one would be full_stack()
+    trc = "Traceback (most recent call last):\n"
+    stackstr = trc + "".join(traceback.format_list(stack))
+    if exc is not None:
+        # pylint: disable=bad-str-strip-call
+        stackstr += "  " + traceback.format_exc().lstrip(trc)
+    return stackstr
+
+
+def custom_error_view(request, exception=None):
+    """Log 500 errors."""
+    logger.error(full_stack())
+    logger.warning(exception)
+    return HttpResponse(
+        "Ops, there was an error. Please try again in a few minutes.", status=500
+    )
+
+
+def custom_warning_view(request, exception=None):
+    """Log 400 errors."""
+    logger.warning(full_stack())
+    logger.warning(exception)
+    return HttpResponse("Ops, that page doesn't exist!", status=404)
+
+
+handler500 = custom_error_view
+handler404 = custom_warning_view
