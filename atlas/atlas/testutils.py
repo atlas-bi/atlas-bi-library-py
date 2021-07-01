@@ -141,8 +141,9 @@ class AtlasBrowserStackTestCase(StaticLiveServerTestCase):
                 logs.append(log)
 
         if len(logs) > 0:
+            # pylint: disable=C0301
             self.selenium.execute_script(
-                'browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"failed", "reason": "console errors"}}'
+                'browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"failed", "reason": "console errors"}}'  # noqa: E501
             )
 
         print(logs)  # noqa: T001

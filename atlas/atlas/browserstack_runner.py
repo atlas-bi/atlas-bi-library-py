@@ -22,9 +22,9 @@ class BrowserStackDiscoverRunner(DiscoverRunner):
         bs_local_args = {"forcelocal": "true"}
         bs_local.start(**bs_local_args)
 
-        print(
+        print(  # noqa: T001
             "Browser stack is %srunning..." % ("" if bs_local.isRunning() else "not ")
-        )  # noqa: T001
+        )
 
         result = {}
         for cap in getattr(settings, "BROWSERSTACK_CAPS", {}):

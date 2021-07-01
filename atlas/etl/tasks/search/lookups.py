@@ -1,13 +1,9 @@
 """Celery tasks to keep lookup values up to date."""
-import contextlib
-
 import pysolr
 from celery import shared_task
 from django.conf import settings
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
-from django_chunked_iterator import batch_iterator
-from etl.tasks.functions import clean_doc, solr_date
 from index.models import (
     FinancialImpact,
     Fragility,
@@ -18,7 +14,6 @@ from index.models import (
     OrganizationalValue,
     ProjectMilestoneFrequency,
     ProjectMilestoneTemplates,
-    Projects,
     RunFrequency,
     StrategicImportance,
     UserRoles,
@@ -38,13 +33,13 @@ def updated_financial_impact(sender, instance, **kwargs):
 
 
 @receiver(pre_delete, sender=RunFrequency)
-def deleted_financial_impact(sender, instance, **kwargs):
+def deleted_run_frequency(sender, instance, **kwargs):
     """When financial_impac is delete, remove it from search."""
     delete_lookup.delay("run_frequency", instance.frequency_id)
 
 
 @receiver(post_save, sender=RunFrequency)
-def updated_financial_impact(sender, instance, **kwargs):
+def updated_run_frequency(sender, instance, **kwargs):
     """When financial_impac is updated, add it to search."""
     load_lookup.delay("run_frequency", instance.frequency_id, str(instance))
 
@@ -209,6 +204,7 @@ def load_lookup(item_type, item_id, item_name):
 
 @shared_task
 def reset_lookups():
+    """Reset all lookups."""
     solr = pysolr.Solr(settings.SOLR_LOOKUP_URL, always_commit=True)
     solr.delete(q="*:*")
     solr.optimize()

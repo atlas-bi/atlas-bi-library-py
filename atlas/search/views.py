@@ -10,7 +10,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.cache import never_cache
-from index.models import Projects, RunFrequency, StrategicImportance, UserRoles
+from index.models import Projects
 
 
 @login_required
@@ -255,7 +255,6 @@ def project_lookup(request):
 @login_required
 def dropdown_lookup(request, lookup):
     """Mini search for dropdowns."""
-
     solr = pysolr.Solr(settings.SOLR_LOOKUP_URL)
 
     lookup_values = [

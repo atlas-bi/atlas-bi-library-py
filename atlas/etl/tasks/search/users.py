@@ -1,4 +1,6 @@
 """Celery tasks to keep user search up to date."""
+# disable qa until fixing user reload.
+# flake8: noqa
 import pysolr
 from celery import shared_task
 from django.conf import settings
