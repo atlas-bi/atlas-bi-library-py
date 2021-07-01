@@ -115,7 +115,22 @@ class AtlasBrowserStackTestCase(StaticLiveServerTestCase):
             desired_capabilities=desired_cap,
         )
 
-        if desired_cap.get("browser", "other") != "edge":
+        # implicit wait throws a w3c error in some combinations
+        # not edge
+        # not Windows 10 + chrome
+        # not osx + chrome
+        if not (
+            desired_cap.get("browser", "other") == "edge"
+            or (
+                desired_cap.get("browser", "other") == "chrome"
+                and desired_cap.get("os_version", "other") == "10"
+                and desired_cap.get("os", "other") == "Windows"
+            )
+            or (
+                desired_cap.get("browser", "other") == "chrome"
+                and desired_cap.get("os", "other") == "OS X"
+            )
+        ):
             cls.selenium.implicitly_wait(10)
 
     def log_count(self):

@@ -59,6 +59,8 @@ jobs:
     - BROWSERSTACK_PROJECT_NAME="Atlas-Py"
     script:
     - tox -e clean,browsertest,cov
+    after_success:
+    - codecov -F browsertest
 services:
 - redis
 - docker
@@ -73,7 +75,7 @@ install:
 script:
 - tox -e clean,test,cov
 after_success:
-- codecov
+- codecov -F unittest
 notifications:
   email:
     on_success: change

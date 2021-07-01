@@ -8,7 +8,7 @@ from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.views import redirect_to_login
 from django.shortcuts import resolve_url
 
-DEFAULT_MESSAGE = "Unauthorised action."
+DEFAULT_MESSAGE = "Unauthorized action."
 
 
 def user_passes_test(
@@ -51,7 +51,7 @@ def user_passes_test(
 def admin_required(
     view_func=None,
     redirect_field_name=REDIRECT_FIELD_NAME,
-    login_url="/login",
+    login_url=settings.LOGIN_URL,
     message=DEFAULT_MESSAGE,
 ):
     """Require admin to access function.

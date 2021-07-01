@@ -3,8 +3,6 @@
 A custom test runner is used so that we can run the tests
 with multiple browser configurations.
 """
-from pathlib import Path
-
 # pylint: disable=C0115
 from browserstack.local import Local
 from django.conf import settings

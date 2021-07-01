@@ -33,7 +33,7 @@ BROWSERSTACK_CAPS.append(
     {
         "os_version": "10",
         "os": "Windows",
-        "browser": "edge",
+        "browser": "firefox",
         "browser_version": "90.0",
     }
 )
@@ -78,15 +78,6 @@ BROWSERSTACK_CAPS.append(
     }
 )
 
-# osx Catalina + safari
-BROWSERSTACK_CAPS.append(
-    {
-        "os_version": "Catalina",
-        "os": "OS X",
-        "browser": "chrome",
-        "browser_version": "latest",
-    }
-)
 
 # iOS 12 max
 BROWSERSTACK_CAPS.append(
