@@ -5,6 +5,7 @@
     {{ block.super }}
     {% if 13 in permissions and term.approved != "Y" or 11 in permissions and term.approved == "Y" %}
         {% include "term_editor.html.dj" %}
+        {% include "term_new.html.dj" %}
     {% endif %}
 {% endblock %}
 

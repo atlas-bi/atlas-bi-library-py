@@ -17,7 +17,7 @@
                             <input name="name" required value="{{ initiative }}" />
 
                             <label>External Contacts</label>
-                            <select type="dynamic-dropdown" name="linked_contacts" search-area="initiative_contacts" method="fullList">
+                            <select type="dynamic-dropdown" name="linked_contacts" search-area="lookup/initiative_contacts" method="fullList">
                                 {% for contact_link in initiative.contact_links.all %}
                                     <option selected="selected" value="{{ contact_link.contact_id }}">{{ contact_link }}</option>
                                 {% endfor %}
@@ -30,10 +30,10 @@
                             <input type="dynamic-dropdown" name="exec_owner_id" value="{{ initiative.exec_owner_id|default:"" }}" visible-value="{{ initiative.exec_owner|default:"" }}" search-area="user_lookup" />
 
                             <label>Financial Impact</label>
-                            <input type="dynamic-dropdown" name="financial_impact" search-area="financial_impact" method="fullList" visible-value="{{ initiative.financial_impact|default:"" }}" value="{{ initiative.financial_impact_id|default:"" }}" />
+                            <input type="dynamic-dropdown" name="financial_impact" search-area="lookup/financial_impact" method="fullList" visible-value="{{ initiative.financial_impact|default:"" }}" value="{{ initiative.financial_impact_id|default:"" }}" />
 
                             <label>Strategic Importance</label>
-                            <input type="dynamic-dropdown" name="strategic_importance" search-area="strategic_importance" method="fullList" visible-value="{{ initiative.strategic_importance|default:"" }}" value="{{ initiative.strategic_importance_id|default:"" }}" />
+                            <input type="dynamic-dropdown" name="strategic_importance" search-area="lookup/strategic_importance" method="fullList" visible-value="{{ initiative.strategic_importance|default:"" }}" value="{{ initiative.strategic_importance_id|default:"" }}" />
 
 
                             <label>Linked Projects</label>

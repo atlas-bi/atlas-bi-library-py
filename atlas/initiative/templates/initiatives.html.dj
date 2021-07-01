@@ -2,21 +2,26 @@
 {% load markdown %}
 {% load compress %}
 
-{% if 20 in permissions or 22 in permissions %}
-    {% block start_css %}
+{% block start_css %}
+    {% if 20 in permissions or 22 in permissions %}
         <link rel="stylesheet" href="/static/lib/codemirror/mycss.css" type="text/css" />
         <link rel="stylesheet" href="/static/css/live-editor.scss" type="text/x-scss" />
-    {% endblock start_css %}
+    {% endif %}
+{% endblock start_css %}
 
-    {% block side_links %}
-      <a class="nav-link" data-toggle="mdl" data-target="newModal" data-tooltip="Create New Initiative">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
-                </a>
-    {% endblock side_links %}
-    {% block modals %}
+{% block side_links %}
+    {% if 20 in permissions or 22 in permissions %}
+        <a class="nav-link" data-toggle="mdl" data-target="newModal" data-tooltip="Create New Initiative">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+        </a>
+    {% endif %}
+{% endblock side_links %}
+
+{% block modals %}
+    {% if 20 in permissions or 22 in permissions %}
         {% include "initiative_new.html.dj" %}
-    {% endblock modals %}
-{% endif %}
+    {% endif %}
+{% endblock modals %}
 
 {% block body %}
     <div class="pageTitle">
@@ -40,8 +45,6 @@
         </div>
     {% endfor %}
 {% endblock body %}
-
-
 
 {% block js %}
     {% compress js file flowchart %}
@@ -67,8 +70,5 @@
             <script src="/static/js/utility/checkbox.js" ></script>
         {% endcompress %}
 
-        {% compress js file report_editor %}
-            <script src="/static/js/reportEditor.js" async></script>
-        {% endcompress %}
     {% endif %}
 {% endblock js %}
