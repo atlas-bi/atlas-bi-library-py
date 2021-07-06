@@ -132,6 +132,8 @@ class AtlasBrowserStackTestCase(StaticLiveServerTestCase):
             )
         ):
             cls.selenium.implicitly_wait(10)
+        else:
+            cls.selenium.set_page_load_timeout(10)
 
     def log_count(self):
         """Check for error logs."""

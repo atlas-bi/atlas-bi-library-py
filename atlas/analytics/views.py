@@ -135,15 +135,16 @@ def log(request):
 
     log_time = timezone.now()
 
-    analytic = Analytics.objects.filter(
-        user=request.user,
-        session_id=log_data.get("sessionId"),
-        page_id=log_data.get("page_Id"),
+    analytic = (
+        Analytics.objects.filter(user=request.user)
+        .filter(session_id=log_data.get("sessionId"))
+        .filter(page_id=log_data.get("pageId"))
     )
 
     if analytic.exists():
-        analytic.first().page_time = log_data.get("pageTime")
-        analytic.first().update_time = log_time
+        analytic = analytic.first()
+        analytic.page_time = log_data.get("pageTime")
+        analytic.update_time = log_time
         analytic.save()
 
         return HttpResponse("ok")
@@ -179,8 +180,11 @@ def log(request):
         session_id=log_data.get("sessionId"),
         page_time=log_data.get("pageTime"),
         update_time=log_time,
-        user=request.user,
     )
+
+    analytic.save()
+
+    analytic.user = request.user
     analytic.save()
 
     return HttpResponse("ok")

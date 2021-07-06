@@ -72,6 +72,10 @@ def edit(request, initiative_id=None):
     initiative.modified_by = request.user
     initiative.save()
 
+    # remove old links
+    Projects.objects.filter(initiative=initiative).update(initiative=None)
+
+    # add new links
     Projects.objects.filter(
         project_id__in=request.POST.getlist("linked_data_projects")
     ).update(initiative=initiative)

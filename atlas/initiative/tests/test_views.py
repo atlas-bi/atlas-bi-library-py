@@ -1,7 +1,17 @@
-"""Atlas Initiative tests."""
+"""Atlas Initiative tests.
+
+Run test for this app with::
+
+    poetry run coverage erase; \
+    poetry run coverage run -p manage.py \
+        test initiative/ --no-input --pattern="test_views.py" --settings atlas.settings.test; \
+    poetry run coverage combine; \
+    poetry run coverage report --include "initiative*" -m
+
+"""
 # pylint: disable=C0115,C0103
 
-from index.models import Initiatives
+from index.models import Initiatives, Projects
 
 from atlas.testutils import AtlasTestCase
 
@@ -86,3 +96,96 @@ class InitiativeTestCase(AtlasTestCase):
         assert response.status_code == 200
 
         self.verify_body_links(response.content)
+
+    def test_create_initiative(self):
+        """Test creating, editing and deleting an initiative."""
+        self.login()
+
+        data = {
+            "name": "test initiative",
+            "description": "initiative description",
+            "ops_owner_id": "1",
+            "exec_owner_id": "1",
+            "financial_impact": "1",
+            "strategic_importance": "1",
+            "linked_data_projects": ["1"],
+        }
+        linked_data_project = data["linked_data_projects"][0]
+
+        response = self.client.post("/initiatives/new", data=data, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        last_url = response.redirect_chain[-1][0]
+        initiative_id = last_url[last_url.rindex("/") + 1 :]  # noqa: E203
+
+        # verify that the new term exists
+        initiative = Initiatives.objects.get(initiative_id=initiative_id)
+
+        # check name, summary, tech def
+        self.assertEqual(initiative.name, data["name"])
+        self.assertEqual(initiative.description, data["description"])
+        self.assertEqual(initiative.ops_owner_id, int(data["ops_owner_id"]))
+        self.assertEqual(initiative.exec_owner_id, int(data["exec_owner_id"]))
+        self.assertEqual(initiative.financial_impact_id, int(data["financial_impact"]))
+        self.assertEqual(
+            initiative.strategic_importance_id, int(data["strategic_importance"])
+        )
+
+        # check project links
+        self.assertTrue(
+            Projects.objects.filter(project_id=linked_data_project)
+            .filter(initiative_id=initiative_id)
+            .exists()
+        )
+
+        # change some things
+        data.pop("description")
+        data.pop("ops_owner_id")
+        data.pop("exec_owner_id")
+        data.pop("strategic_importance")
+        data.pop("financial_impact")
+        data.pop("linked_data_projects")
+
+        response = self.client.post(
+            "/initiatives/%s/edit" % initiative_id, data=data, follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # check link
+        self.assertTrue(
+            response.redirect_chain[-1][0].endswith("/initiatives/%s" % initiative_id)
+        )
+
+        # refresh initiative instance
+        initiative = Initiatives.objects.get(initiative_id=initiative_id)
+        self.assertEqual(initiative.name, data["name"])
+        self.assertEqual(initiative.description, "")
+        self.assertEqual(initiative.ops_owner_id, None)
+        self.assertEqual(initiative.exec_owner_id, None)
+        self.assertEqual(initiative.financial_impact, None)
+        self.assertEqual(initiative.strategic_importance, None)
+
+        # check project links
+        self.assertEqual(
+            Projects.objects.filter(project_id=linked_data_project)
+            .filter(initiative_id=initiative_id)
+            .exists(),
+            False,
+        )
+
+        # check wrong edit method
+        response = self.client.get(
+            "/initiatives/%s/edit" % initiative_id, data=data, follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # check link
+        self.assertTrue(response.redirect_chain[-1][0].endswith("initiatives/"))
+
+        # delete initiative
+        response = self.client.get(
+            "/initiatives/%s/delete" % initiative_id, follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+
+        self.assertTrue(response.redirect_chain[-1][0].endswith("initiatives/"))

@@ -119,16 +119,27 @@ As an example, if you want to use an existing Atlas sql server database, you can
 Running the app
 ###############
 
-.. code:: python
+Redis, Solr and a database should be up. See ``solr/readme.md`` for a guide to starting up a demo solr instance for development.
+
+In terminal 1, start webapp:
+
+.. code:: bash
 
     cd atlas && poetry run python manage.py runserver
 
 
-Starting Celery
+In terminal 2, start celery (for ETL's):
 
-    # settings are specified on startup, not as env variable
+.. code:: bash
+
     DJANGO_SETTINGS_MODULE='atlas.settings.dev' poetry run celery -A atlas worker -l DEBUG
+
+In terminal 3, start celery beat (for scheduled ETL's):
+
+.. code:: bash
+
     DJANGO_SETTINGS_MODULE='atlas.settings.dev' poetry run celery -A atlas beat -l DEBUG --scheduler django_celery_beat.schedulers:DatabaseScheduler
+
 
 Running tests
 #############

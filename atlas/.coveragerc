@@ -19,9 +19,9 @@ omit =
     index/models_sqlsvr.py
     atlas/browserstack_runner.py
     atlas/no_pass_auth.py
-    analytics*
     index*
     mail*
     report*
     etl*
+    user*
     search*

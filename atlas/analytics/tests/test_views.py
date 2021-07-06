@@ -7,6 +7,7 @@ run with::
         test analytics/ --no-input --pattern="test_views.py" --settings atlas.settings.test; \
     poetry run coverage combine; \
     poetry run coverage report --include "analytics*" -m
+
 """
 # pylint: disable=C0115,C0103,C0301
 
