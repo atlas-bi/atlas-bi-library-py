@@ -44,7 +44,7 @@ jobs:
     - C:/Python39/python.exe -m ensurepip
     install:
     - C:/Python39/python.exe -m pip install tox-travis poetry codecov
-    - cd solr && docker run -d -v "$PWD:/var/solr/mine" -p 8983:8983 --name solr_dev solr:8; docker exec -it solr_dev bash -c "source /var/solr/mine/setup_cores.sh;"
+    - cd solr && docker run -d -v "$PWD:/var/solr/mine" -p 8983:8983 --name solr_dev amd64/solr:8; docker exec -it solr_dev bash -c "source /var/solr/mine/setup_cores.sh;"
     before_script:
     - C:/"Program Files"/PostgreSQL/13/bin/psql.exe -c 'create database atlas;' -U
       postgres
