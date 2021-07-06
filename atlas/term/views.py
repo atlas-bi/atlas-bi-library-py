@@ -180,9 +180,9 @@ def edit(request, term_id=None):
         term._approved_at = None
 
     term.approved = request.POST.get("approved", "N")
-    term.external_standard_url = request.POST.get("external_standard_url", None)
+    term.external_standard_url = request.POST.get("external_standard_url", "")
     term.has_external_standard = (
-        "Y" if bool(request.POST.get("external_standard_url", "")) else None
+        "Y" if bool(request.POST.get("external_standard_url", "")) else "N"
     )
     term._valid_from = request.POST.get("valid_from", None)
     term.modified_by = request.user

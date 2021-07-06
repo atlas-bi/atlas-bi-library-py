@@ -235,8 +235,8 @@ class TermTestCase(AtlasTestCase):
         self.assertEqual(term._approved_at, None)
 
         # verify there is no documentation
-        self.assertEqual(term.external_standard_url, None)
-        self.assertEqual(term.has_external_standard, None)
+        self.assertEqual(term.external_standard_url, "")
+        self.assertEqual(term.has_external_standard, "N")
 
         # check that get sends us back to the term.
         self.assertEqual(self.client.get("/terms/new").status_code, 302)
@@ -287,8 +287,8 @@ class TermTestCase(AtlasTestCase):
         term = Terms.objects.get(term_id=term_id)
 
         # verify that it is gone
-        self.assertEqual(term.external_standard_url, None)
-        self.assertEqual(term.has_external_standard, None)
+        self.assertEqual(term.external_standard_url, "")
+        self.assertEqual(term.has_external_standard, "N")
 
         # check valid from
         data["valid_from"] = timezone.now()

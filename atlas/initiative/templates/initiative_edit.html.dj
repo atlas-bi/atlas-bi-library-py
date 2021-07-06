@@ -30,10 +30,10 @@
                             <input type="dynamic-dropdown" name="exec_owner_id" value="{{ initiative.exec_owner_id|default:"" }}" visible-value="{{ initiative.exec_owner|default:"" }}" search-area="user_lookup" />
 
                             <label>Financial Impact</label>
-                            <input type="dynamic-dropdown" name="financial_impact" search-area="lookup/financial_impact" method="fullList" visible-value="{{ initiative.financial_impact|default:"" }}" value="{{ initiative.financial_impact_id|default:"" }}" />
+                            <input type="dynamic-dropdown" name="financial_impact_id" search-area="lookup/financial_impact" method="fullList" visible-value="{{ initiative.financial_impact|default:"" }}" value="{{ initiative.financial_impact_id|default:"" }}" />
 
                             <label>Strategic Importance</label>
-                            <input type="dynamic-dropdown" name="strategic_importance" search-area="lookup/strategic_importance" method="fullList" visible-value="{{ initiative.strategic_importance|default:"" }}" value="{{ initiative.strategic_importance_id|default:"" }}" />
+                            <input type="dynamic-dropdown" name="strategic_importance_id" search-area="lookup/strategic_importance" method="fullList" visible-value="{{ initiative.strategic_importance|default:"" }}" value="{{ initiative.strategic_importance_id|default:"" }}" />
 
 
                             <label>Linked Projects</label>

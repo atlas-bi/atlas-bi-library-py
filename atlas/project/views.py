@@ -99,8 +99,8 @@ def edit(request, project_id=None):
     project.exec_owner_id = request.POST.get("exec_owner_id")
     project.analytics_owner_id = request.POST.get("analytics_owner_id")
     project.data_owner_id = request.POST.get("data_owner_id")
-    project.financial_impact_id = request.POST.get("financial_impact")
-    project.strategic_importance_id = request.POST.get("strategic_importance")
+    project.financial_impact_id = request.POST.get("financial_impact_id")
+    project.strategic_importance_id = request.POST.get("strategic_importance_id")
     project.external_documentation_url = request.POST.get("external_documentation_url")
     project.hidden = (
         "Y" if bool(request.POST.get("external_documentation_url")) else "N"
@@ -133,7 +133,7 @@ def delete(request, project_id):
     ProjectMilestoneTasksCompleted.objects.filter(project_id=project_id).delete()
 
     ProjectChecklist.objects.filter(task__project_id=project_id).delete()
-    ProjectMilestoneTasks.objects.filters(project_id=project_id).delete()
+    ProjectMilestoneTasks.objects.filter(project_id=project_id).delete()
 
     ProjectChecklistCompleted.objects.filter(project_id=project_id).delete()
 

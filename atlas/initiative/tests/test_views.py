@@ -106,8 +106,8 @@ class InitiativeTestCase(AtlasTestCase):
             "description": "initiative description",
             "ops_owner_id": "1",
             "exec_owner_id": "1",
-            "financial_impact": "1",
-            "strategic_importance": "1",
+            "financial_impact_id": "1",
+            "strategic_importance_id": "1",
             "linked_data_projects": ["1"],
         }
         linked_data_project = data["linked_data_projects"][0]
@@ -118,7 +118,7 @@ class InitiativeTestCase(AtlasTestCase):
         last_url = response.redirect_chain[-1][0]
         initiative_id = last_url[last_url.rindex("/") + 1 :]  # noqa: E203
 
-        # verify that the new term exists
+        # verify that the new initiative exists
         initiative = Initiatives.objects.get(initiative_id=initiative_id)
 
         # check name, summary, tech def
@@ -126,9 +126,11 @@ class InitiativeTestCase(AtlasTestCase):
         self.assertEqual(initiative.description, data["description"])
         self.assertEqual(initiative.ops_owner_id, int(data["ops_owner_id"]))
         self.assertEqual(initiative.exec_owner_id, int(data["exec_owner_id"]))
-        self.assertEqual(initiative.financial_impact_id, int(data["financial_impact"]))
         self.assertEqual(
-            initiative.strategic_importance_id, int(data["strategic_importance"])
+            initiative.financial_impact_id, int(data["financial_impact_id"])
+        )
+        self.assertEqual(
+            initiative.strategic_importance_id, int(data["strategic_importance_id"])
         )
 
         # check project links
@@ -142,8 +144,8 @@ class InitiativeTestCase(AtlasTestCase):
         data.pop("description")
         data.pop("ops_owner_id")
         data.pop("exec_owner_id")
-        data.pop("strategic_importance")
-        data.pop("financial_impact")
+        data.pop("strategic_importance_id")
+        data.pop("financial_impact_id")
         data.pop("linked_data_projects")
 
         response = self.client.post(
@@ -189,3 +191,8 @@ class InitiativeTestCase(AtlasTestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertTrue(response.redirect_chain[-1][0].endswith("initiatives/"))
+
+        # check that is was removed from db
+        self.assertEqual(
+            Initiatives.objects.filter(initiative_id=initiative_id).exists(), False
+        )

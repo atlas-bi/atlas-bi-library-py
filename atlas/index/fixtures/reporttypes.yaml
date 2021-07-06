@@ -107,42 +107,34 @@
   pk: 22
   fields:
     name: SSRS Datasource
-    code:
 - model: index.reporttypes
   pk: 23
   fields:
     name: SSRS Fil
-    code:
 - model: index.reporttypes
   pk: 24
   fields:
     name: SSRS Folde
-    code:
 - model: index.reporttypes
   pk: 25
   fields:
     name: SSRS KP
-    code:
 - model: index.reporttypes
   pk: 26
   fields:
     name: SSRS Linked Repor
-    code:
 - model: index.reporttypes
   pk: 27
   fields:
     name: SSRS Mobile Report (folder
-    code:
 - model: index.reporttypes
   pk: 28
   fields:
     name: SSRS Repor
-    code:
 - model: index.reporttypes
   pk: 29
   fields:
     name: SSRS Shared Datase
-    code:
 - model: index.reporttypes
   pk: 30
   fields:
@@ -152,7 +144,6 @@
   pk: 31
   fields:
     name: SSRS Report Par
-    code:
 - model: index.reporttypes
   pk: 32
   fields:

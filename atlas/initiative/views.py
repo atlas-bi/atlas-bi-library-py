@@ -67,8 +67,8 @@ def edit(request, initiative_id=None):
     initiative.description = request.POST.get("description", "")
     initiative.ops_owner_id = request.POST.get("ops_owner_id")
     initiative.exec_owner_id = request.POST.get("exec_owner_id")
-    initiative.financial_impact_id = request.POST.get("financial_impact")
-    initiative.strategic_importance_id = request.POST.get("strategic_importance")
+    initiative.financial_impact_id = request.POST.get("financial_impact_id")
+    initiative.strategic_importance_id = request.POST.get("strategic_importance_id")
     initiative.modified_by = request.user
     initiative.save()
 

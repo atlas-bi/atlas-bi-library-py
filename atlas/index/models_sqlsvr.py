@@ -33,7 +33,7 @@ class ReportGroupMemberships(models.Model):
         db_column="ReportId",
         related_name="group_memeberships",
     )
-    etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, default="")
+    etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -50,7 +50,7 @@ class Reports(models.Model):
         models.DO_NOTHING,
         db_column="ReportObjectTypeID",
         blank=True,
-        default="",
+        null=True,
         related_name="reports",
     )
     name = models.TextField(db_column="Name", blank=True, default="")
@@ -71,7 +71,7 @@ class Reports(models.Model):
         related_name="report_creator",
         db_column="AuthorUserID",
         blank=True,
-        default="",
+        null=True,
     )
     modified_by = models.ForeignKey(
         "Users",
@@ -79,10 +79,10 @@ class Reports(models.Model):
         related_name="report_modifier",
         db_column="LastModifiedByUserID",
         blank=True,
-        default="",
+        null=True,
     )
     _modified_at = models.DateTimeField(
-        db_column="LastModifiedDate", blank=True, default=""
+        db_column="LastModifiedDate", blank=True, auto_now=True
     )
     url = models.TextField(db_column="ReportObjectURL", blank=True, default="")
     system_identifier = models.CharField(
@@ -93,14 +93,14 @@ class Reports(models.Model):
         max_digits=18,
         decimal_places=0,
         blank=True,
-        default="",
+        null=True,
     )
     system_template_id = models.DecimalField(
         db_column="EpicReportTemplateId",
         max_digits=18,
         decimal_places=0,
         blank=True,
-        default="",
+        null=True,
     )
     system_catalog_id = models.CharField(
         db_column="ReportServerCatalogID", max_length=50, blank=True, default=""
@@ -112,7 +112,7 @@ class Reports(models.Model):
         db_column="OrphanedReportObjectYN", max_length=1, blank=True, default=""
     )
     system_path = models.TextField(db_column="ReportServerPath", blank=True, default="")
-    etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, default="")
+    etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
     certification_tag = models.CharField(
         db_column="CertificationTag", max_length=200, blank=True, default=""
     )
@@ -221,8 +221,8 @@ class ReportHierarchies(models.Model):
         related_name="child",
         db_column="ChildReportObjectID",
     )
-    rank = models.IntegerField(db_column="Line", blank=True, default="")
-    etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, default="")
+    rank = models.IntegerField(db_column="Line", blank=True, null=True)
+    etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -241,7 +241,7 @@ class ReportQueries(models.Model):
         related_name="queries",
     )
     query = models.TextField(db_column="Query", blank=True, default="")
-    etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, default="")
+    etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -264,14 +264,14 @@ class ReportRuns(models.Model):
         default="",
         related_name="report_runs",
     )
-    start_time = models.DateTimeField(db_column="RunStartTime", blank=True, default="")
+    start_time = models.DateTimeField(db_column="RunStartTime", blank=True, null=True)
     duration_seconds = models.IntegerField(
-        db_column="RunDurationSeconds", blank=True, default=""
+        db_column="RunDurationSeconds", blank=True, null=True
     )
     status = models.CharField(
         db_column="RunStatus", max_length=100, blank=True, default=""
     )
-    etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, default="")
+    etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -300,13 +300,13 @@ class ReportSubscriptions(models.Model):
         related_name="report_subscriptions",
     )
     unique_id = models.TextField(db_column="SubscriptionId", blank=True, default="")
-    inactive = models.IntegerField(db_column="InactiveFlags", blank=True, default="")
+    inactive = models.IntegerField(db_column="InactiveFlags", blank=True, null=True)
     email_list = models.TextField(db_column="EmailList", blank=True, default="")
     description = models.TextField(db_column="Description", blank=True, default="")
     status = models.TextField(db_column="LastStatus", blank=True, default="")
-    last_run = models.DateTimeField(db_column="LastRunTime", blank=True, default="")
+    last_run = models.DateTimeField(db_column="LastRunTime", blank=True, null=True)
     email = models.TextField(db_column="SubscriptionTo", blank=True, default="")
-    etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, default="")
+    etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -318,7 +318,7 @@ class ReportTypes(models.Model):
     name = models.TextField(db_column="Name")
     short_name = models.TextField(db_column="ShortName", blank=True, default="")
     code = models.TextField(db_column="DefaultEpicMasterFile", blank=True, default="")
-    etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, default="")
+    etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -347,8 +347,8 @@ class Users(AbstractUser):
     email = models.TextField(db_column="Email", blank=True, default="")
     base = models.TextField(db_column="Base", blank=True, default="")
     system_id = models.TextField(db_column="EpicId", blank=True, default="")
-    etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, default="")
-    last_login = models.DateTimeField(db_column="LastLogin", blank=True, default="")
+    etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
+    last_login = models.DateTimeField(db_column="LastLogin", blank=True, null=True)
     is_active = True
     date_joined = None
     is_superuser = True  # check permissions for admin
@@ -483,7 +483,7 @@ class UserGroups(models.Model):
     group_email = models.TextField(db_column="GroupEmail", blank=True, default="")
     group_type = models.TextField(db_column="GroupType", blank=True, default="")
     group_source = models.TextField(db_column="GroupSource", blank=True, default="")
-    etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, default="")
+    etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
     epic_id = models.TextField(db_column="EpicId", blank=True, default="")
 
     class Meta:
@@ -512,7 +512,7 @@ class UserGroupMemberships(models.Model):
         default="",
         related_name="user_memberships",
     )
-    etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, default="")
+    etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -543,7 +543,7 @@ class Analytics(models.Model):
     title = models.TextField(blank=True, default="")
     load_time = models.TextField(db_column="loadTime", blank=True, default="")
     access_date = models.DateTimeField(
-        db_column="accessDateTime", blank=True, default=""
+        db_column="accessDateTime", blank=True, null=True
     )
     referrer = models.TextField(blank=True, default="")
     user = models.ForeignKey(
@@ -551,16 +551,16 @@ class Analytics(models.Model):
         models.DO_NOTHING,
         db_column="UserId",
         blank=True,
-        default="",
+        null=True,
         related_name="analytics",
     )
     zoom = models.FloatField(db_column="Zoom", blank=True, default="")
-    epic = models.IntegerField(db_column="Epic", blank=True, default="")
+    epic = models.IntegerField(db_column="Epic", blank=True, null=True)
     page_id = models.TextField(db_column="pageId", blank=True, default="")
     session_id = models.TextField(db_column="sessionId", blank=True, default="")
-    page_time = models.IntegerField(db_column="pageTime", blank=True, default="")
-    session_time = models.IntegerField(db_column="sessionTime", blank=True, default="")
-    update_time = models.DateTimeField(db_column="updateTime", blank=True, default="")
+    page_time = models.IntegerField(db_column="pageTime", blank=True, null=True)
+    session_time = models.IntegerField(db_column="sessionTime", blank=True, null=True)
+    update_time = models.DateTimeField(db_column="updateTime", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -570,12 +570,12 @@ class Analytics(models.Model):
 class ProjectAgreements(models.Model):
     agreement_id = models.AutoField(db_column="AgreementID", primary_key=True)
     description = models.TextField(db_column="Description", blank=True, default="")
-    _met_at = models.DateTimeField(db_column="MeetingDate", blank=True, default="")
+    _met_at = models.DateTimeField(db_column="MeetingDate", blank=True, null=True)
     _effective_from = models.DateTimeField(
-        db_column="EffectiveDate", blank=True, default=""
+        db_column="EffectiveDate", blank=True, null=True
     )
     _modified_at = models.DateTimeField(
-        db_column="LastUpdateDate", blank=True, default=""
+        db_column="LastUpdateDate", blank=True, auto_now=True
     )
     modified_by = models.ForeignKey(
         "Users",
@@ -583,17 +583,17 @@ class ProjectAgreements(models.Model):
         related_name="project_agreement_modifier",
         db_column="LastUpdateUser",
         blank=True,
-        default="",
+        null=True,
     )
     project_id = models.ForeignKey(
         "Projects",
         models.DO_NOTHING,
         db_column="DataProjectId",
         blank=True,
-        default="",
+        null=True,
         related_name="agreements",
     )
-    rank = models.IntegerField(db_column="Rank", blank=True, default="")
+    rank = models.IntegerField(db_column="Rank", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -625,7 +625,7 @@ class ProjectAgreementUsers(models.Model):
         models.DO_NOTHING,
         db_column="AgreementID",
         blank=True,
-        default="",
+        null=True,
         related_name="agreement_users",
     )
     user = models.ForeignKey(
@@ -633,11 +633,11 @@ class ProjectAgreementUsers(models.Model):
         models.DO_NOTHING,
         db_column="UserId",
         blank=True,
-        default="",
+        null=True,
         related_name="project_agreement",
     )
     modified_at = models.DateTimeField(
-        db_column="LastUpdateDate", blank=True, default=""
+        db_column="LastUpdateDate", blank=True, null=True
     )
     modified_by = models.ForeignKey(
         "Users",
@@ -645,7 +645,7 @@ class ProjectAgreementUsers(models.Model):
         related_name="project_agreement_users_modifier",
         db_column="LastUpdateUser",
         blank=True,
-        default="",
+        null=True,
     )
 
     class Meta:
@@ -665,7 +665,7 @@ class ProjectAttachments(models.Model):
     data = models.BinaryField(db_column="AttachmentData")
     category = models.TextField(db_column="AttachmentType")
     name = models.TextField(db_column="AttachmentName", blank=True, default="")
-    size = models.IntegerField(db_column="AttachmentSize", blank=True, default="")
+    size = models.IntegerField(db_column="AttachmentSize", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -694,7 +694,7 @@ class InitiativeContactLinks(models.Model):
         models.DO_NOTHING,
         db_column="InitiativeId",
         blank=True,
-        default="",
+        null=True,
         related_name="contact_links",
     )
     contact = models.ForeignKey(
@@ -702,7 +702,7 @@ class InitiativeContactLinks(models.Model):
         models.DO_NOTHING,
         db_column="ContactId",
         blank=True,
-        default="",
+        null=True,
         related_name="initiative_links",
     )
 
@@ -726,7 +726,7 @@ class Initiatives(models.Model):
         models.DO_NOTHING,
         db_column="OperationOwnerID",
         blank=True,
-        default="",
+        null=True,
         related_name="initiative_ops_owner",
     )
     exec_owner = models.ForeignKey(
@@ -734,7 +734,7 @@ class Initiatives(models.Model):
         models.DO_NOTHING,
         db_column="ExecutiveOwnerID",
         blank=True,
-        default="",
+        null=True,
         related_name="initiative_exec_owner",
     )
 
@@ -743,7 +743,7 @@ class Initiatives(models.Model):
         models.DO_NOTHING,
         db_column="FinancialImpact",
         blank=True,
-        default="",
+        null=True,
         related_name="initiatives",
     )
     strategic_importance = models.ForeignKey(
@@ -751,11 +751,11 @@ class Initiatives(models.Model):
         models.DO_NOTHING,
         db_column="StrategicImportance",
         blank=True,
-        default="",
+        null=True,
         related_name="initiatives",
     )
     _modified_at = models.DateTimeField(
-        db_column="LastUpdateDate", blank=True, default=""
+        db_column="LastUpdateDate", blank=True, auto_now=True
     )
     modified_by = models.ForeignKey(
         "Users",
@@ -763,7 +763,7 @@ class Initiatives(models.Model):
         related_name="initiative_modifier",
         db_column="LastUpdateUser",
         blank=True,
-        default="",
+        null=True,
     )
 
     class Meta:
@@ -788,7 +788,7 @@ class Projects(models.Model):
         models.DO_NOTHING,
         db_column="DataInitiativeID",
         blank=True,
-        default="",
+        null=True,
         related_name="projects",
     )
 
@@ -801,7 +801,7 @@ class Projects(models.Model):
         related_name="project_ops_owner",
         db_column="OperationOwnerID",
         blank=True,
-        default="",
+        null=True,
     )
     exec_owner = models.ForeignKey(
         "Users",
@@ -809,7 +809,7 @@ class Projects(models.Model):
         related_name="project_exec_owner",
         db_column="ExecutiveOwnerID",
         blank=True,
-        default="",
+        null=True,
     )
     analytics_owner = models.ForeignKey(
         "Users",
@@ -817,7 +817,7 @@ class Projects(models.Model):
         related_name="project_analytics_owner",
         db_column="AnalyticsOwnerID",
         blank=True,
-        default="",
+        null=True,
     )
     data_owner = models.ForeignKey(
         "Users",
@@ -825,14 +825,14 @@ class Projects(models.Model):
         related_name="project_data_owner",
         db_column="DataManagerID",
         blank=True,
-        default="",
+        null=True,
     )
     financial_impact = models.ForeignKey(
         "Financialimpact",
         models.DO_NOTHING,
         db_column="FinancialImpact",
         blank=True,
-        default="",
+        null=True,
         related_name="projects",
     )
     strategic_importance = models.ForeignKey(
@@ -840,7 +840,7 @@ class Projects(models.Model):
         models.DO_NOTHING,
         db_column="StrategicImportance",
         blank=True,
-        default="",
+        null=True,
         related_name="projects",
     )
     external_documentation_url = models.TextField(
@@ -855,7 +855,7 @@ class Projects(models.Model):
         related_name="project_modifier",
         db_column="LastUpdateUser",
         blank=True,
-        default="",
+        null=True,
     )
 
     hidden = models.CharField(
@@ -886,7 +886,7 @@ class ProjectChecklist(models.Model):
         models.DO_NOTHING,
         db_column="MilestoneTaskId",
         blank=True,
-        default="",
+        null=True,
         related_name="checklist",
     )
     item = models.TextField(db_column="Item", blank=True, default="")
@@ -905,20 +905,20 @@ class ProjectChecklistCompleted(models.Model):
         models.DO_NOTHING,
         db_column="DataProjectId",
         blank=True,
-        default="",
+        null=True,
         related_name="completed_checklist",
     )
-    task_date = models.DateTimeField(db_column="TaskDate", blank=True, default="")
-    task_id = models.IntegerField(db_column="TaskId", blank=True, default="")
+    task_date = models.DateTimeField(db_column="TaskDate", blank=True, null=True)
+    task_id = models.IntegerField(db_column="TaskId", blank=True, null=True)
     checklist_id = models.IntegerField(
-        db_column="MilestoneChecklistId", blank=True, default=""
+        db_column="MilestoneChecklistId", blank=True, null=True
     )
     status = models.BooleanField(db_column="ChecklistStatus", blank=True, default="")
     completion_date = models.DateTimeField(
-        db_column="CompletionDate", blank=True, default=""
+        db_column="CompletionDate", blank=True, null=True
     )
     completion_user = models.IntegerField(
-        db_column="CompletionUser", blank=True, default=""
+        db_column="CompletionUser", blank=True, null=True
     )
 
     class Meta:
@@ -942,7 +942,7 @@ class ProjectMilestoneTasks(models.Model):
         models.DO_NOTHING,
         db_column="MilestoneTemplateId",
         blank=True,
-        default="",
+        null=True,
         related_name="tasks",
     )
     owner = models.ForeignKey(
@@ -951,28 +951,28 @@ class ProjectMilestoneTasks(models.Model):
         on_delete=models.CASCADE,
         related_name="project_task_owner",
         blank=True,
-        default="",
+        null=True,
     )
     description = models.TextField(db_column="Description", blank=True, default="")
-    start_date = models.DateTimeField(db_column="StartDate", blank=True, default="")
-    end_date = models.DateTimeField(db_column="EndDate", blank=True, default="")
+    start_date = models.DateTimeField(db_column="StartDate", blank=True, null=True)
+    end_date = models.DateTimeField(db_column="EndDate", blank=True, null=True)
     modified_by = models.ForeignKey(
         "Users",
         db_column="LastUpdateUser",
         on_delete=models.CASCADE,
         related_name="project_task_modifier",
         blank=True,
-        default="",
+        null=True,
     )
     modified_at = models.DateTimeField(
-        db_column="LastUpdateDate", blank=True, default=""
+        db_column="LastUpdateDate", blank=True, null=True
     )
     project = models.ForeignKey(
         Projects,
         models.DO_NOTHING,
         db_column="DataProjectId",
         blank=True,
-        default="",
+        null=True,
         related_name="tasks",
     )
 
@@ -988,11 +988,11 @@ class ProjectMilestoneTasksCompleted(models.Model):
         models.DO_NOTHING,
         db_column="DataProjectId",
         blank=True,
-        default="",
+        null=True,
         related_name="completed_tasks",
     )
     completion_date = models.DateTimeField(
-        db_column="CompletionDate", blank=True, default=""
+        db_column="CompletionDate", blank=True, null=True
     )
     completion_user = models.ForeignKey(
         "Users",
@@ -1000,11 +1000,11 @@ class ProjectMilestoneTasksCompleted(models.Model):
         on_delete=models.CASCADE,
         related_name="project_task_completed_by",
         blank=True,
-        default="",
+        null=True,
     )
     comments = models.TextField(db_column="Comments", blank=True, default="")
     owner = models.TextField(db_column="Owner", blank=True, default="")
-    due_date = models.DateTimeField(db_column="DueDate", blank=True, default="")
+    due_date = models.DateTimeField(db_column="DueDate", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -1019,16 +1019,16 @@ class ProjectMilestoneTemplates(models.Model):
         models.DO_NOTHING,
         db_column="MilestoneTypeId",
         blank=True,
-        default="",
+        null=True,
         related_name="milestone_templates",
     )
     lastupdateuser = models.IntegerField(
-        db_column="LastUpdateUser", blank=True, default=""
+        db_column="LastUpdateUser", blank=True, null=True
     )
     lastupdatedate = models.DateTimeField(
-        db_column="LastUpdateDate", blank=True, default=""
+        db_column="LastUpdateDate", blank=True, null=True
     )
-    interval = models.IntegerField(db_column="Interval", blank=True, default="")
+    interval = models.IntegerField(db_column="Interval", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -1044,17 +1044,17 @@ class ProjectReports(models.Model):
         db_column="ReportId",
         related_name="projects",
         blank=True,
-        default="",
+        null=True,
     )
     project = models.ForeignKey(
         Projects,
         models.DO_NOTHING,
         db_column="DataProjectId",
         blank=True,
-        default="",
+        null=True,
         related_name="report_annotations",
     )
-    rank = models.IntegerField(db_column="Rank", blank=True, default="")
+    rank = models.IntegerField(db_column="Rank", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -1074,17 +1074,17 @@ class ProjectTerms(models.Model):
         db_column="TermId",
         related_name="projects",
         blank=True,
-        default="",
+        null=True,
     )
     project = models.ForeignKey(
         Projects,
         models.DO_NOTHING,
         db_column="DataProjectId",
         blank=True,
-        default="",
+        null=True,
         related_name="term_annotations",
     )
-    rank = models.IntegerField(db_column="Rank", blank=True, default="")
+    rank = models.IntegerField(db_column="Rank", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -1119,7 +1119,7 @@ class ProjectComments(models.Model):
         models.DO_NOTHING,
         db_column="DataProjectConversationId",
         blank=True,
-        default="",
+        null=True,
         related_name="comments",
     )
     user = models.ForeignKey(
@@ -1128,10 +1128,10 @@ class ProjectComments(models.Model):
         related_name="user_project_comments",
         db_column="UserId",
         blank=True,
-        default="",
+        null=True,
     )
     message = models.TextField(db_column="MessageText", blank=True, default="")
-    posted_at = models.DateTimeField(db_column="PostDateTime", blank=True, default="")
+    posted_at = models.DateTimeField(db_column="PostDateTime", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -1219,20 +1219,20 @@ class MailDrafts(models.Model):
     draft_id = models.AutoField(db_column="DraftId", primary_key=True)
     subject = models.TextField(db_column="Subject", blank=True, default="")
     message = models.TextField(db_column="Message", blank=True, default="")
-    editdate = models.DateTimeField(db_column="EditDate", blank=True, default="")
+    editdate = models.DateTimeField(db_column="EditDate", blank=True, null=True)
     messagetypeid = models.IntegerField(
-        db_column="MessageTypeId", blank=True, default=""
+        db_column="MessageTypeId", blank=True, null=True
     )
-    fromuserid = models.IntegerField(db_column="FromUserId", blank=True, default="")
+    fromuserid = models.IntegerField(db_column="FromUserId", blank=True, null=True)
     messageplaintext = models.TextField(
         db_column="MessagePlainText", blank=True, default=""
     )
     recipients = models.TextField(db_column="Recipients", blank=True, default="")
     replytomessageid = models.IntegerField(
-        db_column="ReplyToMessageId", blank=True, default=""
+        db_column="ReplyToMessageId", blank=True, null=True
     )
     replytoconvid = models.IntegerField(
-        db_column="ReplyToConvId", blank=True, default=""
+        db_column="ReplyToConvId", blank=True, null=True
     )
 
     class Meta:
@@ -1247,7 +1247,7 @@ class MailFoldermessages(models.Model):
         models.DO_NOTHING,
         db_column="FolderId",
         blank=True,
-        default="",
+        null=True,
         related_name="folder_messages",
     )
     message = models.ForeignKey(
@@ -1255,7 +1255,7 @@ class MailFoldermessages(models.Model):
         models.DO_NOTHING,
         db_column="MessageId",
         blank=True,
-        default="",
+        null=True,
         related_name="message_folders",
     )
 
@@ -1267,11 +1267,11 @@ class MailFoldermessages(models.Model):
 class MailFolders(models.Model):
     folder_id = models.AutoField(db_column="FolderId", primary_key=True)
     parentfolderid = models.IntegerField(
-        db_column="ParentFolderId", blank=True, default=""
+        db_column="ParentFolderId", blank=True, null=True
     )
-    userid = models.IntegerField(db_column="UserId", blank=True, default="")
+    userid = models.IntegerField(db_column="UserId", blank=True, null=True)
     name = models.TextField(db_column="Name", blank=True, default="")
-    rank = models.IntegerField(db_column="Rank", blank=True, default="")
+    rank = models.IntegerField(db_column="Rank", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -1291,16 +1291,16 @@ class MailMessages(models.Model):
     message_id = models.AutoField(db_column="MessageId", primary_key=True)
     subject = models.TextField(db_column="Subject", blank=True, default="")
     message = models.TextField(db_column="Message", blank=True, default="")
-    senddate = models.DateTimeField(db_column="SendDate", blank=True, default="")
+    senddate = models.DateTimeField(db_column="SendDate", blank=True, null=True)
     message_type = models.ForeignKey(
         MailMessagetype,
         models.DO_NOTHING,
         db_column="MessageTypeId",
         blank=True,
-        default="",
+        null=True,
         related_name="messages",
     )
-    fromuserid = models.IntegerField(db_column="FromUserId", blank=True, default="")
+    fromuserid = models.IntegerField(db_column="FromUserId", blank=True, null=True)
     messageplaintext = models.TextField(
         db_column="MessagePlainText", blank=True, default=""
     )
@@ -1317,15 +1317,15 @@ class MailRecipients(models.Model):
         models.DO_NOTHING,
         db_column="MessageId",
         blank=True,
-        default="",
+        null=True,
         related_name="messages",
     )
-    touserid = models.IntegerField(db_column="ToUserId", blank=True, default="")
-    readdate = models.DateTimeField(db_column="ReadDate", blank=True, default="")
+    touserid = models.IntegerField(db_column="ToUserId", blank=True, null=True)
+    readdate = models.DateTimeField(db_column="ReadDate", blank=True, null=True)
     alertdisplayed = models.IntegerField(
-        db_column="AlertDisplayed", blank=True, default=""
+        db_column="AlertDisplayed", blank=True, null=True
     )
-    togroupid = models.IntegerField(db_column="ToGroupId", blank=True, default="")
+    togroupid = models.IntegerField(db_column="ToGroupId", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -1334,13 +1334,13 @@ class MailRecipients(models.Model):
 
 class MailRecipientsDeleted(models.Model):
     id = models.AutoField(db_column="Id", primary_key=True)
-    messageid = models.IntegerField(db_column="MessageId", blank=True, default="")
-    touserid = models.IntegerField(db_column="ToUserId", blank=True, default="")
-    readdate = models.DateTimeField(db_column="ReadDate", blank=True, default="")
+    messageid = models.IntegerField(db_column="MessageId", blank=True, null=True)
+    touserid = models.IntegerField(db_column="ToUserId", blank=True, null=True)
+    readdate = models.DateTimeField(db_column="ReadDate", blank=True, null=True)
     alertdisplayed = models.IntegerField(
-        db_column="AlertDisplayed", blank=True, default=""
+        db_column="AlertDisplayed", blank=True, null=True
     )
-    togroupid = models.IntegerField(db_column="ToGroupId", blank=True, default="")
+    togroupid = models.IntegerField(db_column="ToGroupId", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -1354,11 +1354,11 @@ class MaintenanceLogs(models.Model):
         models.DO_NOTHING,
         db_column="MaintainerID",
         blank=True,
-        default="",
+        null=True,
         related_name="report_maintenance_logs",
     )
     maintained_at = models.DateTimeField(
-        db_column="MaintenanceDate", blank=True, default=""
+        db_column="MaintenanceDate", blank=True, null=True
     )
     comments = models.TextField(db_column="Comment", blank=True, default="")
     status = models.ForeignKey(
@@ -1366,7 +1366,7 @@ class MaintenanceLogs(models.Model):
         models.DO_NOTHING,
         db_column="MaintenanceLogStatusID",
         blank=True,
-        default="",
+        null=True,
         related_name="logs",
     )
 
@@ -1414,7 +1414,7 @@ class OrganizationalValue(models.Model):
 
 class ReportTickets(models.Model):
     ticket_id = models.AutoField(db_column="ManageEngineTicketsId", primary_key=True)
-    number = models.IntegerField(db_column="TicketNumber", blank=True, default="")
+    number = models.IntegerField(db_column="TicketNumber", blank=True, null=True)
     description = models.TextField(db_column="Description", blank=True, default="")
     report_id = models.OneToOneField(
         "ReportDocs",
@@ -1462,7 +1462,7 @@ class ReportComments(models.Model):
         related_name="user_report_comments",
         db_column="UserID",
         blank=True,
-        default="",
+        null=True,
     )
     message = models.TextField(db_column="MessageText")
     posted_at = models.DateTimeField(db_column="PostDateTime")
@@ -1536,7 +1536,7 @@ class ReportImages(models.Model):
         Reports,
         db_column="ReportObjectID",
         blank=True,
-        default="",
+        null=True,
         on_delete=models.CASCADE,
         related_name="imgs",
     )
@@ -1551,12 +1551,12 @@ class ReportImages(models.Model):
 
 class Reportobjectruntime(models.Model):
     id = models.AutoField(db_column="Id", primary_key=True)
-    runuserid = models.IntegerField(db_column="RunUserId", blank=True, default="")
-    runs = models.IntegerField(db_column="Runs", blank=True, default="")
+    runuserid = models.IntegerField(db_column="RunUserId", blank=True, null=True)
+    runs = models.IntegerField(db_column="Runs", blank=True, null=True)
     runtime = models.DecimalField(
-        db_column="RunTime", max_digits=10, decimal_places=2, blank=True, default=""
+        db_column="RunTime", max_digits=10, decimal_places=2, blank=True, null=True
     )
-    runweek = models.DateTimeField(db_column="RunWeek", blank=True, default="")
+    runweek = models.DateTimeField(db_column="RunWeek", blank=True, null=True)
     runweekstring = models.TextField(db_column="RunWeekString", blank=True, default="")
 
     class Meta:
@@ -1567,17 +1567,17 @@ class Reportobjectruntime(models.Model):
 class Reportobjecttopruns(models.Model):
     id = models.AutoField(db_column="Id", primary_key=True)
     reportobjectid = models.IntegerField(
-        db_column="ReportObjectId", blank=True, default=""
+        db_column="ReportObjectId", blank=True, null=True
     )
     name = models.TextField(db_column="Name", blank=True, default="")
-    runuserid = models.IntegerField(db_column="RunUserId", blank=True, default="")
-    runs = models.IntegerField(db_column="Runs", blank=True, default="")
+    runuserid = models.IntegerField(db_column="RunUserId", blank=True, null=True)
+    runs = models.IntegerField(db_column="Runs", blank=True, null=True)
     runtime = models.DecimalField(
-        db_column="RunTime", max_digits=10, decimal_places=2, blank=True, default=""
+        db_column="RunTime", max_digits=10, decimal_places=2, blank=True, null=True
     )
     lastrun = models.TextField(db_column="LastRun", blank=True, default="")
     reportobjecttypeid = models.IntegerField(
-        db_column="ReportObjectTypeId", blank=True, default=""
+        db_column="ReportObjectTypeId", blank=True, null=True
     )
 
     class Meta:
@@ -1588,7 +1588,7 @@ class Reportobjecttopruns(models.Model):
 class Reportobjectweightedrunrank(models.Model):
     reportobjectid = models.IntegerField()
     weighted_run_rank = models.DecimalField(
-        max_digits=12, decimal_places=4, blank=True, default=""
+        max_digits=12, decimal_places=4, blank=True, null=True
     )
 
     class Meta:
@@ -1603,7 +1603,7 @@ class ReportDocs(models.Model):
         related_name="report_doc_ops_owner",
         db_column="OperationalOwnerUserID",
         blank=True,
-        default="",
+        null=True,
     )
     requester = models.ForeignKey(
         "Users",
@@ -1611,7 +1611,7 @@ class ReportDocs(models.Model):
         related_name="report_doc_requester",
         db_column="Requester",
         blank=True,
-        default="",
+        null=True,
     )
     project_url = models.TextField(db_column="GitLabProjectURL", blank=True, default="")
     description = models.TextField(
@@ -1623,7 +1623,7 @@ class ReportDocs(models.Model):
         models.DO_NOTHING,
         db_column="OrganizationalValueID",
         blank=True,
-        default="",
+        null=True,
         related_name="report_docs",
     )
     frequency = models.ForeignKey(
@@ -1631,7 +1631,7 @@ class ReportDocs(models.Model):
         models.DO_NOTHING,
         db_column="EstimatedRunFrequencyID",
         blank=True,
-        default="",
+        null=True,
         related_name="report_docs",
     )
     fragility = models.ForeignKey(
@@ -1639,7 +1639,7 @@ class ReportDocs(models.Model):
         models.DO_NOTHING,
         db_column="FragilityID",
         blank=True,
-        default="",
+        null=True,
         related_name="report_docs",
     )
     executive_report = models.CharField(
@@ -1650,14 +1650,14 @@ class ReportDocs(models.Model):
         models.DO_NOTHING,
         db_column="MaintenanceScheduleID",
         blank=True,
-        default="",
+        null=True,
         related_name="report_docs",
     )
     _modified_at = models.DateTimeField(
-        db_column="LastUpdateDateTime", blank=True, default=""
+        db_column="LastUpdateDateTime", blank=True, auto_now=True
     )
     _created_at = models.DateTimeField(
-        db_column="CreatedDateTime", blank=True, default=""
+        db_column="CreatedDateTime", blank=True, auto_now_add=True
     )
     created_by = models.ForeignKey(
         "Users",
@@ -1665,7 +1665,7 @@ class ReportDocs(models.Model):
         related_name="report_doc_creator",
         db_column="CreatedBy",
         blank=True,
-        default="",
+        null=True,
     )
     modified_by = models.ForeignKey(
         "Users",
@@ -1673,7 +1673,7 @@ class ReportDocs(models.Model):
         related_name="report_doc_modifier",
         db_column="UpdatedBy",
         blank=True,
-        default="",
+        null=True,
     )
     enabled_for_hyperspace = models.CharField(
         db_column="EnabledForHyperspace", max_length=1, blank=True, default=""
@@ -1711,7 +1711,7 @@ class RolePermissionLinks(models.Model):
         models.DO_NOTHING,
         db_column="RoleId",
         blank=True,
-        default="",
+        null=True,
         related_name="permission_links",
     )
     permission_id = models.ForeignKey(
@@ -1719,7 +1719,7 @@ class RolePermissionLinks(models.Model):
         models.DO_NOTHING,
         db_column="RolePermissionsId",
         blank=True,
-        default="",
+        null=True,
         related_name="role_permission_links",
     )
 
@@ -1740,12 +1740,12 @@ class RolePermissions(models.Model):
 
 class Searchtable(models.Model):
     id = models.AutoField(db_column="Id", primary_key=True)
-    itemid = models.IntegerField(db_column="ItemId", blank=True, default="")
-    typeid = models.IntegerField(db_column="TypeId", blank=True, default="")
+    itemid = models.IntegerField(db_column="ItemId", blank=True, null=True)
+    typeid = models.IntegerField(db_column="TypeId", blank=True, null=True)
     itemtype = models.CharField(
         db_column="ItemType", max_length=100, blank=True, default=""
     )
-    itemrank = models.IntegerField(db_column="ItemRank", blank=True, default="")
+    itemrank = models.IntegerField(db_column="ItemRank", blank=True, null=True)
     searchfielddescription = models.CharField(
         db_column="SearchFieldDescription", max_length=100, blank=True, default=""
     )
@@ -1758,19 +1758,19 @@ class Searchtable(models.Model):
 
 class SearchBasicsearchdata(models.Model):
     id = models.AutoField(db_column="Id", primary_key=True)
-    itemid = models.IntegerField(db_column="ItemId", blank=True, default="")
-    typeid = models.IntegerField(db_column="TypeId", blank=True, default="")
+    itemid = models.IntegerField(db_column="ItemId", blank=True, null=True)
+    typeid = models.IntegerField(db_column="TypeId", blank=True, null=True)
     itemtype = models.CharField(
         db_column="ItemType", max_length=100, blank=True, default=""
     )
-    itemrank = models.IntegerField(db_column="ItemRank", blank=True, default="")
+    itemrank = models.IntegerField(db_column="ItemRank", blank=True, null=True)
     searchfielddescription = models.CharField(
         db_column="SearchFieldDescription", max_length=100, blank=True, default=""
     )
     searchfield = models.TextField(db_column="SearchField", blank=True, default="")
-    hidden = models.IntegerField(db_column="Hidden", blank=True, default="")
-    visibletype = models.IntegerField(db_column="VisibleType", blank=True, default="")
-    orphaned = models.IntegerField(db_column="Orphaned", blank=True, default="")
+    hidden = models.IntegerField(db_column="Hidden", blank=True, null=True)
+    visibletype = models.IntegerField(db_column="VisibleType", blank=True, null=True)
+    orphaned = models.IntegerField(db_column="Orphaned", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -1779,19 +1779,19 @@ class SearchBasicsearchdata(models.Model):
 
 class SearchBasicsearchdataSmall(models.Model):
     id = models.AutoField(db_column="Id", primary_key=True)
-    itemid = models.IntegerField(db_column="ItemId", blank=True, default="")
-    typeid = models.IntegerField(db_column="TypeId", blank=True, default="")
+    itemid = models.IntegerField(db_column="ItemId", blank=True, null=True)
+    typeid = models.IntegerField(db_column="TypeId", blank=True, null=True)
     itemtype = models.CharField(
         db_column="ItemType", max_length=100, blank=True, default=""
     )
-    itemrank = models.IntegerField(db_column="ItemRank", blank=True, default="")
+    itemrank = models.IntegerField(db_column="ItemRank", blank=True, null=True)
     searchfielddescription = models.CharField(
         db_column="SearchFieldDescription", max_length=100, blank=True, default=""
     )
     searchfield = models.TextField(db_column="SearchField", blank=True, default="")
-    hidden = models.IntegerField(db_column="Hidden", blank=True, default="")
-    visibletype = models.IntegerField(db_column="VisibleType", blank=True, default="")
-    orphaned = models.IntegerField(db_column="Orphaned", blank=True, default="")
+    hidden = models.IntegerField(db_column="Hidden", blank=True, null=True)
+    visibletype = models.IntegerField(db_column="VisibleType", blank=True, null=True)
+    orphaned = models.IntegerField(db_column="Orphaned", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -1804,7 +1804,7 @@ class SearchReportobjectsearchdata(models.Model):
     columnname = models.TextField(db_column="ColumnName", blank=True, default="")
     value = models.TextField(db_column="Value", blank=True, default="")
     lastmodifieddate = models.DateTimeField(
-        db_column="LastModifiedDate", blank=True, default=""
+        db_column="LastModifiedDate", blank=True, null=True
     )
     epicmasterfile = models.CharField(
         db_column="EpicMasterFile", max_length=3, blank=True, default=""
@@ -1816,44 +1816,44 @@ class SearchReportobjectsearchdata(models.Model):
         db_column="OrphanedReportObjectYN", max_length=1, blank=True, default=""
     )
     reportobjecttypeid = models.IntegerField(
-        db_column="ReportObjectTypeID", blank=True, default=""
+        db_column="ReportObjectTypeID", blank=True, null=True
     )
-    authoruserid = models.IntegerField(db_column="AuthorUserId", blank=True, default="")
+    authoruserid = models.IntegerField(db_column="AuthorUserId", blank=True, null=True)
     lastmodifiedbyuserid = models.IntegerField(
-        db_column="LastModifiedByUserID", blank=True, default=""
+        db_column="LastModifiedByUserID", blank=True, null=True
     )
     epicreporttemplateid = models.DecimalField(
         db_column="EpicReportTemplateId",
         max_digits=18,
         decimal_places=0,
         blank=True,
-        default="",
+        null=True,
     )
     sourceserver = models.CharField(db_column="SourceServer", max_length=255)
     sourcedb = models.CharField(db_column="SourceDB", max_length=255)
     sourcetable = models.CharField(db_column="SourceTable", max_length=255)
     documented = models.IntegerField(db_column="Documented")
-    docownerid = models.IntegerField(db_column="DocOwnerId", blank=True, default="")
+    docownerid = models.IntegerField(db_column="DocOwnerId", blank=True, null=True)
     docrequesterid = models.IntegerField(
-        db_column="DocRequesterId", blank=True, default=""
+        db_column="DocRequesterId", blank=True, null=True
     )
     docorgvalueid = models.IntegerField(
-        db_column="DocOrgValueId", blank=True, default=""
+        db_column="DocOrgValueId", blank=True, null=True
     )
-    docrunfreqid = models.IntegerField(db_column="DocRunFreqId", blank=True, default="")
-    docfragid = models.IntegerField(db_column="DocFragId", blank=True, default="")
+    docrunfreqid = models.IntegerField(db_column="DocRunFreqId", blank=True, null=True)
+    docfragid = models.IntegerField(db_column="DocFragId", blank=True, null=True)
     docexecvis = models.CharField(
         db_column="DocExecVis", max_length=1, blank=True, default=""
     )
     docmainschedid = models.IntegerField(
-        db_column="DocMainSchedId", blank=True, default=""
+        db_column="DocMainSchedId", blank=True, null=True
     )
     doclastupdated = models.DateTimeField(
-        db_column="DocLastUpdated", blank=True, default=""
+        db_column="DocLastUpdated", blank=True, null=True
     )
-    doccreated = models.DateTimeField(db_column="DocCreated", blank=True, default="")
-    doccreatedby = models.IntegerField(db_column="DocCreatedBy", blank=True, default="")
-    docupdatedby = models.IntegerField(db_column="DocUpdatedBy", blank=True, default="")
+    doccreated = models.DateTimeField(db_column="DocCreated", blank=True, null=True)
+    doccreatedby = models.IntegerField(db_column="DocCreatedBy", blank=True, null=True)
+    docupdatedby = models.IntegerField(db_column="DocUpdatedBy", blank=True, null=True)
     dochypeenabled = models.CharField(
         db_column="DocHypeEnabled", max_length=1, blank=True, default=""
     )
@@ -1863,12 +1863,12 @@ class SearchReportobjectsearchdata(models.Model):
     dochidden = models.CharField(
         db_column="DocHidden", max_length=1, blank=True, default=""
     )
-    twoyearruns = models.IntegerField(db_column="TwoYearRuns", blank=True, default="")
-    oneyearruns = models.IntegerField(db_column="OneYearRuns", blank=True, default="")
+    twoyearruns = models.IntegerField(db_column="TwoYearRuns", blank=True, null=True)
+    oneyearruns = models.IntegerField(db_column="OneYearRuns", blank=True, null=True)
     sixmonthsruns = models.IntegerField(
-        db_column="SixMonthsRuns", blank=True, default=""
+        db_column="SixMonthsRuns", blank=True, null=True
     )
-    onemonthruns = models.IntegerField(db_column="OneMonthRuns", blank=True, default="")
+    onemonthruns = models.IntegerField(db_column="OneMonthRuns", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -1878,14 +1878,14 @@ class SearchReportobjectsearchdata(models.Model):
 class Shareditems(models.Model):
     id = models.AutoField(db_column="Id", primary_key=True)
     sharedfromuserid = models.IntegerField(
-        db_column="SharedFromUserId", blank=True, default=""
+        db_column="SharedFromUserId", blank=True, null=True
     )
     sharedtouserid = models.IntegerField(
-        db_column="SharedToUserId", blank=True, default=""
+        db_column="SharedToUserId", blank=True, null=True
     )
     url = models.TextField(db_column="Url", blank=True, default="")
     name = models.TextField(db_column="Name", blank=True, default="")
-    sharedate = models.DateTimeField(db_column="ShareDate", blank=True, default="")
+    sharedate = models.DateTimeField(db_column="ShareDate", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -1917,7 +1917,7 @@ class Terms(models.Model):
         db_column="ApprovedYN", max_length=1, blank=True, default=""
     )
     _approved_at = models.DateTimeField(
-        db_column="ApprovalDateTime", blank=True, default=""
+        db_column="ApprovalDateTime", blank=True, null=True
     )
     approved_by = models.ForeignKey(
         "Users",
@@ -1925,7 +1925,7 @@ class Terms(models.Model):
         related_name="term_approve_user",
         db_column="ApprovedByUserId",
         blank=True,
-        default="",
+        null=True,
     )
     has_external_standard = models.CharField(
         db_column="HasExternalStandardYN", max_length=1, blank=True, default=""
@@ -1934,18 +1934,16 @@ class Terms(models.Model):
         db_column="ExternalStandardUrl", blank=True, default=""
     )
     _valid_from = models.DateTimeField(
-        db_column="ValidFromDateTime", blank=True, default=""
+        db_column="ValidFromDateTime", blank=True, null=True
     )
-    _valid_to = models.DateTimeField(
-        db_column="ValidToDateTime", blank=True, default=""
-    )
+    _valid_to = models.DateTimeField(db_column="ValidToDateTime", blank=True, null=True)
     modified_by = models.ForeignKey(
         "Users",
         models.DO_NOTHING,
         related_name="term_modifier",
         db_column="UpdatedByUserId",
         blank=True,
-        default="",
+        null=True,
     )
     _modified_at = models.DateTimeField(
         db_column="LastUpdatedDateTime", blank=True, auto_now=True
@@ -2012,7 +2010,7 @@ class TermComments(models.Model):
         models.DO_NOTHING,
         db_column="UserId",
         blank=True,
-        default="",
+        null=True,
         related_name="term_comments",
     )
     message = models.TextField(db_column="MessageText")
@@ -2031,10 +2029,10 @@ class FavoriteFolders(models.Model):
         models.DO_NOTHING,
         db_column="UserId",
         blank=True,
-        default="",
+        null=True,
         related_name="favorite_folders",
     )
-    rank = models.IntegerField(db_column="FolderRank", blank=True, default="")
+    rank = models.IntegerField(db_column="FolderRank", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -2045,14 +2043,14 @@ class FavoriteFolders(models.Model):
 class Favorites(models.Model):
     favorite_id = models.AutoField(db_column="UserFavoritesId", primary_key=True)
     item_type = models.TextField(db_column="ItemType", blank=True, default="")
-    rank = models.IntegerField(db_column="ItemRank", blank=True, default="")
-    item_id = models.IntegerField(db_column="ItemId", blank=True, default="")
+    rank = models.IntegerField(db_column="ItemRank", blank=True, null=True)
+    item_id = models.IntegerField(db_column="ItemId", blank=True, null=True)
     user = models.ForeignKey(
         "Users",
         models.DO_NOTHING,
         db_column="UserId",
         blank=True,
-        default="",
+        null=True,
         related_name="favorites",
     )
     name = models.TextField(db_column="ItemName", blank=True, default="")
@@ -2061,7 +2059,7 @@ class Favorites(models.Model):
         models.DO_NOTHING,
         db_column="FolderId",
         blank=True,
-        default="",
+        null=True,
         related_name="favorites",
     )
 
@@ -2148,14 +2146,14 @@ class Favorites(models.Model):
 class UserPreferences(models.Model):
     preference_id = models.AutoField(db_column="UserPreferenceId", primary_key=True)
     key = models.TextField(db_column="ItemType", blank=True, default="")
-    value = models.IntegerField(db_column="ItemValue", blank=True, default="")
-    item_id = models.IntegerField(db_column="ItemId", blank=True, default="")
+    value = models.IntegerField(db_column="ItemValue", blank=True, null=True)
+    item_id = models.IntegerField(db_column="ItemId", blank=True, null=True)
     user_id = models.ForeignKey(
         "Users",
         models.DO_NOTHING,
         db_column="UserId",
         blank=True,
-        default="",
+        null=True,
         related_name="user_preferences",
     )
 
@@ -2171,7 +2169,7 @@ class UserRolelinks(models.Model):
         models.DO_NOTHING,
         db_column="UserId",
         blank=True,
-        default="",
+        null=True,
         related_name="role_links",
     )
     role = models.ForeignKey(
@@ -2179,7 +2177,7 @@ class UserRolelinks(models.Model):
         models.DO_NOTHING,
         db_column="UserRolesId",
         blank=True,
-        default="",
+        null=True,
         related_name="role_users",
     )
 
