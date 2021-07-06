@@ -1,0 +1,50 @@
+<div class="mdl" id="newModal" tabindex="-1">
+    <div class="mdl-d editorMdl">
+        <div class="mdl-c editorMdl-inner">
+            <div class="editorMdl-title">
+                <h2 class="editorMdl-titleText">Create a New Project<button type="button" data-dismiss="mdl" data-tooltip="Close">&times;</button></h2>
+                <div id="editorMdl-titleSave">changes saved.</div>
+            </div>
+            <div class="editorMdl-cnt" ss-container>
+                <div class="editorMdl-cntLiner">
+                    <form action="/projects/new" method="post">
+                        {% csrf_token %}
+                        <h3>Details</h3>
+                        <div class="listDetails">
+                            <label>Name</label>
+                            <input name="name" required />
+
+                            <label>Operations Owner</label>
+                            <input type="dynamic-dropdown" name="ops_owner_id" value="" search-area="user_lookup" />
+                            
+                            <label>Executive Owner</label>
+                            <input type="dynamic-dropdown" name="exec_owner_id" value="" search-area="user_lookup" />
+                            
+                            <label>Analytics Owner</label>
+                            <input type="dynamic-dropdown" name="analytics_owner_id" value="" search-area="user_lookup" />
+                            
+                            <label>Data Owner</label>
+                            <input type="dynamic-dropdown" name="data_owner_id" value="" search-area="user_lookup" />
+                            
+                            <label>Financial Impact</label>
+                            <input type="dynamic-dropdown" name="financial_impact_id" search-area="lookup/financial-impact" method="fullList" />
+                            
+                            <label>Strategic Importance</label>
+                            <input type="dynamic-dropdown" name="strategic_importance_id" search-area="lookup/strategic-importance" method="fullList" />
+                        </div>
+
+                        <h3>Purpose</h3>
+                        <div class="editor" data-inputName="purpose" data-inputId="purpose"><textarea></textarea></div>
+
+
+                        <h3>Description</h3>
+                        <div class="editor" data-inputName="description" data-inputId="description"><textarea></textarea></div>
+                    
+                        <h3><button class="editor-save" type="submit">Save</button></h3>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

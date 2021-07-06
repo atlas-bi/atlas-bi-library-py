@@ -21,13 +21,13 @@ from django.db import models
 
 class UserGroups(models.Model):
     group_id = models.AutoField(primary_key=True)
-    account_name = models.TextField(blank=True, null=True)
-    group_name = models.TextField(blank=True, null=True)
-    group_email = models.TextField(blank=True, null=True)
-    group_type = models.TextField(blank=True, null=True)
-    group_source = models.TextField(blank=True, null=True)
-    etl_date = models.DateTimeField(blank=True, null=True)
-    epic_id = models.TextField(blank=True, null=True)
+    account_name = models.TextField(blank=True, default="")
+    group_name = models.TextField(blank=True, default="")
+    group_email = models.TextField(blank=True, default="")
+    group_type = models.TextField(blank=True, default="")
+    group_source = models.TextField(blank=True, default="")
+    etl_date = models.DateTimeField(blank=True, default="")
+    epic_id = models.TextField(blank=True, default="")
 
     def __str__(self):
         return self.group_name
@@ -35,15 +35,19 @@ class UserGroups(models.Model):
 
 class Reports(models.Model):
     report_id = models.AutoField(primary_key=True)
-    report_key = models.TextField(blank=True, null=True)
+    report_key = models.TextField(blank=True, default="")
     type = models.ForeignKey(
-        "ReportTypes", blank=True, null=True, on_delete=models.CASCADE
+        "ReportTypes",
+        blank=True,
+        default="",
+        on_delete=models.CASCADE,
+        related_name="reports",
     )
-    name = models.TextField(blank=True, null=True)
-    title = models.TextField(blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
-    detailed_description = models.TextField(blank=True, null=True)
-    system_description = models.TextField(blank=True, null=True)
+    name = models.TextField(blank=True, default="")
+    title = models.TextField(blank=True, default="")
+    description = models.TextField(blank=True, default="")
+    detailed_description = models.TextField(blank=True, default="")
+    system_description = models.TextField(blank=True, default="")
     system_server = models.CharField(max_length=255)
     system_db = models.CharField(max_length=255)
     system_table = models.CharField(max_length=255)
@@ -51,40 +55,40 @@ class Reports(models.Model):
         "Users",
         related_name="report_creator",
         blank=True,
-        null=True,
+        default="",
         on_delete=models.CASCADE,
     )
     modified_by = models.ForeignKey(
         "Users",
         related_name="report_modifier",
         blank=True,
-        null=True,
+        default="",
         on_delete=models.CASCADE,
     )
-    _modified_at = models.DateTimeField(blank=True, null=True)
-    url = models.TextField(blank=True, null=True)
-    system_identifier = models.CharField(max_length=3, blank=True, null=True)
+    _modified_at = models.DateTimeField(blank=True, default="")
+    url = models.TextField(blank=True, default="")
+    system_identifier = models.CharField(max_length=3, blank=True, default="")
     system_id = models.DecimalField(
-        max_digits=18, decimal_places=0, blank=True, null=True
+        max_digits=18, decimal_places=0, blank=True, default=""
     )
     system_template_id = models.DecimalField(
         max_digits=18,
         decimal_places=0,
         blank=True,
-        null=True,
+        default="",
     )
-    system_catalog_id = models.CharField(max_length=50, blank=True, null=True)
-    visible = models.CharField(max_length=1, blank=True, null=True)
-    orphan = models.CharField(max_length=1, blank=True, null=True)
-    system_path = models.TextField(blank=True, null=True)
-    etl_date = models.DateTimeField(blank=True, null=True)
-    certification_tag = models.CharField(max_length=200, blank=True, null=True)
+    system_catalog_id = models.CharField(max_length=50, blank=True, default="")
+    visible = models.CharField(max_length=1, blank=True, default="")
+    orphan = models.CharField(max_length=1, blank=True, default="")
+    system_path = models.TextField(blank=True, default="")
+    etl_date = models.DateTimeField(blank=True, default="")
+    certification_tag = models.CharField(max_length=200, blank=True, default="")
+
+    def __str__(self):
+        return self.title or self.name
 
     @property
     def friendly_name(self):
-        return self.title or self.name
-
-    def __str__(self):
         return self.title or self.name
 
     def system_viewer_url(self, in_system):
@@ -168,11 +172,13 @@ class Reports(models.Model):
 
 class ReportGroupMemberships(models.Model):
     membership_id = models.AutoField(primary_key=True)
-    group_id = models.ForeignKey("UserGroups", on_delete=models.CASCADE)
-    report_id = models.ForeignKey(
-        "Reports", on_delete=models.CASCADE, related_name="groups"
+    group = models.ForeignKey(
+        "UserGroups", on_delete=models.CASCADE, related_name="report_memberships"
     )
-    etl_date = models.DateTimeField(blank=True, null=True)
+    report = models.ForeignKey(
+        "Reports", on_delete=models.CASCADE, related_name="group_memeberships"
+    )
+    etl_date = models.DateTimeField(blank=True, default="")
 
 
 class ReportHierarchies(models.Model):
@@ -180,8 +186,8 @@ class ReportHierarchies(models.Model):
         "Reports", related_name="parent", primary_key=True, on_delete=models.CASCADE
     )
     child = models.ForeignKey("Reports", related_name="child", on_delete=models.CASCADE)
-    rank = models.IntegerField(blank=True, null=True)
-    etl_date = models.DateTimeField(blank=True, null=True)
+    rank = models.IntegerField(blank=True, default="")
+    etl_date = models.DateTimeField(blank=True, default="")
 
 
 class ReportQueries(models.Model):
@@ -189,12 +195,12 @@ class ReportQueries(models.Model):
     report_id = models.ForeignKey(
         Reports,
         blank=True,
-        null=True,
+        default="",
         on_delete=models.CASCADE,
         related_name="queries",
     )
-    query = models.TextField(blank=True, null=True)
-    etl_date = models.DateTimeField(blank=True, null=True)
+    query = models.TextField(blank=True, default="")
+    etl_date = models.DateTimeField(blank=True, default="")
 
     def __str__(self):
         return self.query
@@ -205,42 +211,51 @@ class ReportRuns(models.Model):
         Reports, primary_key=True, on_delete=models.CASCADE
     )
     run_id = models.IntegerField()
-    user_id = models.ForeignKey(
-        "Users", blank=True, null=True, on_delete=models.CASCADE
+    user = models.ForeignKey(
+        "Users",
+        blank=True,
+        default="",
+        on_delete=models.CASCADE,
+        related_name="report_runs",
     )
-    start_time = models.DateTimeField(blank=True, null=True)
-    duration_seconds = models.IntegerField(blank=True, null=True)
-    status = models.CharField(max_length=100, blank=True, null=True)
-    etl_date = models.DateTimeField(blank=True, null=True)
+    start_time = models.DateTimeField(blank=True, default="")
+    duration_seconds = models.IntegerField(blank=True, default="")
+    status = models.CharField(max_length=100, blank=True, default="")
+    etl_date = models.DateTimeField(blank=True, default="")
 
 
 class ReportSubscriptions(models.Model):
     subscriptions_id = models.AutoField(primary_key=True)
-    report_id = models.ForeignKey(
+    report = models.ForeignKey(
         Reports,
         blank=True,
-        null=True,
+        default="",
         on_delete=models.CASCADE,
+        related_name="user_subscriptions",
     )
-    user_id = models.ForeignKey(
-        "Users", blank=True, null=True, on_delete=models.CASCADE
+    user = models.ForeignKey(
+        "Users",
+        blank=True,
+        default="",
+        on_delete=models.CASCADE,
+        related_name="report_subscriptions",
     )
-    unique_id = models.TextField(blank=True, null=True)
-    inactive = models.IntegerField(blank=True, null=True)
-    email_list = models.TextField(blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
-    status = models.TextField(blank=True, null=True)
-    last_run = models.DateTimeField(blank=True, null=True)
-    email = models.TextField(blank=True, null=True)
-    etl_date = models.DateTimeField(blank=True, null=True)
+    unique_id = models.TextField(blank=True, default="")
+    inactive = models.IntegerField(blank=True, default="")
+    email_list = models.TextField(blank=True, default="")
+    description = models.TextField(blank=True, default="")
+    status = models.TextField(blank=True, default="")
+    last_run = models.DateTimeField(blank=True, default="")
+    email = models.TextField(blank=True, default="")
+    etl_date = models.DateTimeField(blank=True, default="")
 
 
 class ReportTypes(models.Model):
     type_id = models.AutoField(primary_key=True)
     name = models.TextField()
-    code = models.TextField(blank=True, null=True)
-    short_name = models.TextField(blank=True, null=True)
-    etl_date = models.DateTimeField(blank=True, null=True)
+    code = models.TextField(blank=True, default="")
+    short_name = models.TextField(blank=True, default="")
+    etl_date = models.DateTimeField(blank=True, default="")
 
     def __str__(self):
         return self.name
@@ -253,24 +268,27 @@ class ReportTypes(models.Model):
 class Users(AbstractUser):
     user_id = models.AutoField(primary_key=True)
     username = models.TextField()
-    employee_id = models.TextField(blank=True, null=True)
-    account_name = models.TextField(blank=True, null=True)
-    display_name = models.TextField(blank=True, null=True)
-    _full_name = models.TextField(blank=True, null=True)
-    _first_name = models.TextField(blank=True, null=True)
-    last_name = models.TextField(blank=True, null=True)
-    department = models.TextField(blank=True, null=True)
-    title = models.TextField(blank=True, null=True)
-    phone = models.TextField(blank=True, null=True)
-    email = models.TextField(blank=True, null=True)
-    base = models.TextField(blank=True, null=True)
-    system_id = models.TextField(blank=True, null=True)
-    etl_date = models.DateTimeField(blank=True, null=True)
-    last_login = models.DateTimeField(blank=True, null=True)
+    employee_id = models.TextField(blank=True, default="")
+    account_name = models.TextField(blank=True, default="")
+    display_name = models.TextField(blank=True, default="")
+    _full_name = models.TextField(blank=True, default="")
+    _first_name = models.TextField(blank=True, default="")
+    last_name = models.TextField(blank=True, default="")
+    department = models.TextField(blank=True, default="")
+    title = models.TextField(blank=True, default="")
+    phone = models.TextField(blank=True, default="")
+    email = models.TextField(blank=True, default="")
+    base = models.TextField(blank=True, default="")
+    system_id = models.TextField(blank=True, default="")
+    etl_date = models.DateTimeField(blank=True, default="")
+    last_login = models.DateTimeField(blank=True, default="")
     is_active = True
     date_joined = None
     is_superuser = True  # check permissions for admin
     is_staff = True
+
+    def __str__(self):
+        return self.build_full_name()
 
     @property
     def is_admin(self):
@@ -386,81 +404,88 @@ class Users(AbstractUser):
 
         return "{} {}".format(self.first_name, self.last_name)
 
-    def __str__(self):
-        return self.build_full_name()
-
 
 class UserGroupMemberships(models.Model):
     membership_id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(Users, blank=True, null=True, on_delete=models.CASCADE)
-    group_id = models.ForeignKey(
-        UserGroups, blank=True, null=True, on_delete=models.CASCADE
+    user = models.ForeignKey(
+        Users,
+        blank=True,
+        default="",
+        on_delete=models.CASCADE,
+        related_name="group_memeberships",
     )
-    etl_date = models.DateTimeField(blank=True, null=True)
+    group = models.ForeignKey(
+        UserGroups,
+        blank=True,
+        default="",
+        on_delete=models.CASCADE,
+        related_name="user_memberships",
+    )
+    etl_date = models.DateTimeField(blank=True, default="")
 
 
 class Analytics(models.Model):
     analytics_id = models.AutoField(primary_key=True)
-    username = models.TextField(blank=True, null=True)
-    app_code_name = models.TextField(blank=True, null=True)
-    app_name = models.TextField(blank=True, null=True)
-    app_version = models.TextField(blank=True, null=True)
-    cookie_enabled = models.TextField(blank=True, null=True)
-    language = models.TextField(blank=True, null=True)
-    oscpu = models.TextField(blank=True, null=True)
-    platform = models.TextField(blank=True, null=True)
-    useragent = models.TextField(blank=True, null=True)
-    host = models.TextField(blank=True, null=True)
-    hostname = models.TextField(blank=True, null=True)
-    href = models.TextField(blank=True, null=True)
-    protocol = models.TextField(blank=True, null=True)
-    search = models.TextField(blank=True, null=True)
-    pathname = models.TextField(blank=True, null=True)
-    unique_id = models.TextField(blank=True, null=True)
-    screen_height = models.TextField(blank=True, null=True)
-    screen_width = models.TextField(blank=True, null=True)
-    origin = models.TextField(blank=True, null=True)
-    title = models.TextField(blank=True, null=True)
-    load_time = models.TextField(blank=True, null=True)
-    access_date = models.DateTimeField(blank=True, null=True)
-    referrer = models.TextField(blank=True, null=True)
+    username = models.TextField(blank=True, default="")
+    app_code_name = models.TextField(blank=True, default="")
+    app_name = models.TextField(blank=True, default="")
+    app_version = models.TextField(blank=True, default="")
+    cookie_enabled = models.TextField(blank=True, default="")
+    language = models.TextField(blank=True, default="")
+    oscpu = models.TextField(blank=True, default="")
+    platform = models.TextField(blank=True, default="")
+    useragent = models.TextField(blank=True, default="")
+    host = models.TextField(blank=True, default="")
+    hostname = models.TextField(blank=True, default="")
+    href = models.TextField(blank=True, default="")
+    protocol = models.TextField(blank=True, default="")
+    search = models.TextField(blank=True, default="")
+    pathname = models.TextField(blank=True, default="")
+    unique_id = models.TextField(blank=True, default="")
+    screen_height = models.TextField(blank=True, default="")
+    screen_width = models.TextField(blank=True, default="")
+    origin = models.TextField(blank=True, default="")
+    title = models.TextField(blank=True, default="")
+    load_time = models.TextField(blank=True, default="")
+    access_date = models.DateTimeField(blank=True, default="")
+    referrer = models.TextField(blank=True, default="")
     user = models.ForeignKey(
         "Users",
         blank=True,
-        null=True,
+        default="",
         related_name="analytics",
         on_delete=models.CASCADE,
     )
-    zoom = models.FloatField(blank=True, null=True)
-    epic = models.IntegerField(blank=True, null=True)
-    page_id = models.TextField(blank=True, null=True)
-    session_id = models.TextField(blank=True, null=True)
-    page_time = models.IntegerField(blank=True, null=True)
-    session_time = models.IntegerField(blank=True, null=True)
-    update_time = models.DateTimeField(blank=True, null=True)
+    zoom = models.FloatField(blank=True, default="")
+    epic = models.IntegerField(blank=True, default="")
+    page_id = models.TextField(blank=True, default="")
+    session_id = models.TextField(blank=True, default="")
+    page_time = models.IntegerField(blank=True, default="")
+    session_time = models.IntegerField(blank=True, default="")
+    update_time = models.DateTimeField(blank=True, default="")
 
 
 class ProjectAgreements(models.Model):
     agreement_id = models.AutoField(primary_key=True)
-    description = models.TextField(blank=True, null=True)
-    _met_at = models.DateTimeField(blank=True, null=True)
-    _effective_from = models.DateTimeField(blank=True, null=True)
-    _modified_at = models.DateTimeField(blank=True, null=True)
+    description = models.TextField(blank=True, default="")
+    _met_at = models.DateTimeField(blank=True, default="")
+    _effective_from = models.DateTimeField(blank=True, default="")
+    _modified_at = models.DateTimeField(blank=True, default="")
     modified_by = models.ForeignKey(
         "Users",
         related_name="project_agreement_modifier",
         blank=True,
-        null=True,
+        default="",
         on_delete=models.CASCADE,
     )
     project_id = models.ForeignKey(
         "Projects",
         blank=True,
-        null=True,
+        default="",
         related_name="agreements",
         on_delete=models.CASCADE,
     )
-    rank = models.IntegerField(blank=True, null=True)
+    rank = models.IntegerField(blank=True, default="")
 
     @property
     def met_at(self):
@@ -483,42 +508,48 @@ class ProjectAgreements(models.Model):
 
 class ProjectAgreementUsers(models.Model):
     agreementusers_id = models.AutoField(primary_key=True)
-    agreement_id = models.ForeignKey(
-        ProjectAgreements, blank=True, null=True, on_delete=models.CASCADE
+    agreement = models.ForeignKey(
+        ProjectAgreements,
+        blank=True,
+        default="",
+        on_delete=models.CASCADE,
+        related_name="agreement_users",
     )
-    user_id = models.ForeignKey(
+    user = models.ForeignKey(
         "Users",
         blank=True,
-        null=True,
+        default="",
         related_name="project_agreement",
         on_delete=models.CASCADE,
     )
-    modified_at = models.DateTimeField(blank=True, null=True)
+    modified_at = models.DateTimeField(blank=True, default="")
     modified_by = models.ForeignKey(
         "Users",
         related_name="project_agreement_users_modifier",
         blank=True,
-        null=True,
+        default="",
         on_delete=models.CASCADE,
     )
 
 
 class ProjectAttachments(models.Model):
     attachment_id = models.AutoField(primary_key=True)
-    project_id = models.ForeignKey("Projects", on_delete=models.CASCADE)
+    project = models.ForeignKey(
+        "Projects", on_delete=models.CASCADE, related_name="attachments"
+    )
     rank = models.IntegerField()
     data = models.BinaryField()
     category = models.TextField()
-    name = models.TextField(blank=True, null=True)
-    size = models.IntegerField(blank=True, null=True)
+    name = models.TextField(blank=True, default="")
+    size = models.IntegerField(blank=True, default="")
 
 
 class InitiativeContacts(models.Model):
     contact_id = models.AutoField(primary_key=True)
-    name = models.TextField(blank=True, null=True)
-    email = models.TextField(blank=True, null=True)
-    phone = models.CharField(max_length=55, blank=True, null=True)
-    company = models.TextField(blank=True, null=True)
+    name = models.TextField(blank=True, default="")
+    email = models.TextField(blank=True, default="")
+    phone = models.CharField(max_length=55, blank=True, default="")
+    company = models.TextField(blank=True, default="")
 
     def __str__(self):
         return self.name
@@ -529,14 +560,14 @@ class InitiativeContactLinks(models.Model):
     initiative = models.ForeignKey(
         "Initiatives",
         blank=True,
-        null=True,
+        default="",
         on_delete=models.CASCADE,
         related_name="contact_links",
     )
     contact = models.ForeignKey(
         InitiativeContacts,
         blank=True,
-        null=True,
+        default="",
         on_delete=models.CASCADE,
         related_name="initiative_links",
     )
@@ -550,35 +581,43 @@ class InitiativeContactLinks(models.Model):
 
 class Initiatives(models.Model):
     initiative_id = models.AutoField(primary_key=True)
-    name = models.TextField(blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
+    name = models.TextField(blank=True, default="")
+    description = models.TextField(blank=True, default="")
     ops_owner = models.ForeignKey(
         "Users",
         blank=True,
-        null=True,
+        default="",
         related_name="initiative_ops_owner",
         on_delete=models.CASCADE,
     )
     exec_owner = models.ForeignKey(
         "Users",
         blank=True,
-        null=True,
+        default="",
         related_name="initiative_exec_owner",
         on_delete=models.CASCADE,
     )
 
     financial_impact = models.ForeignKey(
-        "Financialimpact", blank=True, null=True, on_delete=models.CASCADE
+        "Financialimpact",
+        blank=True,
+        default="",
+        on_delete=models.CASCADE,
+        related_name="initiatives",
     )
     strategic_importance = models.ForeignKey(
-        "Strategicimportance", blank=True, null=True, on_delete=models.CASCADE
+        "Strategicimportance",
+        blank=True,
+        default="",
+        on_delete=models.CASCADE,
+        related_name="initiatives",
     )
-    _modified_at = models.DateTimeField(blank=True, null=True)
+    _modified_at = models.DateTimeField(blank=True, default="")
     modified_by = models.ForeignKey(
         "Users",
         related_name="initiative_modifier",
         blank=True,
-        null=True,
+        default="",
         on_delete=models.CASCADE,
     )
 
@@ -598,33 +637,33 @@ class Projects(models.Model):
     initiative = models.ForeignKey(
         "Initiatives",
         blank=True,
-        null=True,
+        default="",
         related_name="projects",
         on_delete=models.CASCADE,
     )
 
-    name = models.TextField(blank=True, null=True)
-    purpose = models.TextField(blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
+    name = models.TextField(blank=True, default="")
+    purpose = models.TextField(blank=True, default="")
+    description = models.TextField(blank=True, default="")
     ops_owner = models.ForeignKey(
         "Users",
         related_name="project_ops_owner",
         blank=True,
-        null=True,
+        default="",
         on_delete=models.CASCADE,
     )
     exec_owner = models.ForeignKey(
         "Users",
         related_name="project_exec_owner",
         blank=True,
-        null=True,
+        default="",
         on_delete=models.CASCADE,
     )
     analytics_owner = models.ForeignKey(
         "Users",
         related_name="project_analytics_owner",
         blank=True,
-        null=True,
+        default="",
         on_delete=models.CASCADE,
     )
     data_owner = models.ForeignKey(
@@ -632,31 +671,36 @@ class Projects(models.Model):
         on_delete=models.CASCADE,
         related_name="project_data_owner",
         blank=True,
-        null=True,
+        default="",
     )
     financial_impact = models.ForeignKey(
         "Financialimpact",
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
+        related_name="projects",
     )
     strategic_importance = models.ForeignKey(
         "Strategicimportance",
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
+        related_name="projects",
     )
-    external_documentation_url = models.TextField(blank=True, null=True)
-    _modified_at = models.DateTimeField(blank=True, null=True)
+    external_documentation_url = models.TextField(blank=True, default="")
+    _modified_at = models.DateTimeField(blank=True, auto_now=True)
     modified_by = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
         related_name="project_modifier",
         blank=True,
-        null=True,
+        default="",
     )
 
-    hidden = models.CharField(max_length=1, blank=True, null=True)
+    hidden = models.CharField(max_length=1, blank=True, default="")
+
+    def __str__(self):
+        return self.name
 
     @property
     def modified_at(self):
@@ -664,111 +708,128 @@ class Projects(models.Model):
             return datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
-    def __str__(self):
-        return self.name
-
 
 class ProjectChecklist(models.Model):
     checklist_id = models.AutoField(primary_key=True)
-    task_id = models.ForeignKey(
-        "DpMilestonetasks",
+    task = models.ForeignKey(
+        "ProjectMilestoneTasks",
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
+        related_name="checklist",
     )
-    item = models.TextField(blank=True, null=True)
+    item = models.TextField(blank=True, default="")
 
 
 class ProjectChecklistCompleted(models.Model):
     checklistcompleted_id = models.AutoField(primary_key=True)
-    project_id = models.ForeignKey(
+    project = models.ForeignKey(
         Projects,
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
+        related_name="completed_checklist",
     )
-    task_date = models.DateTimeField(blank=True, null=True)
-    task_id = models.IntegerField(blank=True, null=True)
-    checklist_id = models.IntegerField(blank=True, null=True)
-    status = models.BooleanField(blank=True, null=True)
-    completion_date = models.DateTimeField(blank=True, null=True)
-    completion_user = models.IntegerField(blank=True, null=True)
+    task_date = models.DateTimeField(blank=True, default="")
+    task_id = models.IntegerField(blank=True, default="")
+    checklist_id = models.IntegerField(blank=True, default="")
+    status = models.BooleanField(blank=True, default="")
+    completion_date = models.DateTimeField(blank=True, default="")
+    completion_user = models.IntegerField(blank=True, default="")
 
 
 class ProjectMilestoneFrequency(models.Model):
     frequency_id = models.AutoField(primary_key=True)
-    name = models.TextField(blank=True, null=True)
+    name = models.TextField(blank=True, default="")
 
 
-class DpMilestonetasks(models.Model):
-    milestonetaskid = models.AutoField(primary_key=True)
-    milestonetemplateid = models.ForeignKey(
+class ProjectMilestoneTasks(models.Model):
+    task_id = models.AutoField(primary_key=True)
+    template = models.ForeignKey(
         "ProjectMilestoneTemplates",
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
+        related_name="tasks",
     )
-    ownerid = models.IntegerField(blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
-    startdate = models.DateTimeField(blank=True, null=True)
-    enddate = models.DateTimeField(blank=True, null=True)
-    lastupdateuser = models.IntegerField(blank=True, null=True)
-    lastupdatedate = models.DateTimeField(blank=True, null=True)
-    dataprojectid = models.ForeignKey(
-        Projects,
+    owner = models.ForeignKey(
+        "Users",
         on_delete=models.CASCADE,
+        related_name="project_task_owner",
         blank=True,
-        null=True,
+        default="",
+    )
+    description = models.TextField(blank=True, default="")
+    start_date = models.DateTimeField(blank=True, default="")
+    end_date = models.DateTimeField(blank=True, default="")
+    modified_by = models.ForeignKey(
+        "Users",
+        on_delete=models.CASCADE,
+        related_name="project_task_modifier",
+        blank=True,
+        default="",
+    )
+    modified_at = models.DateTimeField(blank=True, default="")
+    project = models.ForeignKey(
+        Projects, on_delete=models.CASCADE, blank=True, default="", related_name="tasks"
     )
 
 
-class DpMilestonetaskscompleted(models.Model):
-    milestonetaskcompletedid = models.AutoField(primary_key=True)
-    dataprojectid = models.ForeignKey(
+class ProjectMilestoneTasksCompleted(models.Model):
+    task_id = models.AutoField(primary_key=True)
+    project = models.ForeignKey(
         Projects,
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
+        related_name="completed_tasks",
     )
-    completiondate = models.DateTimeField(blank=True, null=True)
-    completionuser = models.TextField(blank=True, null=True)
-    comments = models.TextField(blank=True, null=True)
-    owner = models.TextField(blank=True, null=True)
-    duedate = models.DateTimeField(blank=True, null=True)
+    completion_date = models.DateTimeField(blank=True, default="")
+    completion_user = models.ForeignKey(
+        "Users",
+        on_delete=models.CASCADE,
+        related_name="project_task_completed_by",
+        blank=True,
+        default="",
+    )
+    comments = models.TextField(blank=True, default="")
+    owner = models.TextField(blank=True, default="")
+    due_date = models.DateTimeField(blank=True, default="")
 
 
 class ProjectMilestoneTemplates(models.Model):
     template_id = models.AutoField(primary_key=True)
-    name = models.TextField(blank=True, null=True)
-    milestonetypeid = models.ForeignKey(
+    name = models.TextField(blank=True, default="")
+    type_id = models.ForeignKey(
         ProjectMilestoneFrequency,
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
+        related_name="milestone_templates",
     )
-    lastupdateuser = models.IntegerField(blank=True, null=True)
-    lastupdatedate = models.DateTimeField(blank=True, null=True)
-    interval = models.IntegerField(blank=True, null=True)
+    lastupdateuser = models.IntegerField(blank=True, default="")
+    lastupdatedate = models.DateTimeField(blank=True, default="")
+    interval = models.IntegerField(blank=True, default="")
 
 
 class ProjectReports(models.Model):
     annotation_id = models.AutoField(primary_key=True)
-    annotation = models.TextField(blank=True, null=True)
+    annotation = models.TextField(blank=True, default="")
     report = models.ForeignKey(
         "Reports",
         on_delete=models.CASCADE,
         related_name="projects",
         blank=True,
-        null=True,
+        default="",
     )
     project = models.ForeignKey(
         Projects,
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
         related_name="report_annotations",
     )
-    rank = models.IntegerField(blank=True, null=True)
+    rank = models.IntegerField(blank=True, default="")
 
     def __str__(self):
         return self.report.friendly_name
@@ -776,23 +837,23 @@ class ProjectReports(models.Model):
 
 class ProjectTerms(models.Model):
     termannotationid = models.AutoField(primary_key=True)
-    annotation = models.TextField(blank=True, null=True)
+    annotation = models.TextField(blank=True, default="")
 
     term = models.ForeignKey(
         "Terms",
         on_delete=models.CASCADE,
         related_name="projects",
         blank=True,
-        null=True,
+        default="",
     )
     project = models.ForeignKey(
         Projects,
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
         related_name="term_annotations",
     )
-    rank = models.IntegerField(blank=True, null=True)
+    rank = models.IntegerField(blank=True, default="")
 
     def __str__(self):
         return self.term.name
@@ -800,34 +861,34 @@ class ProjectTerms(models.Model):
 
 class ProjectCommentStream(models.Model):
     stream_id = models.AutoField(primary_key=True)
-    project_id = models.ForeignKey(
-        Projects,
-        on_delete=models.CASCADE,
+    project = models.ForeignKey(
+        Projects, on_delete=models.CASCADE, related_name="comment_streams"
     )
 
 
 class ProjectComments(models.Model):
     comment_id = models.AutoField(primary_key=True)
-    stream_id = models.ForeignKey(
+    stream = models.ForeignKey(
         ProjectCommentStream,
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
+        related_name="comments",
     )
-    user_id = models.ForeignKey(
+    user = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
         related_name="user_project_comments",
         blank=True,
-        null=True,
+        default="",
     )
-    message = models.CharField(max_length=4000, blank=True, null=True)
-    posted_at = models.DateTimeField(blank=True, null=True)
+    message = models.TextField(blank=True, default="")
+    posted_at = models.DateTimeField(blank=True, default="")
 
 
 class RunFrequency(models.Model):
     frequency_id = models.AutoField(primary_key=True)
-    name = models.TextField(blank=True, null=True)
+    name = models.TextField(blank=True, default="")
 
     def __str__(self):
         return self.name
@@ -835,7 +896,7 @@ class RunFrequency(models.Model):
 
 class FinancialImpact(models.Model):
     impact_id = models.AutoField(primary_key=True)
-    name = models.TextField(blank=True, null=True)
+    name = models.TextField(blank=True, default="")
 
     def __str__(self):
         return self.name
@@ -843,7 +904,7 @@ class FinancialImpact(models.Model):
 
 class Fragility(models.Model):
     fragility_id = models.AutoField(primary_key=True)
-    name = models.TextField(blank=True, null=True)
+    name = models.TextField(blank=True, default="")
 
     def __str__(self):
         return self.name
@@ -851,7 +912,7 @@ class Fragility(models.Model):
 
 class FragilityTag(models.Model):
     tag_id = models.AutoField(primary_key=True)
-    name = models.TextField(blank=True, null=True)
+    name = models.TextField(blank=True, default="")
 
     def __str__(self):
         return self.name
@@ -859,97 +920,101 @@ class FragilityTag(models.Model):
 
 class Globalsitesettings(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.TextField(blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
-    value = models.TextField(blank=True, null=True)
+    name = models.TextField(blank=True, default="")
+    description = models.TextField(blank=True, default="")
+    value = models.TextField(blank=True, default="")
 
 
 class MailConversations(models.Model):
-    conversationid = models.AutoField(primary_key=True)
-    messageid = models.ForeignKey(
-        "MailMessages",
-        on_delete=models.CASCADE,
+    conversation_id = models.AutoField(primary_key=True)
+    message = models.ForeignKey(
+        "MailMessages", on_delete=models.CASCADE, related_name="conversations"
     )
 
 
 class MailDrafts(models.Model):
-    draftid = models.AutoField(primary_key=True)
-    subject = models.TextField(blank=True, null=True)
-    message = models.TextField(blank=True, null=True)
-    editdate = models.DateTimeField(blank=True, null=True)
-    messagetypeid = models.IntegerField(blank=True, null=True)
-    fromuserid = models.IntegerField(blank=True, null=True)
-    messageplaintext = models.TextField(blank=True, null=True)
-    recipients = models.TextField(blank=True, null=True)
-    replytomessageid = models.IntegerField(blank=True, null=True)
-    replytoconvid = models.IntegerField(blank=True, null=True)
+    draft_id = models.AutoField(primary_key=True)
+    subject = models.TextField(blank=True, default="")
+    message = models.TextField(blank=True, default="")
+    editdate = models.DateTimeField(blank=True, default="")
+    messagetypeid = models.IntegerField(blank=True, default="")
+    fromuserid = models.IntegerField(blank=True, default="")
+    messageplaintext = models.TextField(blank=True, default="")
+    recipients = models.TextField(blank=True, default="")
+    replytomessageid = models.IntegerField(blank=True, default="")
+    replytoconvid = models.IntegerField(blank=True, default="")
 
 
 class MailFoldermessages(models.Model):
-    id = models.AutoField(primary_key=True)
-    folderid = models.ForeignKey(
+    folder_message_id = models.AutoField(primary_key=True)
+    folder = models.ForeignKey(
         "MailFolders",
         blank=True,
-        null=True,
+        default="",
         on_delete=models.CASCADE,
+        related_name="folder_messages",
     )
-    messageid = models.ForeignKey(
+
+    message = models.ForeignKey(
         "MailMessages",
         blank=True,
-        null=True,
+        default="",
         on_delete=models.CASCADE,
+        related_name="message_folders",
     )
 
 
 class MailFolders(models.Model):
-    folderid = models.AutoField(primary_key=True)
-    parentfolderid = models.IntegerField(blank=True, null=True)
-    userid = models.IntegerField(blank=True, null=True)
-    name = models.TextField(blank=True, null=True)
-    rank = models.IntegerField(blank=True, null=True)
+    folder_id = models.AutoField(primary_key=True)
+    parentfolderid = models.IntegerField(blank=True, default="")
+    userid = models.IntegerField(blank=True, default="")
+    name = models.TextField(blank=True, default="")
+    rank = models.IntegerField(blank=True, default="")
 
 
 class MailMessagetype(models.Model):
     messagetypeid = models.AutoField(primary_key=True)
-    name = models.TextField(blank=True, null=True)
+    name = models.TextField(blank=True, default="")
 
 
 class MailMessages(models.Model):
-    messageid = models.AutoField(primary_key=True)
-    subject = models.TextField(blank=True, null=True)
-    message = models.TextField(blank=True, null=True)
-    senddate = models.DateTimeField(blank=True, null=True)
-    messagetypeid = models.ForeignKey(
+    message_id = models.AutoField(primary_key=True)
+    subject = models.TextField(blank=True, default="")
+    message = models.TextField(blank=True, default="")
+    senddate = models.DateTimeField(blank=True, default="")
+    message_type = models.ForeignKey(
         MailMessagetype,
         blank=True,
-        null=True,
+        default="",
         on_delete=models.CASCADE,
+        related_name="messages",
     )
-    fromuserid = models.IntegerField(blank=True, null=True)
-    messageplaintext = models.TextField(blank=True, null=True)
+    fromuserid = models.IntegerField(blank=True, default="")
+    messageplaintext = models.TextField(blank=True, default="")
 
 
 class MailRecipients(models.Model):
-    id = models.AutoField(primary_key=True)
-    messageid = models.ForeignKey(
+    recipient_id = models.AutoField(primary_key=True)
+    message = models.ForeignKey(
         MailMessages,
         blank=True,
-        null=True,
+        default="",
         on_delete=models.CASCADE,
+        related_name="messages",
     )
-    touserid = models.IntegerField(blank=True, null=True)
-    readdate = models.DateTimeField(blank=True, null=True)
-    alertdisplayed = models.IntegerField(blank=True, null=True)
-    togroupid = models.IntegerField(blank=True, null=True)
+    touserid = models.IntegerField(blank=True, default="")
+    readdate = models.DateTimeField(blank=True, default="")
+    alertdisplayed = models.IntegerField(blank=True, default="")
+    togroupid = models.IntegerField(blank=True, default="")
 
 
 class MailRecipientsDeleted(models.Model):
     id = models.AutoField(primary_key=True)
-    messageid = models.IntegerField(blank=True, null=True)
-    touserid = models.IntegerField(blank=True, null=True)
-    readdate = models.DateTimeField(blank=True, null=True)
-    alertdisplayed = models.IntegerField(blank=True, null=True)
-    togroupid = models.IntegerField(blank=True, null=True)
+    messageid = models.IntegerField(blank=True, default="")
+    touserid = models.IntegerField(blank=True, default="")
+    readdate = models.DateTimeField(blank=True, default="")
+    alertdisplayed = models.IntegerField(blank=True, default="")
+    togroupid = models.IntegerField(blank=True, default="")
 
 
 class MaintenanceLogs(models.Model):
@@ -958,16 +1023,16 @@ class MaintenanceLogs(models.Model):
         "Users",
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
         related_name="report_maintenance_logs",
     )
-    maintained_at = models.DateTimeField(blank=True, null=True)
-    comments = models.TextField(blank=True, null=True)
+    maintained_at = models.DateTimeField(blank=True, default="")
+    comments = models.TextField(blank=True, default="")
     status = models.ForeignKey(
         "MaintenancelogStatus",
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
         related_name="logs",
     )
 
@@ -993,7 +1058,7 @@ class MaintenanceSchedule(models.Model):
 
 class OrganizationalValue(models.Model):
     value_id = models.AutoField(primary_key=True)
-    name = models.TextField(blank=True, null=True)
+    name = models.TextField(blank=True, default="")
 
     def __str__(self):
         return self.name
@@ -1001,16 +1066,16 @@ class OrganizationalValue(models.Model):
 
 class ReportTickets(models.Model):
     ticket_id = models.AutoField(primary_key=True)
-    number = models.IntegerField(blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
+    number = models.IntegerField(blank=True, default="")
+    description = models.TextField(blank=True, default="")
     report_id = models.OneToOneField(
         "ReportDocs",
         blank=True,
-        null=True,
+        default="",
         on_delete=models.CASCADE,
         related_name="tickets",
     )
-    url = models.TextField(blank=True, null=True)
+    url = models.TextField(blank=True, default="")
 
     def __str__(self):
         return self.number
@@ -1018,21 +1083,21 @@ class ReportTickets(models.Model):
 
 class ReportCommentStream(models.Model):
     stream_id = models.AutoField(primary_key=True)
-    reportobjectid = models.IntegerField()
-    report_id = models.ForeignKey("Reports", on_delete=models.CASCADE)
+    report = models.ForeignKey(
+        "Reports", on_delete=models.CASCADE, related_name="comment_streams"
+    )
 
 
 class ReportComments(models.Model):
     comment_id = models.AutoField(primary_key=True)
-    stream_id = models.ForeignKey(
-        "ReportCommentStream",
-        on_delete=models.CASCADE,
+    stream = models.ForeignKey(
+        "ReportCommentStream", on_delete=models.CASCADE, related_name="stream_comments"
     )
-    user_id = models.ForeignKey(
+    user = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
         related_name="user_report_comments",
     )
     message = models.TextField()
@@ -1088,43 +1153,43 @@ class ReportImages(models.Model):
     report_id = models.ForeignKey(
         Reports,
         blank=True,
-        null=True,
+        default="",
         on_delete=models.CASCADE,
         related_name="imgs",
     )
     image_rank = models.IntegerField()
     image_data = models.BinaryField()
-    image_source = models.TextField(blank=True, null=True)
+    image_source = models.TextField(blank=True, default="")
 
 
 class Reportobjectruntime(models.Model):
     id = models.AutoField(primary_key=True)
-    runuserid = models.IntegerField(blank=True, null=True)
-    runs = models.IntegerField(blank=True, null=True)
+    runuserid = models.IntegerField(blank=True, default="")
+    runs = models.IntegerField(blank=True, default="")
     runtime = models.DecimalField(
-        max_digits=10, decimal_places=2, blank=True, null=True
+        max_digits=10, decimal_places=2, blank=True, default=""
     )
-    runweek = models.DateTimeField(blank=True, null=True)
-    runweekstring = models.TextField(blank=True, null=True)
+    runweek = models.DateTimeField(blank=True, default="")
+    runweekstring = models.TextField(blank=True, default="")
 
 
 class Reportobjecttopruns(models.Model):
     id = models.AutoField(primary_key=True)
-    reportobjectid = models.IntegerField(blank=True, null=True)
-    name = models.TextField(blank=True, null=True)
-    runuserid = models.IntegerField(blank=True, null=True)
-    runs = models.IntegerField(blank=True, null=True)
+    reportobjectid = models.IntegerField(blank=True, default="")
+    name = models.TextField(blank=True, default="")
+    runuserid = models.IntegerField(blank=True, default="")
+    runs = models.IntegerField(blank=True, default="")
     runtime = models.DecimalField(
-        max_digits=10, decimal_places=2, blank=True, null=True
+        max_digits=10, decimal_places=2, blank=True, default=""
     )
-    lastrun = models.TextField(blank=True, null=True)
-    reportobjecttypeid = models.IntegerField(blank=True, null=True)
+    lastrun = models.TextField(blank=True, default="")
+    reportobjecttypeid = models.IntegerField(blank=True, default="")
 
 
 class Reportobjectweightedrunrank(models.Model):
     reportobjectid = models.IntegerField()
     weighted_run_rank = models.DecimalField(
-        max_digits=12, decimal_places=4, blank=True, null=True
+        max_digits=12, decimal_places=4, blank=True, default=""
     )
 
 
@@ -1134,62 +1199,66 @@ class ReportDocs(models.Model):
         on_delete=models.CASCADE,
         related_name="report_doc_ops_owner",
         blank=True,
-        null=True,
+        default="",
     )
     requester = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
         related_name="report_doc_requester",
         blank=True,
-        null=True,
+        default="",
     )
-    project_url = models.TextField(blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
-    assumptions = models.TextField(blank=True, null=True)
+    project_url = models.TextField(blank=True, default="")
+    description = models.TextField(blank=True, default="")
+    assumptions = models.TextField(blank=True, default="")
     org_value = models.ForeignKey(
         OrganizationalValue,
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
+        related_name="report_docs",
     )
     frequency = models.ForeignKey(
         RunFrequency,
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
+        related_name="report_docs",
     )
     fragility = models.ForeignKey(
         Fragility,
         blank=True,
-        null=True,
+        default="",
         on_delete=models.CASCADE,
+        related_name="report_docs",
     )
-    executive_report = models.CharField(max_length=1, blank=True, null=True)
+    executive_report = models.CharField(max_length=1, blank=True, default="")
     maintenance_schedule = models.ForeignKey(
         MaintenanceSchedule,
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
+        related_name="report_docs",
     )
-    _modified_at = models.DateTimeField(blank=True, null=True)
-    _created_at = models.DateTimeField(blank=True, null=True)
+    _modified_at = models.DateTimeField(blank=True, default="")
+    _created_at = models.DateTimeField(blank=True, default="")
     created_by = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
         related_name="report_doc_creator",
         blank=True,
-        null=True,
+        default="",
     )
     modified_by = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
         related_name="report_doc_modifier",
         blank=True,
-        null=True,
+        default="",
     )
-    enabled_for_hyperspace = models.CharField(max_length=1, blank=True, null=True)
-    do_not_purge = models.CharField(max_length=1, blank=True, null=True)
-    hidden = models.CharField(max_length=1, blank=True, null=True)
+    enabled_for_hyperspace = models.CharField(max_length=1, blank=True, default="")
+    do_not_purge = models.CharField(max_length=1, blank=True, default="")
+    hidden = models.CharField(max_length=1, blank=True, default="")
 
     report = models.OneToOneField(
         "Reports",
@@ -1217,114 +1286,114 @@ class RolePermissionLinks(models.Model):
         "UserRoles",
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
         related_name="permission_links",
     )
     permission_id = models.ForeignKey(
         "RolePermissions",
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
         related_name="role_permission_links",
     )
 
 
 class RolePermissions(models.Model):
     permissions_id = models.AutoField(primary_key=True)
-    name = models.TextField(blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
+    name = models.TextField(blank=True, default="")
+    description = models.TextField(blank=True, default="")
 
 
 class Searchtable(models.Model):
     id = models.AutoField(primary_key=True)
-    itemid = models.IntegerField(blank=True, null=True)
-    typeid = models.IntegerField(blank=True, null=True)
-    itemtype = models.CharField(max_length=100, blank=True, null=True)
-    itemrank = models.IntegerField(blank=True, null=True)
-    searchfielddescription = models.CharField(max_length=100, blank=True, null=True)
-    searchfield = models.TextField(blank=True, null=True)
+    itemid = models.IntegerField(blank=True, default="")
+    typeid = models.IntegerField(blank=True, default="")
+    itemtype = models.CharField(max_length=100, blank=True, default="")
+    itemrank = models.IntegerField(blank=True, default="")
+    searchfielddescription = models.CharField(max_length=100, blank=True, default="")
+    searchfield = models.TextField(blank=True, default="")
 
 
 class SearchBasicsearchdata(models.Model):
     id = models.AutoField(primary_key=True)
-    itemid = models.IntegerField(blank=True, null=True)
-    typeid = models.IntegerField(blank=True, null=True)
-    itemtype = models.CharField(max_length=100, blank=True, null=True)
-    itemrank = models.IntegerField(blank=True, null=True)
-    searchfielddescription = models.CharField(max_length=100, blank=True, null=True)
-    searchfield = models.TextField(blank=True, null=True)
-    hidden = models.IntegerField(blank=True, null=True)
-    visibletype = models.IntegerField(blank=True, null=True)
-    orphaned = models.IntegerField(blank=True, null=True)
+    itemid = models.IntegerField(blank=True, default="")
+    typeid = models.IntegerField(blank=True, default="")
+    itemtype = models.CharField(max_length=100, blank=True, default="")
+    itemrank = models.IntegerField(blank=True, default="")
+    searchfielddescription = models.CharField(max_length=100, blank=True, default="")
+    searchfield = models.TextField(blank=True, default="")
+    hidden = models.IntegerField(blank=True, default="")
+    visibletype = models.IntegerField(blank=True, default="")
+    orphaned = models.IntegerField(blank=True, default="")
 
 
 class SearchBasicsearchdataSmall(models.Model):
     id = models.AutoField(primary_key=True)
-    itemid = models.IntegerField(blank=True, null=True)
-    typeid = models.IntegerField(blank=True, null=True)
-    itemtype = models.CharField(max_length=100, blank=True, null=True)
-    itemrank = models.IntegerField(blank=True, null=True)
-    searchfielddescription = models.CharField(max_length=100, blank=True, null=True)
-    searchfield = models.TextField(blank=True, null=True)
-    hidden = models.IntegerField(blank=True, null=True)
-    visibletype = models.IntegerField(blank=True, null=True)
-    orphaned = models.IntegerField(blank=True, null=True)
+    itemid = models.IntegerField(blank=True, default="")
+    typeid = models.IntegerField(blank=True, default="")
+    itemtype = models.CharField(max_length=100, blank=True, default="")
+    itemrank = models.IntegerField(blank=True, default="")
+    searchfielddescription = models.CharField(max_length=100, blank=True, default="")
+    searchfield = models.TextField(blank=True, default="")
+    hidden = models.IntegerField(blank=True, default="")
+    visibletype = models.IntegerField(blank=True, default="")
+    orphaned = models.IntegerField(blank=True, default="")
 
 
 class SearchReportobjectsearchdata(models.Model):
     primk = models.AutoField(primary_key=True)
     id = models.IntegerField()
-    columnname = models.TextField(blank=True, null=True)
-    value = models.TextField(blank=True, null=True)
-    lastmodifieddate = models.DateTimeField(blank=True, null=True)
-    epicmasterfile = models.CharField(max_length=3, blank=True, null=True)
-    defaultvisibilityyn = models.CharField(max_length=1, blank=True, null=True)
-    orphanedreportobjectyn = models.CharField(max_length=1, blank=True, null=True)
-    reportobjecttypeid = models.IntegerField(blank=True, null=True)
-    authoruserid = models.IntegerField(blank=True, null=True)
-    lastmodifiedbyuserid = models.IntegerField(blank=True, null=True)
+    columnname = models.TextField(blank=True, default="")
+    value = models.TextField(blank=True, default="")
+    lastmodifieddate = models.DateTimeField(blank=True, default="")
+    epicmasterfile = models.CharField(max_length=3, blank=True, default="")
+    defaultvisibilityyn = models.CharField(max_length=1, blank=True, default="")
+    orphanedreportobjectyn = models.CharField(max_length=1, blank=True, default="")
+    reportobjecttypeid = models.IntegerField(blank=True, default="")
+    authoruserid = models.IntegerField(blank=True, default="")
+    lastmodifiedbyuserid = models.IntegerField(blank=True, default="")
     epicreporttemplateid = models.DecimalField(
         max_digits=18,
         decimal_places=0,
         blank=True,
-        null=True,
+        default="",
     )
     sourceserver = models.CharField(max_length=255)
     sourcedb = models.CharField(max_length=255)
     sourcetable = models.CharField(max_length=255)
     documented = models.IntegerField()
-    docownerid = models.IntegerField(blank=True, null=True)
-    docrequesterid = models.IntegerField(blank=True, null=True)
-    docorgvalueid = models.IntegerField(blank=True, null=True)
-    docrunfreqid = models.IntegerField(blank=True, null=True)
-    docfragid = models.IntegerField(blank=True, null=True)
-    docexecvis = models.CharField(max_length=1, blank=True, null=True)
-    docmainschedid = models.IntegerField(blank=True, null=True)
-    doclastupdated = models.DateTimeField(blank=True, null=True)
-    doccreated = models.DateTimeField(blank=True, null=True)
-    doccreatedby = models.IntegerField(blank=True, null=True)
-    docupdatedby = models.IntegerField(blank=True, null=True)
-    dochypeenabled = models.CharField(max_length=1, blank=True, null=True)
-    docdonotpurge = models.CharField(max_length=1, blank=True, null=True)
-    dochidden = models.CharField(max_length=1, blank=True, null=True)
-    twoyearruns = models.IntegerField(blank=True, null=True)
-    oneyearruns = models.IntegerField(blank=True, null=True)
-    sixmonthsruns = models.IntegerField(blank=True, null=True)
-    onemonthruns = models.IntegerField(blank=True, null=True)
+    docownerid = models.IntegerField(blank=True, default="")
+    docrequesterid = models.IntegerField(blank=True, default="")
+    docorgvalueid = models.IntegerField(blank=True, default="")
+    docrunfreqid = models.IntegerField(blank=True, default="")
+    docfragid = models.IntegerField(blank=True, default="")
+    docexecvis = models.CharField(max_length=1, blank=True, default="")
+    docmainschedid = models.IntegerField(blank=True, default="")
+    doclastupdated = models.DateTimeField(blank=True, default="")
+    doccreated = models.DateTimeField(blank=True, default="")
+    doccreatedby = models.IntegerField(blank=True, default="")
+    docupdatedby = models.IntegerField(blank=True, default="")
+    dochypeenabled = models.CharField(max_length=1, blank=True, default="")
+    docdonotpurge = models.CharField(max_length=1, blank=True, default="")
+    dochidden = models.CharField(max_length=1, blank=True, default="")
+    twoyearruns = models.IntegerField(blank=True, default="")
+    oneyearruns = models.IntegerField(blank=True, default="")
+    sixmonthsruns = models.IntegerField(blank=True, default="")
+    onemonthruns = models.IntegerField(blank=True, default="")
 
 
 class Shareditems(models.Model):
     id = models.AutoField(primary_key=True)
-    sharedfromuserid = models.IntegerField(blank=True, null=True)
-    sharedtouserid = models.IntegerField(blank=True, null=True)
-    url = models.TextField(blank=True, null=True)
-    name = models.TextField(blank=True, null=True)
-    sharedate = models.DateTimeField(blank=True, null=True)
+    sharedfromuserid = models.IntegerField(blank=True, default="")
+    sharedtouserid = models.IntegerField(blank=True, default="")
+    url = models.TextField(blank=True, default="")
+    name = models.TextField(blank=True, default="")
+    sharedate = models.DateTimeField(blank=True, default="")
 
 
 class StrategicImportance(models.Model):
     importance_id = models.AutoField(primary_key=True)
-    name = models.TextField(blank=True, null=True)
+    name = models.TextField(blank=True, default="")
 
     def __str__(self):
         return self.name
@@ -1332,30 +1401,33 @@ class StrategicImportance(models.Model):
 
 class Terms(models.Model):
     term_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255, blank=True, null=True)
-    summary = models.CharField(max_length=4000, blank=True, null=True)
-    technical_definition = models.TextField(blank=True, null=True)
-    approved = models.CharField(max_length=1, blank=True, null=True)
-    _approved_at = models.DateTimeField(blank=True, null=True)
+    name = models.CharField(max_length=255, blank=True, default="")
+    summary = models.TextField(blank=True, default="")
+    technical_definition = models.TextField(blank=True, default="")
+    approved = models.CharField(max_length=1, blank=True, default="")
+    _approved_at = models.DateTimeField(blank=True, default="")
     approved_by = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
         related_name="term_approve_user",
         blank=True,
-        null=True,
+        default="",
     )
-    has_external_standard = models.CharField(max_length=1, blank=True, null=True)
-    external_standard_url = models.CharField(max_length=4000, blank=True, null=True)
-    _valid_from = models.DateTimeField(blank=True, null=True)
-    _valid_to = models.DateTimeField(blank=True, null=True)
+    has_external_standard = models.CharField(max_length=1, blank=True, default="")
+    external_standard_url = models.TextField(blank=True, default="")
+    _valid_from = models.DateTimeField(blank=True, default="")
+    _valid_to = models.DateTimeField(blank=True, default="")
     modified_by = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
         related_name="term_modifier",
         blank=True,
-        null=True,
+        default="",
     )
-    _modified_at = models.DateTimeField(blank=True, null=True, auto_now=True)
+    _modified_at = models.DateTimeField(blank=True, auto_now=True)
+
+    def __str__(self):
+        return self.name
 
     @property
     def approved_at(self):
@@ -1381,9 +1453,6 @@ class Terms(models.Model):
             return datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
-    def __str__(self):
-        return self.name
-
 
 class TermCommentStream(models.Model):
     stream_id = models.AutoField(primary_key=True)
@@ -1405,24 +1474,24 @@ class TermComments(models.Model):
         "Users",
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
         related_name="term_comments",
     )
-    message = models.CharField(max_length=4000)
+    message = models.TextField()
     posted_at = models.DateTimeField(auto_now=True)
 
 
 class FavoriteFolders(models.Model):
     folder_id = models.AutoField(primary_key=True)
-    name = models.TextField(blank=True, null=True)
+    name = models.TextField(blank=True, default="")
     user = models.ForeignKey(
         "Users",
         models.DO_NOTHING,
         blank=True,
-        null=True,
+        default="",
         related_name="favorite_folders",
     )
-    rank = models.IntegerField(blank=True, null=True)
+    rank = models.IntegerField(blank=True, default="")
 
     class Meta:
         ordering = ["rank"]
@@ -1430,27 +1499,37 @@ class FavoriteFolders(models.Model):
 
 class Favorites(models.Model):
     favorites_id = models.AutoField(primary_key=True)
-    item_type = models.TextField(blank=True, null=True)
-    rank = models.IntegerField(blank=True, null=True)
-    item_id = models.IntegerField(blank=True, null=True)
+    item_type = models.TextField(blank=True, default="")
+    rank = models.IntegerField(blank=True, default="")
+    item_id = models.IntegerField(blank=True, default="")
     user = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
         related_name="favorites",
     )
-    name = models.TextField(blank=True, null=True)
+    name = models.TextField(blank=True, default="")
     folder = models.ForeignKey(
         FavoriteFolders,
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
         related_name="favorites",
     )
 
     class Meta:
         ordering = ["rank"]
+
+    def __str__(self):
+        if self.item_type.lower() == "report":
+            return str(Reports.objects.get(report_id=self.item_id))
+        elif self.item_type.lower() == "term":
+            return str(Terms.objects.get(term_id=self.item_id).name)
+        elif self.item_type.lower() == "project":
+            return str(Projects.objects.get(project_id=self.item_id))
+        elif self.item_type.lower() == "initiative":
+            return str(Initiatives.objects.get(initiative_id=self.item_id))
 
     @property
     def atlas_url(self):
@@ -1518,27 +1597,17 @@ class Favorites(models.Model):
         elif self.item_type.lower() == "initiative":
             return Initiatives.objects.get(initiative_id=self.item_id).description
 
-    def __str__(self):
-        if self.item_type.lower() == "report":
-            return str(Reports.objects.get(report_id=self.item_id))
-        elif self.item_type.lower() == "term":
-            return str(Terms.objects.get(term_id=self.item_id).name)
-        elif self.item_type.lower() == "project":
-            return str(Projects.objects.get(project_id=self.item_id))
-        elif self.item_type.lower() == "initiative":
-            return str(Initiatives.objects.get(initiative_id=self.item_id))
-
 
 class UserPreferences(models.Model):
     preference_id = models.AutoField(primary_key=True)
-    key = models.TextField(blank=True, null=True)
-    value = models.IntegerField(blank=True, null=True)
-    item_id = models.IntegerField(blank=True, null=True)
+    key = models.TextField(blank=True, default="")
+    value = models.IntegerField(blank=True, default="")
+    item_id = models.IntegerField(blank=True, default="")
     user_id = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
         related_name="user_preferences",
     )
 
@@ -1549,26 +1618,26 @@ class UserRolelinks(models.Model):
         "Users",
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
         related_name="role_links",
     )
     role = models.ForeignKey(
         "UserRoles",
         on_delete=models.CASCADE,
         blank=True,
-        null=True,
+        default="",
         related_name="role_users",
     )
 
 
 class UserRoles(models.Model):
     role_id = models.AutoField(primary_key=True)
-    name = models.TextField(blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
+    name = models.TextField(blank=True, default="")
+    description = models.TextField(blank=True, default="")
 
 
 class UserNamedata(models.Model):
     userid = models.IntegerField(primary_key=True)
-    fullname = models.TextField(blank=True, null=True)
-    firstname = models.TextField(blank=True, null=True)
-    lastname = models.TextField(blank=True, null=True)
+    fullname = models.TextField(blank=True, default="")
+    firstname = models.TextField(blank=True, default="")
+    lastname = models.TextField(blank=True, default="")

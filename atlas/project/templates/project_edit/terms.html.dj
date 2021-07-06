@@ -1,0 +1,24 @@
+
+<h4>New Link</h4>
+<form action="/Projects?handler=AddLinkedTerm" method="post" id="project-editor-add-term-form">
+    <input asp-for="DpTermAnnotation.DataProjectId" type="hidden" value='@Model.DataProject.Id' />
+    <div class="listDetails">
+        
+        <label>Term Name</label>
+        <input type="dynamic-dropdown" class="head-light" data-head="Name" asp-for="DpTermAnnotation.TermId" value="" visible-value="" search-area="TermSearch" />
+        
+        <label>Rank</label>
+        <input asp-for="DpTermAnnotation.Rank" type="number" />
+    </div>
+
+    <h3>Annotation</h3>
+    <div class="editor" data-inputName="DpTermAnnotation.Annotation" data-inputId="DpTermAnnotation_Annotation"><textarea></textarea></div>
+
+    <h3><button class="editor-save" type="submit">Save</button></h3>
+    
+</form>
+
+    <h3>Term Links</h3>
+        <div id="project-editor-currentterms-container">
+            <partial name="Edit/_CurrentTerms" />
+        </div>

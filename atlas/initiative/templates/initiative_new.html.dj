@@ -13,7 +13,7 @@
                         <div class="listDetails">
 
                             <label>Name</label>
-                            <input name="name" data-initial-content="Name" required />
+                            <input name="name" required />
 
                             <label>External Contacts</label>
                             <select type="dynamic-dropdown" name="linked_contacts" search-area="lookup/initiative_contacts" method="fullList"></select>

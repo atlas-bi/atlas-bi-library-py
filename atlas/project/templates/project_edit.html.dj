@@ -1,0 +1,43 @@
+<div class="mdl" id="editModal" tabindex="-1">
+    <div class="mdl-d editorMdl">
+        <div class="mdl-c editorMdl-inner">
+            <div class="editorMdl-title">
+                <h2 class="editorMdl-titleText">Editing <span class="text-green">{{ project }}</span><button type="button" class="editorMdl-close" data-dismiss="mdl" data-tooltip="Close">&times;</button></h2>
+               
+                <div id="editorMdl-titleSave">changes saved.</div>
+            </div>
+            <div class="editorMdl-cnt" ss-container>
+                <div class="editorMdl-cntLiner">
+                    <div class="tab">
+                        <a class="tab-lnk active" href="detailstab">Details</a>
+                        <a class="tab-lnk" href="reportlinkstab">Linked Reports</a>
+                        <a class="tab-lnk" href="termlinkstab">Linked Terms</a>
+                        <a class="tab-lnk" href="attachmentstab">Attachments</a>
+                        <a class="tab-lnk" href="agreetab">Agreements</a>
+                        <a class="tab-lnk" href="milestab">Milestones</a>
+                    </div>
+                    <div class="tab-cnt">
+                        <div class="tab-dta active" id="detailstab">
+                            {% include "project_edit/details.html.dj" %}
+                        </div>
+                        <div class="tab-dta" id="reportlinkstab">
+                            {% include "project_edit/reports.html.dj" %}
+                        </div>
+                        <div class="tab-dta" id="termlinkstab">
+                            {% include "project_edit/terms.html.dj" %}
+                        </div>
+                        <div class="tab-dta" id="attachmentstab">
+                            {% include "project_edit/attachments.html.dj" %}
+                        </div>
+                        <div class="tab-dta" id="agreetab">
+                            {% include "project_edit/agreements.html.dj" %}
+                        </div>
+                        <div class="tab-dta" id="milestab">
+                            {% include "project_edit/milestones.html.dj" %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

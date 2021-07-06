@@ -1,0 +1,23 @@
+
+<h4>New Link</h4>
+<form action="/Projects?handler=AddLinkedReport" method="post" id="project-editor-add-report-form">
+    <input asp-for="DpReportAnnotation.DataProjectId" type="hidden" value='@Model.DataProject.Id' />
+    <div class="listDetails">
+
+        <label>Report Name</label>
+        <input type="dynamic-dropdown" class="head-light" data-head="Name" asp-for="DpReportAnnotation.ReportId" value="" visible-value="" search-area="ReportSearch" />
+
+        <label>Rank</label>
+        <input asp-for="DpReportAnnotation.Rank" type="number" />
+    </div>
+
+    <h3>Annotation</h3>
+    <div class="editor" data-inputName="DpReportAnnotation.Annotation" data-inputId="DpReportAnnotation_Annotation"><textarea></textarea></div>
+
+    <h3><button class="editor-save" type="submit">Save</button></h3>
+</form>
+
+     <h3>Report Links</h3>
+        <div id="project-editor-currentreports-container">
+            <partial name="Edit/_CurrentReports" />
+        </div>

@@ -1,0 +1,39 @@
+<h3>Details</h3>
+<form asp-page-handler="EditDataProject" method="post">
+    <input asp-for="DpDataProject.DataProjectId" value="@Model.DataProject.Id" type="hidden"/>
+    <div class="listDetails">
+        <label>Name</label>
+        <input asp-for="DpDataProject.Name" class="form-control" required value="@Model.DataProject.Name" />
+
+        <label>Operations Owner</label>
+        <input type="dynamic-dropdown" asp-for="DpDataProject.OperationOwnerId" value="@Model.DataProject.OpsOwnerId" visible-value="@Model.DataProject.OpsOwner" search-area="UserSearch" />
+
+        <label>Executive Owner</label>
+        <input type="dynamic-dropdown" asp-for="DpDataProject.ExecutiveOwnerId" value="@Model.DataProject.ExOwnerId" visible-value="@Model.DataProject.ExOwner" search-area="UserSearch" />
+    
+        <label>Analytics Owner</label>       
+        <input type="dynamic-dropdown" asp-for="DpDataProject.AnalyticsOwnerId" value="@Model.DataProject.AnOwnerId" visible-value="@Model.DataProject.AnOwner" search-area="UserSearch" />
+
+        <label>Data Owner</label>
+        <input type="dynamic-dropdown" asp-for="DpDataProject.DataManagerId" value="@Model.DataProject.DataOwnerId" visible-value="@Model.DataProject.DataOwner" search-area="UserSearch" />
+
+        <label>Financial Impact</label>        
+        <input type="dynamic-dropdown" asp-for="DpDataProject.FinancialImpact" search-area="financial-impact" method="fullList" visible-value="@Model.DataProject.FnclImpact" value="@Model.DataProject.FnclImpactId" />
+   
+        <label>Strategic Importance</label>
+        <input type="dynamic-dropdown" asp-for="DpDataProject.StrategicImportance" search-area="strategic-importance" method="fullList" visible-value="@Model.DataProject.StrgImport" value="@Model.DataProject.StrgImportId" />
+
+        <label>Hide Report?</label>
+            <div class='form-check' >
+                <input type="checkbox" id="DoNotPurge" />
+                <input type="hidden" asp-for="DpDataProject.Hidden" value="@Model.DataProject.Hidden">
+            </div>
+    </div>
+
+    <h3>Purpose</h3>
+    <div class="editor" data-inputName="DpDataProject.Purpose" data-inputId="DpDataProject_Purpose"><textarea>@Html.Raw(Model.DataProject.Purpose)</textarea></div>
+
+    <h3>Description</h3>
+    <div class="editor" data-inputName="DpDataProject.Description" data-inputId="DpDataProject_Description"><textarea>@Html.Raw(Model.DataProject.Description)</textarea></div>
+    <h3><button class="editor-save" type="submit">Save</button></h3>
+</form>

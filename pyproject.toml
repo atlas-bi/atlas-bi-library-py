@@ -108,6 +108,7 @@ django-bmemcached = "^0.3.0"
 selenium = "^3.141.0"
 browserstack-local = "^1.2.3"
 flower = {git = "https://github.com/mher/flower.git"}
+django-doctor = "^2.4.0"
 
 
 [build-system]
@@ -169,3 +170,7 @@ max-module-lines=1000
 [tool.pylint.basic]
 good-names = "i,j,k,ex,Run,x,id,e,me,l,_"
 include-naming-hint="no"
+
+[tool.djangodoctor]
+directories = ["atlas"]
+
