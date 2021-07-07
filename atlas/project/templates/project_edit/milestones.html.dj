@@ -13,10 +13,10 @@
         <input asp-for="DpMilestone.EndDate" type="date"  />
 
         <label>Template</label>
-        <input type="dynamic-dropdown" asp-for="DpMilestone.MilestoneTemplateId"  search-area="mile-type" method="fullList" />
+        <input type="dynamic-dropdown" asp-for="DpMilestone.MilestoneTemplateId"  search-area="lookup/project_milestone_frequency" method="fullList" />
 
         <label>Owner</label>
-        <input type="dynamic-dropdown" asp-for="DpMilestone.OwnerId" value="" visible-value="" search-area="UserSearch" />
+        <input type="dynamic-dropdown" asp-for="DpMilestone.OwnerId" value="" visible-value="" search-area="user_lookup" />
 
     </div>
     
@@ -61,10 +61,10 @@
                         <input asp-for="DpMilestone.EndDate" type="date" value="@t.EndDateInput" />
 
                         <label>Template</label>
-                        <input type="dynamic-dropdown" asp-for="DpMilestone.MilestoneTemplateId"  search-area="mile-type" method="fullList" value="@t.TemplateId" visible-value="@t.Template" />
+                        <input type="dynamic-dropdown" asp-for="DpMilestone.MilestoneTemplateId"  search-area="lookup/project_milestone_frequency" method="fullList" value="@t.TemplateId" visible-value="@t.Template" />
 
                         <label>Owner</label>
-                        <input type="dynamic-dropdown" asp-for="DpMilestone.OwnerId" value="@t.OwnerId" visible-value="@t.Owner" search-area="UserSearch" />
+                        <input type="dynamic-dropdown" asp-for="DpMilestone.OwnerId" value="@t.OwnerId" visible-value="@t.Owner" search-area="user_lookup" />
 
                     </div>
                     

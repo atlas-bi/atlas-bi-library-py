@@ -72,6 +72,8 @@ body.b-mdl {
   pointer-events: auto;
   position: relative;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .mdl .mdl-h {

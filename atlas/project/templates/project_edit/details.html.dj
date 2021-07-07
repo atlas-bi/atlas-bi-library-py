@@ -1,39 +1,40 @@
+
 <h3>Details</h3>
-<form asp-page-handler="EditDataProject" method="post">
-    <input asp-for="DpDataProject.DataProjectId" value="@Model.DataProject.Id" type="hidden"/>
+<form action="/projects/{{ project.project_id }}/edit" method="post">
+    {% csrf_token %}
     <div class="listDetails">
         <label>Name</label>
-        <input asp-for="DpDataProject.Name" class="form-control" required value="@Model.DataProject.Name" />
+        <input name="name" class="form-control" required value="{{ project }}" />
 
         <label>Operations Owner</label>
-        <input type="dynamic-dropdown" asp-for="DpDataProject.OperationOwnerId" value="@Model.DataProject.OpsOwnerId" visible-value="@Model.DataProject.OpsOwner" search-area="UserSearch" />
+        <input type="dynamic-dropdown" name="ops_owner_id" value="{{ project.ops_owner_id|default:"" }}" visible-value="{{ project.ops_owner|default:"" }}" search-area="user_lookup" />
 
         <label>Executive Owner</label>
-        <input type="dynamic-dropdown" asp-for="DpDataProject.ExecutiveOwnerId" value="@Model.DataProject.ExOwnerId" visible-value="@Model.DataProject.ExOwner" search-area="UserSearch" />
+        <input type="dynamic-dropdown" name="exec_owner_id" value="{{ project.exec_owner_id|default:"" }}" visible-value="{{ project.exec_owner|default:"" }}" search-area="user_lookup" />
     
         <label>Analytics Owner</label>       
-        <input type="dynamic-dropdown" asp-for="DpDataProject.AnalyticsOwnerId" value="@Model.DataProject.AnOwnerId" visible-value="@Model.DataProject.AnOwner" search-area="UserSearch" />
+        <input type="dynamic-dropdown" name="analytics_owner_id" value="{{ project.analytics_owner_id|default:"" }}" visible-value="{{ project.analytics_owner|default:"" }}" search-area="user_lookup" />
 
         <label>Data Owner</label>
-        <input type="dynamic-dropdown" asp-for="DpDataProject.DataManagerId" value="@Model.DataProject.DataOwnerId" visible-value="@Model.DataProject.DataOwner" search-area="UserSearch" />
+        <input type="dynamic-dropdown" name="data_owner_id" value="{{ project.data_owner_id|default:"" }}" visible-value="{{ project.data_owner|default:"" }}" search-area="user_lookup" />
 
         <label>Financial Impact</label>        
-        <input type="dynamic-dropdown" asp-for="DpDataProject.FinancialImpact" search-area="financial-impact" method="fullList" visible-value="@Model.DataProject.FnclImpact" value="@Model.DataProject.FnclImpactId" />
+        <input type="dynamic-dropdown" name="financial_impact_id" search-area="lookup/financial-impact" method="fullList" value="{{ project.financial_impact_id|default:"" }}" visible-value="{{ project.financial_impact|default:"" }}" />
    
         <label>Strategic Importance</label>
-        <input type="dynamic-dropdown" asp-for="DpDataProject.StrategicImportance" search-area="strategic-importance" method="fullList" visible-value="@Model.DataProject.StrgImport" value="@Model.DataProject.StrgImportId" />
+        <input type="dynamic-dropdown" name="strategic_importance_id" search-area="lookup/strategic-importance" method="fullList" visible-value="{{ project.strategic_importance|default:"" }}" value="{{ project.strategic_importance_id|default:"" }}" />
 
         <label>Hide Report?</label>
             <div class='form-check' >
                 <input type="checkbox" id="DoNotPurge" />
-                <input type="hidden" asp-for="DpDataProject.Hidden" value="@Model.DataProject.Hidden">
+                <input type="hidden" name="hidden" value="{{ project.hidden|default:"N" }}">
             </div>
     </div>
 
     <h3>Purpose</h3>
-    <div class="editor" data-inputName="DpDataProject.Purpose" data-inputId="DpDataProject_Purpose"><textarea>@Html.Raw(Model.DataProject.Purpose)</textarea></div>
+    <div class="editor" data-inputName="purpose" data-inputId="purpose"><textarea>{{ project.purpose|safe }}</textarea></div>
 
     <h3>Description</h3>
-    <div class="editor" data-inputName="DpDataProject.Description" data-inputId="DpDataProject_Description"><textarea>@Html.Raw(Model.DataProject.Description)</textarea></div>
+    <div class="editor" data-inputName="description" data-inputId="description"><textarea>{{ project.description|safe }}</textarea></div>
     <h3><button class="editor-save" type="submit">Save</button></h3>
 </form>

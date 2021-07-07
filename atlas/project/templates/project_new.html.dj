@@ -31,6 +31,12 @@
                             
                             <label>Strategic Importance</label>
                             <input type="dynamic-dropdown" name="strategic_importance_id" search-area="lookup/strategic-importance" method="fullList" />
+
+                            <label>Hide Report?</label>
+                            <div class='form-check' >
+                                <input type="checkbox" id="DoNotPurge" />
+                                <input type="hidden" name="hidden">
+                            </div>
                         </div>
 
                         <h3>Purpose</h3>

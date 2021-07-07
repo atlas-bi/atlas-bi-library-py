@@ -1,5 +1,9 @@
 """Atlas Project views."""
 
+import contextlib
+import json
+
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.views.decorators.cache import never_cache
@@ -14,6 +18,8 @@ from index.models import (
     ProjectReports,
     Projects,
     ProjectTerms,
+    Reports,
+    Terms,
 )
 
 
@@ -69,20 +75,65 @@ def item(request, project_id):
 @login_required
 def comments(request, project_id):
     """Return term comments."""
-    project_comments = (
-        ProjectComments.objects.filter(stream_id__project_id=project_id)
-        .order_by("-stream_id", "comment_id")
-        .all()
-    )
-    context = {
-        "permissions": request.user.get_permissions(),
-        "comments": project_comments,
-    }
-    return render(
-        request,
-        "project_comments.html.dj",
-        context,
-    )
+    if request.method == "GET":
+        project_comments = (
+            ProjectComments.objects.filter(stream_id__project_id=project_id)
+            .order_by("-stream_id", "comment_id")
+            .all()
+        )
+        context = {
+            "permissions": request.user.get_permissions(),
+            "comments": project_comments,
+            "project_id": project_id,
+        }
+        return render(
+            request,
+            "project_comments.html.dj",
+            context,
+        )
+
+    with contextlib.suppress("json.decoder.JSONDecodeError"):
+        data = json.loads(request.body.decode("UTF-8"))
+
+        if data.get("message", "") != "":
+
+            if (
+                data.get("stream")
+                and ProjectCommentStream.objects.filter(
+                    stream_id=data.get("stream")
+                ).exists()
+            ):
+                comment_stream = ProjectCommentStream.objects.filter(
+                    stream_id=data.get("stream")
+                ).first()
+            else:
+                comment_stream = ProjectCommentStream(project_id=project_id)
+                comment_stream.save()
+
+            comment = ProjectComments(
+                stream=comment_stream, message=data.get("message"), user=request.user
+            )
+            comment.save()
+
+    return redirect(comments, project_id)
+
+
+@login_required
+def comments_delete(request, project_id, comment_id):
+    """Delete a comment or comment stream."""
+    data = json.loads(request.body.decode("UTF-8"))
+
+    ProjectComments.objects.get(comment_id=comment_id).delete()
+
+    if (
+        data.get("stream")
+        and ProjectCommentStream.objects.filter(stream_id=data.get("stream")).exists()
+    ):
+
+        ProjectComments.objects.filter(stream__stream_id=data.get("stream")).delete()
+        ProjectCommentStream.objects.get(stream_id=data.get("stream")).delete()
+
+    return redirect(comments, project_id)
 
 
 @login_required
@@ -93,23 +144,115 @@ def edit(request, project_id=None):
 
     project = Projects.objects.get(project_id=project_id) if project_id else Projects()
     project.name = request.POST.get("name", "")
-    project.purpose = request.POST.get("purpose")
-    project.description = request.POST.get("description")
+    project.purpose = request.POST.get("purpose", "")
+    project.description = request.POST.get("description", "")
     project.ops_owner_id = request.POST.get("ops_owner_id")
     project.exec_owner_id = request.POST.get("exec_owner_id")
     project.analytics_owner_id = request.POST.get("analytics_owner_id")
     project.data_owner_id = request.POST.get("data_owner_id")
     project.financial_impact_id = request.POST.get("financial_impact_id")
     project.strategic_importance_id = request.POST.get("strategic_importance_id")
-    project.external_documentation_url = request.POST.get("external_documentation_url")
-    project.hidden = (
-        "Y" if bool(request.POST.get("external_documentation_url")) else "N"
+    project.external_documentation_url = request.POST.get(
+        "external_documentation_url", ""
     )
+    project.hidden = "Y" if request.POST.get("hidden", "N") == "Y" else "N"
     project.modified_by = request.user
 
     project.save()
 
     return redirect(item, project.project_id)
+
+
+@login_required
+def reports_delete(request, project_id, annotation_id):
+    """Add or edit a project report annotation."""
+    ProjectReports.objects.filter(annotation_id=annotation_id).filter(
+        project_id=project_id
+    ).delete()
+
+    project = Projects.objects.get(project_id=project_id)
+
+    return render(request, "project_edit/current_reports.html.dj", {"project": project})
+
+
+@login_required
+def reports(request, project_id, annotation_id=None):
+    """Add or edit a project report annotation."""
+    if request.method == "GET":
+        return redirect(item, project_id)
+
+    data = json.loads(request.body.decode("UTF-8"))
+
+    project = Projects.objects.get(project_id=project_id)
+
+    # validate report_id
+    if not Reports.objects.filter(report_id=data.get("report_id")).exists():
+        messages.error("Report does not exist.")
+        return render(
+            request, "project_edit/current_reports.html.dj", {"project": project}
+        )
+
+    annotation = (
+        ProjectReports.objects.get(annotation_id=annotation_id)
+        if annotation_id
+        else ProjectReports()
+    )
+    annotation.rank = (
+        data.get("rank") if data.get("rank") and data.get("rank").isdigit() else None
+    )
+    annotation.annotation = data.get("annotation", "")
+    annotation.report_id = data.get("report_id")
+    annotation.project_id = project_id
+
+    annotation.save()
+
+    return render(request, "project_edit/current_reports.html.dj", {"project": project})
+
+
+@login_required
+def terms_delete(request, project_id, annotation_id):
+    """Add or edit a project report annotation."""
+    ProjectTerms.objects.filter(annotation_id=annotation_id).filter(
+        project_id=project_id
+    ).delete()
+
+    project = Projects.objects.get(project_id=project_id)
+
+    return render(request, "project_edit/current_reports.html.dj", {"project": project})
+
+
+@login_required
+def terms(request, project_id, annotation_id=None):
+    """Add or edit a project report annotation."""
+    if request.method == "GET":
+        return redirect(item, project_id)
+
+    data = json.loads(request.body.decode("UTF-8"))
+
+    project = Projects.objects.get(project_id=project_id)
+
+    # validate term_id
+    if not Terms.objects.filter(term_id=data.get("term_id")).exists():
+        messages.error("Term does not exist.")
+        return render(
+            request, "project_edit/current_terms.html.dj", {"project": project}
+        )
+
+    annotation = (
+        ProjectTerms.objects.get(annotation_id=annotation_id)
+        if annotation_id
+        else ProjectTerms()
+    )
+    annotation.rank = (
+        data.get("rank") if data.get("rank") and data.get("rank").isdigit() else None
+    )
+    annotation.annotation = data.get("annotation", "")
+    annotation.term_id = data.get("term_id")
+    annotation.project_id = project_id
+
+    annotation.save()
+
+    return render(request, "project_edit/current_terms.html.dj", {"project": project})
 
 
 @login_required

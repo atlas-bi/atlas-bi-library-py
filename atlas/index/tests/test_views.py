@@ -1,4 +1,14 @@
-"""Atlas Index tests."""
+"""Atlas Index tests.
+
+run with::
+
+    poetry run coverage erase; \
+    poetry run coverage run -p manage.py \
+        test index/ --no-input --pattern="test_views.py" --settings atlas.settings.test; \
+    poetry run coverage combine; \
+    poetry run coverage report --include "index*" -m
+
+"""
 # pylint: disable=C0115,C0103
 from atlas.testutils import AtlasTestCase
 

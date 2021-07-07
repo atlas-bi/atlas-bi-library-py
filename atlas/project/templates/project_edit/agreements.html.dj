@@ -13,7 +13,7 @@
         <input asp-for="MyDpAgreement.Rank" type="number" />
         
         <label>Participants</label>
-        <select type="dynamic-dropdown" class="head-light" data-head="Participants" asp-for="DpAgreementUsers" value="" visible-value="" search-area="UserSearch" ></select>
+        <select type="dynamic-dropdown" class="head-light" data-head="Participants" asp-for="DpAgreementUsers" value="" visible-value="" search-area="user_lookup" ></select>
     </div>
     
     <h3>Description</h3>
@@ -53,7 +53,7 @@
                         
                         <label>Participants</label>
 
-                        <select type="dynamic-dropdown" class="head-light" data-head="Participants" asp-for="DpAgreementUsers" value="" visible-value="" search-area="UserSearch">
+                        <select type="dynamic-dropdown" class="head-light" data-head="Participants" asp-for="DpAgreementUsers" value="" visible-value="" search-area="user_lookup">
                             @foreach(var t in a.Users){
                                 <option selected="selected" value="@t.Id">@t.Name</option>
                             }

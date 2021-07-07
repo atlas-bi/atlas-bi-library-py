@@ -253,6 +253,38 @@ def project_lookup(request):
 
 @never_cache
 @login_required
+def report_lookup(request):
+    """Project lookup."""
+    search_string = build_search_string(request.GET.get("s"), search_type="fuzzy")
+
+    solr = pysolr.Solr(settings.SOLR_URL, search_handler="reports")
+
+    results = solr.search(build_search_string(search_string), **{"rows": 20})
+
+    output = [
+        {"ObjectId": item.get("atlas_id"), "Name": item.get("name")} for item in results
+    ]
+    return JsonResponse(output, safe=False)
+
+
+@never_cache
+@login_required
+def term_lookup(request):
+    """Term lookup."""
+    search_string = build_search_string(request.GET.get("s"), search_type="fuzzy")
+
+    solr = pysolr.Solr(settings.SOLR_URL, search_handler="aterms")
+
+    results = solr.search(build_search_string(search_string), **{"rows": 20})
+
+    output = [
+        {"ObjectId": item.get("atlas_id"), "Name": item.get("name")} for item in results
+    ]
+    return JsonResponse(output, safe=False)
+
+
+@never_cache
+@login_required
 def dropdown_lookup(request, lookup):
     """Mini search for dropdowns."""
     solr = pysolr.Solr(settings.SOLR_LOOKUP_URL)

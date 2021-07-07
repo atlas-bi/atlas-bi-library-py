@@ -34,9 +34,15 @@ covid,covid-19,corona virus, covid 19, covid dashboard, covid dash, covid depart
 ip => inpatient
 w/ => with
 w/0 => without
-ed => emergency department
-ltc => long term care
+cbo => corporate billing office
+ccc => coal city campus
+ed,er,emergency department, emergency room
+np => nurse practitioner
+ct => imaging
+slc, ltc, sa40, long term care
 rmc => riverside medical center
+Bruce Wayne => Batman
+physician, provider
 adt,admissions,discharges,transfers
 hb => hospital billing
 tran,trans,transfer,transfers
@@ -67,7 +73,7 @@ nhsn => national healthcare safety network
 qi,quality improvement, quality initiative, quality indicator
 mst => malnutrition screening tool
 ccl => cardiac cath lab
-ar,accounts receivable, accounts recievable
+ar,accounts receivable, accounts recievable, atb
 iru => interventional radiology unit
 gme, graduate medical education, student doctors, medical students
 aim => current hospitalist group
@@ -93,6 +99,9 @@ ami => heart attach
 atb => ageed trial balance
 pb => professional billing
 pcp => primary care provider
+hcpc, hcpcs, cpt, current procedural terminology
+payer, payor
+canceled, cancelled
 
 # names
 Ab,Abraham

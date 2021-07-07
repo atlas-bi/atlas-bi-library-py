@@ -152,7 +152,11 @@ Testing uses a local postgres server and redis server. The server names are "pos
 
       docker run --name postgresql-container -p 5432:5432 -e POSTGRES_HOST_AUTH_METHOD=trust -d postgres
 
-2. Run code tests directly
+2. Start solr
+
+See /solr/readmemd for a guide.
+
+3. Run code tests directly
 
    .. code:: bash
 
@@ -163,7 +167,7 @@ Testing uses a local postgres server and redis server. The server names are "pos
       tox -e clean,py39,cov
 
 
-3. Run browser tests
+4. Run browser tests
 
    .. code:: bash
 

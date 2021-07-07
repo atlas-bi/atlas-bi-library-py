@@ -836,9 +836,8 @@ class ProjectReports(models.Model):
 
 
 class ProjectTerms(models.Model):
-    termannotationid = models.AutoField(primary_key=True)
+    annotation_id = models.AutoField(primary_key=True)
     annotation = models.TextField(blank=True, default="")
-
     term = models.ForeignKey(
         "Terms",
         on_delete=models.CASCADE,

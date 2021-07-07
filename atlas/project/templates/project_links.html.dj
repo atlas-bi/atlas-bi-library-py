@@ -1,7 +1,7 @@
 {% load markdown %}
-{% if project.report_annotations %}
+{% if project.report_annotations.all %}
 
-    <h3>Linked Reports</h3>
+    <h3>Reports</h3>
 
     {% for annotation in project.report_annotations.all %}
         <h4 class="drop" data-toggle="clps" data-target="collapse-report-{{ annotation.report.report_id }}">{{ annotation }}
@@ -19,7 +19,7 @@
     {% endfor %}
 {% endif %}
 
-{% if project.term_annotations %}
+{% if project.term_annotations.all %}
     <h3>Terms</h3>
     {% for annotation in project.term_annotations.all %}
         <h4 class="drop" data-toggle="clps" data-target="collapse-term-{{ annotation.term.term_id }}">{{ annotation }}

@@ -46,4 +46,12 @@
 
     <span class="listDetails-title">Last Updated</span>
     <span>{{ project.modified_at }}</span>
+
+    {% if project.hidden == "Y" %}
+        <span class="listDetails-title">Hidden from Search</span>
+        <span>Yes</span>
+    {% else %}
+        <span class="listDetails-title">Visible in Search</span>
+        <span>Yes</span>
+    {% endif %}
 </div>

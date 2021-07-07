@@ -58,17 +58,17 @@
         </h2>
 
         <div class="pageNav">
-            <a href="#about" class="pageNav-link">About</a>
-            {% if project.report_annotations or project.term_annotationss %}
+            <a href="#about" class="pageNav-link">Details</a>
+            {% if project.report_annotations.all or project.term_annotationss.all %}
                 <a href="#links" class="pageNav-link">Linked Content</a>
             {% endif %}
-            {% if project.attachments %}
+            {% if project.attachments.all %}
                 <a href="#attachments" class="pageNav-link">Attachments</a>
             {% endif %}
-            {% if project.agreements %}
+            {% if project.agreements.all %}
                 <a href="#agreements" class="pageNav-link">Agreements</a>
             {% endif %}
-            {% if project.tasks %}
+            {% if project.tasks.all %}
                 <a href="#tasks" class="pageNav-link">Milestones</a>
             {% endif %}
             <a href="#comments" class="pageNav-link">Comments</a>
@@ -82,28 +82,28 @@
 
     <section class="pageSection">
         <span class="location" id="links"></span>
-        {% if project.report_annotations or project.term_annotationss %}
+        {% if project.report_annotations.all or project.term_annotationss.all %}
             {% include "project_links.html.dj" %}
         {% endif %}
     </section>
 
     <section class="pageSection">
         <span class="location" id="attachments"></span>
-        {% if project.attachments %}
+        {% if project.attachments.all %}
             {% include "project_attachments.html.dj" %}
         {% endif %}
     </section>
 
     <section class="pageSection">
         <span class="location" id="agreements"></span>
-        {% if project.agreements %}
+        {% if project.agreements.all %}
             {% include "project_agreements.html.dj" %}
         {% endif %}
     </section>
 
     <section class="pageSection">
         <span class="location" id="tasks"></span>
-        {% if project.tasks %}
+        {% if project.tasks.all %}
             {% include "project_tasks.html.dj" %}
         {% endif %}
     </section>
@@ -124,10 +124,12 @@
         <script src="/static/lib/flowchart/custom.js"></script>
     {% endcompress %}
 
-    {% compress js file project_editor %}
-        <script src="/static/js/milestone-checklist.js"></script>
-        <script src="/static/js/projectEditor.js"></script>
-    {% endcompress %}
+    {% if 26 in permissions or 28 in permissions %}
+        {% compress js file project_editor %}
+            <script src="/static/js/milestone-checklist.js"></script>
+            <script src="/static/js/projectEditor.js"></script>
+        {% endcompress %}
+    {% endif %}
 
     <script>hljs.highlightAll();</script>
     {% if 26 in permissions or 28 in permissions %}

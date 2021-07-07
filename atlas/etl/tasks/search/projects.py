@@ -20,12 +20,20 @@ def deleted_project(sender, instance, **kwargs):
 @receiver(post_save, sender=Projects)
 def updated_project(sender, instance, **kwargs):
     """When project is updated, add it to search."""
-    load_project.delay(instance.project_id)
+    if instance.hidden == "Y":
+        delete_project.delay(instance.project_id)
+    else:
+        load_project.delay(instance.project_id)
 
 
 @shared_task
 def delete_project(project_id):
     """Celery task to remove a project from search."""
+    delete_project_function(project_id)
+
+
+def delete_project_function(project_id):
+    """In process delete function."""
     solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
 
     solr.delete(q="type:projects AND atlas_id:%s" % project_id)
@@ -60,7 +68,8 @@ def load_projects(project_id=None):
     2. Bulk load to solr in batchs of x
     """
     projects = (
-        Projects.objects.select_related("ops_owner")
+        Projects.objects.exclude(hidden="Y")
+        .select_related("ops_owner")
         .select_related("exec_owner")
         .select_related("analytics_owner")
         .select_related("data_owner")
@@ -77,6 +86,9 @@ def load_projects(project_id=None):
 
     if project_id:
         projects = projects.filter(project_id=project_id)
+
+    if len(projects) == 0:
+        delete_project_function(project_id)
 
     # reset the batch. reports will be loaded to solr in batches
     # of "batch_size"

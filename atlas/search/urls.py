@@ -12,6 +12,10 @@ urlpatterns = [
     path("user_lookup/<str:role>", views.user_lookup, name="user_lookup"),
     # search for projects for dropdowns
     path("project_lookup", views.project_lookup, name="project_lookup"),
+    # search for reports for dropdowns
+    path("report_lookup", views.report_lookup, name="report_lookup"),
+    # search for terms for dropdowns
+    path("term_lookup", views.term_lookup, name="term_lookup"),
     # basic value lookups for dropdowns
     path("lookup/<str:lookup>", views.dropdown_lookup, name="dropdown_lookup"),
     # ajax search page. Type is typically "reports", "terms", "projects", etc.

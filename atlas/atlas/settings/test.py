@@ -42,6 +42,25 @@ COMPRESS_ENABLED = False
 
 DATABASE_ROUTERS: list = []
 
+# make celery tasks run as blocking
+CELERY_BROKER_URL = "memory://"
+CELERY_RESULT_BACKEND = "cache+memory://"
+CELERY_ALWAYS_EAGER = True
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "WARNING",
+    },
+}
+
 # pretend there are no migrations. By default the tests will create a database that is based
 # on the latest migrations. Since we are not doing any migrations on the psql db (app is using
 # mssql db in production/dev), we can ignore migrations for tests and just create a db based

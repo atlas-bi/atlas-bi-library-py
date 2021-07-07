@@ -1,24 +1,23 @@
 
-<h4>New Link</h4>
-<form action="/Projects?handler=AddLinkedTerm" method="post" id="project-editor-add-term-form">
-    <input asp-for="DpTermAnnotation.DataProjectId" type="hidden" value='@Model.DataProject.Id' />
+<h4>Add a Term</h4>
+<form action="/projects/{{ project.project_id }}/edit/terms" method="post" id="project-editor-add-term-form">
     <div class="listDetails">
         
         <label>Term Name</label>
-        <input type="dynamic-dropdown" class="head-light" data-head="Name" asp-for="DpTermAnnotation.TermId" value="" visible-value="" search-area="TermSearch" />
+        <input type="dynamic-dropdown" class="head-light" name="term_id" search-area="term_lookup" />
         
         <label>Rank</label>
-        <input asp-for="DpTermAnnotation.Rank" type="number" />
+        <input name="rank" type="number" />
     </div>
 
     <h3>Annotation</h3>
-    <div class="editor" data-inputName="DpTermAnnotation.Annotation" data-inputId="DpTermAnnotation_Annotation"><textarea></textarea></div>
+    <div class="editor" data-inputName="annotation" data-inputId="annotation"><textarea></textarea></div>
 
     <h3><button class="editor-save" type="submit">Save</button></h3>
     
 </form>
 
-    <h3>Term Links</h3>
-        <div id="project-editor-currentterms-container">
-            <partial name="Edit/_CurrentTerms" />
-        </div>
+
+<div id="project-editor-currentterms-container">
+    {% include "project_edit/current_terms.html.dj" %}
+</div>
