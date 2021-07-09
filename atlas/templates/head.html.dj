@@ -1,89 +1,133 @@
 {% load compress %}
 <!DOCTYPE html>
-<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
 {% compress css file main %}
-    <link rel="stylesheet" href="/static/lib/fonts/impmin/stylesheet.css" type="text/css" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/lib/fonts/cheltmin/stylesheet.css" type="text/css" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/lib/fonts/sfmin/stylesheet.css" type="text/css" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/lib/fonts/marckscript/stylesheet.css" type="text/css" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/nav.scss" type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/crumbs.scss" type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/favorite.scss" type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/page.scss" type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/video.scss" type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/search.scss" type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/essential.scss" type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/utility/collapse.scss" type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/utility/modal.scss" type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/utility/tabs.scss" type="text/x-scss" charset="utf-8"/>
+<link
+    rel="stylesheet"
+    href="/static/lib/fonts/impmin/stylesheet.css"
+    type="text/css"
+    charset="utf-8"/>
+<link
+    rel="stylesheet"
+    href="/static/lib/fonts/cheltmin/stylesheet.css"
+    type="text/css"
+    charset="utf-8"/>
+<link
+    rel="stylesheet"
+    href="/static/lib/fonts/sfmin/stylesheet.css"
+    type="text/css"
+    charset="utf-8"/>
+<link
+    rel="stylesheet"
+    href="/static/lib/fonts/marckscript/stylesheet.css"
+    type="text/css"
+    charset="utf-8"/>
+<link rel="stylesheet" href="/static/css/nav.scss" type="text/x-scss" charset="utf-8"/>
+<link rel="stylesheet" href="/static/css/crumbs.scss" type="text/x-scss" charset="utf-8"/>
+<link rel="stylesheet" href="/static/css/favorite.scss" type="text/x-scss" charset="utf-8"/>
+<link rel="stylesheet" href="/static/css/page.scss" type="text/x-scss" charset="utf-8"/>
+<link rel="stylesheet" href="/static/css/video.scss" type="text/x-scss" charset="utf-8"/>
+<link rel="stylesheet" href="/static/css/search.scss" type="text/x-scss" charset="utf-8"/>
+<link rel="stylesheet" href="/static/css/essential.scss" type="text/x-scss" charset="utf-8"/>
+<link
+    rel="stylesheet"
+    href="/static/css/utility/collapse.scss"
+    type="text/x-scss"
+    charset="utf-8"/>
+<link rel="stylesheet" href="/static/css/utility/modal.scss" type="text/x-scss" charset="utf-8"/>
+<link rel="stylesheet" href="/static/css/utility/tabs.scss" type="text/x-scss" charset="utf-8"/>
 {% endcompress %}
 
-
-
-
-
 {% compress css file differed %}
-    <link rel="stylesheet" href="/static/css/page-effects.scss"   type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/favorite-effects.scss"   type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/lib/fonts/fontawesome/css/mine.css"   type="text/css" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/utility/tooltip.scss"   type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/utility/drag.scss"   type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/utility/progressbar.scss"   type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/lib/fonts/fasmin/css/fas.css"   type="text/css" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/lib/fonts/farmin/css/far.css"   type="text/css" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/utility/chart.scss"   type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/utility/table.scss"   type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/milestone.scss"   type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/input.scss"   type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/comments.scss"   type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/dropdown.scss"   type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/markdown.scss"   type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/messagebox.scss"   type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/lib/scrollbars/simple-scrollbar.css"   type="text/css" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/lib/highlight/rainbow.css"   type="text/css" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/query.scss"   type="text/x-scss" charset="utf-8"/>
+<link rel="stylesheet" href="/static/css/page-effects.scss" type="text/x-scss" charset="utf-8"/>
+<link
+    rel="stylesheet"
+    href="/static/css/favorite-effects.scss"
+    type="text/x-scss"
+    charset="utf-8"/>
+<link
+    rel="stylesheet"
+    href="/static/lib/fonts/fontawesome/css/mine.css"
+    type="text/css"
+    charset="utf-8"/>
+<link rel="stylesheet" href="/static/css/utility/tooltip.scss" type="text/x-scss" charset="utf-8"/>
+<link rel="stylesheet" href="/static/css/utility/drag.scss" type="text/x-scss" charset="utf-8"/>
+<link
+    rel="stylesheet"
+    href="/static/css/utility/progressbar.scss"
+    type="text/x-scss"
+    charset="utf-8"/>
+<link
+    rel="stylesheet"
+    href="/static/lib/fonts/fasmin/css/fas.css"
+    type="text/css"
+    charset="utf-8"/>
+<link
+    rel="stylesheet"
+    href="/static/lib/fonts/farmin/css/far.css"
+    type="text/css"
+    charset="utf-8"/>
+<link rel="stylesheet" href="/static/css/utility/chart.scss" type="text/x-scss" charset="utf-8"/>
+<link rel="stylesheet" href="/static/css/utility/table.scss" type="text/x-scss" charset="utf-8"/>
+<link rel="stylesheet" href="/static/css/milestone.scss" type="text/x-scss" charset="utf-8"/>
+<link rel="stylesheet" href="/static/css/input.scss" type="text/x-scss" charset="utf-8"/>
+<link rel="stylesheet" href="/static/css/comments.scss" type="text/x-scss" charset="utf-8"/>
+<link rel="stylesheet" href="/static/css/dropdown.scss" type="text/x-scss" charset="utf-8"/>
+<link rel="stylesheet" href="/static/css/markdown.scss" type="text/x-scss" charset="utf-8"/>
+<link rel="stylesheet" href="/static/css/messagebox.scss" type="text/x-scss" charset="utf-8"/>
+<link
+    rel="stylesheet"
+    href="/static/lib/scrollbars/simple-scrollbar.css"
+    type="text/css"
+    charset="utf-8"/>
+<link rel="stylesheet" href="/static/lib/highlight/rainbow.css" type="text/css" charset="utf-8"/>
+<link rel="stylesheet" href="/static/css/query.scss" type="text/x-scss" charset="utf-8"/>
 {% endcompress %}
 
 {% compress js inline %}
 <script>
-    (function() {
+    (function () {
         // completed loaded print files. used for IE11 to preload css
-        var css = document.querySelectorAll('link[media="print"]');
-        for(var x=0; x< css.length; x++){
-            css[x].onload = function(){this.onload=null;this.removeAttribute('media')}
+        var css = document.querySelectorAll("link[media='print']");
+        for (var x = 0; x < css.length; x++) {
+            css[x].onload = function () {
+                this.onload = null;
+                this.removeAttribute("media")
+            }
         }
     })();
 </script>
 {% endcompress %}
 
 {% compress js file %}
-    {% block start_js %}
-    {% endblock start_js %}
+{% block start_js %}{% endblock start_js %}
 {% endcompress %}
 {% compress js inline %}
-    {% block start_js_inline %}
-    {% endblock start_js_inline %}
+{% block start_js_inline %}{% endblock start_js_inline %}
 {% endcompress %}
 
 {% compress js file mustache %}
-    <script src="/static/lib/handlebarsjs/handlebars.js"></script>
+<script src="/static/lib/handlebarsjs/handlebars.js"></script>
 
 {% endcompress %}
 
 {% compress js file markdown %}
-    <script type="text/javascript" src="/static/lib/markdown-it/markdown-it.js"></script>
+<script type="text/javascript" src="/static/lib/markdown-it/markdown-it.js"></script>
 {% endcompress %}
 
 <script id="search-template" type="text/x-handlebars-template">
     {% include "handlebars/search.html" %}
 </script>
 
-
 {% if title %}
-    <title>{{ title }} - Atlas</title>
+    <title>
+        {{ title }}
+        - Atlas
+    </title>
 {% else %}
-    <title>Home - Atlas of Information Management</title>
+    <title>
+        Home - Atlas of Information Management</title>
 {% endif %}

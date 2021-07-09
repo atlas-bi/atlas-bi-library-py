@@ -18,7 +18,7 @@ import logging
 import djangosaml2
 from django.conf import settings as django_settings
 from django.http import HttpResponse
-from django.urls import include, path
+from django.urls import include, path, re_path
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ urlpatterns = [
     path("analytics/", include("analytics.urls")),
     path("reports/", include("report.urls")),
     path("initiatives/", include("initiative.urls")),
-    path("terms/", include("term.urls")),
+    re_path(r"[tT]erms/", include("term.urls")),
     path("users/", include("user.urls")),
     path("search/", include("search.urls")),
     path("projects/", include("project.urls")),

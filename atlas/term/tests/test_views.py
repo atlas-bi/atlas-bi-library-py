@@ -60,7 +60,15 @@ class TermTestCase(AtlasTestCase):
         # find a term that doesn't exist.
         term = Terms.objects.order_by("term_id").last()
 
-        assert self.client.get("/terms/%s" % (term.term_id + 1)).status_code == 302
+        # try to get it
+        self.assertEqual(
+            self.client.get("/terms/%s" % (term.term_id + 1)).status_code, 404
+        )
+
+        # try to delete it
+        self.assertEqual(
+            self.client.get("/terms/%s/delete" % (term.term_id + 1)).status_code, 404
+        )
 
     def test_valid_term(self):
         """Check that valid terms are viewable."""
@@ -102,7 +110,7 @@ class TermTestCase(AtlasTestCase):
                 data=data,
                 content_type="application/json",
             ).status_code,
-            302,
+            200,
         )
 
         # assert that the comment stream was created
@@ -127,7 +135,7 @@ class TermTestCase(AtlasTestCase):
                 data=data,
                 content_type="application/json",
             ).status_code,
-            302,
+            200,
         )
         self.assertTrue(
             TermComments.objects.filter(stream__term_id=term.term_id)
@@ -153,7 +161,7 @@ class TermTestCase(AtlasTestCase):
                 data=data,
                 content_type="application/json",
             ).status_code,
-            302,
+            200,
         )
         self.assertTrue(
             TermComments.objects.filter(stream__term_id=term.term_id)
@@ -203,7 +211,7 @@ class TermTestCase(AtlasTestCase):
             self.client.post(
                 "/terms/%s/comments" % term.term_id, content_type="application/json"
             ).status_code,
-            302,
+            200,
         )
 
     def test_create_term(self):
@@ -225,21 +233,9 @@ class TermTestCase(AtlasTestCase):
         # verify that the new term exists
         term = Terms.objects.get(term_id=term_id)
 
-        # check name, summary, tech def
-        self.assertEqual(term.name, data["name"])
-        self.assertEqual(term.summary, data["summary"])
-        self.assertEqual(term.technical_definition, data["technical_definition"])
-
-        # verify it is not approved
+        # check it is not approved
         self.assertEqual(term.approved, "N")
         self.assertEqual(term._approved_at, None)
-
-        # verify there is no documentation
-        self.assertEqual(term.external_standard_url, "")
-        self.assertEqual(term.has_external_standard, "N")
-
-        # check that get sends us back to the term.
-        self.assertEqual(self.client.get("/terms/new").status_code, 302)
 
         # approve the term
         data["approved"] = "Y"
@@ -253,6 +249,28 @@ class TermTestCase(AtlasTestCase):
         # verify that it is approved
         self.assertEqual(term.approved, "Y")
         self.assertTrue(term._approved_at is not None)
+
+        # create a term approved
+        data["approved"] = "Y"
+        response = self.client.post("/terms/new", data=data, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        last_url = response.redirect_chain[-1][0]
+        term_id = last_url[last_url.rindex("/") + 1 :]  # noqa: E203
+
+        # verify that the new term exists
+        term = Terms.objects.get(term_id=term_id)
+
+        # check name, summary, tech def
+        self.assertEqual(term.name, data["name"])
+        self.assertEqual(term.summary, data["summary"])
+        self.assertEqual(term.technical_definition, data["technical_definition"])
+
+        # verify there is no documentation
+        self.assertEqual(term.external_standard_url, "")
+
+        # check that get sends us back to the term.
+        self.assertEqual(self.client.get("/terms/new").status_code, 302)
 
         # unapprove the term
         data["approved"] = "N"
@@ -276,7 +294,6 @@ class TermTestCase(AtlasTestCase):
 
         # verify it is there
         self.assertEqual(term.external_standard_url, data["external_standard_url"])
-        self.assertEqual(term.has_external_standard, "Y")
 
         # remove external documentation
         data.pop("external_standard_url")
@@ -288,7 +305,6 @@ class TermTestCase(AtlasTestCase):
 
         # verify that it is gone
         self.assertEqual(term.external_standard_url, "")
-        self.assertEqual(term.has_external_standard, "N")
 
         # check valid from
         data["valid_from"] = timezone.now()
@@ -335,7 +351,7 @@ class TermTestCase(AtlasTestCase):
                 data=data,
                 content_type="application/json",
             ).status_code,
-            302,
+            200,
         )
 
         # add a report link

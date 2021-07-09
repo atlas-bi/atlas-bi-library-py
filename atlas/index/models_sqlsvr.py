@@ -11,12 +11,12 @@
 # to import from various schemas = make sure user owns the schema, and then change it to default
 # for the user. run command for each schema.
 #
-
 import re
 from datetime import datetime
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.urls import reverse
 
 
 class ReportGroupMemberships(models.Model):
@@ -1956,6 +1956,18 @@ class Terms(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse("term:details", kwargs={"pk": self.pk})
+
+    def get_absolute_delete_url(self):
+        return reverse("term:delete", kwargs={"pk": self.pk})
+
+    def get_absolute_edit_url(self):
+        return reverse("term:edit", kwargs={"pk": self.pk})
+
+    def get_absolute_comments_url(self):
+        return reverse("term:comments", kwargs={"pk": self.pk})
+
     @property
     def approved_at(self):
         if self._approved_at:
@@ -2019,6 +2031,12 @@ class TermComments(models.Model):
     class Meta:
         managed = False
         db_table = "TermConversationMessage"
+
+    def get_absolute_delete_url(self):
+        return reverse(
+            "term:comments_delete",
+            kwargs={"pk": self.stream.term_id, "comment_id": self.pk},
+        )
 
 
 class FavoriteFolders(models.Model):

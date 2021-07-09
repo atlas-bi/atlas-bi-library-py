@@ -8,7 +8,7 @@
 
             <div class="editorMdl-cnt" ss-container>
                 <div class="editorMdl-cntLiner">
-                    <form action="/terms/{{ term.term_id }}/edit" method="post">
+                    <form action="{{ term.get_absolute_edit_url }}" method="post">
                         {% csrf_token %}
                         <h3>Details</h3>
 

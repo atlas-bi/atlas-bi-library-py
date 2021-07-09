@@ -1,16 +1,40 @@
 {
   "dependencies": {
+    "@unibeautify/beautifier-js-beautify": "^0.4.0",
+    "@unibeautify/beautifier-prettydiff": "^0.6.0",
+    "@unibeautify/cli": "^0.5.1",
+    "eslint": "^7.17.0",
+    "eslint-plugin-jsdoc": "^35.1.2",
+    "js-beautify": "^1.14.0",
+    "jshint": "^2.12.0",
     "markdown-include": "^0.4.3",
     "markdown-it": "^12.0.4",
     "mustache": "^4.1.0",
-    "postcss": "^8.3.0"
+    "postcss": "^8.3.0",
+    "prettydiff2": "^2.2.8",
+    "stylelint-config-standard": "^22.0.0",
+    "unibeautify": "^0.15.0",
+    "unibeautify-cli": "^0.2.1"
   },
   "description": "atlas of information management",
-  "devDependencies": {
-    "eslint": "^7.17.0",
-    "eslint-plugin-jsdoc": "^35.1.2",
-    "jshint": "^2.12.0",
-    "stylelint-config-standard": "^22.0.0"
+  "unibeautify": {
+    "HTML": {
+      "beautifiers": [
+        "JS-Beautify",
+        "Pretty Diff"
+      ],
+      "brace_style": "expand",
+      "end_with_newline": true,
+      "force_indentation": true,
+      "indent_comments": true,
+      "indent_inner_html": true,
+      "indent_size": 4,
+      "indent_style": "space",
+      "max_preserve_newlines": 1,
+      "quotes": "double",
+      "wrap_attributes": "auto",
+      "wrap_line_length": 99
+    }
   },
   "eslintConfig": {
     "plugins": [

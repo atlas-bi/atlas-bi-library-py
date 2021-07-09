@@ -168,7 +168,7 @@ max-module-lines=1000
 
 
 [tool.pylint.basic]
-good-names = "i,j,k,ex,Run,x,id,e,me,l,_"
+good-names = "i,j,k,ex,Run,x,id,e,me,l,_,pk"
 include-naming-hint="no"
 
 [tool.djangodoctor]

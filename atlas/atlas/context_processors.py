@@ -16,3 +16,13 @@ def settings(request):
     return {
         "settings": settings_in_templates,
     }
+
+
+def user(request):
+    """Context processor for user information."""
+    if not request.user.is_anonymous:
+        return {
+            "permissions": request.user.get_permissions(),
+            "user": request.user,
+            "favorites": request.user.get_favorites(),
+        }

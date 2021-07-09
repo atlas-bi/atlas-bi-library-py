@@ -1,25 +1,48 @@
-<h3>Details</h3>
+<h3>
+    Details</h3>
 <div class="listDetails">
     {% if term.approved == "Y" %}
-        <span class="listDetails-title">Approval Date</span>
-        <span>{{ term.approved_at }}</span>
-        <span class="listDetails-title">Approved By</span>
-        <span>{{ term.approved_by.full_name }}</span>
+        <span class="listDetails-title">
+            Approval Date</span>
+        <span>
+            {{ term.approved_at }}
+        </span>
+        <span class="listDetails-title">
+            Approved By</span>
+        <span>
+            {{ term.approved_by.full_name }}
+        </span>
     {% else %}
-        <span class="listDetails-title">Has Been Approved</span>
-        <span>No</span>
+        <span class="listDetails-title">
+            Has Been Approved</span>
+        <span>
+            No</span>
     {% endif %}
 
     {% if term.external_standard_url %}
-        <span class="listDetails-title">External Standard URL</span>
-        <span><a href="{{ term.external_standard_url }}" target="_blank" rel="noopener">{{ term.external_standard_url }}</a></span>
+        <span class="listDetails-title">
+            External Standard URL</span>
+        <span>
+            <a href="{{ term.external_standard_url }}" target="_blank" rel="noopener">
+                {{ term.external_standard_url }}
+            </a>
+        </span>
     {% endif %}
     {% if term.valid_from %}
-        <span class="listDetails-title">Valid From</span>
-        <span>{{ term.valid_from }}</span>
+        <span class="listDetails-title">
+            Valid From</span>
+        <span>
+            {{ term.valid_from }}
+        </span>
     {% endif %}
-    <span class="listDetails-title">Last Updated By</span>
-    <span>{{ term.modified_by.full_name }}</span>
-    <span class="listDetails-title">Last Updated</span>
-    <span>{{ term.modified_at }}</span>
+    <span class="listDetails-title">
+        Last Updated By</span>
+    <span>
+        {{ term.modified_by.full_name }}
+    </span>
+    <span class="listDetails-title">
+        Last Updated</span>
+    <span>
+        {{ term.modified_at }}
+    </span>
 </div>

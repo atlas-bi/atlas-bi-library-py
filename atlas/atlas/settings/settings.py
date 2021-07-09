@@ -172,6 +172,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "atlas.context_processors.settings",
+                "atlas.context_processors.user",
             ],
             "libraries": {
                 "markdown": "atlas.templatetags.markdown",
