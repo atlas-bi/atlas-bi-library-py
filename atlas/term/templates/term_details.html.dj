@@ -1,11 +1,11 @@
 {% load markdown %}
 <h3 class="pageSection-title">
-    Description</h3>
+Description</h3>
 
 {% if term.summary %}
 
     <h4>
-        Summary</h4>
+    Summary</h4>
     <div class="markdown">
         {{ term.summary|markdown|safe }}
     </div>
@@ -13,7 +13,7 @@
 
 {% if term.technical_definition %}
     <h4>
-        Technical Definition</h4>
+    Technical Definition</h4>
     <div class="markdown">
         {{ term.technical_definition|markdown|safe }}
     </div>

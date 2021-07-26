@@ -9,7 +9,6 @@
         <script src="/static/js/solr.js" async></script>
     {% endcompress %}
 
-<div class="sr-results">
-</div>
+    <div class="sr-results"></div>
 
 {% endblock body %}

@@ -1,15 +1,19 @@
 from django.urls import path
 
-from . import views
+from . import apps
+from .views import views
+from .views.comments import Comments, comments_delete
+
+app_name = apps.ProjectConfig.name
 
 urlpatterns = [
-    path("", views.index, name="index"),
-    path("<int:project_id>", views.item, name="item"),
-    path("<int:project_id>/comments", views.comments, name="comments"),
+    path("", views.index, name="list"),
+    path("<int:project_id>", views.item, name="details"),
+    path("<int:pk>/comments", Comments.as_view(), name="comments"),
     path(
-        "<int:project_id>/comments/<int:comment_id>/delete",
-        views.comments_delete,
-        name="delete comments",
+        "<int:pk>/comments/<int:comment_id>/delete",
+        comments_delete,
+        name="comments_delete",
     ),
     # linked reports
     path("<int:project_id>/edit/reports", views.reports, name="reports"),

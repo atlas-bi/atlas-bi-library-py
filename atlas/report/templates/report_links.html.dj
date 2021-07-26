@@ -3,7 +3,7 @@
         <a href="#images" class="pageNav-link">Images</a>
     {% endif %}
 
-    {% if report.description or report.detailed_description  or report.docs.developer_description or report.docs.assumptions or report.system_description %}
+    {% if report.description or report.detailed_description or report.docs.developer_description or report.docs.assumptions or report.system_description %}
         <a href="#description" class="pageNav-link">Description</a>
     {% endif %}
 
@@ -18,11 +18,11 @@
     {% endif %}
 
     {% if parents or children or groups %}
-                <a href="#relationships" class="pageNav-link">Relationships</a>
+        <a href="#relationships" class="pageNav-link">Relationships</a>
     {% endif %}
 
     {% if report.docs.logs %}
-                <a href="#maintenance" class="pageNav-link">Maintenance</a>
+        <a href="#maintenance" class="pageNav-link">Maintenance</a>
     {% endif %}
 
     <a href="#comments" class="pageNav-link">Comments</a>

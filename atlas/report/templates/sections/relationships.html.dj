@@ -20,7 +20,10 @@
                 <tbody>
                     {% for group in report.groups.all %}
                         <tr>
-                            <td><a href="/groups/{{ group.group_id }}">{{ group.group }}</a></td>
+                            <td>
+                                <a href="/groups/{{ group.group_id }}">{{ group.group }}
+                                </a>
+                            </td>
                             <td>{{ group.group.group_type }}</td>
                             <td>{{ group.group.group_source }}</td>
                         </tr>
@@ -36,37 +39,57 @@
     <h4>Reports included in this report.</h4>
     {% for child in children %}
         <h5>
-            <a href="/reports/{{ child.report_id }}">{{ child }} {% if child.system_identifier %}[{{ child.system_identifier}}{% if child.system_id %} {{ child.system_id}}{% endif %}]{% endif %}</a>
+            <a href="/reports/{{ child.report_id }}">{{ child }}
+                {% if child.system_identifier %}
+                    [{{ child.system_identifier }}
+                    {% if child.system_id %}
+                        {{ child.system_id }}
+                    {% endif %}
+                    ]
+                {% endif %}
+            </a>
         </h5>
 
         {% if child.imgs.all|length == 1 %}
             <div class="pop text-center" style="max-height:400px;">
-                <img class="img-responsive" data-src="/reports/{{ child.report_id }}/image/{{ child.imgs.all.0.image_id }}" alt="Image loading.." style="max-width: 78%;max-height: 290px;min-height: 1px;" src="/static/img/loader.gif">
-            </div>
-        {% elif child.imgs.all|length > 1 %}
-            <div class="crsl">
-                {% for img in child.imgs.all %}
-                    <div class="crsl-itm pop">
-                        <img data-src="/reports/{{ child.report_id }}/image/{{ img.image_id }}" alt="Image loading.." src="/static/img/loader.gif" />
-                    </div>
-                {% endfor %}
-
-                <div class="crsl-ind">
-                    {% for img in child.imgs.all %}
-                        <span  class="crsl-dot {% if forloop.counter0 == 0 %}active{% endif %}" slide="{{ forloop.counter0 }}"></span>
-                    {% endfor %}
+                <img
+                    class="img-responsive"
+                    data-src="/reports/{{ child.report_id }}/image/{{ child.imgs.all.0.image_id }}"
+                    alt="Image loading.."
+                    style="max-width: 78%;max-height: 290px;min-height: 1px;"
+                    src="/static/img/loader.gif">
                 </div>
-                <a class="crsl-prev">
-                    <i class="fas fa-chevron-left fa-lg"></i>
-                </a>
-                <a class="crsl-next">
-                    <i class="fas fa-chevron-right fa-lg"></i>
-                </a>
-            </div>
-        {% endif %}
+            {% elif child.imgs.all|length > 1 %}
+                <div class="crsl">
+                    {% for img in child.imgs.all %}
+                        <div class="crsl-itm pop">
+                            <img
+                                data-src="/reports/{{ child.report_id }}/image/{{ img.image_id }}"
+                                alt="Image loading.."
+                                src="/static/img/loader.gif"/>
+                        </div>
+                    {% endfor %}
+
+                    <div class="crsl-ind">
+                        {% for img in child.imgs.all %}
+                            <span class="crsl-dot
+                                {% if forloop.counter0 == 0 %}
+                                    active
+                                {% endif %}
+                            " slide="{{ forloop.counter0 }}"></span>
+                        {% endfor %}
+                    </div>
+                    <a class="crsl-prev">
+                        <i class="fas fa-chevron-left fa-lg"></i>
+                    </a>
+                    <a class="crsl-next">
+                        <i class="fas fa-chevron-right fa-lg"></i>
+                    </a>
+                </div>
+            {% endif %}
 
 
-<!--         @foreach (var subchild in child.Child)
+            <!-- @foreach (var subchild in child.Child)
         {
             <h6>
                 <a href="Reports?id=@subchild.Id">@subchild.Name [@subchild.EpicMasterFile]</a>
@@ -76,62 +99,81 @@
             {
                 <h6 style="margin-left:40px"><a href="Reports?id=@supersubchild.Id">@supersubchild.Name [@supersubchild.EpicMasterFile]</a></h6>
             }
-        } -->
-    {% endfor %}
-{% endif %}
+            } -->
+        {% endfor %}
+    {% endif %}
 
-{% if parents %}
-    <h4>Reports that include this report.</h4>
-    {% for parent in parents %}
-        <h5>
-            <a href="/reports/{{ parent.report_id }}">{{ parent }}</a>
-        </h5>
-        {% if parent.imgs.all.count == 1 %}
-            <div class="pop text-center" style="max-height:400px">
-                <img class=" img-responsive" data-src="/reports/{{ parent.report_id }}/image/{{ parent.imgs.all.0.image_id }}" alt="Image loading.." style="max-width: 78%;max-height: 290px" src="/static/img/loader.gif" >
-            </div>
-        {% elif parent.imgs.all.count > 1 %}
-            <div class="crsl">
-                {% for img in parent.imgs.all %}
-                    <div class="crsl-itm pop">
-                        <img data-src="/reports/{{ parent.report_id }}/image/{{ img.image_id }}" alt="Image loading.." src="/static/img/loader.gif" />
+    {% if parents %}
+        <h4>Reports that include this report.</h4>
+        {% for parent in parents %}
+            <h5>
+                <a href="/reports/{{ parent.report_id }}">{{ parent }}</a>
+            </h5>
+            {% if parent.imgs.all.count == 1 %}
+                <div class="pop text-center" style="max-height:400px">
+                    <img
+                        class=" img-responsive"
+                        data-src="/reports/{{ parent.report_id }}/image/{{ parent.imgs.all.0.image_id }}"
+                        alt="Image loading.."
+                        style="max-width: 78%;max-height: 290px"
+                        src="/static/img/loader.gif">
                     </div>
-                {% endfor %}
+                {% elif parent.imgs.all.count > 1 %}
+                    <div class="crsl">
+                        {% for img in parent.imgs.all %}
+                            <div class="crsl-itm pop">
+                                <img
+                                    data-src="/reports/{{ parent.report_id }}/image/{{ img.image_id }}"
+                                    alt="Image loading.."
+                                    src="/static/img/loader.gif"/>
+                            </div>
+                        {% endfor %}
 
-                <div class="crsl-ind">
-                    {% for img in parent.imgs.all %}
-                        <span  class="crsl-dot {% if forloop.counter == 0%} active{% endif %}" slide="{{ forloop.counter }}"></span>
-                    {% endfor %}
-                </div>
-                <a class="crsl-prev">
-                    <i class="fas fa-chevron-left fa-lg"></i>
-                </a>
-                <a class="crsl-next">
-                    <i class="fas fa-chevron-right fa-lg"></i>
-                </a>
-            </div>
-        {% endif %}
-    {% endfor %}
-{% endif %}
-
-{% if report.projects.all %}
-    <h4>Data Projects that include this report.</h4>
-    {% for annotation in report.projects.all %}
-        <h4 class="drop" data-toggle="clps" data-target="collapse-project-{{ annotation.annotation_id }}">
-            {{ annotation.project }}
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
-        </h4>
-
-        <div id="collapse-project-{{ annotation.annotation_id }}" class="clps">
-            <div class="drop-box">
-                <h5><a class="drop-link" href="/projects/{{ annotation.project_id }}">Open This Project</a></h5>
-                {% if annotation.annotation %}
-                    <h5>Annotation</h5>
-                    <div class="markdown">
-                        {{ annotation.annotation|markdown|safe }}
+                        <div class="crsl-ind">
+                            {% for img in parent.imgs.all %}
+                                <span class="crsl-dot
+                                    {% if forloop.counter == 0 %}
+                                        active
+                                    {% endif %}
+                                " slide="{{ forloop.counter }}"></span>
+                            {% endfor %}
+                        </div>
+                        <a class="crsl-prev">
+                            <i class="fas fa-chevron-left fa-lg"></i>
+                        </a>
+                        <a class="crsl-next">
+                            <i class="fas fa-chevron-right fa-lg"></i>
+                        </a>
                     </div>
                 {% endif %}
-            </div>
-        </div>
-    {% endfor %}
-{% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {% if report.projects.all %}
+            <h4>Data Projects that include this report.</h4>
+            {% for annotation in report.projects.all %}
+                <h4
+                    class="drop"
+                    data-toggle="clps"
+                    data-target="collapse-project-{{ annotation.annotation_id }}">
+                    {{ annotation.project }}
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
+                </h4>
+
+                <div id="collapse-project-{{ annotation.annotation_id }}" class="clps">
+                    <div class="drop-box">
+                        <h5>
+                            <a
+                                class="drop-link"
+                                href="/projects/{{ annotation.project_id }}">Open This Project
+                            </a></h5>
+                            {% if annotation.annotation %}
+                                <h5>Annotation</h5>
+                                <div class="markdown">
+                                    {{ annotation.annotation|markdown|safe }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}

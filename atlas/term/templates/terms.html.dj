@@ -5,10 +5,13 @@
 
 {% block side_links %}
     {% if 7 in permissions %}
-        <a class="nav-link new" data-toggle="mdl" data-target="newModal" data-tooltip="Create New Term">
+        <a
+            class="nav-link new"
+            data-toggle="mdl"
+            data-target="newModal"
+            data-tooltip="Create New Term">
             <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512">
-                <path
-                    d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/>
+                <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/>
             </svg>
         </a>
     {% endif %}
@@ -37,12 +40,12 @@
                 </span>
                 {% if term.approved == "Y" %}
                     <span class="text-green">
-                        Approved</span>
+                        Approved
+                    </span>
                 {% endif %}
 
                 <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 320 512">
-                    <path
-                        d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/>
+                    <path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/>
                 </svg>
             </h4>
 
@@ -50,7 +53,8 @@
                 <div class="drop-box">
                     <h5>
                         <a class="drop-link" href="{{ term.get_absolute_url }}">
-                            Open This Term</a>
+                            Open This Term
+                        </a>
                     </h5>
                     {% if term.summary %}
                         <div class="markdown">

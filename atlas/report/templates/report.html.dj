@@ -2,11 +2,15 @@
 {% load compress %}
 
 {% block side_links %}
-{% include 'report_sidenav.html.dj' %}
+    {% include 'report_sidenav.html.dj' %}
 {% endblock side_links %}
 {% block start_css %}
     <link rel="stylesheet" href="/static/css/reports.scss" type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/utility/carousel.scss" type="text/x-scss" charset="utf-8"/>
+    <link
+        rel="stylesheet"
+        href="/static/css/utility/carousel.scss"
+        type="text/x-scss"
+        charset="utf-8"/>
 {% endblock start_css %}
 
 {% block body %}
@@ -16,15 +20,30 @@
             <span>
                 <!-- cert tag -->
                 {% if report.certification_tag == "Analytics Certified" %}
-                    <span data-tooltip="This report has received the highest level of scrutiny from the Analytics Team and the owning end user. Certified reports are the most reliable and accurate in the system." class="pageNav-badgeHunterGreen tt-bottom">{{ report.certification_tag }}</span>
+                    <span
+                        data-tooltip="This report has received the highest level of scrutiny from the Analytics Team and the owning end user. Certified reports are the most reliable and accurate in the system."
+                        class="pageNav-badgeHunterGreen tt-bottom">{{ report.certification_tag }}
+                    </span>
                 {% elif report.certification_tag == "Analytics Reviewed" %}
-                    <span data-tooltip="This report has gone through the standard Analytics code review and validation process. Reviewed reports can be trusted for monitoring most operational processes." class="pageNav-badgeGreen tt-bottom">{{ report.certification_tag }}</span>
+                    <span
+                        data-tooltip="This report has gone through the standard Analytics code review and validation process. Reviewed reports can be trusted for monitoring most operational processes."
+                        class="pageNav-badgeGreen tt-bottom">{{ report.certification_tag }}
+                    </span>
                 {% elif report.certification_tag == "Epic Released" %}
-                    <span data-tooltip="Epic Released Reports are limited to the standard Epic configuration. They cannot be customized to match Riverside’s unique system build and may not always be accurate. Use with caution." class="pageNav-badgeOrange tt-bottom">{{ report.certification_tag }}</span>
+                    <span
+                        data-tooltip="Epic Released Reports are limited to the standard Epic configuration. They cannot be customized to match Riverside’s unique system build and may not always be accurate. Use with caution."
+                        class="pageNav-badgeOrange tt-bottom">{{ report.certification_tag }}
+                    </span>
                 {% elif report.certification_tag == "Legacy" %}
-                    <span data-tooltip="This report has not been validated by the Analytics team for accuracy and reliability. Use with caution." class="pageNav-badgeOrange tt-bottom">{{ report.certification_tag }}</span>
+                    <span
+                        data-tooltip="This report has not been validated by the Analytics team for accuracy and reliability. Use with caution."
+                        class="pageNav-badgeOrange tt-bottom">{{ report.certification_tag }}
+                    </span>
                 {% elif report.certification_tag == "High Risk" %}
-                    <span data-tooltip="This report has not been validated by the Analytics Team and does not have a usage track record. It may display inaccurate or misleading information. Use at your own risk." class="pageNav-badgeRed tt-bottom">{{ report.certification_tag }}</span>
+                    <span
+                        data-tooltip="This report has not been validated by the Analytics Team and does not have a usage track record. It may display inaccurate or misleading information. Use at your own risk."
+                        class="pageNav-badgeRed tt-bottom">{{ report.certification_tag }}
+                    </span>
                 {% endif %}
 
                 <!-- report name -->
@@ -34,7 +53,10 @@
 
         {% if 12 in permissions %}
             <!-- maintenance status alert -->
-            <div data-ajax="yes" class="no-loader" data-url="/reports/{{ report.report_id }}/maint_status"></div>
+            <div
+                data-ajax="yes"
+                class="no-loader"
+                data-url="/reports/{{ report.report_id }}/maint_status"></div>
         {% endif %}
 
         {% include 'report_links.html.dj' %}
@@ -53,7 +75,7 @@
         <span class="location" id="description"></span>
         <div id="report-description-container">
 
-            {% if report.description or report.detailed_description  or report.docs.developer_description or report.docs.assumptions or report.system_description %}
+            {% if report.description or report.detailed_description or report.docs.developer_description or report.docs.assumptions or report.system_description %}
                 {% include 'sections/description.html.dj' %}
             {% endif %}
         </div>
@@ -100,7 +122,10 @@
 
     <section class="pageSection">
         <span class="location" id="comments"></span>
-        <div class="comments" data-ajax="yes" data-url="/reports/{{ report.report_id }}/comments"></div>
+        <div
+            class="comments"
+            data-ajax="yes"
+            data-url="/reports/{{ report.report_id }}/comments"></div>
     </section>
 
     {% if 12 in permissions %}
@@ -116,57 +141,60 @@
                     <h2>Image</h2>
                 </div>
                 <div class="mdl-b">
-                    <img src="" class="imagepreview img-thumbnail" style="max-width: 100%; max-height:100%">
+                    <img
+                        src=""
+                        class="imagepreview img-thumbnail"
+                        style="max-width: 100%; max-height:100%">
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- report profile -->
-    <div class="mdl" id="profile-modal" tabindex="-1">
-        <div class="mdl-d" style="max-width:70%">
-            <div class="mdl-c">
-                <div class="mdl-h">
-                    <button type="button" class="close" data-dismiss="mdl">&times;</button>
-                    <h2>Report Profile</h2>
+        <!-- report profile -->
+        <div class="mdl" id="profile-modal" tabindex="-1">
+            <div class="mdl-d" style="max-width:70%">
+                <div class="mdl-c">
+                    <div class="mdl-h">
+                        <button type="button" class="close" data-dismiss="mdl">&times;</button>
+                        <h2>Report Profile</h2>
+                    </div>
+                    <div class="mdl-b"></div>
                 </div>
-                <div class="mdl-b"></div>
             </div>
         </div>
-    </div>
 
-{% endblock body %}
+    {% endblock body %}
 
-{% block js %}
-    {% compress js file flowchart %}
-        <script src="/static/lib/flowchart/raphael.min.js"></script>
-        <script src="/static/lib/flowchart/flowchart.min.js"></script>
-        <script src="/static/lib/flowchart/custom.js"></script>
-    {% endcompress %}
-
-    <script>hljs.highlightAll();</script>
-    {% if 12 in permissions %}
-
-        {% compress js file editor %}
-            <script src="/static/lib/codemirror/codemirror.js" ></script>
-            <script src="/static/lib/codemirror/autorefresh.js" ></script>
-            <script src="/static/lib/codemirror/overlay.js" ></script>
-            <script src="/static/lib/codemirror/markdown.js" ></script>
-            <script src="/static/lib/codemirror/gfm.js" ></script>
-            <script src="/static/lib/codemirror/python.js" ></script>
-            <script src="/static/lib/codemirror/r.js" ></script>
-            <script src="/static/lib/codemirror/shell.js" ></script>
-            <script src="/static/lib/codemirror/sql.js" ></script>
-            <script src="/static/js/editor.js" ></script>
-            <script src="/static/js/utility/checkbox.js" ></script>
+    {% block js %}
+        {% compress js file flowchart %}
+            <script src="/static/lib/flowchart/raphael.min.js"></script>
+            <script src="/static/lib/flowchart/flowchart.min.js"></script>
+            <script src="/static/lib/flowchart/custom.js"></script>
         {% endcompress %}
 
-        {% compress js file report_editor %}
-            <script src="/static/js/reportEditor.js" async></script>
-        {% endcompress %}
-    {% endif %}
-{% endblock js %}
+        <script>hljs.highlightAll();</script>
+        {% if 12 in permissions %}
 
-{% block start_js_inline %}
-    <script src="/static/js/reportProfile.js"></script>
-{% endblock start_js_inline %}
+            {% compress js file editor %}
+                <script src="/static/lib/codemirror/codemirror.js" ></script>
+                <script src="/static/lib/codemirror/autorefresh.js" ></script>
+                <script src="/static/lib/codemirror/overlay.js" ></script>
+                <script src="/static/lib/codemirror/markdown.js" ></script>
+                <script src="/static/lib/codemirror/gfm.js" ></script>
+                <script src="/static/lib/codemirror/python.js" ></script>
+                <script src="/static/lib/codemirror/r.js" ></script>
+                <script src="/static/lib/codemirror/shell.js" ></script>
+                <script src="/static/lib/codemirror/sql.js" ></script>
+                <script src="/static/js/editor.js" ></script>
+                <script src="/static/js/utility/checkbox.js" ></script>
+            {% endcompress %}
+
+            {% compress js file report_editor %}
+                <script src="/static/js/reportEditor.js" async></script>
+            {% endcompress %}
+        {% endif %}
+    {% endblock js %}
+
+    {% block start_js_inline %}
+        <script src="/static/js/reportProfile.js"></script>
+    {% endblock start_js_inline %}

@@ -5,10 +5,10 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 {% compress css file etl %}
-<link rel="stylesheet" href="/static/css/etl.scss" type="text/x-scss" charset="utf-8" />
+    <link rel="stylesheet" href="/static/css/etl.scss" type="text/x-scss" charset="utf-8" />
 {% endcompress %}
 {% compress js inline %}
-<script>
+    <script>
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     </script>
 {% endcompress %}
@@ -18,72 +18,88 @@
         <div class="container">
             <h1 class="title">Atlas ETL Administration</h1>
             <h3 class="title is-3">Health Check</h2>
-                <div class="block">
-                    <h3>Solr: <span data-ajax="/etl/solr_health" data-freq="10"></span></h3>
-                    <h3>Celery: <span data-ajax="/etl/celery_health" data-freq="10"></span></h3>
-                    <h3>Celery Beat: ?</h3>
+            <div class="block">
+                <h3>Solr:
+                    <span data-ajax="/etl/solr_health" data-freq="10"></span>
+                </h3>
+                <h3>Celery:
+                    <span data-ajax="/etl/celery_health" data-freq="10"></span>
+                </h3>
+                <h3>Celery Beat: ?</h3>
+            </div>
+            <h3 class="title is-3">Solr Panl</h2>
+            <div class="columns">
+                <div class="column">
+                    <table class="table is-fullwidth">
+                        {% for type in search_etls %}
+                            <tr>
+                                <td>
+                                    <h6 class="title is-6">{{ type|title }}</h6>
+                                </td>
+                                <td>
+                                    <div class="field">
+                                        <input
+                                            id="{{ type }}"
+                                            type="checkbox"
+                                            name="{{ type }}"
+                                            class="switch is-rounded is-info"
+                                            data-url="/etl/search/{{ type }}/">
+                                        <label for="{{ type }}"></label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span
+                                        data-ajax="/etl/search/{{ type }}/status"
+                                        data-toggle="{{ type }}"
+                                        data-freq="10"></span>
+                                </td>
+                                <td>
+                                    <a href="/etl/search/{{ type }}/run">Run Now
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
                 </div>
-                <h3 class="title is-3">Solr Panl</h2>
-                    <div class="columns">
-                        <div class="column">
-                            <table class="table is-fullwidth">
-                                {% for type in search_etls %}
-                                <tr>
-                                    <td>
-                                        <h6 class="title is-6">{{type|title}}</h6>
-                                    </td>
-                                    <td>
-                                        <div class="field">
-                                            <input id="{{type}}" type="checkbox" name="{{type}}" class="switch is-rounded is-info" data-url="/etl/search/{{type}}/">
-                                            <label for="{{type}}"></label>
-                                        </div>
-                                    </td>
-                                    <td><span data-ajax="/etl/search/{{type}}/status" data-toggle="{{type}}" data-freq="10"></span></td>
-                                    <td><a href="/etl/search/{{type}}/run">Run Now</a></td>
-                                </tr>
-                                {% endfor %}
-                            </table>
-                        </div>
-                        <div class="column">
-                            <div class="content">
-                                <p>
-                                    Enabling an ETL will ensure that search data matches with the Atlas database content by completely removing and reloading the search index.
-                                </p>
-                                <p>
-                                    Whenever a item in the database is change/updated through the Atlas webapp, the search will attempt to keep in sync. However, it is still wise to reload the search data daily by enabling the ETL.
-                                </p>
-                                <p>
-                                    To trigger an immediate reset, click <strong>"Run Now"</strong>
-                                </p>
-                            </div>
-                        </div>
+                <div class="column">
+                    <div class="content">
+                        <p>
+                            Enabling an ETL will ensure that search data matches with the Atlas database content by completely removing and reloading the search index.
+                        </p>
+                        <p>
+                            Whenever a item in the database is change/updated through the Atlas webapp, the search will attempt to keep in sync. However, it is still wise to reload the search data daily by enabling the ETL.
+                        </p>
+                        <p>
+                            To trigger an immediate reset, click <strong>"Run Now"</strong>
+                        </p>
                     </div>
-                    <div data-ajax="/etl/job/schedule" data-freq="10">
-                    </div>
-                    <h3 class="title is-3">Recent Task History</h3>
-                    <div class="table-container">
-                        <table class="table is-striped is-narrow">
-                            <thead>
-                                <tr>
-                                    {% for key, values in history.0.items %}
-                                    <td>{{key}}</td>
-                                    {% endfor %}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for job in history %}
-                                <tr>
-                                    {% for key, values in job.items %}
-                                    <td>{{values}}</td>
-                                    {% endfor %}
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    </tr>
+                </div>
+            </div>
+            <div data-ajax="/etl/job/schedule" data-freq="10"></div>
+            <h3 class="title is-3">Recent Task History</h3>
+            <div class="table-container">
+                <table class="table is-striped is-narrow">
+                    <thead>
+                        <tr>
+                            {% for key, values in history.0.items %}
+                                <td>{{ key }}</td>
+                            {% endfor %}
+                        </tr>
                     </thead>
+                    <tbody>
+                        {% for job in history %}
+                            <tr>
+                                {% for key, values in job.items %}
+                                    <td>{{ values }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </tr>
+    </thead>
 </body>
 {% compress js file etl %}
-<script type="text/javascript" src="/static/js/etl.js" defer></script>
+    <script type="text/javascript" src="/static/js/etl.js" defer></script>
 {% endcompress %}

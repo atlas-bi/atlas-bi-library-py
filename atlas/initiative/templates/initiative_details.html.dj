@@ -8,11 +8,16 @@
     {% endif %}
     <p>
         {% if initiative.ops_owner %}
-            Operational<span class="text-light">&nbsp;&middot;&nbsp;{{ initiative.ops_owner }}</span><br>
+            Operational
+            <span class="text-light">&nbsp;&middot;&nbsp;{{ initiative.ops_owner }}
+            </span>
+            <br>
         {% endif %}
 
         {% if initiative.exec_owner %}
-            Executive<span class="text-light">&nbsp;&middot;&nbsp;{{ initiative.exec_owner }}</span>
+            Executive
+            <span class="text-light">&nbsp;&middot;&nbsp;{{ initiative.exec_owner }}
+            </span>
         {% endif %}
     </p>
     {% if initiative.financial_impact or initiative.strategic_importance %}
@@ -20,11 +25,16 @@
     {% endif %}
 
     {% if initiative.financial_impact %}
-        Financial<span class="text-light">&nbsp;&middot;&nbsp;{{ initiative.financial_impact }}</span><br>
+        Financial
+        <span class="text-light">&nbsp;&middot;&nbsp;{{ initiative.financial_impact }}
+        </span>
+        <br>
     {% endif %}
 
     {% if initiative.strategic_importance %}
-        Strategic<span class="text-light">&nbsp;&middot;&nbsp;{{ initiative.strategic_importance }}</span>
+        Strategic
+        <span class="text-light">&nbsp;&middot;&nbsp;{{ initiative.strategic_importance }}
+        </span>
     {% endif %}
 
 
@@ -38,7 +48,8 @@
     {% if initiative.contacts %}
         <h3>External Contacts</h3>
         {% for contact in initiative.contacts %}
-            <span>{{ contact }} @@ {{ contact.company }} </span><br>
+            <span>{{ contact }} @@ {{ contact.company }} </span>
+            <br>
         {% endfor %}
     {% endif %}
     <h3>Details</h3>
@@ -56,16 +67,22 @@
         <h3>Linked Projects</h3>
 
         {% for project in initiative.projects.all %}
-            <h4 class="drop" data-toggle="clps" data-target="collapse-{{ project.project_id }}">{{ project }}
+            <h4
+                class="drop"
+                data-toggle="clps"
+                data-target="collapse-{{ project.project_id }}">{{ project }}
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
             </h4>
 
             <div id="collapse-{{ project.project_id }}" class="clps">
                 <div class="drop-box">
                     <h5>
-                        <a class="drop-link" href="/projects/{{ project.project_id }}" >Open This Project</a>
+                        <a
+                            class="drop-link"
+                            href="/projects/{{ project.project_id }}">Open This Project
+                        </a>
                     </h5>
-                   {% if project.reports %}
+                    {% if project.reports %}
                         <h5>Linked Reports</h5>
                         {% for report in project.reports.all %}
                             <h6>

@@ -1,14 +1,16 @@
 <h3>
-    Linked Reports</h3>
+Linked Reports</h3>
 
 <div class="table-responsive">
     <table class="table sort">
         <thead>
             <tr>
                 <th>
-                    Report Name</th>
+                    Report Name
+                </th>
                 <th>
-                    Action</th>
+                    Action
+                </th>
             </tr>
         </thead>
         <tbody>

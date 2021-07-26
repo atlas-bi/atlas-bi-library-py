@@ -1,27 +1,38 @@
 {% verbatim %}
-<h2 class="fav-col-title">Filters</h2>
-<form id="searchForm">
-    {{#each facets.facet_fields }}
-        {{#if (filter_exists this @key ../search_filters) }}
-            <h5 class="search-fltrTitle">{{titleCase @key }}</h5>
-            <div class="srch-fltr">
-                {{#each this }}
-                    {{#filter_open_collapse @index ../this @../key @key ../../search_filters}}
-                        <div id="{{@../key }}" class="clps">
+    <h2 class="fav-col-title">Filters</h2>
+    <form id="searchForm">
+        {{#each facets.facet_fields }}
+            {{#if (filter_exists this @key ../search_filters) }}
+                <h5 class="search-fltrTitle">{{ titleCase @key }}</h5>
+                <div class="srch-fltr">
+                    {{#each this }}
+                        {{#filter_open_collapse @index ../this @../key @key ../../search_filters }}
+                            <div id="{{@../key }}" class="clps">
 
-                    {{/filter_open_collapse}}
-                    <div class='form-check search-filter' group="{{@../key }}" group-value="{{@key }}">
-                        <input type="checkbox" {{filter_type ../../search_filters @../key @key}}/>
-                        <input type="hidden" />
-                        <label>{{titleCase @key }}<span class="search-filterQty">{{ this }}</span></label>
-                    </div>
-                    {{#filter_close_collapse @index ../this @../key @key ../../search_filters}}
-                        </div>
-                        <a class="search-filter-showMore" data-toggle="clps" data-target="{{@../key }}">Show More</a>
-                    {{/filter_close_collapse}}
-                {{/each}}
-            </div>
-        {{/if}}
-    {{/each}}
-</form>
+                            {{/filter_open_collapse }}
+                            <div
+                                class='form-check search-filter'
+                                group="{{@../key }}"
+                                group-value="{{@key }}">
+                                <input type="checkbox"/>
+                                <input type="hidden" />
+                                <label>
+                                    {{ titleCase @key }}
+                                    <span class="search-filterQty">{{ this }}
+                                    </span>
+                                </label>
+                            </div>
+                            {{#filter_close_collapse @index ../this @../key @key ../../search_filters }}
+                            </div>
+                            <a
+                                class="search-filter-showMore"
+                                data-toggle="clps"
+                                data-target="{{@../key }}">Show More
+                            </a>
+                        {{/filter_close_collapse }}
+                    {{/each }}
+                </div>
+            {{/if }}
+        {{/each }}
+    </form>
 {% endverbatim %}

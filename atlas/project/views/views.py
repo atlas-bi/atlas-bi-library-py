@@ -1,12 +1,10 @@
 """Atlas Project views."""
 
-import contextlib
 import json
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
-from django.views.decorators.cache import never_cache
 from index.models import (
     ProjectAttachments,
     ProjectChecklist,
@@ -69,71 +67,6 @@ def item(request, project_id):
         "project.html.dj",
         context,
     )
-
-
-@never_cache
-@login_required
-def comments(request, project_id):
-    """Return term comments."""
-    if request.method == "GET":
-        project_comments = (
-            ProjectComments.objects.filter(stream_id__project_id=project_id)
-            .order_by("-stream_id", "comment_id")
-            .all()
-        )
-        context = {
-            "permissions": request.user.get_permissions(),
-            "comments": project_comments,
-            "project_id": project_id,
-        }
-        return render(
-            request,
-            "project_comments.html.dj",
-            context,
-        )
-
-    with contextlib.suppress("json.decoder.JSONDecodeError"):
-        data = json.loads(request.body.decode("UTF-8"))
-
-        if data.get("message", "") != "":
-
-            if (
-                data.get("stream")
-                and ProjectCommentStream.objects.filter(
-                    stream_id=data.get("stream")
-                ).exists()
-            ):
-                comment_stream = ProjectCommentStream.objects.filter(
-                    stream_id=data.get("stream")
-                ).first()
-            else:
-                comment_stream = ProjectCommentStream(project_id=project_id)
-                comment_stream.save()
-
-            comment = ProjectComments(
-                stream=comment_stream, message=data.get("message"), user=request.user
-            )
-            comment.save()
-
-    return redirect(comments, project_id)
-
-
-@login_required
-def comments_delete(request, project_id, comment_id):
-    """Delete a comment or comment stream."""
-    data = json.loads(request.body.decode("UTF-8"))
-
-    ProjectComments.objects.get(comment_id=comment_id).delete()
-
-    if (
-        data.get("stream")
-        and ProjectCommentStream.objects.filter(stream_id=data.get("stream")).exists()
-    ):
-
-        ProjectComments.objects.filter(stream__stream_id=data.get("stream")).delete()
-        ProjectCommentStream.objects.get(stream_id=data.get("stream")).delete()
-
-    return redirect(comments, project_id)
 
 
 @login_required

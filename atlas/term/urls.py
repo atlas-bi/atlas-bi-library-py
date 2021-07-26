@@ -1,9 +1,10 @@
 # pylint: disable=C0103,C0114
 
 from django.urls import path
-from term import apps
-from term.views import views
-from term.views.comments import Comments, comments_delete
+
+from . import apps
+from .views import views
+from .views.comments import Comments, comments_delete
 
 app_name = apps.TermConfig.name
 

@@ -1,42 +1,82 @@
 {% load compress %}
-{% compress css inline auth%}
-    <link rel="stylesheet" href="/static/lib/fonts/sfmin/stylesheet.css" type="text/css" charset="utf-8"/>
-    <link rel="stylesheet" href="/static/lib/fonts/cheltmin/stylesheet.css" type="text/css" charset="utf-8"/>
+{% compress css inline auth %}
+    <link
+        rel="stylesheet"
+        href="/static/lib/fonts/sfmin/stylesheet.css"
+        type="text/css"
+        charset="utf-8"/>
+    <link
+        rel="stylesheet"
+        href="/static/lib/fonts/cheltmin/stylesheet.css"
+        type="text/css"
+        charset="utf-8"/>
     <link type="text/x-scss" rel="stylesheet" href="/static/css/auth.scss" />
 {% endcompress %}
 
-<link rel="preload" href="/static/lib/fonts/cheltmin/subset-NYTCheltenham-Medium.woff2" as="font" type="font/woff2" crossorigin />
-<link rel="preload" href="/static/lib/fonts/cheltmin/subset-NYTCheltenham-Bold.woff2" as="font" type="font/woff2" crossorigin />
-<link rel="preload" href="/static/lib/fonts/cheltmin/subset-NYTCheltenham-MediumItalic.woff2" as="font" type="font/woff2" crossorigin />
-<link rel="preload" href="/static/lib/fonts/cheltmin/subset-NYTCheltenhamWide-Regular.woff2" as="font" type="font/woff2" crossorigin />
+<link
+    rel="preload"
+    href="/static/lib/fonts/cheltmin/subset-NYTCheltenham-Medium.woff2"
+    as="font"
+    type="font/woff2"/>
+<link
+    rel="preload"
+    href="/static/lib/fonts/cheltmin/subset-NYTCheltenham-Bold.woff2"
+    as="font"
+    type="font/woff2"/>
+<link
+    rel="preload"
+    href="/static/lib/fonts/cheltmin/subset-NYTCheltenham-MediumItalic.woff2"
+    as="font"
+    type="font/woff2"/>
+<link
+    rel="preload"
+    href="/static/lib/fonts/cheltmin/subset-NYTCheltenhamWide-Regular.woff2"
+    as="font"
+    type="font/woff2"/>
 
 
 <div class="login">
     <div class="login-cntr">
         <form action="" method="post" autocomplete="off">
-             {% csrf_token %}
-            <h2 class="login-ttl">{{ settings.LOGIN_TITLE|default:"Atlas Dev"}}</h2>
+            {% csrf_token %}
+            <h2 class="login-ttl">{{ settings.LOGIN_TITLE|default:"Atlas Dev" }}</h2>
             {% if settings.DEMO %}
-            <p>
-                <pre class="login-subTtl">
+                <p>
+                    <pre class="login-subTtl">
                     Demo Login Information:
                     Basic User - user@user.user, pass: 123
                     Admin User - admin@admin.admin, pass: 123
-                </pre>
-            </p>
+                    </pre>
+                </p>
             {% endif %}
 
             <div class="login-inputGrp">
                 <div class="login-inputTtl" >Email</div>
-                <input class="login-input" autocapitalize="none" autocomplete="username" autofocus="" id="id_username" maxlength="254" name="username" required="" type="text">
+                <input
+                    class="login-input"
+                    autocapitalize="none"
+                    autocomplete="username"
+                    autofocus=""
+                    id="id_username"
+                    maxlength="254"
+                    name="username"
+                    required=""
+                    type="text">
             </div>
             <div class="login-inputGrp">
                 <div class="login-inputTtl">Password</div>
-                <input class="login-input" autocomplete="current-password" id="id_password" name="password" required="" type="password" value="123">
+                <input
+                    class="login-input"
+                    autocomplete="current-password"
+                    id="id_password"
+                    name="password"
+                    required=""
+                    type="password"
+                    value="123">
             </div>
             <button class="login-btn" type="submit" value="Submit">Log In</button>
             {% for error in form.username.errors %}
-                 <p class="text-danger">{{ error }}</p>
+                <p class="text-danger">{{ error }}</p>
             {% endfor %}
             {% if form.non_field_errors %}
                 {% for error in form.non_field_errors %}

@@ -8,19 +8,21 @@
 
     <div id="collapseTerm-{{ term.term_id }}" class="clps">
         <div class="drop-box">
-            <h5><a class="drop-link" href="/terms/{{ term.term_id }}">Open This Term</a></h5>
-            {% if term.summary %}
-                <h5>Summary</h5>
-                <div class="markdown">
-                    {{ term.summary|markdown|safe }}
-                </div>
-            {% endif %}
-            {% if term.definition %}
-                <h5>Technical Definition</h5>
-                <div class="markdown">
-                    {{ term.definition|markdown|safe }}
-                </div>
-            {% endif %}
+            <h5>
+                <a class="drop-link" href="/terms/{{ term.term_id }}">Open This Term
+                </a></h5>
+                {% if term.summary %}
+                    <h5>Summary</h5>
+                    <div class="markdown">
+                        {{ term.summary|markdown|safe }}
+                    </div>
+                {% endif %}
+                {% if term.definition %}
+                    <h5>Technical Definition</h5>
+                    <div class="markdown">
+                        {{ term.definition|markdown|safe }}
+                    </div>
+                {% endif %}
+            </div>
         </div>
-    </div>
-{% endfor %}
+    {% endfor %}

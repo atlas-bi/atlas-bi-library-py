@@ -703,6 +703,18 @@ class Projects(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse("project:details", kwargs={"pk": self.pk})
+
+    def get_absolute_delete_url(self):
+        return reverse("project:delete", kwargs={"pk": self.pk})
+
+    def get_absolute_edit_url(self):
+        return reverse("project:edit", kwargs={"pk": self.pk})
+
+    def get_absolute_comments_url(self):
+        return reverse("project:comments", kwargs={"pk": self.pk})
+
     @property
     def modified_at(self):
         if self._modified_at:
@@ -884,6 +896,12 @@ class ProjectComments(models.Model):
     )
     message = models.TextField(blank=True, default="")
     posted_at = models.DateTimeField(blank=True, null=True)
+
+    def get_absolute_delete_url(self):
+        return reverse(
+            "project:comments_delete",
+            kwargs={"pk": self.stream.project_id, "comment_id": self.pk},
+        )
 
 
 class RunFrequency(models.Model):
