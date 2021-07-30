@@ -1,32 +1,26 @@
 <h4>Add a Report</h4>
-<form
-    action="/projects/{{ project.project_id }}/edit/reports"
-    method="post"
-    id="project-editor-add-report-form">
+<form action="/projects/{{ project.project_id }}/edit/reports" method="post" id="project-editor-add-report-form">
     {% csrf_token %}
     <div class="listDetails">
-        <label>Report Name</label>
-        <input
-            type="dynamic-dropdown"
-            class="head-light"
-            name="report_id"
-            search-area="report_lookup"/>
-
-        <label>Rank</label>
+        <label>
+            Report Name
+        </label>
+        <input type="dynamic-dropdown" class="head-light" name="report_id" search-area="report_lookup"/>
+        <label>
+            Rank
+        </label>
         <input name="rank" type="number" />
     </div>
-
     <h3>Annotation</h3>
     <div class="editor" data-inputName="annotation" data-inputId="annotation">
         <textarea></textarea>
     </div>
-
     <h3>
-        <button class="editor-save" type="submit">Save
-        </button></h3>
-    </form>
-
-
-    <div id="project-editor-currentreports-container">
-        {% include "project_edit/current_reports.html.dj" %}
-    </div>
+        <button class="editor-save" type="submit">
+            Save
+        </button>
+    </h3>
+</form>
+<div id="project-editor-currentreports-container">
+    {% include "project_edit/current_reports.html.dj" %}
+</div>

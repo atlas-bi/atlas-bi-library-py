@@ -1,91 +1,73 @@
 <div class="comments">
     <h4 class="comments-title darken">{{ comments|length }} Comments</h4>
-
     <div class="comments-group">
         <form asp-page-handler="NewComment" class="comments-form">
             <input asp-for="NewComment.TermId" type="hidden" value="@ViewBag.Id" />
-            <input
-                type="nice-input"
-                data-initial-content="Add a comment.."
-                asp-for="NewCommentReply.MessageText"
-                class="submit"
-                value=""/>
+            <input type="nice-input"
+                   data-initial-content="Add a comment.."
+                   asp-for="NewCommentReply.MessageText"
+                   class="submit"
+                   value=""/>
         </form>
         {% if comments|length > 0 %}
             {% for comment in comments %}
-
-                <div class="
-                    {% ifchanged comment.stream_id %}
-                        comments-msg
-                    {% else %}
-                        comments-newMsgReply
-                    {% endifchanged %}
-                    ">
+                <div class=" {% ifchanged comment.stream_id %} comments-msg {% else %} comments-newMsgReply {% endifchanged %} ">
                     <div class="comments-msgHdr">
-                        <h6><strong>{{ comment.user.full_name }}</strong>
-                            <span class="comments-date"> · {{ comment.posted_at }}
-                            </span>
+                        <h6>
+                            <strong>{{ comment.user.full_name }}</strong>
+                            <span class="comments-date">· {{ comment.posted_at }}</span>
                         </h6>
                         <div class="comments-cntrls">
                             {% if 25 in permissions %}
                                 {% ifchanged comment.stream_id %}
-                                    <form
-                                        asp-page-handler="DeleteCommentStream"
-                                        class="comments-form">
-                                        <input
-                                            asp-for="NewComment.TermConversationId"
-                                            value="@comment.ConvId"
-                                            type="hidden"/>
-                                        <input
-                                            asp-for="NewComment.TermId"
-                                            value="@ViewBag.Id"
-                                            type="hidden"/>
-                                        <button type="submit" class="comments-btn atlas-blue"><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg></button>
-                                    </form>
-                                {% else %}
-                                    <form asp-page-handler="DeleteComment" class="comments-form">
-                                        <input
-                                            asp-for="NewCommentReply.TermConversationMessageId"
-                                            value="@comment.MessId"
-                                            type="hidden"/>
-                                        <input
-                                            asp-for="NewComment.TermId"
-                                            value="@ViewBag.Id"
-                                            type="hidden"/>
-                                        <button type="submit" class="comments-btn atlas-blue" style="margin-top:-8px; padding-right:0;"><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg></button>
-                                    </form>
-                                {% endifchanged %}
-                            {% endif %}
-                            {% ifchanged comment.stream_id %}
-                                <button
-                                    class="comments-btn atlas-blue"
+                                    <form asp-page-handler="DeleteCommentStream" class="comments-form">
+                                        <input asp-for="NewComment.TermConversationId"
+                                               value="@comment.ConvId"
+                                               type="hidden"/>
+                                        <input asp-for="NewComment.TermId" value="@ViewBag.Id" type="hidden"/>
+                                        <button type="submit" class="comments-btn atlas-blue">
+                                            <svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                            <path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg></button>
+                                        </form>
+                                    {% else %}
+                                        <form asp-page-handler="DeleteComment" class="comments-form">
+                                            <input asp-for="NewCommentReply.TermConversationMessageId"
+                                                   value="@comment.MessId"
+                                                   type="hidden"/>
+                                            <input asp-for="NewComment.TermId" value="@ViewBag.Id" type="hidden"/>
+                                            <button type="submit" class="comments-btn atlas-blue" style="margin-top:-8px; padding-right:0;"><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/>
+                                        </svg>
+                                    </button>
+                                </form>
+                            {% endifchanged %}
+                        {% endif %}
+                        {% ifchanged comment.stream_id %}
+                            <button class="comments-btn atlas-blue"
                                     data-toggle="clps"
                                     data-target="message-@comment.MessId"
-                                    type="button"><i
-    class="fas fa-reply"></i>
-                                </button>
-                            {% endifchanged %}
-                        </div>
-                    </div>
-                    <p class="comments-txt">{{ comment.message|safe }}</p>
-                </div>
-                <div class="clps" id="message-@comment.MessId">
-                    <div class="comments-newReply">
-                        <form asp-page-handler="NewComment" method="post" class="comments-form">
-                            <input asp-for="NewComment.TermId" type="hidden" value="@ViewBag.Id" />
-                            <input
-                                asp-for="NewComment.TermConversationId"
-                                type="hidden"
-                                value="@comment.ConvId"/>
-                            <input
-                                type="nice-input"
-                                data-initial-content="Add a reply.."
-                                asp-for="NewCommentReply.MessageText"
-                                class="submit"/>
-                        </form>
+                                    type="button">
+                                <i class="fas fa-reply"></i>
+                            </button>
+                        {% endifchanged %}
                     </div>
                 </div>
-            {% endfor %}
-        {% endif %}
-    </div>
+                <p class="comments-txt">
+                    {{ comment.message|safe }}
+                </p>
+            </div>
+            <div class="clps" id="message-@comment.MessId">
+                <div class="comments-newReply">
+                    <form asp-page-handler="NewComment" method="post" class="comments-form">
+                        <input asp-for="NewComment.TermId" type="hidden" value="@ViewBag.Id" />
+                        <input asp-for="NewComment.TermConversationId" type="hidden" value="@comment.ConvId"/>
+                        <input type="nice-input"
+                               data-initial-content="Add a reply.."
+                               asp-for="NewCommentReply.MessageText"
+                               class="submit"/>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
 </div>

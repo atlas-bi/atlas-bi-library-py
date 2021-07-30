@@ -1,19 +1,16 @@
 {% load markdown %}
-
 {% if project.description %}
     <h3>Description</h3>
     <div class="markdown">
         {{ project.description|markdown|safe }}
     </div>
 {% endif %}
-
 {% if project.purpose %}
     <h3>Purpose</h3>
     <div class="markdown">
         {{ project.purpose|markdown|safe }}
     </div>
 {% endif %}
-
 <h3>Details</h3>
 <div class="listDetails">
     {% if project.ops_owner %}
@@ -40,18 +37,21 @@
         <span class="listDetails-title">Strategic Importance</span>
         <span>{{ project.strategic_importance }}</span>
     {% endif %}
-
     <span class="listDetails-title">Last Updated By</span>
     <span>{{ project.modified_by }}</span>
-
     <span class="listDetails-title">Last Updated</span>
-    <span>{{ project.modified_at }}</span>
-
+    <span>
+        {{ project.modified_at }}
+    </span>
     {% if project.hidden == "Y" %}
         <span class="listDetails-title">Hidden from Search</span>
-        <span>Yes</span>
+        <span>
+            Yes
+        </span>
     {% else %}
         <span class="listDetails-title">Visible in Search</span>
-        <span>Yes</span>
+        <span>
+            Yes
+        </span>
     {% endif %}
 </div>

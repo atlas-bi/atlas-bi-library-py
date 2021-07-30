@@ -1,5 +1,4 @@
 {% extends "layout.html.dj" %}
-
 {% block body %}
     <div class="pageTitle loose">
         <h2 class="pageTitle-head">
@@ -12,18 +11,21 @@
             <a class="tab-lnk active" href="#favorites">
                 Favorites
             </a>
-            <!-- <a class="tab-lnk" href="#mail">Mail</a> -->
-        </div>
+            <!--
+<a class="tab-lnk" href="#mail">Mail</a>
+        -->
     </div>
-
-    <section class="tab-cnt">
-        <div class="tab-dta active" id="favorites">
-            <h3 class="pageSection-title">
-            My Favorites</h3>
-            <div data-ajax="yes" data-url="/users/favorites"></div>
-        </div>
-        <!-- <div class="tab-dta" id="mail"> <div data-ajax="yes" data-url="/mail/get_mailbox"></div>
-    </div> -->
+</div>
+<section class="tab-cnt">
+    <div class="tab-dta active" id="favorites">
+        <h3 class="pageSection-title">My Favorites</h3>
+        <div data-ajax="yes" data-url="/users/favorites"></div>
+    </div>
+    <!--
+<div class="tab-dta" id="mail">
+ 
+<div data-ajax="yes" data-url="/mail/get_mailbox"></div>
+    </div>
+-->
 </section>
-
 {% endblock body %}

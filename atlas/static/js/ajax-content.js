@@ -157,7 +157,7 @@
 
           if (!e.classList.contains("no-loader")) {
             e.innerHTML =
-              '<div class="ajaxLoader"><img class="ajaxLoader-img" src="/static/img/loader.gif" /></div>';
+              '<div class="ajaxLoader"><img class="ajaxLoader-img" src="static/img/loader.gif" /></div>';
           }
 
           if (p !== null && p !== "") {

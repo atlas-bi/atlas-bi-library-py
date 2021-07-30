@@ -1,34 +1,27 @@
 <h3 class="pageSection-title">Images</h3>
-
 {% if report.imgs.all|length == 1 %}
     <div class="pop text-center" style="max-height:400px;">
-        <img
-            class="img-responsive"
-            src="/reports/{{ report.report_id }}/image/{{ report.imgs.all.0.image_id }}"
-            alt="Main report image"
-            style="max-width: 98%;max-height: 390px;min-height: 1px;">
+        <img class="img-responsive"
+             src="/reports/{{ report.report_id }}/image/{{ report.imgs.all.0.image_id }}"
+             alt="Main report image"
+             style="max-width: 98%;max-height: 390px;min-height: 1px;">
         </div>
     {% else %}
         <div class="crsl no-select">
             {% for img in report.imgs.all %}
                 <div class="crsl-itm pop">
                     {% if forloop.counter0 > 0 %}
-                        <img
-                            data-src="/reports/{{ report.report_id }}/image/{{ img.image_id }}"
-                            src="/static/img/loader.gif"/>
+                        <img data-src="/reports/{{ report.report_id }}/image/{{ img.image_id }}"
+                             src="{% static '/img/loader.gif' %}"/>
                     {% else %}
                         <img src="/reports/{{ report.report_id }}/image/{{ img.image_id }}"/>
                     {% endif %}
                 </div>
             {% endfor %}
-
             <div class="crsl-ind">
                 {% for img in report.imgs.all %}
-                    <span class="crsl-dot
-                        {% if forloop.counter0 == 0 %}
-                            active
-                        {% endif %}
-                    " slide="{{ forloop.counter0 }}"></span>
+                    <span class="crsl-dot {% if forloop.counter0 == 0 %}active {% endif %} "
+                          slide="{{ forloop.counter0 }}"></span>
                 {% endfor %}
             </div>
             <a class="crsl-prev">

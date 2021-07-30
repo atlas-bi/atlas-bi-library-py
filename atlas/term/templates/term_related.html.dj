@@ -1,16 +1,10 @@
-<h3>
-Linked Reports</h3>
-
+<h3>Linked Reports</h3>
 <div class="table-responsive">
     <table class="table sort">
         <thead>
             <tr>
-                <th>
-                    Report Name
-                </th>
-                <th>
-                    Action
-                </th>
+                <th>Report Name</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -22,11 +16,7 @@ Linked Reports</h3>
                         </a>
                     </td>
                     <td>
-                        {% if report.run_url %}
-                            <a href="{{ report.run_url }}">
-                                Run Report
-                            </a>
-                        {% endif %}
+                        {% if report.run_url %}<a href="{{ report.run_url }}">Run Report</a>{% endif %}
                     </td>
                 </tr>
             {% endfor %}

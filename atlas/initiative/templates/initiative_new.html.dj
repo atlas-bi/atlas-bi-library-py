@@ -2,76 +2,70 @@
     <div class="mdl-d editorMdl">
         <div class="mdl-c editorMdl-inner">
             <div class="editorMdl-title">
-                <h2 class="editorMdl-titleText">Create a New Initiative
-                    <button
-                        type="button"
-                        class="editorMdl-close"
-                        data-dismiss="mdl"
-                        data-tooltip="Close">&times;
-                    </button></h2>
-                    <div id="editorMdl-titleSave">changes saved.</div>
+                <h2 class="editorMdl-titleText">
+                    Create a New Initiative
+                    <button type="button" class="editorMdl-close" data-dismiss="mdl" data-tooltip="Close">
+                        &times;
+                    </button>
+                </h2>
+                <div id="editorMdl-titleSave">
+                    changes saved.
                 </div>
-                <div class="editorMdl-cnt" ss-container>
-                    <div class="editorMdl-cntLiner">
-                        <form action="/initiatives/new" method="post" >
-                            {% csrf_token %}
-                            <h3>Details</h3>
-                            <div class="listDetails">
-
-                                <label>Name</label>
-                                <input name="name" required />
-
-                                <label>External Contacts</label>
-                            <select
-                                type="dynamic-dropdown"
-                                name="linked_contacts"
-                                search-area="lookup/initiative_contacts"
-                                method="fullList"></select>
-
-                            <label>Operations Owner</label>
-                            <input
-                                type="dynamic-dropdown"
-                                name="ops_owner_id"
-                                search-area="user_lookup"/>
-
-                            <label>Executive Owner</label>
-                            <input
-                                type="dynamic-dropdown"
-                                name="exec_owner_id"
-                                search-area="user_lookup"/>
-
-                            <label>Financial Impact</label>
-                            <input
-                                type="dynamic-dropdown"
-                                name="financial_impact_id"
-                                search-area="lookup/financial_impact"
-                                method="fullList"/>
-
-                            <label>Strategic Importance</label>
-                            <input
-                                type="dynamic-dropdown"
-                                name="strategic_importance_id"
-                                search-area="lookup/strategic_importance"
-                                method="fullList"/>
-
-
-                            <label>Linked Projects</label>
-                        <select
-                            type="dynamic-dropdown"
-                            name="linked_data_projects"
-                            id="linked-data-projects"
-                            search-area="project_lookup"></select>
-                    </div>
-
-                    <h3>Description</h3>
-                    <div
-                        class="editor"
-                        data-inputName="description"
-                        data-inputId="description"></div>
-
-                    <h3>
-                        <button class="editor-save" type="submit">Save
-                        </button></h3>
+            </div>
+            <div class="editorMdl-cnt" ss-container>
+                <div class="editorMdl-cntLiner">
+                    <form action="/initiatives/new" method="post" >
+                        {% csrf_token %}
+                        <h3>Details</h3>
+                        <div class="listDetails">
+                            <label>
+                                Name
+                            </label>
+                            <input name="name" required />
+                            <label>
+                                External Contacts
+                            </label>
+                            <select type="dynamic-dropdown"
+                                    name="linked_contacts"
+                                    search-area="lookup/initiative_contacts"
+                                    method="fullList"></select>
+                            <label>
+                                Operations Owner
+                            </label>
+                            <input type="dynamic-dropdown" name="ops_owner_id" search-area="user_lookup"/>
+                            <label>
+                                Executive Owner
+                            </label>
+                            <input type="dynamic-dropdown" name="exec_owner_id" search-area="user_lookup"/>
+                            <label>
+                                Financial Impact
+                            </label>
+                            <input type="dynamic-dropdown"
+                                   name="financial_impact_id"
+                                   search-area="lookup/financial_impact"
+                                   method="fullList"/>
+                            <label>
+                                Strategic Importance
+                            </label>
+                            <input type="dynamic-dropdown"
+                                   name="strategic_importance_id"
+                                   search-area="lookup/strategic_importance"
+                                   method="fullList"/>
+                            <label>
+                                Linked Projects
+                            </label>
+                            <select type="dynamic-dropdown"
+                                    name="linked_data_projects"
+                                    id="linked-data-projects"
+                                    search-area="project_lookup"></select>
+                        </div>
+                        <h3>Description</h3>
+                        <div class="editor" data-inputName="description" data-inputId="description"></div>
+                        <h3>
+                            <button class="editor-save" type="submit">
+                                Save
+                            </button>
+                        </h3>
                     </form>
                 </div>
             </div>

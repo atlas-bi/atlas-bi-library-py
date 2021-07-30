@@ -1,14 +1,10 @@
 {% load cache %}
-
 <nav class="nav">
     <a class="nav-title" href="/">
-        <span class="nav-a">
-            A
-        </span>
+        <span class="nav-a">A</span>
         tlas of Information Management
     </a>
     <div class="nav-links">
-
         <!-- mail -->
         <a class="nav-link" href="#mail">
             <svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
@@ -18,55 +14,35 @@
                 0
             </span>
         </a>
-
         {% if 1 in permissions or 18 in permissions or 33 in permissions or 34 in permissions %}
             <div class="nav-drop" id="nav-drop-admin">
                 <svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
                     <path d="m507.73 109.1c-2.24-9.03-13.54-12.09-20.12-5.51l-74.36 74.36-67.88-11.31-11.31-67.88 74.36-74.36c6.62-6.62 3.43-17.9-5.66-20.16-47.38-11.74-99.55 0.91-136.58 37.93-39.64 39.64-50.55 97.1-34.05 147.2l-213.39 213.39c-24.99 24.99-24.99 65.51 0 90.5s65.51 24.99 90.5 0l213.21-213.21c50.12 16.71 107.47 5.68 147.37-34.22 37.07-37.07 49.7-89.32 37.91-136.73zm-443.73 362.9c-13.25 0-24-10.75-24-24 0-13.26 10.75-24 24-24s24 10.74 24 24c0 13.25-10.75 24-24 24z"/>
                 </svg>
-
                 <div class="nav-dropBox">
                     <div class="nav-dropLiner">
                         {% if 18 in permissions or 1 in permissions %}
-                            <a href="/accesscontrol">
-                                Access Control
-                            </a>
+                            <a href="/accesscontrol">Access Control</a>
                         {% endif %}
-
                         {% if 33 in permissions or 34 in permissions %}
-                            <a href="/parameters">
-                                Parameters
-                            </a>
+                            <a href="/parameters">Parameters</a>
                         {% endif %}
-
-                        {% if 36 in permissions %}
-                            <a href="/analytics">
-                                Analytics
-                            </a>
-                        {% endif %}
-
+                        {% if 36 in permissions %}<a href="/analytics">Analytics</a>{% endif %}
                         {% if 36 in permissions %}
                             <!-- permission should be added for etl -->
-                            <a href="/etl">
-                                ETL
-                            </a>
+                            <a href="/etl">ETL</a>
                         {% endif %}
-
-                        <a href="/tasks">
-                            Tasks
-                        </a>
+                        <a href="/tasks">Tasks</a>
                     </div>
                 </div>
             </div>
         {% endif %}
-
         <cache>
             <!-- main report groups -->
             <div class="nav-drop" id="nav-drop-objects">
                 <svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
                     <path d="M48 48a48 48 0 1 0 48 48 48 48 0 0 0-48-48zm0 160a48 48 0 1 0 48 48 48 48 0 0 0-48-48zm0 160a48 48 0 1 0 48 48 48 48 0 0 0-48-48zm448 16H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-320H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16V80a16 16 0 0 0-16-16zm0 160H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16z"/>
                 </svg>
-
                 <div class="nav-dropBox">
                     <div class="nav-dropLiner">
                         <a href="/initiatives" title="initiatives">
@@ -75,20 +51,16 @@
                         <a href="/projects" title="projects">
                             Projects
                         </a>
-                        <a href="/terms" title="terms">
-                            Terms
-                        </a>
+                        <a href="/terms" title="terms">Terms</a>
                     </div>
                 </div>
             </div>
-
             <a class="nav-link" href="/users" data-tooltip="Open Profile">
                 <svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
                     <path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"/>
                 </svg>
             </a>
         </cache>
-
         {% if 44 in permissions %}
             <div class="nav-drop">
                 {% if user.active_role %}
@@ -114,7 +86,6 @@
                 </script>
             </div>
         {% endif %}
-
         <!-- epic navigation -->
         {% if is_epic %}
             <a class="nav-link" onclick="history.back()">
@@ -131,5 +102,5 @@
     </div>
 </nav>
 <div class="nb-cmbsWrp">
-<ul class="nb-cmbs"></ul>
+    <ul class="nb-cmbs"></ul>
 </div>

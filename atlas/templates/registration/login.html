@@ -1,39 +1,39 @@
 {% load compress %}
+{% load static %}
 {% compress css inline auth %}
     <link
         rel="stylesheet"
-        href="/static/lib/fonts/sfmin/stylesheet.css"
+        href="{% static '/lib/fonts/sfmin/stylesheet.css' %}"
         type="text/css"
         charset="utf-8"/>
     <link
         rel="stylesheet"
-        href="/static/lib/fonts/cheltmin/stylesheet.css"
+        href="{% static '/lib/fonts/cheltmin/stylesheet.css' %}"
         type="text/css"
         charset="utf-8"/>
-    <link type="text/x-scss" rel="stylesheet" href="/static/css/auth.scss" />
+    <link type="text/x-scss" rel="stylesheet" href="{% static '/css/auth.scss' %}" />
 {% endcompress %}
 
 <link
     rel="preload"
-    href="/static/lib/fonts/cheltmin/subset-NYTCheltenham-Medium.woff2"
+    href="{% static '/lib/fonts/cheltmin/subset-NYTCheltenham-Medium.woff2' %}"
     as="font"
     type="font/woff2"/>
 <link
     rel="preload"
-    href="/static/lib/fonts/cheltmin/subset-NYTCheltenham-Bold.woff2"
+    href="{% static '/lib/fonts/cheltmin/subset-NYTCheltenham-Bold.woff2' %}"
     as="font"
     type="font/woff2"/>
 <link
     rel="preload"
-    href="/static/lib/fonts/cheltmin/subset-NYTCheltenham-MediumItalic.woff2"
+    href="{% static '/lib/fonts/cheltmin/subset-NYTCheltenham-MediumItalic.woff2' %}"
     as="font"
     type="font/woff2"/>
 <link
     rel="preload"
-    href="/static/lib/fonts/cheltmin/subset-NYTCheltenhamWide-Regular.woff2"
+    href="{% static '/lib/fonts/cheltmin/subset-NYTCheltenhamWide-Regular.woff2' %}"
     as="font"
     type="font/woff2"/>
-
 
 <div class="login">
     <div class="login-cntr">
@@ -61,7 +61,7 @@
                     maxlength="254"
                     name="username"
                     required=""
-                    type="text">
+                    type="text" />
             </div>
             <div class="login-inputGrp">
                 <div class="login-inputTtl">Password</div>
@@ -72,7 +72,7 @@
                     name="password"
                     required=""
                     type="password"
-                    value="123">
+                    value="123" />
             </div>
             <button class="login-btn" type="submit" value="Submit">Log In</button>
             {% for error in form.username.errors %}
