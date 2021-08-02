@@ -17,166 +17,130 @@
         {% if report.modified_by or report.created_by %}
             <span class="text-light">
                 &nbsp;&middot;&nbsp;
-                <a href="/users/ {% if report.modified_by %} {{ report.modified_by.user_id }} {% else %} {{ report.created_by.user_id }} {% endif %} ">
-                {{ report.modified_by|default:report.created_by }}
-            </a>
-        </span>
-    {% endif %}
-</span>
-{% if report.docs.modified_at %}
-    <span class="listDetails-title">Documentation Last Modified</span>
-    <span>
-        {{ report.docs.modified_at|relative }}
-        {% if report.docs.modified_by or report.docs.created_by %}
-            <span class="text-light">
-                &nbsp;&middot;&nbsp;
-                <a href="/users/ {% if report.docs.modified_by %} {{ report.docs.modified_by.user_id }} {% else %} {{ report.docs.created_by.user_id }} {% endif %} ">
-                {{ report.docs.modified_by|default:report.docs.created_by }}
-            </a>
-        </span>
-    {% endif %}
-</span>
-{% endif %}
-{% if report.created_by %}
-<span class="listDetails-title">Report Author</span>
-<a href="/users/{{ report.created_by.user_id }}">
-    {{ report.created_by }}
-</a>
-{% endif %}
-{% if report.docs.requester %}
-<span class="listDetails-title">Report Requester</span>
-<a href="/users/{{ report.docs.requester.user_id }}">
-    {{ report.docs.requester }}
-</a>
-{% endif %}
-{% if report.docs.ops_owner %}
-<span class="listDetails-title">Operational Owner</span>
-<a href="/users/{{ report.docs.ops_owner.user_id }}">
-    {{ report.docs.ops_owner }}
-</a>
-{% endif %}
-{% if report.docs.project_url %}
-<span class="listDetails-title">Git Project Link</span>
-<a target="_blank" rel="noopener" href="{{ report.docs.project_url }}">
-    View Source
-</a>
-{% endif %}
-{% if report.system_identifier %}
-<span class="listDetails-title">
-    Epic Identifier
-</span>
-{% if report.system_viewer_url %}<a href="{{ report.system_viewer_url }}">{% endif %}
-<span>
-    <span id="epic-ini">
-        {{ report.system_identifier }}&nbsp;
-    </span>
-    {% if report.system_id %}
-        <span id="epic-id" data-epic-hgr="{{ system_template_id }}">
-            {{ report.system_id }}
-            {% if report.system_template_id %}(Template {{ report.system_template_id }}){% endif %}
-        </span>
-    {% endif %}
-</span>
-{% if report.system_viewer_url %}<a href="@m.Report.RecordViewerUrl">{% endif %}
-{% endif %}
-<span class="listDetails-title">
-Atlas Id
-</span>
-<span>{{ report.report_id }}</span>
-{% if report.orphaned == "Y" %}
-<span class="listDetails-title">
-    Orphaned?
-</span>
-<span>Yes</span>
-{% endif %}
-{% if report.docs.executive_report == "Y" %}
-<span class="listDetails-title">
-    Executive Visiblity
-</span>
-<span>Yes</span>
-{% endif %}
-{% if report.type == "SSRS Report" %}
-<span class="listDetails-title">
-    Enabled for Hyperspace
-</span>
-<span>
-    {% if report.docs.enabled_for_hyperspace == "Y" %}
-        Yes
-    {% else %}
-        No
-    {% endif %}
-</span>
-{% endif %}
-{% if 35 in permission and report.docs.do_not_purge == "Y" %}
-<span class="listDetails-title">
-    Do Not Purge
-</span>
-<span>Yes</span>
-{% endif %}
-{% if 43 in permission and report.docs.hidden == "Y" %}
-<span class="listDetails-title">
-    Hidden?
-</span>
-<span>Yes</span>
-{% endif %}
-{% if report.docs.frequency %}
-<span class="listDetails-title">
-    Estimated Run Frequency
-</span>
-<span>{{ report.docs.frequency }}</span>
-{% endif %}
-{% if report.docs.fragility %}
-<span class="listDetails-title">
-    Fragility Rating
-</span>
-<span>{{ report.docs.fragility }}</span>
-{% endif %}
-{% if report.docs.maintenance_schedule %}
-<span class="listDetails-title">
-    Maintenance Schedule
-</span>
-<span>
-    {{ report.docs.maintenance_schedule }}
-</span>
-{% endif %}
-{% if report.docs.org_value %}
-<span class="listDetails-title">
-    Organizational Value Rating
-</span>
-<span>
-    {{ report.docs.org_value }}
-</span>
-{% endif %}
-{% if report.docs.fragility_tags.all %}
-<span class="listDetails-title">
-    Fragility Tags
-</span>
-<span>
-    {% for tag in report.docs.fragility_tags.all %}
-        {% if forloop.last %}
-            <span class="badge badge-primary">
-                {{ tag.fragility_tag }}
-            </span>
-        {% else %}
-            <span class="badge badge-primary">
-                {{ tag.fragility_tag }},
+                <a href="{% if report.modified_by %}{{ report.modified_by.get_absolute_url }}{% else %}{{ report.created_by.get_absolute_url }}{% endif %} ">
+                    {{ report.modified_by|default:report.created_by }}
+                </a>
             </span>
         {% endif %}
-    {% endfor %}
-</span>
-{% endif %}
+    </span>
+    {% if report.docs.modified_at %}
+        <span class="listDetails-title">Documentation Last Modified</span>
+        <span>
+            {{ report.docs.modified_at|relative }}
+            {% if report.docs.modified_by or report.docs.created_by %}
+                <span class="text-light">
+                    &nbsp;&middot;&nbsp;
+                    <a href="{% if report.docs.modified_by %}{{ report.docs.modified_by.get_absolute_url }}{% else %}{{ report.docs.created_by.get_absolute_url }}{% endif %} ">
+                        {{ report.docs.modified_by|default:report.docs.created_by }}
+                    </a>
+                </span>
+            {% endif %}
+        </span>
+    {% endif %}
+    {% if report.created_by %}
+        <span class="listDetails-title">Report Author</span>
+        <a href="{{ report.created_by.get_absolute_url }}">
+            {{ report.created_by }}
+        </a>
+    {% endif %}
+    {% if report.docs.requester %}
+        <span class="listDetails-title">Report Requester</span>
+        <a href="{{ report.docs.requester.get_absolute_url }}">
+            {{ report.docs.requester }}
+        </a>
+    {% endif %}
+    {% if report.docs.ops_owner %}
+        <span class="listDetails-title">Operational Owner</span>
+        <a href="{{ report.docs.ops_owner.get_absolute_url }}">
+            {{ report.docs.ops_owner }}
+        </a>
+    {% endif %}
+    {% if report.docs.collection_url %}
+        <span class="listDetails-title">Git Collection Link</span>
+        <a target="_blank" rel="noopener" href="{{ report.docs.collection_url }}">
+            View Source
+        </a>
+    {% endif %}
+    {% if report.system_identifier %}
+        <span class="listDetails-title">Epic Identifier</span>
+        {% if report.system_viewer_url %}<a href="{{ report.system_viewer_url }}">{% endif %}
+        <span>
+            <span id="epic-ini">{{ report.system_identifier }}&nbsp;</span>
+            {% if report.system_id %}
+                <span id="epic-id" data-epic-hgr="{{ system_template_id }}">
+                    {{ report.system_id }}
+                    {% if report.system_template_id %}(Template {{ report.system_template_id }}){% endif %}
+                </span>
+            {% endif %}
+        </span>
+        {% if report.system_viewer_url %}<a href="@m.Report.RecordViewerUrl">{% endif %}
+    {% endif %}
+    <span class="listDetails-title">Atlas Id</span>
+    <span>{{ report.report_id }}</span>
+    {% if report.orphaned == "Y" %}
+        <span class="listDetails-title">Orphaned?</span>
+        <span>Yes</span>
+    {% endif %}
+    {% if report.docs.executive_report == "Y" %}
+        <span class="listDetails-title">Executive Visiblity</span>
+        <span>Yes</span>
+    {% endif %}
+    {% if report.type == "SSRS Report" %}
+        <span class="listDetails-title">Enabled for Hyperspace</span>
+        <span>
+            {% if report.docs.enabled_for_hyperspace == "Y" %}
+                Yes
+            {% else %}
+                No
+            {% endif %}
+        </span>
+    {% endif %}
+    {% if 35 in permission and report.docs.do_not_purge == "Y" %}
+        <span class="listDetails-title">Do Not Purge</span>
+        <span>Yes</span>
+    {% endif %}
+    {% if 43 in permission and report.docs.hidden == "Y" %}
+        <span class="listDetails-title">Hidden?</span>
+        <span>Yes</span>
+    {% endif %}
+    {% if report.docs.frequency %}
+        <span class="listDetails-title">Estimated Run Frequency</span>
+        <span>{{ report.docs.frequency }}</span>
+    {% endif %}
+    {% if report.docs.fragility %}
+        <span class="listDetails-title">Fragility Rating</span>
+        <span>{{ report.docs.fragility }}</span>
+    {% endif %}
+    {% if report.docs.maintenance_schedule %}
+        <span class="listDetails-title">Maintenance Schedule</span>
+        <span>{{ report.docs.maintenance_schedule }}</span>
+    {% endif %}
+    {% if report.docs.org_value %}
+        <span class="listDetails-title">Organizational Value Rating</span>
+        <span>{{ report.docs.org_value }}</span>
+    {% endif %}
+    {% if report.docs.fragility_tags.all %}
+        <span class="listDetails-title">Fragility Tags</span>
+        <span>
+            {% for tag in report.docs.fragility_tags.all %}
+                {% if forloop.last %}
+                    <span class="badge badge-primary">{{ tag.fragility_tag }}</span>
+                {% else %}
+                    <span class="badge badge-primary">{{ tag.fragility_tag }},</span>
+                {% endif %}
+            {% endfor %}
+        </span>
+    {% endif %}
 </div>
 <section id="report-meticket-container">
-{% if report.tickets.all %}
-<h4>
-    Service Request Tickets
-</h4>
-<div class="reportDetails">
-    {% for ticket in report.tickets.all %}
-        <a target="_blank" class="reportDetails-title" href="{{ ticket.url }}">
-            #{{ ticket }} <code >
-        </a>
-    {% endfor %}
-</div>
-{% endif %}
+    {% if report.tickets.all %}
+        <h4>Service Request Tickets</h4>
+        <div class="reportDetails">
+            {% for ticket in report.tickets.all %}
+                <a target="_blank" class="reportDetails-title" href="{{ ticket.url }}">
+                    #{{ ticket }} <code >
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
 </section>

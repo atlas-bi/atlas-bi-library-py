@@ -1,13 +1,11 @@
-{% extends 'layout.html.dj' %}
+{% extends "layout.html.dj" %}
 {% block body %}
     <div class="pageTitle loose">
         <h2 class="pageTitle-head">
             <span>Hi, {{ user.first_name }}</span>
         </h2>
         <div class="tab">
-            <a class="tab-lnk active" href="#favorites">
-                Favorites
-            </a>
+            <a class="tab-lnk active" href="#favorites">Favorites</a>
             <!--
 <a class="tab-lnk" href="#mail">Mail</a>
         -->

@@ -33,7 +33,7 @@ urlpatterns = [
     re_path(r"[tT]erms/", include("term.urls")),
     path("users/", include("user.urls")),
     path("search/", include("search.urls")),
-    path("projects/", include("project.urls")),
+    path("collections/", include("collection.urls")),
     path("etl/", include("etl.urls")),
 ]
 

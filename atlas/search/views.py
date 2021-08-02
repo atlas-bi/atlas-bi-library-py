@@ -10,7 +10,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.cache import never_cache
-from index.models import Projects
+from index.models import Collections
 
 
 @login_required
@@ -32,7 +32,7 @@ def index(request, search_type="query", search_string=""):
     - modify json
         - add "favorite" column
         - add run url, based on permissions
-        - adds project ads
+        - adds collection ads
 
     Still need to add facet ranges
 
@@ -85,11 +85,11 @@ def index(request, search_type="query", search_string=""):
                 field: fields[(num * 2) + 1] for num, field in enumerate(fields[::2])
             }
 
-    # break early if project, otherwise get project ads.
-    if search_type == "projects":
+    # break early if collection, otherwise get collection ads.
+    if search_type == "collections":
         return JsonResponse(output, safe=False)
 
-    output["projects"] = build_project_ads(results.docs)
+    output["collections"] = build_collection_ads(results.docs)
 
     return JsonResponse(output, safe=False)
 
@@ -99,8 +99,8 @@ def clean_dict(my_dict):
     return {attr: value for attr, value in my_dict if value}
 
 
-def build_project_ads(docs):
-    """Build project ad lists."""
+def build_collection_ads(docs):
+    """Build collection ad lists."""
 
     def get_item(doc, doc_type):
         """Get ids from list."""
@@ -115,15 +115,15 @@ def build_project_ads(docs):
         None, list(map(functools.partial(get_item, doc_type="reports"), docs))
     )
 
-    # get projects from results
+    # get collections from results
     return list(
-        Projects.objects.filter(
+        Collections.objects.filter(
             Q(term_annotations__term__term_id__in=term_ids)
             | Q(report_annotations__report__report_id__in=report_ids)
         )
         .filter(Q(hidden__isnull=True) | Q(hidden="N"))
         .all()
-        .values("project_id", "purpose", "description", "name")
+        .values("collection_id", "purpose", "description", "name")
         .distinct()
     )
 
@@ -237,11 +237,11 @@ def user_lookup(request, role=None):
 
 @never_cache
 @login_required
-def project_lookup(request):
-    """Project lookup."""
+def collection_lookup(request):
+    """Collection lookup."""
     search_string = build_search_string(request.GET.get("s"), search_type="fuzzy")
 
-    solr = pysolr.Solr(settings.SOLR_URL, search_handler="projects")
+    solr = pysolr.Solr(settings.SOLR_URL, search_handler="collections")
 
     results = solr.search(build_search_string(search_string), **{"rows": 20})
 
@@ -254,7 +254,7 @@ def project_lookup(request):
 @never_cache
 @login_required
 def report_lookup(request):
-    """Project lookup."""
+    """Collection lookup."""
     search_string = build_search_string(request.GET.get("s"), search_type="fuzzy")
 
     solr = pysolr.Solr(settings.SOLR_URL, search_handler="reports")

@@ -1,7 +1,7 @@
 """Atlas Initiative views."""
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
-from index.models import Initiatives, Projects
+from index.models import Collections, Initiatives
 
 
 @login_required
@@ -73,11 +73,11 @@ def edit(request, initiative_id=None):
     initiative.save()
 
     # remove old links
-    Projects.objects.filter(initiative=initiative).update(initiative=None)
+    Collections.objects.filter(initiative=initiative).update(initiative=None)
 
     # add new links
-    Projects.objects.filter(
-        project_id__in=request.POST.getlist("linked_data_projects")
+    Collections.objects.filter(
+        collection_id__in=request.POST.getlist("linked_data_collections")
     ).update(initiative=initiative)
     return redirect(item, initiative.initiative_id)
 
@@ -89,10 +89,10 @@ def delete(request, initiative_id):
     1. comments
     2. comment streams
     3. report doc initiative links
-    4. project annotations
+    4. collection annotations
     5. initiative
     """
-    Projects.objects.filter(initiative__initiative_id=initiative_id).update(
+    Collections.objects.filter(initiative__initiative_id=initiative_id).update(
         initiative=None
     )
     Initiatives.objects.get(initiative_id=initiative_id).delete()

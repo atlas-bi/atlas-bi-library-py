@@ -6,7 +6,7 @@
         <div class="maint-logHeader">
             <h6>
                 <strong>
-                <a href="/users/{{ log.log.maintainer.user_id }}">
+                <a href="{{ log.log.maintainer.get_absolute_url }}">
                     {{ log.log.maintainer }}
                 </a>
                 </strong>

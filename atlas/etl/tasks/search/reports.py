@@ -70,9 +70,9 @@ def load_reports(report_id=None):
         .prefetch_related("docs__fragility_tags")
         .prefetch_related("docs__fragility_tags")
         .prefetch_related("docs__terms")
-        .prefetch_related("projects")
-        .prefetch_related("projects__project")
-        .prefetch_related("projects__project__initiative")
+        .prefetch_related("collections")
+        .prefetch_related("collections__collection")
+        .prefetch_related("collections__collection__initiative")
     )
 
     if report_id:
@@ -120,15 +120,15 @@ def build_doc(report):
         "fragility_tags": [],
         "related_terms": [],
         "linked_description": [],
-        "related_projects": [],
+        "related_collections": [],
         "related_initiatives": [],
     }
 
     with contextlib.suppress(AttributeError):
         doc = build_report_doc(report, doc)
 
-    for project_link in report.projects.all():
-        doc = build_report_project_docs(project_link, doc)
+    for collection_link in report.collections.all():
+        doc = build_report_collection_docs(collection_link, doc)
 
     return clean_doc(doc)
 
@@ -163,19 +163,21 @@ def build_report_doc(report, doc):
     return doc
 
 
-def build_report_project_docs(project_link, doc):
-    """Build report project docs."""
-    doc["related_projects"].append(str(project_link.project))
+def build_report_collection_docs(collection_link, doc):
+    """Build report collection docs."""
+    doc["related_collections"].append(str(collection_link.collection))
     doc["linked_description"].extend(
         [
-            project_link.project.description,
-            project_link.project.purpose,
-            project_link.annotation,
+            collection_link.collection.description,
+            collection_link.collection.purpose,
+            collection_link.annotation,
         ]
     )
 
     with contextlib.suppress(AttributeError):
-        doc["related_initiatives"].append(str(project_link.project.initiative))
-        doc["linked_description"].append(project_link.project.initiative.description)
+        doc["related_initiatives"].append(str(collection_link.collection.initiative))
+        doc["linked_description"].append(
+            collection_link.collection.initiative.description
+        )
 
     return doc

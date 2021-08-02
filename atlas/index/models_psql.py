@@ -92,6 +92,9 @@ class Reports(models.Model):
     def friendly_name(self):
         return self.title or self.name
 
+    def get_absolute_url(self):
+        return reverse("report:index", kwargs={"pk": self.pk})
+
     def system_viewer_url(self, in_system):
         """Build system record viewer url."""
         if self.system_id and self.system_identifier and in_system:
@@ -295,6 +298,9 @@ class Users(AbstractUser):
     def is_admin(self):
         return self.role_links.filter(role_id=1).exists()
 
+    def get_absolute_url(self):
+        return reverse("user:details", kwargs={"pk": self.pk})
+
     def has_permission(self, perm, obj=None):
         # check if they have a permission
         return (
@@ -466,7 +472,7 @@ class Analytics(models.Model):
     update_time = models.DateTimeField(blank=True, null=True)
 
 
-class ProjectAgreements(models.Model):
+class CollectionAgreements(models.Model):
     agreement_id = models.AutoField(primary_key=True)
     description = models.TextField(blank=True, default="")
     _met_at = models.DateTimeField(blank=True, null=True)
@@ -474,13 +480,13 @@ class ProjectAgreements(models.Model):
     _modified_at = models.DateTimeField(blank=True, auto_now=True)
     modified_by = models.ForeignKey(
         "Users",
-        related_name="project_agreement_modifier",
+        related_name="collection_agreement_modifier",
         blank=True,
         null=True,
         on_delete=models.CASCADE,
     )
-    project_id = models.ForeignKey(
-        "Projects",
+    collection_id = models.ForeignKey(
+        "Collections",
         blank=True,
         null=True,
         related_name="agreements",
@@ -507,10 +513,10 @@ class ProjectAgreements(models.Model):
         return ""
 
 
-class ProjectAgreementUsers(models.Model):
+class CollectionAgreementUsers(models.Model):
     agreementusers_id = models.AutoField(primary_key=True)
     agreement = models.ForeignKey(
-        ProjectAgreements,
+        CollectionAgreements,
         blank=True,
         null=True,
         on_delete=models.CASCADE,
@@ -520,23 +526,23 @@ class ProjectAgreementUsers(models.Model):
         "Users",
         blank=True,
         null=True,
-        related_name="project_agreement",
+        related_name="collection_agreement",
         on_delete=models.CASCADE,
     )
     modified_at = models.DateTimeField(blank=True, null=True)
     modified_by = models.ForeignKey(
         "Users",
-        related_name="project_agreement_users_modifier",
+        related_name="collection_agreement_users_modifier",
         blank=True,
         null=True,
         on_delete=models.CASCADE,
     )
 
 
-class ProjectAttachments(models.Model):
+class CollectionAttachments(models.Model):
     attachment_id = models.AutoField(primary_key=True)
-    project = models.ForeignKey(
-        "Projects", on_delete=models.CASCADE, related_name="attachments"
+    collection = models.ForeignKey(
+        "Collections", on_delete=models.CASCADE, related_name="attachments"
     )
     rank = models.IntegerField()
     data = models.BinaryField()
@@ -632,14 +638,14 @@ class Initiatives(models.Model):
         return ""
 
 
-class Projects(models.Model):
-    project_id = models.AutoField(primary_key=True)
+class Collections(models.Model):
+    collection_id = models.AutoField(primary_key=True)
 
     initiative = models.ForeignKey(
         "Initiatives",
         blank=True,
         null=True,
-        related_name="projects",
+        related_name="collections",
         on_delete=models.CASCADE,
     )
 
@@ -648,21 +654,21 @@ class Projects(models.Model):
     description = models.TextField(blank=True, default="")
     ops_owner = models.ForeignKey(
         "Users",
-        related_name="project_ops_owner",
+        related_name="collection_ops_owner",
         blank=True,
         null=True,
         on_delete=models.CASCADE,
     )
     exec_owner = models.ForeignKey(
         "Users",
-        related_name="project_exec_owner",
+        related_name="collection_exec_owner",
         blank=True,
         null=True,
         on_delete=models.CASCADE,
     )
     analytics_owner = models.ForeignKey(
         "Users",
-        related_name="project_analytics_owner",
+        related_name="collection_analytics_owner",
         blank=True,
         null=True,
         on_delete=models.CASCADE,
@@ -670,7 +676,7 @@ class Projects(models.Model):
     data_owner = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
-        related_name="project_data_owner",
+        related_name="collection_data_owner",
         blank=True,
         null=True,
     )
@@ -679,21 +685,21 @@ class Projects(models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        related_name="projects",
+        related_name="collections",
     )
     strategic_importance = models.ForeignKey(
         "Strategicimportance",
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        related_name="projects",
+        related_name="collections",
     )
     external_documentation_url = models.TextField(blank=True, default="")
     _modified_at = models.DateTimeField(blank=True, auto_now=True)
     modified_by = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
-        related_name="project_modifier",
+        related_name="collection_modifier",
         blank=True,
         null=True,
     )
@@ -704,16 +710,16 @@ class Projects(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("project:details", kwargs={"pk": self.pk})
+        return reverse("collection:details", kwargs={"pk": self.pk})
 
     def get_absolute_delete_url(self):
-        return reverse("project:delete", kwargs={"pk": self.pk})
+        return reverse("collection:delete", kwargs={"pk": self.pk})
 
     def get_absolute_edit_url(self):
-        return reverse("project:edit", kwargs={"pk": self.pk})
+        return reverse("collection:edit", kwargs={"pk": self.pk})
 
     def get_absolute_comments_url(self):
-        return reverse("project:comments", kwargs={"pk": self.pk})
+        return reverse("collection:comments", kwargs={"pk": self.pk})
 
     @property
     def modified_at(self):
@@ -722,10 +728,10 @@ class Projects(models.Model):
         return ""
 
 
-class ProjectChecklist(models.Model):
+class CollectionChecklist(models.Model):
     checklist_id = models.AutoField(primary_key=True)
     task = models.ForeignKey(
-        "ProjectMilestoneTasks",
+        "CollectionMilestoneTasks",
         on_delete=models.CASCADE,
         blank=True,
         null=True,
@@ -734,10 +740,10 @@ class ProjectChecklist(models.Model):
     item = models.TextField(blank=True, default="")
 
 
-class ProjectChecklistCompleted(models.Model):
+class CollectionChecklistCompleted(models.Model):
     checklistcompleted_id = models.AutoField(primary_key=True)
-    project = models.ForeignKey(
-        Projects,
+    collection = models.ForeignKey(
+        Collections,
         on_delete=models.CASCADE,
         blank=True,
         null=True,
@@ -751,15 +757,15 @@ class ProjectChecklistCompleted(models.Model):
     completion_user = models.IntegerField(blank=True, null=True)
 
 
-class ProjectMilestoneFrequency(models.Model):
+class CollectionMilestoneFrequency(models.Model):
     frequency_id = models.AutoField(primary_key=True)
     name = models.TextField(blank=True, default="")
 
 
-class ProjectMilestoneTasks(models.Model):
+class CollectionMilestoneTasks(models.Model):
     task_id = models.AutoField(primary_key=True)
     template = models.ForeignKey(
-        "ProjectMilestoneTemplates",
+        "CollectionMilestoneTemplates",
         on_delete=models.CASCADE,
         blank=True,
         null=True,
@@ -768,7 +774,7 @@ class ProjectMilestoneTasks(models.Model):
     owner = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
-        related_name="project_task_owner",
+        related_name="collection_task_owner",
         blank=True,
         null=True,
     )
@@ -778,20 +784,24 @@ class ProjectMilestoneTasks(models.Model):
     modified_by = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
-        related_name="project_task_modifier",
+        related_name="collection_task_modifier",
         blank=True,
         null=True,
     )
     modified_at = models.DateTimeField(blank=True, null=True)
-    project = models.ForeignKey(
-        Projects, on_delete=models.CASCADE, blank=True, null=True, related_name="tasks"
+    collection = models.ForeignKey(
+        Collections,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="tasks",
     )
 
 
-class ProjectMilestoneTasksCompleted(models.Model):
+class CollectionMilestoneTasksCompleted(models.Model):
     task_id = models.AutoField(primary_key=True)
-    project = models.ForeignKey(
-        Projects,
+    collection = models.ForeignKey(
+        Collections,
         on_delete=models.CASCADE,
         blank=True,
         null=True,
@@ -801,7 +811,7 @@ class ProjectMilestoneTasksCompleted(models.Model):
     completion_user = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
-        related_name="project_task_completed_by",
+        related_name="collection_task_completed_by",
         blank=True,
         default="",
     )
@@ -810,11 +820,11 @@ class ProjectMilestoneTasksCompleted(models.Model):
     due_date = models.DateTimeField(blank=True, null=True)
 
 
-class ProjectMilestoneTemplates(models.Model):
+class CollectionMilestoneTemplates(models.Model):
     template_id = models.AutoField(primary_key=True)
     name = models.TextField(blank=True, default="")
     type_id = models.ForeignKey(
-        ProjectMilestoneFrequency,
+        CollectionMilestoneFrequency,
         on_delete=models.CASCADE,
         blank=True,
         null=True,
@@ -825,18 +835,18 @@ class ProjectMilestoneTemplates(models.Model):
     interval = models.IntegerField(blank=True, null=True)
 
 
-class ProjectReports(models.Model):
+class CollectionReports(models.Model):
     annotation_id = models.AutoField(primary_key=True)
     annotation = models.TextField(blank=True, default="")
     report = models.ForeignKey(
         "Reports",
         on_delete=models.CASCADE,
-        related_name="projects",
+        related_name="collections",
         blank=True,
         null=True,
     )
-    project = models.ForeignKey(
-        Projects,
+    collection = models.ForeignKey(
+        Collections,
         on_delete=models.CASCADE,
         blank=True,
         null=True,
@@ -848,18 +858,18 @@ class ProjectReports(models.Model):
         return self.report.friendly_name
 
 
-class ProjectTerms(models.Model):
+class CollectionTerms(models.Model):
     annotation_id = models.AutoField(primary_key=True)
     annotation = models.TextField(blank=True, default="")
     term = models.ForeignKey(
         "Terms",
         on_delete=models.CASCADE,
-        related_name="projects",
+        related_name="collections",
         blank=True,
         null=True,
     )
-    project = models.ForeignKey(
-        Projects,
+    collection = models.ForeignKey(
+        Collections,
         on_delete=models.CASCADE,
         blank=True,
         null=True,
@@ -871,17 +881,17 @@ class ProjectTerms(models.Model):
         return self.term.name
 
 
-class ProjectCommentStream(models.Model):
+class CollectionCommentStream(models.Model):
     stream_id = models.AutoField(primary_key=True)
-    project = models.ForeignKey(
-        Projects, on_delete=models.CASCADE, related_name="comment_streams"
+    collection = models.ForeignKey(
+        Collections, on_delete=models.CASCADE, related_name="comment_streams"
     )
 
 
-class ProjectComments(models.Model):
+class CollectionComments(models.Model):
     comment_id = models.AutoField(primary_key=True)
     stream = models.ForeignKey(
-        ProjectCommentStream,
+        CollectionCommentStream,
         on_delete=models.CASCADE,
         blank=True,
         null=True,
@@ -890,7 +900,7 @@ class ProjectComments(models.Model):
     user = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
-        related_name="user_project_comments",
+        related_name="user_collection_comments",
         blank=True,
         null=True,
     )
@@ -899,8 +909,8 @@ class ProjectComments(models.Model):
 
     def get_absolute_delete_url(self):
         return reverse(
-            "project:comments_delete",
-            kwargs={"pk": self.stream.project_id, "comment_id": self.pk},
+            "collection:comments_delete",
+            kwargs={"pk": self.stream.collection_id, "comment_id": self.pk},
         )
 
 
@@ -1226,7 +1236,7 @@ class ReportDocs(models.Model):
         blank=True,
         null=True,
     )
-    project_url = models.TextField(blank=True, default="")
+    collection_url = models.TextField(blank=True, default="")
     description = models.TextField(blank=True, default="")
     assumptions = models.TextField(blank=True, default="")
     org_value = models.ForeignKey(
@@ -1562,8 +1572,8 @@ class Favorites(models.Model):
             return str(Reports.objects.get(report_id=self.item_id))
         elif self.item_type.lower() == "term":
             return str(Terms.objects.get(term_id=self.item_id).name)
-        elif self.item_type.lower() == "project":
-            return str(Projects.objects.get(project_id=self.item_id))
+        elif self.item_type.lower() == "collection":
+            return str(Collections.objects.get(collection_id=self.item_id))
         elif self.item_type.lower() == "initiative":
             return str(Initiatives.objects.get(initiative_id=self.item_id))
 
@@ -1627,9 +1637,9 @@ class Favorites(models.Model):
         elif self.item_type.lower() == "term":
             term = Terms.objects.get(term_id=self.item_id)
             return term.summary or term.technical_definition
-        elif self.item_type.lower() == "project":
-            project = Projects.objects.get(project_id=self.item_id)
-            return project.purpose or project.description
+        elif self.item_type.lower() == "collection":
+            collection = Collections.objects.get(collection_id=self.item_id)
+            return collection.purpose or collection.description
         elif self.item_type.lower() == "initiative":
             return Initiatives.objects.get(initiative_id=self.item_id).description
 

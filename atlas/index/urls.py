@@ -1,7 +1,9 @@
 from django.urls import path
 from django.views.generic.base import RedirectView
 
-from . import views
+from . import apps, views
+
+app_name = apps.IndexConfig.name
 
 favicon_view = RedirectView.as_view(url="/static/img/favicon.ico", permanent=True)
 apple_touch_icon_precomposed = RedirectView.as_view(

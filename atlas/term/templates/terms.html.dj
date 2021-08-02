@@ -15,7 +15,7 @@
     {% if 7 in permissions %}
         {% include "term_new.html.dj" %}
     {% endif %}
-{% endblock models %}
+{% endblock modals %}
 {% block body %}
     <div class="pageTitle">
         <h2 class="pageTitle-head">{{ title }}</h2>

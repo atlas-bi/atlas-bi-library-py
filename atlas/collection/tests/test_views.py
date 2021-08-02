@@ -1,23 +1,23 @@
-"""Atlas Project tests.
+"""Atlas Collection tests.
 
 Run test for this app with::
 
     poetry run coverage erase; \
     poetry run coverage run -p manage.py \
-        test project/ --no-input --pattern="test_views.py" --settings atlas.settings.test; \
+        test collection/ --no-input --pattern="test_views.py" --settings atlas.settings.test; \
     poetry run coverage combine; \
-    poetry run coverage report --include "project*" -m
+    poetry run coverage report --include "collection*" -m
 
 """
 import pysolr
 from django.conf import settings
-from etl.tasks.search.projects import load_projects
+from etl.tasks.search.collections import load_collections
 from index.models import (
-    ProjectComments,
-    ProjectCommentStream,
-    ProjectReports,
-    Projects,
-    ProjectTerms,
+    CollectionComments,
+    CollectionCommentStream,
+    CollectionReports,
+    Collections,
+    CollectionTerms,
 )
 
 from atlas.testutils import AtlasTestCase
@@ -25,57 +25,62 @@ from atlas.testutils import AtlasTestCase
 # pylint: disable=C0103,W0105,C0115
 
 
-class ProjectTestCase(AtlasTestCase):
+class CollectionTestCase(AtlasTestCase):
 
     # pre-login tests.
     # verify that all pages redirect to login screen.
 
-    def test_login_projects(self):
-        """Check that users are sent from ``/projects`` to login page."""
-        response = self.client.get("/projects/", follow=False)
-        self.assertEqual(response.url, "/accounts/login/?next=/projects/")
+    def test_login_collections(self):
+        """Check that users are sent from ``/collections`` to login page."""
+        response = self.client.get("/collections/", follow=False)
+        self.assertEqual(response.url, "/accounts/login/?next=/collections/")
         self.assertEqual(response.status_code, 302)
 
-    def test_login_project(self):
-        """Check that users are sent from ``/projects/%s`` to login page."""
-        project = Projects.objects.first()
-        response = self.client.get("/projects/%s" % project.project_id, follow=False)
+    def test_login_collection(self):
+        """Check that users are sent from ``/collections/%s`` to login page."""
+        collection = Collections.objects.first()
+        response = self.client.get(
+            "/collections/%s" % collection.collection_id, follow=False
+        )
         self.assertEqual(
-            response.url, "/accounts/login/?next=/projects/%s" % project.project_id
+            response.url,
+            "/accounts/login/?next=/collections/%s" % collection.collection_id,
         )
         self.assertEqual(response.status_code, 302)
 
     def test_login_comments(self):
-        """Check that users are sent from ``/projects/%s/comments`` to login page."""
-        project = Projects.objects.first()
+        """Check that users are sent from ``/collections/%s/comments`` to login page."""
+        collection = Collections.objects.first()
         response = self.client.get(
-            "/projects/%s/comments" % project.project_id, follow=False
+            "/collections/%s/comments" % collection.collection_id, follow=False
         )
         self.assertEqual(
             response.url,
-            "/accounts/login/?next=/projects/%s/comments" % project.project_id,
+            "/accounts/login/?next=/collections/%s/comments" % collection.collection_id,
         )
         self.assertEqual(response.status_code, 302)
 
     # logged in tests.
 
-    def test_invalid_project(self):
-        """Check that invalid projects redirect."""
-        # find an project that doesn't exist.
+    def test_invalid_collection(self):
+        """Check that invalid collections redirect."""
+        # find an collection that doesn't exist.
         self.login()
 
-        project = Projects.objects.order_by("project_id").last()
+        collection = Collections.objects.order_by("collection_id").last()
 
         assert (
-            self.client.get("/projects/%s" % (project.project_id + 1)).status_code
+            self.client.get(
+                "/collections/%s" % (collection.collection_id + 1)
+            ).status_code
             == 302
         )
 
-    def test_valid_project(self):
-        """Check that valid projects are viewable."""
+    def test_valid_collection(self):
+        """Check that valid collections are viewable."""
         self.login()
-        project = Projects.objects.first()
-        response = self.client.get("/projects/%s" % project.project_id)
+        collection = Collections.objects.first()
+        response = self.client.get("/collections/%s" % collection.collection_id)
 
         self.assertEqual(response.status_code, 200)
 
@@ -84,20 +89,25 @@ class ProjectTestCase(AtlasTestCase):
     def test_old_urls(self):
         """Check that atlas v1 urls are viewable."""
         self.login()
-        project = Projects.objects.first()
-        response = self.client.get("/projects?id=%s" % project.project_id, follow=True)
-        assert response.redirect_chain[-1][0] == "/projects/%s" % project.project_id
+        collection = Collections.objects.first()
+        response = self.client.get(
+            "/collections?id=%s" % collection.collection_id, follow=True
+        )
+        assert (
+            response.redirect_chain[-1][0]
+            == "/collections/%s" % collection.collection_id
+        )
         assert (
             self.client.get(
-                "/projects?id=%s" % project.project_id, follow=True
+                "/collections?id=%s" % collection.collection_id, follow=True
             ).status_code
             == 200
         )
 
-    def test_all_projects(self):
-        """Check that "all projects" page is viewable."""
+    def test_all_collections(self):
+        """Check that "all collections" page is viewable."""
         self.login()
-        response = self.client.get("/projects", follow=True)
+        response = self.client.get("/collections", follow=True)
         self.assertEqual(response.status_code, 200)
 
         self.verify_body_links(response.content)
@@ -105,28 +115,30 @@ class ProjectTestCase(AtlasTestCase):
     def test_comments(self):
         """Check that comments are available."""
         self.login()
-        project = Projects.objects.first()
+        collection = Collections.objects.first()
         assert (
-            self.client.get("/projects/%s/comments" % project.project_id).status_code
+            self.client.get(
+                "/collections/%s/comments" % collection.collection_id
+            ).status_code
             == 200
         )
 
-    def test_create_edit_project(self):
-        """Check that projects can be created/edited/delete."""
+    def test_create_edit_collection(self):
+        """Check that collections can be created/edited/delete."""
         self.login()
 
         # test wrong method
-        response = self.client.get("/projects/new", follow=True)
+        response = self.client.get("/collections/new", follow=True)
         self.assertEqual(response.status_code, 200)
 
         # check link
-        self.assertTrue(response.redirect_chain[-1][0].endswith("projects/"))
+        self.assertTrue(response.redirect_chain[-1][0].endswith("collections/"))
 
-        # create new project
+        # create new collection
         data = {
-            "name": "test project",
+            "name": "test collection",
             "purpose": "testing, yeah bro",
-            "description": "project description",
+            "description": "collection description",
             "ops_owner_id": "1",
             "exec_owner_id": "1",
             "analytics_owner_id": "1",
@@ -137,40 +149,42 @@ class ProjectTestCase(AtlasTestCase):
             "hidden": "Y",
         }
 
-        response = self.client.post("/projects/new", data=data, follow=True)
+        response = self.client.post("/collections/new", data=data, follow=True)
         self.assertEqual(response.status_code, 200)
 
         last_url = response.redirect_chain[-1][0]
-        project_id = last_url[last_url.rindex("/") + 1 :]  # noqa: E203
+        collection_id = last_url[last_url.rindex("/") + 1 :]  # noqa: E203
 
-        # verify that the new project exists
-        project = Projects.objects.get(project_id=project_id)
+        # verify that the new collection exists
+        collection = Collections.objects.get(collection_id=collection_id)
 
-        # verify that hidden project is not in search
+        # verify that hidden collection is not in search
 
-        load_projects(project_id)
+        load_collections(collection_id)
         solr = pysolr.Solr(settings.SOLR_URL)
-        results = solr.search(q="type:projects AND atlas_id:%s" % project_id)
+        results = solr.search(q="type:collections AND atlas_id:%s" % collection_id)
         self.assertEqual(results.hits, 0)
 
         # check name, summary, tech def
-        self.assertEqual(project.name, data["name"])
-        self.assertEqual(project.purpose, data["purpose"])
-        self.assertEqual(project.description, data["description"])
-        self.assertEqual(project.ops_owner_id, int(data["ops_owner_id"]))
-        self.assertEqual(project.exec_owner_id, int(data["exec_owner_id"]))
-        self.assertEqual(project.analytics_owner_id, int(data["analytics_owner_id"]))
-        self.assertEqual(project.data_owner_id, int(data["data_owner_id"]))
-        self.assertEqual(project.financial_impact_id, int(data["financial_impact_id"]))
+        self.assertEqual(collection.name, data["name"])
+        self.assertEqual(collection.purpose, data["purpose"])
+        self.assertEqual(collection.description, data["description"])
+        self.assertEqual(collection.ops_owner_id, int(data["ops_owner_id"]))
+        self.assertEqual(collection.exec_owner_id, int(data["exec_owner_id"]))
+        self.assertEqual(collection.analytics_owner_id, int(data["analytics_owner_id"]))
+        self.assertEqual(collection.data_owner_id, int(data["data_owner_id"]))
         self.assertEqual(
-            project.strategic_importance_id, int(data["strategic_importance_id"])
+            collection.financial_impact_id, int(data["financial_impact_id"])
         )
         self.assertEqual(
-            project.external_documentation_url, data["external_documentation_url"]
+            collection.strategic_importance_id, int(data["strategic_importance_id"])
         )
-        self.assertEqual(project.hidden, "Y" if data["hidden"] == "Y" else "N")
+        self.assertEqual(
+            collection.external_documentation_url, data["external_documentation_url"]
+        )
+        self.assertEqual(collection.hidden, "Y" if data["hidden"] == "Y" else "N")
 
-        # edit project
+        # edit collection
         data.pop("purpose")
         data.pop("hidden")
 
@@ -186,32 +200,34 @@ class ProjectTestCase(AtlasTestCase):
         data["description"] = "edited description"
 
         response = self.client.post(
-            "/projects/%s/edit" % project_id, data=data, follow=True
+            "/collections/%s/edit" % collection_id, data=data, follow=True
         )
         self.assertEqual(response.status_code, 200)
 
-        # reload project
-        project = Projects.objects.get(project_id=project_id)
+        # reload collection
+        collection = Collections.objects.get(collection_id=collection_id)
 
-        # verify that the project is now visible in search
-        load_projects(project_id)
-        results = solr.search(q="type:projects AND atlas_id:%s" % project_id)
+        # verify that the collection is now visible in search
+        load_collections(collection_id)
+        results = solr.search(q="type:collections AND atlas_id:%s" % collection_id)
         self.assertEqual(results.hits, 1)
 
         # check name, summary, tech def
-        self.assertEqual(project.name, data["name"])
-        self.assertEqual(project.purpose, "")
-        self.assertEqual(project.description, data["description"])
-        self.assertEqual(project.ops_owner_id, None)
-        self.assertEqual(project.exec_owner_id, None)
-        self.assertEqual(project.analytics_owner_id, None)
-        self.assertEqual(project.data_owner_id, None)
-        self.assertEqual(project.financial_impact_id, int(data["financial_impact_id"]))
+        self.assertEqual(collection.name, data["name"])
+        self.assertEqual(collection.purpose, "")
+        self.assertEqual(collection.description, data["description"])
+        self.assertEqual(collection.ops_owner_id, None)
+        self.assertEqual(collection.exec_owner_id, None)
+        self.assertEqual(collection.analytics_owner_id, None)
+        self.assertEqual(collection.data_owner_id, None)
         self.assertEqual(
-            project.strategic_importance_id, int(data["strategic_importance_id"])
+            collection.financial_impact_id, int(data["financial_impact_id"])
         )
-        self.assertEqual(project.external_documentation_url, "")
-        self.assertEqual(project.hidden, "N")
+        self.assertEqual(
+            collection.strategic_importance_id, int(data["strategic_importance_id"])
+        )
+        self.assertEqual(collection.external_documentation_url, "")
+        self.assertEqual(collection.hidden, "N")
 
         # add term and report annotation
 
@@ -221,28 +237,32 @@ class ProjectTestCase(AtlasTestCase):
 
         # add attachment
 
-        # delete the project
-        response = self.client.get("/projects/%s/delete" % project_id, follow=True)
+        # delete the collection
+        response = self.client.get(
+            "/collections/%s/delete" % collection_id, follow=True
+        )
         self.assertEqual(response.status_code, 200)
 
-        self.assertTrue(response.redirect_chain[-1][0].endswith("projects/"))
+        self.assertTrue(response.redirect_chain[-1][0].endswith("collections/"))
 
         # check that is was removed from db
-        self.assertEqual(Projects.objects.filter(project_id=project_id).exists(), False)
+        self.assertEqual(
+            Collections.objects.filter(collection_id=collection_id).exists(), False
+        )
 
-        # check that project was removed from search
-        load_projects(project_id)
-        results = solr.search(q="type:projects AND atlas_id:%s" % project_id)
+        # check that collection was removed from search
+        load_collections(collection_id)
+        results = solr.search(q="type:collections AND atlas_id:%s" % collection_id)
         self.assertEqual(results.hits, 0)
 
     def test_create_comments(self):
         """Check that we can create comments."""
         self.login()
-        project = Projects.objects.first()
+        collection = Collections.objects.first()
         data = {"message": "new comment"}
         self.assertEqual(
             self.client.post(
-                "/projects/%s/comments" % project.project_id,
+                "/collections/%s/comments" % collection.collection_id,
                 data=data,
                 content_type="application/json",
             ).status_code,
@@ -251,14 +271,18 @@ class ProjectTestCase(AtlasTestCase):
 
         # assert that the comment stream was created
         self.assertTrue(
-            ProjectCommentStream.objects.filter(project_id=project.project_id)
+            CollectionCommentStream.objects.filter(
+                collection_id=collection.collection_id
+            )
             .filter(comments__message=data["message"])
             .exists()
         )
 
         # assert that the comment was created
         self.assertTrue(
-            ProjectComments.objects.filter(stream__project_id=project.project_id)
+            CollectionComments.objects.filter(
+                stream__collection_id=collection.collection_id
+            )
             .filter(message=data["message"])
             .exists()
         )
@@ -267,60 +291,70 @@ class ProjectTestCase(AtlasTestCase):
         data = {"message": "new comment two"}
         self.assertEqual(
             self.client.post(
-                "/projects/%s/comments" % project.project_id,
+                "/collections/%s/comments" % collection.collection_id,
                 data=data,
                 content_type="application/json",
             ).status_code,
             302,
         )
         self.assertTrue(
-            ProjectComments.objects.filter(stream__project_id=project.project_id)
+            CollectionComments.objects.filter(
+                stream__collection_id=collection.collection_id
+            )
             .filter(message=data["message"])
             .exists()
         )
         self.assertTrue(
-            ProjectCommentStream.objects.filter(project_id=project.project_id)
+            CollectionCommentStream.objects.filter(
+                collection_id=collection.collection_id
+            )
             .filter(comments__message=data["message"])
             .exists()
         )
 
         # attempt to add another comment to the streamand verify it is there
         stream = (
-            ProjectComments.objects.filter(stream__project_id=project.project_id)
+            CollectionComments.objects.filter(
+                stream__collection_id=collection.collection_id
+            )
             .filter(message=data["message"])
             .first()
         )
         data = {"message": "stream reply", "stream": stream.stream_id}
         self.assertEqual(
             self.client.post(
-                "/projects/%s/comments" % project.project_id,
+                "/collections/%s/comments" % collection.collection_id,
                 data=data,
                 content_type="application/json",
             ).status_code,
             302,
         )
         self.assertTrue(
-            ProjectComments.objects.filter(stream__project_id=project.project_id)
+            CollectionComments.objects.filter(
+                stream__collection_id=collection.collection_id
+            )
             .filter(message=data["message"])
             .filter(stream_id=stream.stream_id)
             .exists()
         )
         self.assertTrue(
-            ProjectCommentStream.objects.filter(project_id=project.project_id)
+            CollectionCommentStream.objects.filter(
+                collection_id=collection.collection_id
+            )
             .filter(comments__message=data["message"])
             .filter(stream_id=stream.stream_id)
             .exists()
         )
 
         # attempt to delete a comment and verify it is gone
-        comment = ProjectComments.objects.filter(
-            stream__project_id=project.project_id
+        comment = CollectionComments.objects.filter(
+            stream__collection_id=collection.collection_id
         ).first()
         self.assertTrue(
             self.client.post(
-                "/projects/%s/comments/%s/delete"
+                "/collections/%s/comments/%s/delete"
                 % (
-                    project.project_id,
+                    collection.collection_id,
                     comment.comment_id,
                 ),
                 content_type="application/json",
@@ -329,15 +363,15 @@ class ProjectTestCase(AtlasTestCase):
         )
 
         # attempt to delete a stream
-        comment = ProjectComments.objects.filter(
-            stream__project_id=project.project_id
+        comment = CollectionComments.objects.filter(
+            stream__collection_id=collection.collection_id
         ).first()
         data = {"stream": comment.stream_id}
         self.assertTrue(
             self.client.post(
-                "/projects/%s/comments/%s/delete"
+                "/collections/%s/comments/%s/delete"
                 % (
-                    project.project_id,
+                    collection.collection_id,
                     comment.comment_id,
                 ),
                 data=data,
@@ -349,7 +383,7 @@ class ProjectTestCase(AtlasTestCase):
         # add a comment with no message
         self.assertEqual(
             self.client.post(
-                "/projects/%s/comments" % project.project_id,
+                "/collections/%s/comments" % collection.collection_id,
                 content_type="application/json",
             ).status_code,
             302,
@@ -366,7 +400,7 @@ class ProjectTestCase(AtlasTestCase):
 
         # check with wrong method
         response = self.client.get(
-            "/projects/1/edit/reports",
+            "/collections/1/edit/reports",
             data=data,
             content_type="application/json",
         )
@@ -375,7 +409,7 @@ class ProjectTestCase(AtlasTestCase):
         # check with invalid report id
         data["report_id"] = 99
         response = self.client.post(
-            "/projects/1/edit/reports",
+            "/collections/1/edit/reports",
             data=data,
             content_type="application/json",
         )
@@ -385,23 +419,23 @@ class ProjectTestCase(AtlasTestCase):
         data["report_id"] = 1
 
         response = self.client.post(
-            "/projects/1/edit/reports",
+            "/collections/1/edit/reports",
             data=data,
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 200)
 
         self.assertTrue(
-            ProjectReports.objects.filter(annotation=data["annotation"])
+            CollectionReports.objects.filter(annotation=data["annotation"])
             .filter(rank=data["rank"])
-            .filter(project_id=1)
+            .filter(collection_id=1)
             .exists()
         )
 
         annotation_id = (
-            ProjectReports.objects.filter(annotation=data["annotation"])
+            CollectionReports.objects.filter(annotation=data["annotation"])
             .filter(rank=data["rank"])
-            .filter(project_id=1)
+            .filter(collection_id=1)
             .first()
             .annotation_id
         )
@@ -411,7 +445,7 @@ class ProjectTestCase(AtlasTestCase):
         data["annotation"] = "new annotation"
 
         response = self.client.post(
-            "/projects/1/edit/reports/%s" % annotation_id,
+            "/collections/1/edit/reports/%s" % annotation_id,
             data=data,
             content_type="application/json",
         )
@@ -419,19 +453,22 @@ class ProjectTestCase(AtlasTestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertTrue(
-            ProjectReports.objects.filter(annotation=data["annotation"])
+            CollectionReports.objects.filter(annotation=data["annotation"])
             .filter(rank=None)
-            .filter(project_id=1)
+            .filter(collection_id=1)
             .exists()
         )
 
         # delete the annotation
-        response = self.client.get("/projects/1/edit/reports/%s/delete" % annotation_id)
+        response = self.client.get(
+            "/collections/1/edit/reports/%s/delete" % annotation_id
+        )
         self.assertEqual(response.status_code, 200)
 
         # make sure its gone
         self.assertEqual(
-            ProjectReports.objects.filter(annotation_id=annotation_id).exists(), False
+            CollectionReports.objects.filter(annotation_id=annotation_id).exists(),
+            False,
         )
 
     def test_add_term_annotation(self):
@@ -441,7 +478,7 @@ class ProjectTestCase(AtlasTestCase):
 
         # check with wrong method
         response = self.client.get(
-            "/projects/1/edit/terms",
+            "/collections/1/edit/terms",
             data=data,
             content_type="application/json",
         )
@@ -450,7 +487,7 @@ class ProjectTestCase(AtlasTestCase):
         # check with invalid term id
         data["term_id"] = 99
         response = self.client.post(
-            "/projects/1/edit/terms",
+            "/collections/1/edit/terms",
             data=data,
             content_type="application/json",
         )
@@ -460,23 +497,23 @@ class ProjectTestCase(AtlasTestCase):
         data["term_id"] = 1
 
         response = self.client.post(
-            "/projects/1/edit/terms",
+            "/collections/1/edit/terms",
             data=data,
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 200)
 
         self.assertTrue(
-            ProjectTerms.objects.filter(annotation=data["annotation"])
+            CollectionTerms.objects.filter(annotation=data["annotation"])
             .filter(rank=data["rank"])
-            .filter(project_id=1)
+            .filter(collection_id=1)
             .exists()
         )
 
         annotation_id = (
-            ProjectTerms.objects.filter(annotation=data["annotation"])
+            CollectionTerms.objects.filter(annotation=data["annotation"])
             .filter(rank=data["rank"])
-            .filter(project_id=1)
+            .filter(collection_id=1)
             .first()
             .annotation_id
         )
@@ -486,7 +523,7 @@ class ProjectTestCase(AtlasTestCase):
         data["annotation"] = "new annotation"
 
         response = self.client.post(
-            "/projects/1/edit/terms/%s" % annotation_id,
+            "/collections/1/edit/terms/%s" % annotation_id,
             data=data,
             content_type="application/json",
         )
@@ -494,17 +531,19 @@ class ProjectTestCase(AtlasTestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertTrue(
-            ProjectTerms.objects.filter(annotation=data["annotation"])
+            CollectionTerms.objects.filter(annotation=data["annotation"])
             .filter(rank=None)
-            .filter(project_id=1)
+            .filter(collection_id=1)
             .exists()
         )
 
         # delete the annotation
-        response = self.client.get("/projects/1/edit/terms/%s/delete" % annotation_id)
+        response = self.client.get(
+            "/collections/1/edit/terms/%s/delete" % annotation_id
+        )
         self.assertEqual(response.status_code, 200)
 
         # make sure its gone
         self.assertEqual(
-            ProjectTerms.objects.filter(annotation_id=annotation_id).exists(), False
+            CollectionTerms.objects.filter(annotation_id=annotation_id).exists(), False
         )

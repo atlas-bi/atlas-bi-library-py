@@ -11,8 +11,8 @@ Run test for this app with::
 """
 from django.utils import timezone
 from index.models import (
-    Projects,
-    ProjectTerms,
+    Collections,
+    CollectionTerms,
     ReportDocs,
     ReportTerms,
     TermComments,
@@ -366,14 +366,14 @@ class TermTestCase(AtlasTestCase):
             True,
         )
 
-        # add a project link
-        project = Projects.objects.first()
+        # add a collection link
+        collection = Collections.objects.first()
 
-        ProjectTerms(project=project, term_id=term_id).save()
+        CollectionTerms(collection=collection, term_id=term_id).save()
 
         # verify it exists
         self.assertEqual(
-            ProjectTerms.objects.filter(project=project)
+            CollectionTerms.objects.filter(collection=collection)
             .filter(term_id=term_id)
             .exists(),
             True,
@@ -391,9 +391,9 @@ class TermTestCase(AtlasTestCase):
             False,
         )
 
-        # verify that the project link is gone
+        # verify that the collection link is gone
         self.assertEqual(
-            ProjectTerms.objects.filter(project=project)
+            CollectionTerms.objects.filter(collection=collection)
             .filter(term_id=term_id)
             .exists(),
             False,

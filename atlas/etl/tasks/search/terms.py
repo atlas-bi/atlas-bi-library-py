@@ -65,9 +65,9 @@ def load_terms(term_id=None):
         .prefetch_related("report_docs")
         .prefetch_related("report_docs__report_doc")
         .prefetch_related("report_docs__report_doc__report")
-        .prefetch_related("projects")
-        .prefetch_related("projects__project")
-        .prefetch_related("projects__project__initiative")
+        .prefetch_related("collections")
+        .prefetch_related("collections__collection")
+        .prefetch_related("collections__collection__initiative")
     )
 
     if term_id:
@@ -105,7 +105,7 @@ def build_doc(term):
         "valid_to": solr_date(term._valid_to),
         "last_updated": solr_date(term._modified_at),
         "updated_by": str(term.modified_by),
-        "related_projects": [],
+        "related_collections": [],
         "related_initiatives": [],
         "related_terms": [],
         "related_reports": [],
@@ -113,17 +113,19 @@ def build_doc(term):
         "linked_description": [],
     }
 
-    for project_link in term.projects.all():
-        # Build term project doc.
-        doc["related_projects"].append(str(project_link.project))
+    for collection_link in term.collections.all():
+        # Build term collection doc.
+        doc["related_collections"].append(str(collection_link.collection))
         doc["linked_description"].extend(
-            [project_link.project.description, project_link.annotation]
+            [collection_link.collection.description, collection_link.annotation]
         )
 
         with contextlib.suppress(AttributeError):
-            doc["related_initiatives"].append(str(project_link.project.initiative))
+            doc["related_initiatives"].append(
+                str(collection_link.collection.initiative)
+            )
             doc["linked_description"].append(
-                project_link.project.initiative.description
+                collection_link.collection.initiative.description
             )
 
     for report_doc_link in term.report_docs.all():

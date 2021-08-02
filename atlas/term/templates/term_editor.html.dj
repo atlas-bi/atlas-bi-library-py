@@ -19,28 +19,20 @@
                         {% csrf_token %}
                         <h3>Details</h3>
                         <div class="listDetails">
-                            <label>
-                                Name
-                            </label>
+                            <label>Name</label>
                             <input name="name" required value="{{ term }}"/>
-                            <label>
-                                External Standard Link
-                            </label>
+                            <label>External Standard Link</label>
                             <input name="external_standard_url" value="{{ term.external_standard_url|default:"/>
-                            <label>
-                                Valid From
-                            </label>
+                            <label>Valid From</label>
                             <input type="date" name="valid_from" value="{{ term.valid_from|default:"/>
                         </div>
                         <h3>Summary</h3>
                         <div class="editor" data-inputName="summary" data-inputId="summary">
-                            <textarea>
-                            {{ term.summary|default:""|safe }}
-                            </textarea>
+                            <textarea>{{ term.summary|default:""|safe }}</textarea>
                         </div>
                         <h3>Technical Definition</h3>
                         <div class="editor" data-inputName="technical_definition" data-inputId="technical_definition">
-                            <textarea >
+                            <textarea>{{ term.technical_definition|default:""|safe }}</textarea>
                         </div>
                         {% if 6 in permissions %}
                             <div class="form-check">
@@ -55,9 +47,7 @@
                             </div>
                         {% endif %}
                         <h3>
-                            <button class="editor-save" type="submit">
-                                Save
-                            </button>
+                            <button class="editor-save" type="submit">Save</button>
                         </h3>
                     </form>
                 </div>

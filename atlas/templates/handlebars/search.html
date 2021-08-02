@@ -9,26 +9,24 @@
         <div class="srch-colTwo" id="results">
             <div class="srch-results" ss-container>
 
-
-
-                {{#if projects }}
-                    {{#each projects }}
+                {{#if collections }}
+                    {{#each collections }}
                         <div class="srch-result srch-resultProj">
                             <!-- fav links -->
                             <div class="fav-links">
                                 <div class="fav-star">
                                     <i
-                                        fav-type="project"
-                                        object-id="{{ this.project_id }}"
+                                        fav-type="collection"
+                                        object-id="{{ this.collection_id }}"
                                         class="far fa-star"></i>
                                 </div>
                                 <div
                                     class="fav-share darken"
                                     data-toggle="mdl"
                                     data-target="shareModal"
-                                    data-type="project"
+                                    data-type="collection"
                                     data-name='{{ this.name }}'
-                                    data-url="/projects/{{ this.project_id }}">
+                                    data-url="/collections/{{ this.collection_id }}">
                                     <i class="fas fa-share"></i>
                                 </div>
                             </div>
@@ -37,16 +35,16 @@
                                 <h5
                                     class="fav-title"
                                     data-toggle="clps"
-                                    data-target="clps-proj-{{ this.project_id }}">
+                                    data-target="clps-proj-{{ this.collection_id }}">
                                     <span>{{ this.name }}</span>
                                     <div class="fav-type">
-                                        <span class="srch-field">Project</span>
+                                        <span class="srch-field">Collection</span>
                                     </div>
                                 </h5>
                                 <h5 class="fav-nav">
-                                    <a href="/projects/{{ this.project_id }}">Open In Atlas</a>
+                                    <a href="/collections/{{ this.collection_id }}">Open In Atlas</a>
                                 </h5>
-                                <div class="clps fav-dtls" id="clps-proj-{{ this.project_id }}">
+                                <div class="clps fav-dtls" id="clps-proj-{{ this.collection_id }}">
                                     <div class="markdown noleft">
                                         {{#if this.purpose }}
                                             {{ this.purpose }}
@@ -59,12 +57,6 @@
                         </div>
                     {{/each }}
                 {{/if }}
-
-
-
-
-
-
 
                 {{#each docs }}
                     <div class="srch-result">
@@ -110,7 +102,7 @@
                                             </span>
                                         {{/if_in }}
                                     {{/if }}
-                                    {{#if_in this.type '["terms","projects","initiatives"]' }}
+                                    {{#if_in this.type '["terms","collections","initiatives"]' }}
                                         <span class="text-success"><i class="fas fa-check"></i>
                                         </span>
                                     {{/if_in }}

@@ -11,7 +11,7 @@ Run test for this app with::
 """
 # pylint: disable=C0115,C0103
 
-from index.models import Initiatives, Projects
+from index.models import Collections, Initiatives
 
 from atlas.testutils import AtlasTestCase
 
@@ -108,9 +108,9 @@ class InitiativeTestCase(AtlasTestCase):
             "exec_owner_id": "1",
             "financial_impact_id": "1",
             "strategic_importance_id": "1",
-            "linked_data_projects": ["1"],
+            "linked_data_collections": ["1"],
         }
-        linked_data_project = data["linked_data_projects"][0]
+        linked_data_collection = data["linked_data_collections"][0]
 
         response = self.client.post("/initiatives/new", data=data, follow=True)
         self.assertEqual(response.status_code, 200)
@@ -133,9 +133,9 @@ class InitiativeTestCase(AtlasTestCase):
             initiative.strategic_importance_id, int(data["strategic_importance_id"])
         )
 
-        # check project links
+        # check collection links
         self.assertTrue(
-            Projects.objects.filter(project_id=linked_data_project)
+            Collections.objects.filter(collection_id=linked_data_collection)
             .filter(initiative_id=initiative_id)
             .exists()
         )
@@ -146,7 +146,7 @@ class InitiativeTestCase(AtlasTestCase):
         data.pop("exec_owner_id")
         data.pop("strategic_importance_id")
         data.pop("financial_impact_id")
-        data.pop("linked_data_projects")
+        data.pop("linked_data_collections")
 
         response = self.client.post(
             "/initiatives/%s/edit" % initiative_id, data=data, follow=True
@@ -167,9 +167,9 @@ class InitiativeTestCase(AtlasTestCase):
         self.assertEqual(initiative.financial_impact, None)
         self.assertEqual(initiative.strategic_importance, None)
 
-        # check project links
+        # check collection links
         self.assertEqual(
-            Projects.objects.filter(project_id=linked_data_project)
+            Collections.objects.filter(collection_id=linked_data_collection)
             .filter(initiative_id=initiative_id)
             .exists(),
             False,

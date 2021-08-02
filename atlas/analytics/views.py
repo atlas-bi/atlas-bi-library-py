@@ -88,12 +88,12 @@ def index(request):
         .order_by("month")
     )
 
-    project = (
+    collection = (
         Analytics.objects.order_by("access_date")
         .filter(
             access_date__isnull=False,
             access_date__lte=timezone.now().replace(day=1) - timedelta(days=1),
-            pathname="/projects",
+            pathname="/collections",
         )
         .annotate(month=Trunc("access_date", "month"))
         .values("month")
@@ -110,7 +110,7 @@ def index(request):
         "search": search,
         "report": report,
         "term": term,
-        "project": project,
+        "collection": collection,
         "favorites": request.user.get_favorites(),
         "title": "Analytics",
     }

@@ -9,7 +9,7 @@ from django.utils import timezone
 from django.views.decorators.cache import never_cache
 from django.views.generic import DetailView, ListView, View
 from index.models import (
-    ProjectTerms,
+    CollectionTerms,
     Reports,
     ReportTerms,
     TermComments,
@@ -27,13 +27,13 @@ def delete(request, pk):
     1. comments
     2. comment streams
     3. report doc term links
-    4. project annotations
+    4. collection annotations
     5. term
     """
     TermComments.objects.filter(stream_id__term_id=pk).delete()
     TermCommentStream.objects.filter(term_id=pk).delete()
     ReportTerms.objects.filter(term__term_id=pk).delete()
-    ProjectTerms.objects.filter(term__term_id=pk).delete()
+    CollectionTerms.objects.filter(term__term_id=pk).delete()
     get_object_or_404(Terms, pk=pk).delete()
 
     return redirect("term:list")
@@ -61,9 +61,9 @@ class TermDetails(LoginRequiredMixin, DetailView):
         .prefetch_related("report_docs")
         .prefetch_related("report_docs__report_doc")
         .prefetch_related("report_docs__report_doc__report")
-        .prefetch_related("projects")
-        .prefetch_related("projects__project")
-        .prefetch_related("projects__project__initiative")
+        .prefetch_related("collections")
+        .prefetch_related("collections__collection")
+        .prefetch_related("collections__collection__initiative")
     )
 
     def get_context_data(self, **kwargs):

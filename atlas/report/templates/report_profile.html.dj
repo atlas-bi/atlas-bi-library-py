@@ -10,9 +10,7 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
 <div class="tab">
     @if(TopUsers)
     {
-    <a class="tab-lnk active" href="#top-users">
-        Top Users
-    </a>
+    <a class="tab-lnk active" href="#top-users">Top Users</a>
     }
     @if(RunHistory){
     <a class="tab-lnk @if(!TopUsers){<text>
@@ -36,9 +34,7 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
     <div class="tab-dta active" id="top-users">
         <h3>Top Users</h3>
         <div class="tab">
-            <a class="tab-lnk" href="#top-user-chart">
-                Chart
-            </a>
+            <a class="tab-lnk" href="#top-user-chart">Chart</a>
             <a class="tab-lnk active" href="#top-user-table">
                 Table
             </a>
@@ -180,27 +176,17 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
                     <thead>
                         <tr>
                             <th>Week Starting At</th>
-                            <th>
-                                Total Hits
-                            </th>
-                            <th>
-                                Average Run Time
-                            </th>
+                            <th>Total Hits</th>
+                            <th>Average Run Time</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var u in Model.RunTime.OrderBy(x => x.Date))
                         {
                         <tr>
-                            <td>
-                                @u.Date
-                            </td>
-                            <td>
-                                @u.Cnt
-                            </td>
-                            <td>
-                                @u.Avg
-                            </td>
+                            <td>@u.Date</td>
+                            <td>@u.Cnt</td>
+                            <td>@u.Avg</td>
                         </tr>
                         }
                     </tbody>
@@ -214,37 +200,23 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
 {
 <div class="tab-dta @if(!TopUsers && !RunHistory){<text>
     active</text>} my-4" id="failed-runs">
-    <h3>
-        Failed Runs
-    </h3>
+    <h3>Failed Runs</h3>
     <div class="table-responsive">
         <table class="table sort">
             <thead>
                 <tr>
-                    <th>
-                        Run Date
-                    </th>
-                    <th>
-                        Run By
-                    </th>
-                    <th>
-                        Status
-                    </th>
+                    <th>Run Date</th>
+                    <th>Run By</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var run in Model.FailedRuns)
                 {
                 <tr>
-                    <td>
-                        @run.Date
-                    </td>
-                    <td>
-                        @run.RunUser
-                    </td>
-                    <td>
-                        @run.RunStatus
-                    </td>
+                    <td>@run.Date</td>
+                    <td>@run.RunUser</td>
+                    <td>@run.RunStatus</td>
                 </tr>
                 }
             </tbody>
@@ -256,22 +228,14 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
 {
 <div class="tab-dta @if(!TopUsers && !RunHistory && !FailedRuns){<text>
     active</text>}" id="user-subscriptions">
-    <h3>
-        Subscriptions
-    </h3>
+    <h3>Subscriptions</h3>
     <div class="table-responsive">
         <table class="table sort">
             <thead>
                 <tr>
-                    <th>
-                        Description
-                    </th>
-                    <th>
-                        Last Run
-                    </th>
-                    <th>
-                        Message
-                    </th>
+                    <th>Description</th>
+                    <th>Last Run</th>
+                    <th>Message</th>
                     <th>
                         User
                     </th>
@@ -339,9 +303,9 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
 </div>
 } else {
 <h5>
-No activity to show
+    No activity to show
 </h5>
 <h5>
-¯\_(ツ)_/¯
+    ¯\_(ツ)_/¯
 </h5>
 }

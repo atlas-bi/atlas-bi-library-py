@@ -52,8 +52,7 @@
                                                   data-freq="10"></span>
                                         </td>
                                         <td>
-                                            <a href="/etl/search/{{ type }}/run">Run Now
-                                            </a>
+                                            <a href="/etl/search/{{ type }}/run">Run Now</a>
                                         </td>
                                     </tr>
                                 {% endfor %}

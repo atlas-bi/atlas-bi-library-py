@@ -128,6 +128,9 @@ class Reports(models.Model):
     def friendly_name(self):
         return self.title or self.name
 
+    def get_absolute_url(self):
+        return reverse("report:index", kwargs={"pk": self.pk})
+
     def system_run_url(self, in_system):
         return "123.123"
 
@@ -365,6 +368,9 @@ class Users(AbstractUser):
     def is_admin(self):
         return self.role_links.filter(role_id=1).exists()
 
+    def get_absolute_url(self):
+        return reverse("user:details", kwargs={"pk": self.pk})
+
     def has_permission(self, perm, obj=None):
         # check if they have a permission
         return (
@@ -567,7 +573,7 @@ class Analytics(models.Model):
         db_table = "Analytics"
 
 
-class ProjectAgreements(models.Model):
+class CollectionAgreements(models.Model):
     agreement_id = models.AutoField(db_column="AgreementID", primary_key=True)
     description = models.TextField(db_column="Description", blank=True, default="")
     _met_at = models.DateTimeField(db_column="MeetingDate", blank=True, null=True)
@@ -580,13 +586,13 @@ class ProjectAgreements(models.Model):
     modified_by = models.ForeignKey(
         "Users",
         models.DO_NOTHING,
-        related_name="project_agreement_modifier",
+        related_name="collection_agreement_modifier",
         db_column="LastUpdateUser",
         blank=True,
         null=True,
     )
-    project_id = models.ForeignKey(
-        "Projects",
+    collection_id = models.ForeignKey(
+        "Collections",
         models.DO_NOTHING,
         db_column="DataProjectId",
         blank=True,
@@ -618,10 +624,10 @@ class ProjectAgreements(models.Model):
         return ""
 
 
-class ProjectAgreementUsers(models.Model):
+class CollectionAgreementUsers(models.Model):
     agreementusers_id = models.AutoField(db_column="AgreementUsersID", primary_key=True)
     agreement = models.ForeignKey(
-        ProjectAgreements,
+        CollectionAgreements,
         models.DO_NOTHING,
         db_column="AgreementID",
         blank=True,
@@ -634,7 +640,7 @@ class ProjectAgreementUsers(models.Model):
         db_column="UserId",
         blank=True,
         null=True,
-        related_name="project_agreement",
+        related_name="collection_agreement",
     )
     modified_at = models.DateTimeField(
         db_column="LastUpdateDate", blank=True, null=True
@@ -642,7 +648,7 @@ class ProjectAgreementUsers(models.Model):
     modified_by = models.ForeignKey(
         "Users",
         models.DO_NOTHING,
-        related_name="project_agreement_users_modifier",
+        related_name="collection_agreement_users_modifier",
         db_column="LastUpdateUser",
         blank=True,
         null=True,
@@ -653,10 +659,10 @@ class ProjectAgreementUsers(models.Model):
         db_table = "DP_AgreementUsers"
 
 
-class ProjectAttachments(models.Model):
+class CollectionAttachments(models.Model):
     attachment_id = models.AutoField(db_column="AttachmentId", primary_key=True)
-    project = models.ForeignKey(
-        "Projects",
+    collection = models.ForeignKey(
+        "Collections",
         models.DO_NOTHING,
         db_column="DataProjectId",
         related_name="attachments",
@@ -780,8 +786,8 @@ class Initiatives(models.Model):
         return ""
 
 
-class Projects(models.Model):
-    project_id = models.AutoField(db_column="DataProjectID", primary_key=True)
+class Collections(models.Model):
+    collection_id = models.AutoField(db_column="DataProjectID", primary_key=True)
 
     initiative = models.ForeignKey(
         "Initiatives",
@@ -789,7 +795,7 @@ class Projects(models.Model):
         db_column="DataInitiativeID",
         blank=True,
         null=True,
-        related_name="projects",
+        related_name="collections",
     )
 
     name = models.TextField(db_column="Name", blank=True, default="")
@@ -798,7 +804,7 @@ class Projects(models.Model):
     ops_owner = models.ForeignKey(
         "Users",
         models.DO_NOTHING,
-        related_name="project_ops_owner",
+        related_name="collection_ops_owner",
         db_column="OperationOwnerID",
         blank=True,
         null=True,
@@ -806,7 +812,7 @@ class Projects(models.Model):
     exec_owner = models.ForeignKey(
         "Users",
         models.DO_NOTHING,
-        related_name="project_exec_owner",
+        related_name="collection_exec_owner",
         db_column="ExecutiveOwnerID",
         blank=True,
         null=True,
@@ -814,7 +820,7 @@ class Projects(models.Model):
     analytics_owner = models.ForeignKey(
         "Users",
         models.DO_NOTHING,
-        related_name="project_analytics_owner",
+        related_name="collection_analytics_owner",
         db_column="AnalyticsOwnerID",
         blank=True,
         null=True,
@@ -822,7 +828,7 @@ class Projects(models.Model):
     data_owner = models.ForeignKey(
         "Users",
         models.DO_NOTHING,
-        related_name="project_data_owner",
+        related_name="collection_data_owner",
         db_column="DataManagerID",
         blank=True,
         null=True,
@@ -833,7 +839,7 @@ class Projects(models.Model):
         db_column="FinancialImpact",
         blank=True,
         null=True,
-        related_name="projects",
+        related_name="collections",
     )
     strategic_importance = models.ForeignKey(
         "Strategicimportance",
@@ -841,7 +847,7 @@ class Projects(models.Model):
         db_column="StrategicImportance",
         blank=True,
         null=True,
-        related_name="projects",
+        related_name="collections",
     )
     external_documentation_url = models.TextField(
         db_column="ExternalDocumentationURL", blank=True, default=""
@@ -852,7 +858,7 @@ class Projects(models.Model):
     modified_by = models.ForeignKey(
         "Users",
         models.DO_NOTHING,
-        related_name="project_modifier",
+        related_name="collection_modifier",
         db_column="LastUpdateUser",
         blank=True,
         null=True,
@@ -873,16 +879,16 @@ class Projects(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("project:details", kwargs={"pk": self.pk})
+        return reverse("collection:details", kwargs={"pk": self.pk})
 
     def get_absolute_delete_url(self):
-        return reverse("project:delete", kwargs={"pk": self.pk})
+        return reverse("collection:delete", kwargs={"pk": self.pk})
 
     def get_absolute_edit_url(self):
-        return reverse("project:edit", kwargs={"pk": self.pk})
+        return reverse("collection:edit", kwargs={"pk": self.pk})
 
     def get_absolute_comments_url(self):
-        return reverse("project:comments", kwargs={"pk": self.pk})
+        return reverse("collection:comments", kwargs={"pk": self.pk})
 
     @property
     def modified_at(self):
@@ -891,10 +897,10 @@ class Projects(models.Model):
         return ""
 
 
-class ProjectChecklist(models.Model):
+class CollectionChecklist(models.Model):
     checklist_id = models.AutoField(db_column="MilestoneChecklistId", primary_key=True)
     task = models.ForeignKey(
-        "ProjectMilestoneTasks",
+        "CollectionMilestoneTasks",
         models.DO_NOTHING,
         db_column="MilestoneTaskId",
         blank=True,
@@ -908,12 +914,12 @@ class ProjectChecklist(models.Model):
         db_table = "DP_MilestoneChecklist"
 
 
-class ProjectChecklistCompleted(models.Model):
+class CollectionChecklistCompleted(models.Model):
     checklistcompleted_id = models.AutoField(
         db_column="MilestoneChecklistCompletedId", primary_key=True
     )
-    project_id = models.ForeignKey(
-        Projects,
+    collection_id = models.ForeignKey(
+        Collections,
         models.DO_NOTHING,
         db_column="DataProjectId",
         blank=True,
@@ -938,7 +944,7 @@ class ProjectChecklistCompleted(models.Model):
         db_table = "DP_MilestoneChecklistCompleted"
 
 
-class ProjectMilestoneFrequency(models.Model):
+class CollectionMilestoneFrequency(models.Model):
     frequency_id = models.AutoField(db_column="MilestoneTypeId", primary_key=True)
     name = models.TextField(db_column="Name", blank=True, default="")
 
@@ -947,10 +953,10 @@ class ProjectMilestoneFrequency(models.Model):
         db_table = "DP_MilestoneFrequency"
 
 
-class ProjectMilestoneTasks(models.Model):
+class CollectionMilestoneTasks(models.Model):
     task_id = models.AutoField(db_column="MilestoneTaskId", primary_key=True)
     template = models.ForeignKey(
-        "ProjectMilestoneTemplates",
+        "CollectionMilestoneTemplates",
         models.DO_NOTHING,
         db_column="MilestoneTemplateId",
         blank=True,
@@ -961,7 +967,7 @@ class ProjectMilestoneTasks(models.Model):
         "Users",
         db_column="OwnerId",
         on_delete=models.CASCADE,
-        related_name="project_task_owner",
+        related_name="collection_task_owner",
         blank=True,
         null=True,
     )
@@ -972,15 +978,15 @@ class ProjectMilestoneTasks(models.Model):
         "Users",
         db_column="LastUpdateUser",
         on_delete=models.CASCADE,
-        related_name="project_task_modifier",
+        related_name="collection_task_modifier",
         blank=True,
         null=True,
     )
     modified_at = models.DateTimeField(
         db_column="LastUpdateDate", blank=True, null=True
     )
-    project = models.ForeignKey(
-        Projects,
+    collection = models.ForeignKey(
+        Collections,
         models.DO_NOTHING,
         db_column="DataProjectId",
         blank=True,
@@ -993,10 +999,10 @@ class ProjectMilestoneTasks(models.Model):
         db_table = "DP_MilestoneTasks"
 
 
-class ProjectMilestoneTasksCompleted(models.Model):
+class CollectionMilestoneTasksCompleted(models.Model):
     task_id = models.AutoField(db_column="MilestoneTaskCompletedId", primary_key=True)
-    project = models.ForeignKey(
-        Projects,
+    collection = models.ForeignKey(
+        Collections,
         models.DO_NOTHING,
         db_column="DataProjectId",
         blank=True,
@@ -1010,7 +1016,7 @@ class ProjectMilestoneTasksCompleted(models.Model):
         "Users",
         db_column="CompletionUser",
         on_delete=models.CASCADE,
-        related_name="project_task_completed_by",
+        related_name="collection_task_completed_by",
         blank=True,
         null=True,
     )
@@ -1023,11 +1029,11 @@ class ProjectMilestoneTasksCompleted(models.Model):
         db_table = "DP_MilestoneTasksCompleted"
 
 
-class ProjectMilestoneTemplates(models.Model):
+class CollectionMilestoneTemplates(models.Model):
     template_id = models.AutoField(db_column="MilestoneTemplateId", primary_key=True)
     name = models.TextField(db_column="Name", blank=True, default="")
     type_id = models.ForeignKey(
-        ProjectMilestoneFrequency,
+        CollectionMilestoneFrequency,
         models.DO_NOTHING,
         db_column="MilestoneTypeId",
         blank=True,
@@ -1047,19 +1053,19 @@ class ProjectMilestoneTemplates(models.Model):
         db_table = "DP_MilestoneTemplates"
 
 
-class ProjectReports(models.Model):
+class CollectionReports(models.Model):
     annotation_id = models.AutoField(db_column="ReportAnnotationID", primary_key=True)
     annotation = models.TextField(db_column="Annotation", blank=True, default="")
     report = models.ForeignKey(
         "Reports",
         models.DO_NOTHING,
         db_column="ReportId",
-        related_name="projects",
+        related_name="collections",
         blank=True,
         null=True,
     )
-    project = models.ForeignKey(
-        Projects,
+    collection = models.ForeignKey(
+        Collections,
         models.DO_NOTHING,
         db_column="DataProjectId",
         blank=True,
@@ -1076,7 +1082,7 @@ class ProjectReports(models.Model):
         return self.report.friendly_name
 
 
-class ProjectTerms(models.Model):
+class CollectionTerms(models.Model):
     termannotationid = models.AutoField(db_column="TermAnnotationID", primary_key=True)
     annotation = models.TextField(db_column="Annotation", blank=True, default="")
 
@@ -1084,12 +1090,12 @@ class ProjectTerms(models.Model):
         "Terms",
         models.DO_NOTHING,
         db_column="TermId",
-        related_name="projects",
+        related_name="collections",
         blank=True,
         null=True,
     )
-    project = models.ForeignKey(
-        Projects,
+    collection = models.ForeignKey(
+        Collections,
         models.DO_NOTHING,
         db_column="DataProjectId",
         blank=True,
@@ -1106,12 +1112,12 @@ class ProjectTerms(models.Model):
         return self.term.name
 
 
-class ProjectCommentStream(models.Model):
+class CollectionCommentStream(models.Model):
     stream_id = models.AutoField(
         db_column="DataProjectConversationId", primary_key=True
     )
-    project = models.ForeignKey(
-        Projects,
+    collection = models.ForeignKey(
+        Collections,
         models.DO_NOTHING,
         db_column="DataProjectId",
         related_name="comment_streams",
@@ -1122,12 +1128,12 @@ class ProjectCommentStream(models.Model):
         db_table = "Dp_DataProjectConversation"
 
 
-class ProjectComments(models.Model):
+class CollectionComments(models.Model):
     comment_id = models.AutoField(
         db_column="DataProjectConversationMessageId", primary_key=True
     )
     stream = models.ForeignKey(
-        ProjectCommentStream,
+        CollectionCommentStream,
         models.DO_NOTHING,
         db_column="DataProjectConversationId",
         blank=True,
@@ -1137,7 +1143,7 @@ class ProjectComments(models.Model):
     user = models.ForeignKey(
         "Users",
         models.DO_NOTHING,
-        related_name="user_project_comments",
+        related_name="user_collection_comments",
         db_column="UserId",
         blank=True,
         null=True,
@@ -1151,8 +1157,8 @@ class ProjectComments(models.Model):
 
     def get_absolute_delete_url(self):
         return reverse(
-            "project:comments_delete",
-            kwargs={"pk": self.stream.project_id, "comment_id": self.pk},
+            "collection:comments_delete",
+            kwargs={"pk": self.stream.collection_id, "comment_id": self.pk},
         )
 
 
@@ -1631,7 +1637,9 @@ class ReportDocs(models.Model):
         blank=True,
         null=True,
     )
-    project_url = models.TextField(db_column="GitLabProjectURL", blank=True, default="")
+    collection_url = models.TextField(
+        db_column="GitLabProjectURL", blank=True, default=""
+    )
     description = models.TextField(
         db_column="DeveloperDescription", blank=True, default=""
     )
@@ -2109,8 +2117,8 @@ class Favorites(models.Model):
             return str(Reports.objects.get(report_id=self.item_id))
         elif self.item_type.lower() == "term":
             return str(Terms.objects.get(term_id=self.item_id).name)
-        elif self.item_type.lower() == "project":
-            return str(Projects.objects.get(project_id=self.item_id))
+        elif self.item_type.lower() == "collection":
+            return str(Collections.objects.get(collection_id=self.item_id))
         elif self.item_type.lower() == "initiative":
             return str(Initiatives.objects.get(initiative_id=self.item_id))
 
@@ -2172,9 +2180,9 @@ class Favorites(models.Model):
         elif self.item_type.lower() == "term":
             term = Terms.objects.get(term_id=self.item_id)
             return term.summary or term.technical_definition
-        elif self.item_type.lower() == "project":
-            project = Projects.objects.get(project_id=self.item_id)
-            return project.purpose or project.description
+        elif self.item_type.lower() == "collection":
+            collection = Collections.objects.get(collection_id=self.item_id)
+            return collection.purpose or collection.description
         elif self.item_type.lower() == "initiative":
             return Initiatives.objects.get(initiative_id=self.item_id).description
 

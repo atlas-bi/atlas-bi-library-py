@@ -132,7 +132,7 @@ INSTALLED_APPS = [
     "search.apps.SearchConfig",
     "term.apps.TermConfig",
     "initiative.apps.InitiativeConfig",
-    "project.apps.ProjectConfig",
+    "collection.apps.CollectionConfig",
     "user.apps.UserConfig",
     "etl.apps.EtlConfig",
 ]

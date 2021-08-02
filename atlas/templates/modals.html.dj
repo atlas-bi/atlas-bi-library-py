@@ -86,9 +86,7 @@
                     <textarea name="description"></textarea>
                 </div>
                 <div class="mdl-f">
-                    <button type="submit" class="share-feedback">
-                        Submit
-                    </button>
+                    <button type="submit" class="share-feedback">Submit</button>
                 </div>
             </div>
         </div>

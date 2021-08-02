@@ -1,6 +1,7 @@
 {% extends "layout.html.dj" %}
 {% load compress %}
 {% load mathfilters %}
+{% load static %}
 {% block start_js %}
     {% compress js inline %}
         <script src="{% static '/js/realtime.min.js' %}"></script>
@@ -31,7 +32,7 @@
                     "units": "(s)",
                     "data": [
                         {% for user in top_users %}
-                            { 
+                            {
                                 "title": "{{ user.user___first_name }}",
                                 "data": "{{ user.average|div:1000|floatformat:1 }}"
                             }{% if not forloop.last %},{% endif %}
@@ -74,7 +75,7 @@
                     "units": "(s)",
                     "data": [
                             {% for page in top_pages %}
-                                { 
+                                {
                                     "title": "{{ page.pathname }}",
                                     "data": "{{ page.average|div:1000|floatformat:1 }}"
                                 }{% if not forloop.last %},{% endif %}
@@ -208,7 +209,7 @@
                 }
         </script>
     </div>
-    <h3>Project Access History</h3>
+    <h3>Collection Access History</h3>
     <div class="atlas-chart">
         <div class="ajaxLoader"><img class="ajaxLoader-img" src="{% static '/img/loader.gif' %}" alt="loader" /></div>
         <script type="application/json">
@@ -218,13 +219,13 @@
                 },
                 "type": "bar",
                 "height":"400",
-                "title": "Monthly Atlas Project Access",
+                "title": "Monthly Atlas Collection Access",
                 "data": [{
                     "title" : "Visits",
                     "axis":"0",
                     "type": "bar",
                     "data": [
-                            {% for month in project %}
+                            {% for month in collection %}
                                 {
                                     "title": "{{ month.month }}",
                                     "data": "{{ month.count }}"

@@ -15,17 +15,13 @@
             </div>
             <div class="editorMdl-cnt" ss-container>
                 <div class="editorMdl-cntLiner">
-                    <form action="/initiatives/{{ initiative.initiative_id }}" method="post">
+                    <form action="{% 'initiative:edit' initiative.initiative_id %}" method="post">
                         {% csrf_token %}
                         <h3>Details</h3>
                         <div class="listDetails">
-                            <label>
-                                Name
-                            </label>
+                            <label>Name</label>
                             <input name="name" required value="{{ initiative }}" />
-                            <label>
-                                External Contacts
-                            </label>
+                            <label>External Contacts</label>
                             <select type="dynamic-dropdown"
                                     name="linked_contacts"
                                     search-area="lookup/initiative_contacts"
@@ -36,62 +32,50 @@
                                     </option>
                                 {% endfor %}
                             </select>
-                            <label>
-                                Operations Owner
-                            </label>
+                            <label>Operations Owner</label>
                             <input type="dynamic-dropdown"
                                    name="ops_owner_id"
                                    value="{{ initiative.ops_owner_id|default:"
                                    visible-value="{{ initiative.ops_owner|default:"
                                    search-area="user_lookup"/>
-                            <label>
-                                Executive Owner
-                            </label>
+                            <label>Executive Owner</label>
                             <input type="dynamic-dropdown"
                                    name="exec_owner_id"
                                    value="{{ initiative.exec_owner_id|default:"
                                    visible-value="{{ initiative.exec_owner|default:"
                                    search-area="user_lookup"/>
-                            <label>
-                                Financial Impact
-                            </label>
+                            <label>Financial Impact</label>
                             <input type="dynamic-dropdown"
                                    name="financial_impact_id"
                                    search-area="lookup/financial_impact"
                                    method="fullList"
                                    visible-value="{{ initiative.financial_impact|default:"
                                    value="{{ initiative.financial_impact_id|default:"/>
-                            <label>
-                                Strategic Importance
-                            </label>
+                            <label>Strategic Importance</label>
                             <input type="dynamic-dropdown"
                                    name="strategic_importance_id"
                                    search-area="lookup/strategic_importance"
                                    method="fullList"
                                    visible-value="{{ initiative.strategic_importance|default:"
                                    value="{{ initiative.strategic_importance_id|default:"/>
-                            <label>
-                                Linked Projects
-                            </label>
+                            <label>Linked Collections</label>
                             <select type="dynamic-dropdown"
-                                    name="linked_data_projects"
-                                    id="linked-data-projects"
-                                    search-area="project_lookup">
-                                {% for project in initiative.projects.all %}
-                                    <option selected="selected" value="{{ project.project_id }}">
-                                        {{ project }}
+                                    name="linked_data_collections"
+                                    id="linked-data-collections"
+                                    search-area="collection_lookup">
+                                {% for collection in initiative.collections.all %}
+                                    <option selected="selected" value="{{ collection.collection_id }}">
+                                        {{ collection }}
                                     </option>
                                 {% endfor %}
                             </select>
                         </div>
                         <h3>Description</h3>
                         <div class="editor" data-inputName="description" data-inputId="description">
-                            <textarea >
+                            <textarea>{{ initiative.description|default:""|safe }}</textarea>
                         </div>
                         <h3>
-                            <button class="editor-save" type="submit">
-                                Save
-                            </button>
+                            <button class="editor-save" type="submit">Save</button>
                         </h3>
                     </form>
                 </div>

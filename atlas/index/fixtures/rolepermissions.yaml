@@ -81,15 +81,15 @@
 - model: index.rolepermissions
   pk: 21
   fields:
-    name: Create Project
+    name: Create Collection
 - model: index.rolepermissions
   pk: 22
   fields:
-    name: Delete Project
+    name: Delete Collection
 - model: index.rolepermissions
   pk: 23
   fields:
-    name: Edit Project
+    name: Edit Collection
 - model: index.rolepermissions
   pk: 24
   fields:

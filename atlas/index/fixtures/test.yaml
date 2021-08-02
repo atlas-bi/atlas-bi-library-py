@@ -76,12 +76,12 @@
     modified_by: 1
     _modified_at: 2020-01-01 00:00:00+0
 
-# Project
-- model: index.projects
+# Collection
+- model: index.collections
   pk: 1
   fields:
     initiative: 1
-    name: Test project to group stuff up
+    name: Test collection to group stuff up
     description: "#Do\n\n##we\n\n```python\n\nneed one?```\n"
     ops_owner: 1
     exec_owner: 1

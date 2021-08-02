@@ -81,12 +81,12 @@
           form,
           url,
           termsContainer = document.getElementById(
-            "project-editor-currentterms-container"
+            "collection-editor-currentterms-container"
           );
-        if (e.target.closest("#project-editor-remove-term-form")) {
+        if (e.target.closest("#collection-editor-remove-term-form")) {
           e.preventDefault();
 
-          form = e.target.closest("#project-editor-remove-term-form");
+          form = e.target.closest("#collection-editor-remove-term-form");
           url = form.getAttribute("href");
 
           q = new XMLHttpRequest();
@@ -123,12 +123,12 @@
           form,
           url,
           termsContainer = document.getElementById(
-            "project-editor-currentreports-container"
+            "collection-editor-currentreports-container"
           );
-        if (e.target.closest("#project-editor-remove-report-form")) {
+        if (e.target.closest("#collection-editor-remove-report-form")) {
           e.preventDefault();
 
-          form = e.target.closest("#project-editor-remove-report-form");
+          form = e.target.closest("#collection-editor-remove-report-form");
           url = form.getAttribute("href");
 
           q = new XMLHttpRequest();
@@ -165,17 +165,17 @@
           form,
           url,
           termsContainer = document.getElementById(
-            "project-editor-currentterms-container"
+            "collection-editor-currentterms-container"
           );
         if (
-          e.target.closest("#project-editor-edit-term-form") ||
-          e.target.closest("#project-editor-add-term-form")
+          e.target.closest("#collection-editor-edit-term-form") ||
+          e.target.closest("#collection-editor-add-term-form")
         ) {
           e.preventDefault();
 
           form =
-            e.target.closest("#project-editor-edit-term-form") ||
-            e.target.closest("#project-editor-add-term-form");
+            e.target.closest("#collection-editor-edit-term-form") ||
+            e.target.closest("#collection-editor-add-term-form");
           url = form.getAttribute("action");
 
           q = new XMLHttpRequest();
@@ -226,17 +226,17 @@
           form,
           url,
           termsContainer = document.getElementById(
-            "project-editor-currentreports-container"
+            "collection-editor-currentreports-container"
           );
         if (
-          e.target.closest("#project-editor-edit-report-form") ||
-          e.target.closest("#project-editor-add-report-form")
+          e.target.closest("#collection-editor-edit-report-form") ||
+          e.target.closest("#collection-editor-add-report-form")
         ) {
           e.preventDefault();
 
           form =
-            e.target.closest("#project-editor-edit-report-form") ||
-            e.target.closest("#project-editor-add-report-form");
+            e.target.closest("#collection-editor-edit-report-form") ||
+            e.target.closest("#collection-editor-add-report-form");
 
 
           q = new XMLHttpRequest();

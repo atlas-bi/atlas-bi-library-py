@@ -65,11 +65,11 @@ def load_initiatives(initiative_id=None):
         .select_related("financial_impact")
         .select_related("strategic_importance")
         .select_related("modified_by")
-        .prefetch_related("projects__term_annotations")
-        .prefetch_related("projects__term_annotations__term")
-        .prefetch_related("projects__report_annotations")
-        .prefetch_related("projects__report_annotations__report")
-        .prefetch_related("projects__report_annotations__report__docs")
+        .prefetch_related("collections__term_annotations")
+        .prefetch_related("collections__term_annotations__term")
+        .prefetch_related("collections__report_annotations")
+        .prefetch_related("collections__report_annotations__report")
+        .prefetch_related("collections__report_annotations__report__docs")
     )
 
     if initiative_id:
@@ -104,25 +104,25 @@ def build_doc(initiative):
         "strategic_importance": str(initiative.strategic_importance),
         "last_updated": solr_date(initiative._modified_at),
         "updated_by": str(initiative.modified_by),
-        "related_projects": [],
+        "related_collections": [],
         "linked_description": [],
         "related_terms": [],
         "related_reports": [],
         "linked_name": [],
     }
 
-    for project in initiative.projects.all():
-        doc = build_initiative_project_doc(project, doc)
+    for collection in initiative.collections.all():
+        doc = build_initiative_collection_doc(collection, doc)
 
     return clean_doc(doc)
 
 
-def build_initiative_project_doc(project, doc):
-    """Build initiative project doc."""
-    doc["related_projects"].append(str(project))
-    doc["linked_description"].extend([project.purpose, project.description])
+def build_initiative_collection_doc(collection, doc):
+    """Build initiative collection doc."""
+    doc["related_collections"].append(str(collection))
+    doc["linked_description"].extend([collection.purpose, collection.description])
 
-    for term_annotation in project.term_annotations.all():
+    for term_annotation in collection.term_annotations.all():
         doc["related_terms"].append(str(term_annotation.term))
         doc["linked_description"].extend(
             [
@@ -132,7 +132,7 @@ def build_initiative_project_doc(project, doc):
             ]
         )
 
-    for report_annotation in project.report_annotations.all():
+    for report_annotation in collection.report_annotations.all():
         doc = build_initiative_report_doc(report_annotation, doc)
 
     return doc

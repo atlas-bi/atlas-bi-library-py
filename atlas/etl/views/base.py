@@ -58,7 +58,7 @@ def index(request):
         "history": [result.as_dict() for result in TaskResult.objects.all()[:10]],
         "search_etls": [
             "reports",
-            "projects",
+            "collections",
             "terms",
             "initiatives",
             "users",

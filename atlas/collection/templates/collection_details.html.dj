@@ -1,57 +1,51 @@
 {% load markdown %}
-{% if project.description %}
+{% if collection.description %}
     <h3>Description</h3>
     <div class="markdown">
-        {{ project.description|markdown|safe }}
+        {{ collection.description|markdown|safe }}
     </div>
 {% endif %}
-{% if project.purpose %}
+{% if collection.purpose %}
     <h3>Purpose</h3>
     <div class="markdown">
-        {{ project.purpose|markdown|safe }}
+        {{ collection.purpose|markdown|safe }}
     </div>
 {% endif %}
 <h3>Details</h3>
 <div class="listDetails">
-    {% if project.ops_owner %}
+    {% if collection.ops_owner %}
         <span class="listDetails-title">Operational Owner</span>
-        <span>{{ project.ops_owner }}</span>
+        <span>{{ collection.ops_owner }}</span>
     {% endif %}
-    {% if project.exec_owner %}
+    {% if collection.exec_owner %}
         <span class="listDetails-title">Executive Owner</span>
-        <span>{{ project.exec_owner }}</span>
+        <span>{{ collection.exec_owner }}</span>
     {% endif %}
-    {% if project.analytics_owner %}
+    {% if collection.analytics_owner %}
         <span class="listDetails-title">Analytics Owner</span>
-        <span>{{ project.analytics_owner }}</span>
+        <span>{{ collection.analytics_owner }}</span>
     {% endif %}
-    {% if project.data_owner %}
+    {% if collection.data_owner %}
         <span class="listDetails-title">Data Owner</span>
-        <span>{{ project.data_owner }}</span>
+        <span>{{ collection.data_owner }}</span>
     {% endif %}
-    {% if project.financial_impact %}
+    {% if collection.financial_impact %}
         <span class="listDetails-title">Financial Impact</span>
-        <span>{{ project.financial_impact }}</span>
+        <span>{{ collection.financial_impact }}</span>
     {% endif %}
-    {% if project.strategic_importance %}
+    {% if collection.strategic_importance %}
         <span class="listDetails-title">Strategic Importance</span>
-        <span>{{ project.strategic_importance }}</span>
+        <span>{{ collection.strategic_importance }}</span>
     {% endif %}
     <span class="listDetails-title">Last Updated By</span>
-    <span>{{ project.modified_by }}</span>
+    <span>{{ collection.modified_by }}</span>
     <span class="listDetails-title">Last Updated</span>
-    <span>
-        {{ project.modified_at }}
-    </span>
-    {% if project.hidden == "Y" %}
+    <span>{{ collection.modified_at }}</span>
+    {% if collection.hidden == "Y" %}
         <span class="listDetails-title">Hidden from Search</span>
-        <span>
-            Yes
-        </span>
+        <span>Yes</span>
     {% else %}
         <span class="listDetails-title">Visible in Search</span>
-        <span>
-            Yes
-        </span>
+        <span>Yes</span>
     {% endif %}
 </div>

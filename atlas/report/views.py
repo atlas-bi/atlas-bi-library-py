@@ -28,7 +28,7 @@ def index(request, report_id):
         .prefetch_related("docs__fragility_tags__fragility_tag")
         .prefetch_related("groups")
         .prefetch_related("groups__group")
-        .prefetch_related("projects")
+        .prefetch_related("collections")
         .get(report_id=report_id)
     )
 

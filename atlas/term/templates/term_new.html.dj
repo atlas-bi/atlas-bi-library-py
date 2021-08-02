@@ -18,17 +18,11 @@
                         {% csrf_token %}
                         <h3>Details</h3>
                         <div class="listDetails">
-                            <label>
-                                Name
-                            </label>
+                            <label>Name</label>
                             <input name="name"/>
-                            <label>
-                                External Standard Link
-                            </label>
+                            <label>External Standard Link</label>
                             <input name="external_standard_url"/>
-                            <label>
-                                Valid From
-                            </label>
+                            <label>Valid From</label>
                             <input type="date" name="valid_from"/>
                         </div>
                         <h3>Summary</h3>
@@ -47,9 +41,7 @@
                             </div>
                         {% endif %}
                         <h3>
-                            <button class="editor-save" type="submit">
-                                Save
-                            </button>
+                            <button class="editor-save" type="submit">Save</button>
                         </h3>
                     </form>
                 </div>

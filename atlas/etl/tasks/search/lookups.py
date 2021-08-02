@@ -5,6 +5,8 @@ from django.conf import settings
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from index.models import (
+    CollectionMilestoneFrequency,
+    CollectionMilestoneTemplates,
     FinancialImpact,
     Fragility,
     FragilityTag,
@@ -12,8 +14,6 @@ from index.models import (
     MaintenanceLogStatus,
     MaintenanceSchedule,
     OrganizationalValue,
-    ProjectMilestoneFrequency,
-    ProjectMilestoneTemplates,
     RunFrequency,
     StrategicImportance,
     UserRoles,
@@ -116,31 +116,31 @@ def updated_initiative_contacts(sender, instance, **kwargs):
     load_lookup.delay("initiative_contacts", instance.contact_id, str(instance))
 
 
-@receiver(pre_delete, sender=ProjectMilestoneFrequency)
-def deleted_project_milestone_frequency(sender, instance, **kwargs):
-    """When project_milestone_frequency is delete, remove it from search."""
-    delete_lookup.delay("project_milestone_frequency", instance.frequency_id)
+@receiver(pre_delete, sender=CollectionMilestoneFrequency)
+def deleted_collection_milestone_frequency(sender, instance, **kwargs):
+    """When collection_milestone_frequency is delete, remove it from search."""
+    delete_lookup.delay("collection_milestone_frequency", instance.frequency_id)
 
 
-@receiver(post_save, sender=ProjectMilestoneFrequency)
-def updated_project_milestone_frequency(sender, instance, **kwargs):
-    """When project_milestone_frequency is updated, add it to search."""
+@receiver(post_save, sender=CollectionMilestoneFrequency)
+def updated_collection_milestone_frequency(sender, instance, **kwargs):
+    """When collection_milestone_frequency is updated, add it to search."""
     load_lookup.delay(
-        "project_milestone_frequency", instance.frequency_id, str(instance)
+        "collection_milestone_frequency", instance.frequency_id, str(instance)
     )
 
 
-@receiver(pre_delete, sender=ProjectMilestoneTemplates)
-def deleted_project_milestone_templates(sender, instance, **kwargs):
-    """When project_milestone_templates is delete, remove it from search."""
-    delete_lookup.delay("project_milestone_templates", instance.template_id)
+@receiver(pre_delete, sender=CollectionMilestoneTemplates)
+def deleted_collection_milestone_templates(sender, instance, **kwargs):
+    """When collection_milestone_templates is delete, remove it from search."""
+    delete_lookup.delay("collection_milestone_templates", instance.template_id)
 
 
-@receiver(post_save, sender=ProjectMilestoneTemplates)
-def updated_project_milestone_templates(sender, instance, **kwargs):
-    """When project_milestone_templates is updated, add it to search."""
+@receiver(post_save, sender=CollectionMilestoneTemplates)
+def updated_collection_milestone_templates(sender, instance, **kwargs):
+    """When collection_milestone_templates is updated, add it to search."""
     load_lookup.delay(
-        "project_milestone_templates", instance.template_id, str(instance)
+        "collection_milestone_templates", instance.template_id, str(instance)
     )
 
 
@@ -287,23 +287,23 @@ def reset_lookups():
     docs.extend(
         [
             {
-                "id": "project_milestone_frequency_" + str(value.frequency_id),
-                "item_type": "project_milestone_frequency",
+                "id": "collection_milestone_frequency_" + str(value.frequency_id),
+                "item_type": "collection_milestone_frequency",
                 "item_name": value.name,
                 "atlas_id": value.frequency_id,
             }
-            for value in ProjectMilestoneFrequency.objects.all()
+            for value in CollectionMilestoneFrequency.objects.all()
         ]
     )
     docs.extend(
         [
             {
-                "id": "project_milestone_templates_" + str(value.template_id),
-                "item_type": "project_milestone_templates",
+                "id": "collection_milestone_templates_" + str(value.template_id),
+                "item_type": "collection_milestone_templates",
                 "item_name": value.name,
                 "atlas_id": value.template_id,
             }
-            for value in ProjectMilestoneTemplates.objects.all()
+            for value in CollectionMilestoneTemplates.objects.all()
         ]
     )
     docs.extend(

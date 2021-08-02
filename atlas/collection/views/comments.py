@@ -1,4 +1,4 @@
-"""Atlas Project Comments."""
+"""Atlas Collection Comments."""
 # pylint: disable=C0116,C0115,W0613
 import contextlib
 import json
@@ -9,7 +9,7 @@ from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.generic import ListView
-from index.models import ProjectComments, ProjectCommentStream, Projects
+from index.models import CollectionComments, CollectionCommentStream, Collections
 
 decorators = [never_cache, login_required]
 
@@ -18,17 +18,19 @@ decorators = [never_cache, login_required]
 def comments_delete(request, pk, comment_id):
     data = json.loads(request.body.decode("UTF-8"))
 
-    ProjectComments.objects.get(comment_id=comment_id).delete()
+    CollectionComments.objects.get(comment_id=comment_id).delete()
 
     if (
         data.get("stream")
-        and ProjectCommentStream.objects.filter(stream_id=data.get("stream")).exists()
+        and CollectionCommentStream.objects.filter(
+            stream_id=data.get("stream")
+        ).exists()
     ):
 
-        ProjectComments.objects.filter(stream__stream_id=data.get("stream")).delete()
-        ProjectCommentStream.objects.get(stream_id=data.get("stream")).delete()
+        CollectionComments.objects.filter(stream__stream_id=data.get("stream")).delete()
+        CollectionCommentStream.objects.get(stream_id=data.get("stream")).delete()
 
-    return redirect("project:comments", pk=pk)
+    return redirect("collection:comments", pk=pk)
 
 
 @method_decorator(never_cache, name="get")
@@ -39,15 +41,15 @@ class Comments(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["comments_url"] = Projects.objects.get(
-            project_id=self.kwargs["pk"]
+        context["comments_url"] = Collections.objects.get(
+            collection_id=self.kwargs["pk"]
         ).get_absolute_comments_url()
 
         return context
 
     def get_queryset(self):
         return (
-            ProjectComments.objects.filter(stream__project_id=self.kwargs["pk"])
+            CollectionComments.objects.filter(stream__collection_id=self.kwargs["pk"])
             .order_by("-stream_id", "comment_id")
             .all()
         )
@@ -60,18 +62,18 @@ class Comments(LoginRequiredMixin, ListView):
 
                 if (
                     data.get("stream")
-                    and ProjectCommentStream.objects.filter(
+                    and CollectionCommentStream.objects.filter(
                         stream_id=data.get("stream")
                     ).exists()
                 ):
-                    comment_stream = ProjectCommentStream.objects.filter(
+                    comment_stream = CollectionCommentStream.objects.filter(
                         stream_id=data.get("stream")
                     ).first()
                 else:
-                    comment_stream = ProjectCommentStream(project_id=pk)
+                    comment_stream = CollectionCommentStream(collection_id=pk)
                     comment_stream.save()
 
-                comment = ProjectComments(
+                comment = CollectionComments(
                     stream=comment_stream,
                     message=data.get("message"),
                     user=request.user,

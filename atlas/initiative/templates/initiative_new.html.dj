@@ -14,57 +14,41 @@
             </div>
             <div class="editorMdl-cnt" ss-container>
                 <div class="editorMdl-cntLiner">
-                    <form action="/initiatives/new" method="post" >
+                    <form action="{% url 'initiative:new' %}" method="post" >
                         {% csrf_token %}
                         <h3>Details</h3>
                         <div class="listDetails">
-                            <label>
-                                Name
-                            </label>
+                            <label>Name</label>
                             <input name="name" required />
-                            <label>
-                                External Contacts
-                            </label>
+                            <label>External Contacts</label>
                             <select type="dynamic-dropdown"
                                     name="linked_contacts"
                                     search-area="lookup/initiative_contacts"
                                     method="fullList"></select>
-                            <label>
-                                Operations Owner
-                            </label>
+                            <label>Operations Owner</label>
                             <input type="dynamic-dropdown" name="ops_owner_id" search-area="user_lookup"/>
-                            <label>
-                                Executive Owner
-                            </label>
+                            <label>Executive Owner</label>
                             <input type="dynamic-dropdown" name="exec_owner_id" search-area="user_lookup"/>
-                            <label>
-                                Financial Impact
-                            </label>
+                            <label>Financial Impact</label>
                             <input type="dynamic-dropdown"
                                    name="financial_impact_id"
                                    search-area="lookup/financial_impact"
                                    method="fullList"/>
-                            <label>
-                                Strategic Importance
-                            </label>
+                            <label>Strategic Importance</label>
                             <input type="dynamic-dropdown"
                                    name="strategic_importance_id"
                                    search-area="lookup/strategic_importance"
                                    method="fullList"/>
-                            <label>
-                                Linked Projects
-                            </label>
+                            <label>Linked Collections</label>
                             <select type="dynamic-dropdown"
-                                    name="linked_data_projects"
-                                    id="linked-data-projects"
-                                    search-area="project_lookup"></select>
+                                    name="linked_data_collections"
+                                    id="linked-data-collections"
+                                    search-area="collection_lookup"></select>
                         </div>
                         <h3>Description</h3>
                         <div class="editor" data-inputName="description" data-inputId="description"></div>
                         <h3>
-                            <button class="editor-save" type="submit">
-                                Save
-                            </button>
+                            <button class="editor-save" type="submit">Save</button>
                         </h3>
                     </form>
                 </div>

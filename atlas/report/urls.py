@@ -1,11 +1,13 @@
 from django.urls import path
 
-from . import views
+from . import apps, views
+
+app_name = apps.ReportConfig.name
 
 urlpatterns = [
-    path("<int:report_id>", views.index, name="index"),
-    path("<int:report_id>/comments", views.comments, name="comments"),
-    path("<int:report_id>/profile", views.profile, name="profile"),
-    path("<int:report_id>/maint_status", views.maint_status, name="maint_status"),
-    path("<int:report_id>/image/<int:image_id>", views.image, name="image"),
+    path("<int:pk>", views.index, name="index"),
+    path("<int:pk>/comments", views.comments, name="comments"),
+    path("<int:pk>/profile", views.profile, name="profile"),
+    path("<int:pk>/maint_status", views.maint_status, name="maint_status"),
+    path("<int:pk>/image/<int:image_id>", views.image, name="image"),
 ]
