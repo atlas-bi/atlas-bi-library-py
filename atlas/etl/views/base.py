@@ -70,8 +70,8 @@ def index(request):
 
 
 @never_cache
-def job_edit(request, job_id):
-    """View for editing jobs.
+def job_delete(request, job_id):
+    """View for deleting jobs.
 
     Currently will only delete a job.
     """

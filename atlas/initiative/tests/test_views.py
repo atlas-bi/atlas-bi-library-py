@@ -2,6 +2,9 @@
 
 Run test for this app with::
 
+    docker container start postgresql-container
+    docker container start solr_dev
+
     poetry run coverage erase; \
     poetry run coverage run -p manage.py \
         test initiative/ --no-input --pattern="test_views.py" --settings atlas.settings.test; \
@@ -11,6 +14,7 @@ Run test for this app with::
 """
 # pylint: disable=C0115,C0103
 
+from django.http.response import Http404
 from index.models import Collections, Initiatives
 
 from atlas.testutils import AtlasTestCase
@@ -54,11 +58,19 @@ class InitiativeTestCase(AtlasTestCase):
         self.login()
         initiative = Initiatives.objects.order_by("initiative_id").last()
 
-        assert (
+        self.assertEqual(
             self.client.get(
                 "/initiatives/%s" % (initiative.initiative_id + 1)
-            ).status_code
-            == 302
+            ).status_code,
+            404,
+        )
+
+        # try to delete it
+        self.assertEqual(
+            self.client.get(
+                "/initiatives/%s/delete" % (initiative.initiative_id + 1)
+            ).status_code,
+            404,
         )
 
     def test_valid_initiative(self):
@@ -96,6 +108,12 @@ class InitiativeTestCase(AtlasTestCase):
         assert response.status_code == 200
 
         self.verify_body_links(response.content)
+
+    def test_get_create_initiative(self):
+        self.login()
+
+        response = self.client.get("/initiatives/new", follow=False)
+        self.assertEqual(response.status_code, 302)
 
     def test_create_initiative(self):
         """Test creating, editing and deleting an initiative."""
@@ -174,15 +192,6 @@ class InitiativeTestCase(AtlasTestCase):
             .exists(),
             False,
         )
-
-        # check wrong edit method
-        response = self.client.get(
-            "/initiatives/%s/edit" % initiative_id, data=data, follow=True
-        )
-        self.assertEqual(response.status_code, 200)
-
-        # check link
-        self.assertTrue(response.redirect_chain[-1][0].endswith("initiatives/"))
 
         # delete initiative
         response = self.client.get(

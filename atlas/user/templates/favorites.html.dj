@@ -1,9 +1,9 @@
 {% load markdown %}
 {% load user_tags %}
-{% with permissions | authorized as authorized %}
+{% with permissions|authorized as authorized %}
     <!--@if (ViewBag.UserId == ViewBag.MyId ||-->
     <div class="favs-cntr">
-        {% if my_favorites | length > 0 %}
+        {% if my_favorites|length > 0 %}
             <div class="favs-colOne">
                 <h2 class="fav-col-title">Folders</h2>
                 <div id="fav-folders" ss-container="ss-container">
@@ -14,7 +14,7 @@
                             {{ my_favorites|length }}
                         </div>
                     </div>
-                    {% if my_folders | length > 0 %}
+                    {% if my_folders|length > 0 %}
                         {% for folder in my_folders %}
                             <div class="fav-folder drg"
                                  folder-id="{{ folder.folder_id }}"
@@ -52,8 +52,7 @@
             <div class="favs-colTwo">
                 <div class="favs {% if authorized %}disabled {% endif %} }" ss-container="ss-container">
                     <div id="favs-none"
-                        {% if my_favorites|length>
-                            0 %}
+                        {% if my_favorites|length > 0 %}
                             style="display:none;"
                         {% endif %}
                         >
@@ -102,7 +101,7 @@
                             </div>
                             <div class="fav-body">
                                 <h5 class="fav-title" data-toggle="clps" data-target="clps-{{ fav.favorite_id }}">
-                                    {% if fav.item_type | lower == "search" %}
+                                    {% if fav.item_type|lower == "search" %}
                                         <span class="darken">{{ fav }}</span>
                                     {% else %}
                                         <span class="darken">
@@ -126,7 +125,7 @@
                                         {% elif fav.certification_tag == "High Risk" %}
                                             <span class="srch-fieldRed">{{ fav.certification_tag }}</span>
                                         {% endif %}
-                                        {% if fav.item_type | lower == "search" %}
+                                        {% if fav.item_type|lower == "search" %}
                                             <span>Search Filter?</span>
                                         {% endif %}
                                         <span>{{ fav.item_type|title }}</span>
@@ -170,7 +169,8 @@
                     {% endfor %}
                 </div>
             </div>
-        {% elif top_run_reports | length > 0 %}
+        {% elif top_run_reports|length > 0 %}
+        {#<!--
             <div class="favs-none">
                 <div class="favs-noFavs" ss-container="ss-container">
                     <h3 class="favs-noFavsTitle">Your last run reports</h3>
@@ -208,6 +208,7 @@
                     }
                 </div>
             </div>
+            -->#}
         {% else %}
             <h4>Search to get started!</h4>
         {% endif %}

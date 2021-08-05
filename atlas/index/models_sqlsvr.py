@@ -779,6 +779,9 @@ class Initiatives(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse("initiative:item", kwargs={"pk": self.pk})
+
     @property
     def modified_at(self):
         if self._modified_at:
@@ -799,59 +802,8 @@ class Collections(models.Model):
     )
 
     name = models.TextField(db_column="Name", blank=True, default="")
-    purpose = models.TextField(db_column="Purpose", blank=True, default="")
+    search_summary = models.TextField(db_column="Purpose", blank=True, default="")
     description = models.TextField(db_column="Description", blank=True, default="")
-    ops_owner = models.ForeignKey(
-        "Users",
-        models.DO_NOTHING,
-        related_name="collection_ops_owner",
-        db_column="OperationOwnerID",
-        blank=True,
-        null=True,
-    )
-    exec_owner = models.ForeignKey(
-        "Users",
-        models.DO_NOTHING,
-        related_name="collection_exec_owner",
-        db_column="ExecutiveOwnerID",
-        blank=True,
-        null=True,
-    )
-    analytics_owner = models.ForeignKey(
-        "Users",
-        models.DO_NOTHING,
-        related_name="collection_analytics_owner",
-        db_column="AnalyticsOwnerID",
-        blank=True,
-        null=True,
-    )
-    data_owner = models.ForeignKey(
-        "Users",
-        models.DO_NOTHING,
-        related_name="collection_data_owner",
-        db_column="DataManagerID",
-        blank=True,
-        null=True,
-    )
-    financial_impact = models.ForeignKey(
-        "Financialimpact",
-        models.DO_NOTHING,
-        db_column="FinancialImpact",
-        blank=True,
-        null=True,
-        related_name="collections",
-    )
-    strategic_importance = models.ForeignKey(
-        "Strategicimportance",
-        models.DO_NOTHING,
-        db_column="StrategicImportance",
-        blank=True,
-        null=True,
-        related_name="collections",
-    )
-    external_documentation_url = models.TextField(
-        db_column="ExternalDocumentationURL", blank=True, default=""
-    )
     _modified_at = models.DateTimeField(
         db_column="LastUpdateDate", blank=True, auto_now=True
     )
@@ -879,7 +831,7 @@ class Collections(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("collection:details", kwargs={"pk": self.pk})
+        return reverse("collection:item", kwargs={"pk": self.pk})
 
     def get_absolute_delete_url(self):
         return reverse("collection:delete", kwargs={"pk": self.pk})
@@ -1054,8 +1006,7 @@ class CollectionMilestoneTemplates(models.Model):
 
 
 class CollectionReports(models.Model):
-    annotation_id = models.AutoField(db_column="ReportAnnotationID", primary_key=True)
-    annotation = models.TextField(db_column="Annotation", blank=True, default="")
+    link_id = models.AutoField(db_column="ReportAnnotationID", primary_key=True)
     report = models.ForeignKey(
         "Reports",
         models.DO_NOTHING,
@@ -1070,7 +1021,7 @@ class CollectionReports(models.Model):
         db_column="DataProjectId",
         blank=True,
         null=True,
-        related_name="report_annotations",
+        related_name="reports",
     )
     rank = models.IntegerField(db_column="Rank", blank=True, null=True)
 
@@ -1081,11 +1032,21 @@ class CollectionReports(models.Model):
     def __str__(self):
         return self.report.friendly_name
 
+    def get_absolute_delete_url(self):
+        return reverse(
+            "collection:report_delete",
+            kwargs={"pk": self.pk, collection_id: self.collection_id},
+        )
+
+    def get_absolute_edit_url(self):
+        return reverse(
+            "collection:report_edit",
+            kwargs={"pk": self.pk, collection_id: self.collection_id},
+        )
+
 
 class CollectionTerms(models.Model):
-    termannotationid = models.AutoField(db_column="TermAnnotationID", primary_key=True)
-    annotation = models.TextField(db_column="Annotation", blank=True, default="")
-
+    link_id = models.AutoField(db_column="TermAnnotationID", primary_key=True)
     term = models.ForeignKey(
         "Terms",
         models.DO_NOTHING,
@@ -1100,7 +1061,7 @@ class CollectionTerms(models.Model):
         db_column="DataProjectId",
         blank=True,
         null=True,
-        related_name="term_annotations",
+        related_name="terms",
     )
     rank = models.IntegerField(db_column="Rank", blank=True, null=True)
 
@@ -1110,6 +1071,18 @@ class CollectionTerms(models.Model):
 
     def __str__(self):
         return self.term.name
+
+    def get_absolute_delete_url(self):
+        return reverse(
+            "collection:term_delete",
+            kwargs={"pk": self.pk, collection_id: self.collection_id},
+        )
+
+    def get_absolute_edit_url(self):
+        return reverse(
+            "collection:term_edit",
+            kwargs={"pk": self.pk, collection_id: self.collection_id},
+        )
 
 
 class CollectionCommentStream(models.Model):
@@ -1983,7 +1956,7 @@ class Terms(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("term:details", kwargs={"pk": self.pk})
+        return reverse("term:item", kwargs={"pk": self.pk})
 
     def get_absolute_delete_url(self):
         return reverse("term:delete", kwargs={"pk": self.pk})

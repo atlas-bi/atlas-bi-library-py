@@ -154,7 +154,7 @@ Testing uses a local postgres server and redis server. The server names are "pos
 
 2. Start solr
 
-See /solr/readmemd for a guide.
+See /solr/readme.rst for a guide.
 
 3. Run code tests directly
 

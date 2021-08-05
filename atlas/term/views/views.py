@@ -47,7 +47,7 @@ class TermList(LoginRequiredMixin, ListView):
 
     def get(self, request, **kwargs):
         if request.GET.get("id"):
-            return redirect("/terms/%s" % request.GET.get("id"))
+            return redirect("term:item", pk=request.GET.get("id"))
 
         return super().get(request, **kwargs)
 
@@ -121,7 +121,7 @@ class TermDetails(LoginRequiredMixin, DetailView):
 
         term.save()
 
-        return redirect("term:details", **kwargs)
+        return redirect("term:item", **kwargs)
 
 
 class TermNew(LoginRequiredMixin, View):
@@ -141,7 +141,7 @@ class TermNew(LoginRequiredMixin, View):
 
         term.save()
 
-        return redirect("term:details", pk=term.term_id)
+        return redirect("term:item", pk=term.term_id)
 
     def get(self, request):
         return redirect("term:list")

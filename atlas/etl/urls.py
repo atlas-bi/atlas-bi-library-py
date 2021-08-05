@@ -39,6 +39,6 @@ urlpatterns = [
         lookups.lookups,
         name="search_lookups",
     ),
-    path("job/<int:job_id>/delete", base.job_edit, name="job_edit"),
+    path("job/<int:job_id>/delete", base.job_delete, name="job_delete"),
     path("job/schedule", base.job_schedule, name="job_schedule"),
 ]

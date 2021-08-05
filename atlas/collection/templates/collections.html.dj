@@ -1,6 +1,7 @@
 {% extends "layout.html.dj" %}
 {% load markdown %}
 {% load compress %}
+{% load static %}
 {% block start_css %}
     {% if 26 in permissions %}
         <link rel="stylesheet" href="{% static '/lib/codemirror/mycss.css' %}" type="text/css" />
@@ -35,7 +36,7 @@
         <div id="collapse-collection-{{ collection.collection_id }}" class="clps">
             <div class="drop-box">
                 <h5>
-                    <a class="drop-link" href="/collections/{{ collection.collection_id }}">
+                    <a class="drop-link" href="{{ collection.get_absolute_url }}">
                         Open This Collection
                     </a>
                 </h5>

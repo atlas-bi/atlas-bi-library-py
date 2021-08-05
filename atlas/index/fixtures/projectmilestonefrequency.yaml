@@ -1,20 +1,20 @@
-- model: index.projectmilestonefrequency
+- model: index.collectionmilestonefrequency
   pk: 1
   fields:
     name: Day(s)
-- model: index.projectmilestonefrequency
+- model: index.collectionmilestonefrequency
   pk: 2
   fields:
     name: Week(s)
-- model: index.projectmilestonefrequency
+- model: index.collectionmilestonefrequency
   pk: 3
   fields:
     name: Month(s)
-- model: index.projectmilestonefrequency
+- model: index.collectionmilestonefrequency
   pk: 4
   fields:
     name: Year(s)
-- model: index.projectmilestonefrequency
+- model: index.collectionmilestonefrequency
   pk: 5
   fields:
     name: Quarter(s)

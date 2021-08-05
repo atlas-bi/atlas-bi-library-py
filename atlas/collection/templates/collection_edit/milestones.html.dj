@@ -1,6 +1,5 @@
 <h3>New Milestone</h3>
-<form asp-page-handler="AddMilestone" method="post" id=AddMilestone>
-    <input asp-for="DpMilestone.DataCollectionId" type="hidden" value='@Model.DataCollection.Id' />
+<form asp-page-handler="AddMilestone" method="post" id="AddMilestone">
     <input type='hidden' name='DpChecklist' value='' />
     <div class="listDetails">
         <label>Start Date</label>

@@ -11,7 +11,7 @@
         </form>
         {% if comments|length > 0 %}
             {% for comment in comments %}
-                <div class=" {% ifchanged comment.stream_id %} comments-msg {% else %} comments-newMsgReply {% endifchanged %} ">
+                <div class="{% ifchanged comment.stream_id %} comments-msg {% else %} comments-newMsgReply {% endifchanged %} ">
                     <div class="comments-msgHdr">
                         <h6>
                             <strong>{{ comment.user.full_name }}</strong>

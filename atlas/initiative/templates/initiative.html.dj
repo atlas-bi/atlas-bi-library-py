@@ -1,10 +1,11 @@
 {% extends "layout.html.dj" %}
 {% load compress %}
+{% load static %}
 {% block start_css %}
     {{ block.super }}
     {% if 22 in permissions or 21 in permissions %}
-        <link rel="stylesheet" href="{% static /lib/codemirror/mycss.css' %}" type="text/css" />
-        <link rel="stylesheet" href="{% static /css/live-editor.scss' %}" type="text/x-scss" />
+        <link rel="stylesheet" href="{% static '/lib/codemirror/mycss.css' %}" type="text/css" />
+        <link rel="stylesheet" href="{% static '/css/live-editor.scss' %}" type="text/x-scss" />
     {% endif %}
 {% endblock start_css %}
 {% block modals %}
@@ -28,7 +29,7 @@
         <!-- delete -->
         <a class="nav-link"
            data-tooltip="Delete this Initaitive"
-           href="{% url initiative:delete' initiative.initiative_id %}"
+           href="{% url 'initiative:delete' initiative.initiative_id %}"
            onclick="return confirm('Are you sure you want to remove this?');">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                 <path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/>
@@ -86,25 +87,25 @@
 {% endblock body %}
 {% block js %}
     {% compress js file flowchart %}
-        <script src="{% static /lib/flowchart/raphael.min.js' %}"></script>
-        <script src="{% static /lib/flowchart/flowchart.min.js' %}"></script>
-        <script src="{% static /lib/flowchart/custom.js' %}"></script>
+        <script src="{% static '/lib/flowchart/raphael.min.js' %}"></script>
+        <script src="{% static '/lib/flowchart/flowchart.min.js' %}"></script>
+        <script src="{% static '/lib/flowchart/custom.js' %}"></script>
     {% endcompress %}
     <script>hljs.highlightAll();
     </script>
     {% if 22 in permissions or 21 in permissions %}
         {% compress js file editor %}
-            <script src="{% static /lib/codemirror/codemirror.js' %}" ></script>
-            <script src="{% static /lib/codemirror/autorefresh.js' %}" ></script>
-            <script src="{% static /lib/codemirror/overlay.js' %}" ></script>
-            <script src="{% static /lib/codemirror/markdown.js' %}" ></script>
-            <script src="{% static /lib/codemirror/gfm.js' %}" ></script>
-            <script src="{% static /lib/codemirror/python.js' %}" ></script>
-            <script src="{% static /lib/codemirror/r.js' %}" ></script>
-            <script src="{% static /lib/codemirror/shell.js' %}" ></script>
-            <script src="{% static /lib/codemirror/sql.js' %}" ></script>
-            <script src="{% static /js/editor.js' %}" ></script>
-            <script src="{% static /js/utility/checkbox.js' %}" ></script>
+            <script src="{% static '/lib/codemirror/codemirror.js' %}" ></script>
+            <script src="{% static '/lib/codemirror/autorefresh.js' %}" ></script>
+            <script src="{% static '/lib/codemirror/overlay.js' %}" ></script>
+            <script src="{% static '/lib/codemirror/markdown.js' %}" ></script>
+            <script src="{% static '/lib/codemirror/gfm.js' %}" ></script>
+            <script src="{% static '/lib/codemirror/python.js' %}" ></script>
+            <script src="{% static '/lib/codemirror/r.js' %}" ></script>
+            <script src="{% static '/lib/codemirror/shell.js' %}" ></script>
+            <script src="{% static '/lib/codemirror/sql.js' %}" ></script>
+            <script src="{% static '/js/editor.js' %}" ></script>
+            <script src="{% static '/js/utility/checkbox.js' %}" ></script>
         {% endcompress %}
     {% endif %}
 {% endblock js %}

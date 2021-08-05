@@ -1,55 +1,17 @@
 <h3>Details</h3>
-<form action="/collections/{{ collection.collection_id }}/edit" method="post">
+<form action="{% url 'collection:edit' collection.collection_id %}" method="post">
     {% csrf_token %}
     <div class="listDetails">
         <label>Name</label>
         <input name="name" class="form-control" required value="{{ collection }}" />
-        <label>Operations Owner</label>
-        <input type="dynamic-dropdown"
-               name="ops_owner_id"
-               value="{{ collection.ops_owner_id|default:"
-               " }}" visible-value="{{ collection.ops_owner|default:"
-               " }}" search-area="user_lookup"/>
-        <label>Executive Owner</label>
-        <input type="dynamic-dropdown"
-               name="exec_owner_id"
-               value="{{ collection.exec_owner_id|default:"
-               " }}" visible-value="{{ collection.exec_owner|default:"
-               " }}" search-area="user_lookup"/>
-        <label>Analytics Owner</label>
-        <input type="dynamic-dropdown"
-               name="analytics_owner_id"
-               value="{{ collection.analytics_owner_id|default:"
-               " }}" visible-value="{{ collection.analytics_owner|default:"
-               " }}" search-area="user_lookup"/>
-        <label>Data Owner</label>
-        <input type="dynamic-dropdown"
-               name="data_owner_id"
-               value="{{ collection.data_owner_id|default:"
-               " }}" visible-value="{{ collection.data_owner|default:"
-               " }}" search-area="user_lookup"/>
-        <label>Financial Impact</label>
-        <input type="dynamic-dropdown"
-               name="financial_impact_id"
-               search-area="lookup/financial-impact"
-               method="fullList"
-               value="{{ collection.financial_impact_id|default:"
-               " }}" visible-value="{{ collection.financial_impact|default:"/>
-        <label>Strategic Importance</label>
-        <input type="dynamic-dropdown"
-               name="strategic_importance_id"
-               search-area="lookup/strategic-importance"
-               method="fullList"
-               visible-value="{{ collection.strategic_importance|default:"
-               " }}" value="{{ collection.strategic_importance_id|default:"/>
         <label>Hide Report?</label>
-        <div class='form-check' >
+        <div class="form-check">
             <input type="checkbox" id="DoNotPurge" />
-            <input type="hidden" name="hidden" value="{{ collection.hidden|default:"N" }}">
+            <input type="hidden" name="hidden" value="{{ collection.hidden|default:"N" }}" />
         </div>
     </div>
-    <h3>Purpose</h3>
-    <div class="editor" data-inputName="purpose" data-inputId="purpose">
+    <h3>Search Summary</h3>
+    <div class="editor" data-inputName="search_summary" data-inputId="search_summary">
         <textarea>{{ collection.purpose|safe }}</textarea>
     </div>
     <h3>Description</h3>

@@ -14,37 +14,16 @@
             </div>
             <div class="editorMdl-cnt" ss-container>
                 <div class="editorMdl-cntLiner">
-                    <form action="/collections/new" method="post">
+                    <form action="{% url 'collection:new' %}" method="post">
                         {% csrf_token %}
                         <h3>Details</h3>
                         <div class="listDetails">
                             <label>Name</label>
                             <input name="name" required />
-                            <label>Operations Owner</label>
-                            <input type="dynamic-dropdown" name="ops_owner_id" value="" search-area="user_lookup"/>
-                            <label>Executive Owner</label>
-                            <input type="dynamic-dropdown" name="exec_owner_id" value="" search-area="user_lookup"/>
-                            <label>Analytics Owner</label>
-                            <input type="dynamic-dropdown"
-                                   name="analytics_owner_id"
-                                   value=""
-                                   search-area="user_lookup"/>
-                            <label>Data Owner</label>
-                            <input type="dynamic-dropdown" name="data_owner_id" value="" search-area="user_lookup"/>
-                            <label>Financial Impact</label>
-                            <input type="dynamic-dropdown"
-                                   name="financial_impact_id"
-                                   search-area="lookup/financial-impact"
-                                   method="fullList"/>
-                            <label>Strategic Importance</label>
-                            <input type="dynamic-dropdown"
-                                   name="strategic_importance_id"
-                                   search-area="lookup/strategic-importance"
-                                   method="fullList"/>
                             <label>Hide Report?</label>
-                            <div class='form-check' >
+                            <div class="form-check">
                                 <input type="checkbox" id="DoNotPurge" />
-                                <input type="hidden" name="hidden">
+                                <input type="hidden" name="hidden"/>
                             </div>
                         </div>
                         <h3>Purpose</h3>

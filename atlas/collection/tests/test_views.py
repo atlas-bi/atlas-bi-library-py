@@ -137,15 +137,8 @@ class CollectionTestCase(AtlasTestCase):
         # create new collection
         data = {
             "name": "test collection",
-            "purpose": "testing, yeah bro",
+            "search_summary": "testing, yeah bro",
             "description": "collection description",
-            "ops_owner_id": "1",
-            "exec_owner_id": "1",
-            "analytics_owner_id": "1",
-            "data_owner_id": "1",
-            "financial_impact_id": "1",
-            "strategic_importance_id": "1",
-            "external_documentation_url": "some://thing.cool",
             "hidden": "Y",
         }
 
@@ -167,35 +160,13 @@ class CollectionTestCase(AtlasTestCase):
 
         # check name, summary, tech def
         self.assertEqual(collection.name, data["name"])
-        self.assertEqual(collection.purpose, data["purpose"])
+        self.assertEqual(collection.search_summary, data["search_summary"])
         self.assertEqual(collection.description, data["description"])
-        self.assertEqual(collection.ops_owner_id, int(data["ops_owner_id"]))
-        self.assertEqual(collection.exec_owner_id, int(data["exec_owner_id"]))
-        self.assertEqual(collection.analytics_owner_id, int(data["analytics_owner_id"]))
-        self.assertEqual(collection.data_owner_id, int(data["data_owner_id"]))
-        self.assertEqual(
-            collection.financial_impact_id, int(data["financial_impact_id"])
-        )
-        self.assertEqual(
-            collection.strategic_importance_id, int(data["strategic_importance_id"])
-        )
-        self.assertEqual(
-            collection.external_documentation_url, data["external_documentation_url"]
-        )
         self.assertEqual(collection.hidden, "Y" if data["hidden"] == "Y" else "N")
 
         # edit collection
-        data.pop("purpose")
+        data.pop("search_summary")
         data.pop("hidden")
-
-        data.pop("ops_owner_id")
-        data.pop("exec_owner_id")
-        data.pop("analytics_owner_id")
-        data.pop("data_owner_id")
-        data.pop("external_documentation_url")
-
-        data["financial_impact_id"] = "2"
-        data["strategic_importance_id"] = "2"
 
         data["description"] = "edited description"
 
@@ -214,19 +185,8 @@ class CollectionTestCase(AtlasTestCase):
 
         # check name, summary, tech def
         self.assertEqual(collection.name, data["name"])
-        self.assertEqual(collection.purpose, "")
+        self.assertEqual(collection.search_summary, "")
         self.assertEqual(collection.description, data["description"])
-        self.assertEqual(collection.ops_owner_id, None)
-        self.assertEqual(collection.exec_owner_id, None)
-        self.assertEqual(collection.analytics_owner_id, None)
-        self.assertEqual(collection.data_owner_id, None)
-        self.assertEqual(
-            collection.financial_impact_id, int(data["financial_impact_id"])
-        )
-        self.assertEqual(
-            collection.strategic_importance_id, int(data["strategic_importance_id"])
-        )
-        self.assertEqual(collection.external_documentation_url, "")
         self.assertEqual(collection.hidden, "N")
 
         # add term and report annotation

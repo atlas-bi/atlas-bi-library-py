@@ -8,7 +8,9 @@ from index.models import ReportComments, ReportDocs, ReportImages, Reports, Term
 
 
 @login_required
-def index(request, report_id):
+def index(request, pk):
+
+    report_id = pk
 
     report = (
         Reports.objects.select_related("docs")
@@ -26,8 +28,8 @@ def index(request, report_id):
         .prefetch_related("docs__logs__log__maintainer")
         .prefetch_related("docs__fragility_tags")
         .prefetch_related("docs__fragility_tags__fragility_tag")
-        .prefetch_related("groups")
-        .prefetch_related("groups__group")
+        #   .prefetch_related("groups")
+        #   .prefetch_related("groups__group")
         .prefetch_related("collections")
         .get(report_id=report_id)
     )

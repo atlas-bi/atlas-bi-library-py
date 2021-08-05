@@ -83,13 +83,6 @@
     initiative: 1
     name: Test collection to group stuff up
     description: "#Do\n\n##we\n\n```python\n\nneed one?```\n"
-    ops_owner: 1
-    exec_owner: 1
-    analytics_owner: 1
-    data_owner: 1
-    financial_impact: 1
-    strategic_importance: 1
-    external_documentation_url: www.google.com
     _modified_at: 2020-01-01 00:00:00+0
     modified_by: 1
 

@@ -20,10 +20,10 @@
             <h3 class="title is-3">Health Check</h2>
                 <div class="block">
                     <h3>Solr:
-                        <span data-ajax="/etl/solr_health" data-freq="10"></span>
+                        <span data-ajax="{% url 'etl:solr_health' %}" data-freq="10"></span>
                     </h3>
                     <h3>Celery:
-                        <span data-ajax="/etl/celery_health" data-freq="10"></span>
+                        <span data-ajax="{% url 'etl:celery_health' %}" data-freq="10"></span>
                     </h3>
                     <h3>Celery Beat: ?</h3>
                 </div>
@@ -72,7 +72,7 @@
                             </div>
                         </div>
                     </div>
-                    <div data-ajax="/etl/job/schedule" data-freq="10"></div>
+                    <div data-ajax="{% url 'etl:job_schedule' %}" data-freq="10"></div>
                     <h3 class="title is-3">Recent Task History</h3>
                     <div class="table-container">
                         <table class="table is-striped is-narrow">

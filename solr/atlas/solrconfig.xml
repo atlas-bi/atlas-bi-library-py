@@ -946,9 +946,9 @@
       <str name="facet.range.gap">+1MONTH</str>
     </lst>
   </requestHandler>
-  <requestHandler name="/projects" class="solr.SearchHandler">
+  <requestHandler name="/collections" class="solr.SearchHandler">
     <lst name="appends">
-      <str name="fq">{!tag=dt}type:projects</str>
+      <str name="fq">{!tag=dt}type:collections</str>
     </lst>
     <lst name="defaults">
       <str name="echoParams">explicit</str>
@@ -987,7 +987,7 @@
     </lst>
   </requestHandler>
 
-  <initParams path="/update/**,/query,/select,/spell,/reports,/projects,/initiatives,/users,/aterms">
+  <initParams path="/update/**,/query,/select,/spell,/reports,/collections,/initiatives,/users,/aterms">
     <lst name="defaults">
       <str name="df">all_text</str>
     </lst>

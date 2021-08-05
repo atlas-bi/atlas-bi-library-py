@@ -1,3 +1,4 @@
+{% load static %}
 <h3 class="pageSection-title">Images</h3>
 {% if report.imgs.all|length == 1 %}
     <div class="pop text-center" style="max-height:400px;">
@@ -11,10 +12,10 @@
         {% for img in report.imgs.all %}
             <div class="crsl-itm pop">
                 {% if forloop.counter0 > 0 %}
-                    <img data-src="{% url report:image pk=report.report_id image_id=img.image_id %}"
+                    <img data-src="{% url 'report:image' pk=report.report_id image_id=img.image_id %}"
                          src="{% static '/img/loader.gif' %}"/>
                 {% else %}
-                    <img src="{% url report:image pk=report.report_id image_id=img.image_id %}"/>
+                    <img src="{% url 'report:image' pk=report.report_id image_id=img.image_id %}"/>
                 {% endif %}
             </div>
         {% endfor %}

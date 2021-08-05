@@ -1,10 +1,11 @@
 {% extends "layout.html.dj" %}
 {% load markdown %}
 {% load compress %}
+{% load static %}
 {% block start_css %}
     {% if 20 in permissions or 22 in permissions %}
-        <link rel="stylesheet" href="{% static /lib/codemirror/mycss.css' %}" type="text/css" />
-        <link rel="stylesheet" href="{% static /css/live-editor.scss' %}" type="text/x-scss" />
+        <link rel="stylesheet" href="{% static '/lib/codemirror/mycss.css' %}" type="text/css" />
+        <link rel="stylesheet" href="{% static '/css/live-editor.scss' %}" type="text/x-scss" />
     {% endif %}
 {% endblock start_css %}
 {% block side_links %}
@@ -50,9 +51,9 @@
 {% endblock body %}
 {% block js %}
     {% compress js file flowchart %}
-        <script src="{% static /lib/flowchart/raphael.min.js' %}"></script>
-        <script src="{% static lib/flowchart/flowchart.min.js' %}"></script>
-        <script src="{% static lib/flowchart/custom.js' %}"></script>
+        <script src="{% static '/lib/flowchart/raphael.min.js' %}"></script>
+        <script src="{% static '/lib/flowchart/flowchart.min.js' %}"></script>
+        <script src="{% static '/lib/flowchart/custom.js' %}"></script>
     {% endcompress %}
     <script>hljs.highlightAll();
     </script>

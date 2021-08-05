@@ -4,7 +4,9 @@ import json
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.generic import DetailView, ListView, View
 from index.models import (
     CollectionAttachments,
     CollectionChecklist,
@@ -21,93 +23,75 @@ from index.models import (
 )
 
 
-@login_required
-def index(request):
-    """Return main collection list."""
-    # maintain compatibility with dotnet urls.
-    if request.GET.get("id"):
-        return redirect("/collections/%s" % request.GET.get("id"))
+class CollectionList(LoginRequiredMixin, ListView):
+    queryset = Collections.objects.all().order_by("-_modified_at")
+    context_object_name = "collections"
+    template_name = "collections.html.dj"
+    extra_context = {"title": "Collections"}
 
-    context = {
-        "permissions": request.user.get_permissions(),
-        "user": request.user,
-        "favorites": request.user.get_favorites(),
-        "collections": Collections.objects.all().order_by("-_modified_at"),
-        "title": "Collections",
-    }
+    def get(self, request, **kwargs):
+        if request.GET.get("id"):
+            return redirect("collection:item", pk=request.GET.get("id"))
 
-    return render(
-        request,
-        "collections.html.dj",
-        context,
-    )
+        return super().get(request, **kwargs)
 
 
-@login_required
-def item(request, collection_id):
-    """Return specific collection."""
-    try:
-        collection = Collections.objects.get(collection_id=collection_id)
-    except Collections.DoesNotExist:
-        return redirect(index)
+class CollectionDetails(LoginRequiredMixin, DetailView):
+    template_name = "collection.html.dj"
+    context_object_name = "collection"
+    queryset = Collections.objects
 
-    context = {
-        "permissions": request.user.get_permissions(),
-        "user": request.user,
-        "favorites": request.user.get_favorites(),
-        "collection": collection,
-        "title": collection.name,
-        "favorite": "favorite"
-        if request.user.has_favorite("collection", collection_id)
-        else "",
-    }
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["favorite"] = (
+            "favorite"
+            if self.request.user.has_favorite("collection", self.kwargs["pk"])
+            else ""
+        )
+        context["title"] = self.object.name
 
-    return render(
-        request,
-        "collection.html.dj",
-        context,
-    )
+        return context
+
+    def post(self, request, **kwargs):
+
+        collection = Collections.objects.get(collection_id=self.kwargs["pk"])
+        collection.name = request.POST.get("name", "")
+        collection.search_summary = request.POST.get("search_summary", "")
+        collection.description = request.POST.get("description", "")
+        collection.hidden = "Y" if request.POST.get("hidden", "N") == "Y" else "N"
+        collection.modified_by = request.user
+
+        collection.save()
+
+        return redirect(collection.get_absolute_url())
 
 
-@login_required
-def edit(request, collection_id=None):
-    """Save collection edits."""
-    if request.method == "GET":
-        return redirect(index)
+class CollectionNew(LoginRequiredMixin, View):
+    def post(self, request):
+        collection = Collections(
+            name=request.POST.get("name", ""),
+            search_summary=request.POST.get("search_summary", ""),
+            description=request.POST.get("description", ""),
+            hidden="Y" if request.POST.get("hidden", "N") == "Y" else "N",
+            modified_by=request.user,
+        )
 
-    collection = (
-        Collections.objects.get(collection_id=collection_id)
-        if collection_id
-        else Collections()
-    )
-    collection.name = request.POST.get("name", "")
-    collection.purpose = request.POST.get("purpose", "")
-    collection.description = request.POST.get("description", "")
-    collection.ops_owner_id = request.POST.get("ops_owner_id")
-    collection.exec_owner_id = request.POST.get("exec_owner_id")
-    collection.analytics_owner_id = request.POST.get("analytics_owner_id")
-    collection.data_owner_id = request.POST.get("data_owner_id")
-    collection.financial_impact_id = request.POST.get("financial_impact_id")
-    collection.strategic_importance_id = request.POST.get("strategic_importance_id")
-    collection.external_documentation_url = request.POST.get(
-        "external_documentation_url", ""
-    )
-    collection.hidden = "Y" if request.POST.get("hidden", "N") == "Y" else "N"
-    collection.modified_by = request.user
+        collection.save()
 
-    collection.save()
+        return redirect(collection.get_absolute_url())
 
-    return redirect(item, collection.collection_id)
+    def get(self, request):
+        return redirect("collection:list")
 
 
 @login_required
-def reports_delete(request, collection_id, annotation_id):
+def reports_delete(request, pk, annotation_id):
     """Add or edit a collection report annotation."""
     CollectionReports.objects.filter(annotation_id=annotation_id).filter(
-        collection_id=collection_id
+        collection_id=pk
     ).delete()
 
-    collection = Collections.objects.get(collection_id=collection_id)
+    collection = get_object_or_404(Collections, pk=pk)
 
     return render(
         request, "collection_edit/current_reports.html.dj", {"collection": collection}
@@ -115,14 +99,14 @@ def reports_delete(request, collection_id, annotation_id):
 
 
 @login_required
-def reports(request, collection_id, annotation_id=None):
+def reports(request, pk, annotation_id=None):
     """Add or edit a collection report annotation."""
     if request.method == "GET":
-        return redirect(item, collection_id)
+        return redirect("collection:item", pk=pk)
 
     data = json.loads(request.body.decode("UTF-8"))
 
-    collection = Collections.objects.get(collection_id=collection_id)
+    collection = get_object_or_404(Collections, pk=pk)
 
     # validate report_id
     if not Reports.objects.filter(report_id=data.get("report_id")).exists():
@@ -203,7 +187,7 @@ def terms(request, collection_id, annotation_id=None):
 
 
 @login_required
-def delete(request, collection_id):
+def delete(request, pk):
     """Delete a collection.
 
     1. comments
@@ -214,23 +198,21 @@ def delete(request, collection_id):
     6. attachments
     7. collection
     """
-    CollectionComments.objects.filter(stream_id__collection_id=collection_id).delete()
-    CollectionCommentStream.objects.filter(collection_id=collection_id).delete()
+    CollectionComments.objects.filter(stream_id__collection_id=pk).delete()
+    CollectionCommentStream.objects.filter(collection_id=pk).delete()
 
-    CollectionTerms.objects.filter(collection_id=collection_id).delete()
-    CollectionReports.objects.filter(collection_id=collection_id).delete()
+    CollectionTerms.objects.filter(collection_id=pk).delete()
+    CollectionReports.objects.filter(collection_id=pk).delete()
 
-    CollectionMilestoneTasksCompleted.objects.filter(
-        collection_id=collection_id
-    ).delete()
+    CollectionMilestoneTasksCompleted.objects.filter(collection_id=pk).delete()
 
-    CollectionChecklist.objects.filter(task__collection_id=collection_id).delete()
-    CollectionMilestoneTasks.objects.filter(collection_id=collection_id).delete()
+    CollectionChecklist.objects.filter(task__collection_id=pk).delete()
+    CollectionMilestoneTasks.objects.filter(collection_id=pk).delete()
 
-    CollectionChecklistCompleted.objects.filter(collection_id=collection_id).delete()
+    CollectionChecklistCompleted.objects.filter(collection_id=pk).delete()
 
-    CollectionAttachments.objects.filter(collection_id=collection_id).delete()
+    CollectionAttachments.objects.filter(collection_id=pk).delete()
 
-    Collections.objects.get(collection_id=collection_id).delete()
+    get_object_or_404(Collections, pk=pk).delete()
 
-    return redirect(index)
+    return redirect("collection:list")

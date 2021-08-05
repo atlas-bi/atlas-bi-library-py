@@ -15,7 +15,7 @@
             </div>
             <div class="editorMdl-cnt" ss-container>
                 <div class="editorMdl-cntLiner">
-                    <form action="{% 'initiative:edit' initiative.initiative_id %}" method="post">
+                    <form action="{% url 'initiative:edit' initiative.initiative_id %}" method="post">
                         {% csrf_token %}
                         <h3>Details</h3>
                         <div class="listDetails">
@@ -35,29 +35,29 @@
                             <label>Operations Owner</label>
                             <input type="dynamic-dropdown"
                                    name="ops_owner_id"
-                                   value="{{ initiative.ops_owner_id|default:"
-                                   visible-value="{{ initiative.ops_owner|default:"
+                                   value="{{ initiative.ops_owner_id|default:"" }}"
+                                   visible-value="{{ initiative.ops_owner|default:"" }}"
                                    search-area="user_lookup"/>
                             <label>Executive Owner</label>
                             <input type="dynamic-dropdown"
                                    name="exec_owner_id"
-                                   value="{{ initiative.exec_owner_id|default:"
-                                   visible-value="{{ initiative.exec_owner|default:"
+                                   value="{{ initiative.exec_owner_id|default:"" }}"
+                                   visible-value="{{ initiative.exec_owner|default:"" }}"
                                    search-area="user_lookup"/>
                             <label>Financial Impact</label>
                             <input type="dynamic-dropdown"
                                    name="financial_impact_id"
                                    search-area="lookup/financial_impact"
                                    method="fullList"
-                                   visible-value="{{ initiative.financial_impact|default:"
-                                   value="{{ initiative.financial_impact_id|default:"/>
+                                   visible-value="{{ initiative.financial_impact|default:"" }}"
+                                   value="{{ initiative.financial_impact_id|default:"" }}"/>
                             <label>Strategic Importance</label>
                             <input type="dynamic-dropdown"
                                    name="strategic_importance_id"
                                    search-area="lookup/strategic_importance"
                                    method="fullList"
-                                   visible-value="{{ initiative.strategic_importance|default:"
-                                   value="{{ initiative.strategic_importance_id|default:"/>
+                                   visible-value="{{ initiative.strategic_importance|default:"" }}"
+                                   value="{{ initiative.strategic_importance_id|default:"" }}"/>
                             <label>Linked Collections</label>
                             <select type="dynamic-dropdown"
                                     name="linked_data_collections"

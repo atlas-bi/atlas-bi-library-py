@@ -215,7 +215,7 @@
   <field name="orphan" type="text_en"/>
   <field name="query" type="text_en" multiValued="true" />
   <field name="related_initiatives" type="text_general" multiValued="true" />
-  <field name="related_projects" type="text_general" multiValued="true" />
+  <field name="related_collections" type="text_general" multiValued="true" />
   <field name="related_reports" type="text_general" multiValued="true" />
   <field name="related_terms" type="text_general" multiValued="true" />
   <field name="report_last_updated" type="pdate"/>
@@ -268,7 +268,7 @@
   <field name="maintenance_schedule_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="enabled_for_hyperspace_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="do_not_purge_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
-  <field name="related_projects_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="related_collections_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="related_initiatives_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="approved_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="approved_by_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
@@ -349,7 +349,7 @@
   <copyField source="approved" dest="approved_str" maxChars="256"/>
   <copyField source="approved_by" dest="approved_by_str" maxChars="256"/>
   <copyField source="has_external_standard" dest="has_external_standard_str" maxChars="256"/>
-  <copyField source="related_projects" dest="related_projects_str" maxChars="256"/>
+  <copyField source="related_collections" dest="related_collections_str" maxChars="256"/>
   <copyField source="external_url" dest="external_url_str" maxChars="256"/>
 
 
@@ -379,7 +379,7 @@
   <copyField source="report_type_short" dest="all_text" />
   <copyField source="name" dest="all_text" />
   <copyField source="approved_by" dest="all_text" />
-  <copyField source="related_projects" dest="all_text" />
+  <copyField source="related_collections" dest="all_text" />
   <copyField source="estimated_run_frequency" dest="all_text" />
   <copyField source="maintenance_schedule" dest="all_text" />
   <copyField source="query" dest="all_text" />
@@ -411,7 +411,7 @@
   <copyField source="maintenance_schedule" dest="maintenance_schedule_text" />
   <copyField source="enabled_for_hyperspace" dest="enabled_for_hyperspace_text" />
   <copyField source="do_not_purge" dest="do_not_purge_text" />
-  <copyField source="related_projects" dest="related_projects_text" />
+  <copyField source="related_collections" dest="related_collections_text" />
   <copyField source="related_initiatives" dest="related_initiatives_text" />
   <copyField source="approved" dest="approved_text" />
   <copyField source="approved_by" dest="approved_by_text" />
