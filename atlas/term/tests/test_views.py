@@ -93,6 +93,8 @@ class TermTestCase(AtlasTestCase):
         response = self.client.get("/terms", follow=True)
         assert response.status_code == 200
 
+        self.verify_body_links(response.content)
+
     def test_comments(self):
         """Check that comments are available."""
         self.login()

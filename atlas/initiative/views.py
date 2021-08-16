@@ -1,10 +1,10 @@
 """Atlas Initiative views."""
-# pylint: disable=C0116,C0115,W0613,W0212
+# pylint: disable=C0116,C0115,W0613,W0212,R0201
 
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import DetailView, ListView, View
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.views.generic import DeleteView, DetailView, ListView, View
 from index.models import Collections, Initiatives
 
 
@@ -85,15 +85,21 @@ class InitiativeNew(LoginRequiredMixin, View):
         return redirect("initiative:list")
 
 
-@login_required
-def delete(request, pk):
-    """Delete a initiative.
+class InitiativeDelete(LoginRequiredMixin, DeleteView):
+    model = Initiatives
+    success_url = reverse_lazy("initiative:list")
 
-    1. Updated linked collections to None
-    2. delete initiative
-    """
-    Collections.objects.filter(initiative__initiative_id=pk).update(initiative=None)
+    def get(self, *args, **kwargs):
+        return self.post(*args, **kwargs)
 
-    get_object_or_404(Initiatives, initiative_id=pk).delete()
+    def post(self, *args, **kwargs):
+        """Delete a initiative.
 
-    return redirect("initiative:list")
+        1. Updated linked collections to None
+        2. delete
+        """
+        pk = self.kwargs["pk"]
+
+        Collections.objects.filter(initiative__initiative_id=pk).update(initiative=None)
+
+        return super().post(*args, **kwargs)

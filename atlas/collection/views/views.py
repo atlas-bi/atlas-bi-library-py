@@ -1,4 +1,5 @@
 """Atlas Collection views."""
+# pylint: disable=C0116,C0115,W0613,W0212,R0201
 
 import json
 
@@ -6,7 +7,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import DetailView, ListView, View
+from django.urls import reverse_lazy
+from django.views.generic import DeleteView, DetailView, ListView, View
 from index.models import (
     CollectionAttachments,
     CollectionChecklist,
@@ -84,135 +86,119 @@ class CollectionNew(LoginRequiredMixin, View):
         return redirect("collection:list")
 
 
-@login_required
-def reports_delete(request, pk, annotation_id):
-    """Add or edit a collection report annotation."""
-    CollectionReports.objects.filter(annotation_id=annotation_id).filter(
-        collection_id=pk
-    ).delete()
+class CollectionDelete(LoginRequiredMixin, DeleteView):
+    model = Collections
+    success_url = reverse_lazy("collection:list")
 
-    collection = get_object_or_404(Collections, pk=pk)
+    def post(self, *args, **kwargs):
+        pk = self.kwargs["pk"]
 
-    return render(
-        request, "collection_edit/current_reports.html.dj", {"collection": collection}
-    )
+        CollectionComments.objects.filter(stream_id__collection_id=pk).delete()
+        CollectionCommentStream.objects.filter(collection_id=pk).delete()
+
+        CollectionTerms.objects.filter(collection_id=pk).delete()
+        CollectionReports.objects.filter(collection_id=pk).delete()
+
+        CollectionMilestoneTasksCompleted.objects.filter(collection_id=pk).delete()
+
+        CollectionChecklist.objects.filter(task__collection_id=pk).delete()
+        CollectionMilestoneTasks.objects.filter(collection_id=pk).delete()
+
+        CollectionChecklistCompleted.objects.filter(collection_id=pk).delete()
+
+        CollectionAttachments.objects.filter(collection_id=pk).delete()
+
+        return super().post(*args, **kwargs)
+
+    def get(self, *args, **kwargs):
+        return self.post(*args, **kwargs)
 
 
-@login_required
-def reports(request, pk, annotation_id=None):
-    """Add or edit a collection report annotation."""
-    if request.method == "GET":
-        return redirect("collection:item", pk=pk)
+class ReportLinkDelete(LoginRequiredMixin, DeleteView):
+    model = CollectionReports
 
-    data = json.loads(request.body.decode("UTF-8"))
+    def get_success_url(self):
+        return reverse_lazy(
+            "collection:reports", kwargs={"collection_id": self.kwargs["collection_id"]}
+        )
 
-    collection = get_object_or_404(Collections, pk=pk)
+    def get(self, *args, **kwargs):
+        return self.post(*args, **kwargs)
 
-    # validate report_id
-    if not Reports.objects.filter(report_id=data.get("report_id")).exists():
-        messages.error("Report does not exist.")
+
+class ReportLinkNew(LoginRequiredMixin, View):
+    def get(self, *args, **kwargs):
+        reportlinks = CollectionReports.objects.filter(
+            collection_id=self.kwargs["collection_id"]
+        )
+
         return render(
-            request,
+            self.request,
             "collection_edit/current_reports.html.dj",
-            {"collection": collection},
+            {"reportlinks": reportlinks},
         )
 
-    annotation = (
-        CollectionReports.objects.get(annotation_id=annotation_id)
-        if annotation_id
-        else CollectionReports()
-    )
-    annotation.rank = (
-        data.get("rank") if data.get("rank") and data.get("rank").isdigit() else None
-    )
-    annotation.annotation = data.get("annotation", "")
-    annotation.report_id = data.get("report_id")
-    annotation.collection_id = collection_id
+    def post(self, *args, **kwargs):
 
-    annotation.save()
+        data = json.loads(self.request.body.decode("UTF-8"))
 
-    return render(
-        request, "collection_edit/current_reports.html.dj", {"collection": collection}
-    )
+        if Reports.objects.filter(report_id=data.get("report_id")).exists():
+            CollectionReports.objects.update_or_create(
+                defaults={
+                    "rank": data.get("rank")
+                    if data.get("rank") and str(data.get("rank")).isdigit()
+                    else None
+                },
+                report_id=data.get("report_id"),
+                collection_id=self.kwargs["collection_id"],
+            )
 
+        else:
+            messages.error(self.request, "Report does not exist.")
 
-@login_required
-def terms_delete(request, collection_id, annotation_id):
-    """Add or edit a collection report annotation."""
-    CollectionTerms.objects.filter(annotation_id=annotation_id).filter(
-        collection_id=collection_id
-    ).delete()
-
-    collection = Collections.objects.get(collection_id=collection_id)
-
-    return render(
-        request, "collection_edit/current_reports.html.dj", {"collection": collection}
-    )
+        return self.get(*args, **kwargs)
 
 
-@login_required
-def terms(request, collection_id, annotation_id=None):
-    """Add or edit a collection report annotation."""
-    if request.method == "GET":
-        return redirect(item, collection_id)
+class TermLinkDelete(LoginRequiredMixin, DeleteView):
+    model = CollectionTerms
 
-    data = json.loads(request.body.decode("UTF-8"))
+    def get_success_url(self):
+        return reverse_lazy(
+            "collection:terms", kwargs={"collection_id": self.kwargs["collection_id"]}
+        )
 
-    collection = Collections.objects.get(collection_id=collection_id)
+    def get(self, *args, **kwargs):
+        return self.post(*args, **kwargs)
 
-    # validate term_id
-    if not Terms.objects.filter(term_id=data.get("term_id")).exists():
-        messages.error("Term does not exist.")
+
+class TermLinkNew(LoginRequiredMixin, View):
+    def get(self, *args, **kwargs):
+        termlinks = CollectionTerms.objects.filter(
+            collection_id=self.kwargs["collection_id"]
+        )
+
         return render(
-            request, "collection_edit/current_terms.html.dj", {"collection": collection}
+            self.request,
+            "collection_edit/current_terms.html.dj",
+            {"termlinks": termlinks},
         )
 
-    annotation = (
-        CollectionTerms.objects.get(annotation_id=annotation_id)
-        if annotation_id
-        else CollectionTerms()
-    )
-    annotation.rank = (
-        data.get("rank") if data.get("rank") and data.get("rank").isdigit() else None
-    )
-    annotation.annotation = data.get("annotation", "")
-    annotation.term_id = data.get("term_id")
-    annotation.collection_id = collection_id
+    def post(self, *args, **kwargs):
 
-    annotation.save()
+        data = json.loads(self.request.body.decode("UTF-8"))
 
-    return render(
-        request, "collection_edit/current_terms.html.dj", {"collection": collection}
-    )
+        if Terms.objects.filter(term_id=data.get("term_id")).exists():
+            CollectionTerms.objects.update_or_create(
+                defaults={
+                    "rank": data.get("rank")
+                    if data.get("rank") and str(data.get("rank")).isdigit()
+                    else None
+                },
+                term_id=data.get("term_id"),
+                collection_id=self.kwargs["collection_id"],
+            )
 
+        else:
+            messages.error(self.request, "Term does not exist.")
 
-@login_required
-def delete(request, pk):
-    """Delete a collection.
-
-    1. comments
-    2. comment streams
-    3. term and report annotations
-    4. checklist tasks and completed tasks, and open checklists
-    5. completed checklist
-    6. attachments
-    7. collection
-    """
-    CollectionComments.objects.filter(stream_id__collection_id=pk).delete()
-    CollectionCommentStream.objects.filter(collection_id=pk).delete()
-
-    CollectionTerms.objects.filter(collection_id=pk).delete()
-    CollectionReports.objects.filter(collection_id=pk).delete()
-
-    CollectionMilestoneTasksCompleted.objects.filter(collection_id=pk).delete()
-
-    CollectionChecklist.objects.filter(task__collection_id=pk).delete()
-    CollectionMilestoneTasks.objects.filter(collection_id=pk).delete()
-
-    CollectionChecklistCompleted.objects.filter(collection_id=pk).delete()
-
-    CollectionAttachments.objects.filter(collection_id=pk).delete()
-
-    get_object_or_404(Collections, pk=pk).delete()
-
-    return redirect("collection:list")
+        return self.get(*args, **kwargs)

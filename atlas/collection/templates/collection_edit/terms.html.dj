@@ -8,14 +8,11 @@
         <label>Rank</label>
         <input name="rank" type="number" />
     </div>
-    <h3>Annotation</h3>
-    <div class="editor" data-inputName="annotation" data-inputId="annotation">
-        <textarea></textarea>
-    </div>
+
     <h3>
         <button class="editor-save" type="submit">Save</button>
     </h3>
 </form>
 <div id="collection-editor-currentterms-container">
-    {% include "collection_edit/current_terms.html.dj" %}
+    <div id="collection-editor-currentterms-container" data-ajax="yes" data-url="{% url 'collection:terms' collection.collection_id %}"></div>
 </div>

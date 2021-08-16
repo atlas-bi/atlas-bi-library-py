@@ -78,8 +78,8 @@
         </h2>
         <div class="pageNav">
             <a href="#details" class="pageNav-link">Details</a>
-            {% if initiative.collections %}
-                <a href="#collections" class="pageNav-link">Linked Collections and Reports</a>
+            {% if initiative.collections.all %}
+                <a href="#collections" class="pageNav-link">Linked Collections</a>
             {% endif %}
         </div>
     </div>

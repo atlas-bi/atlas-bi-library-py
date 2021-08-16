@@ -7,8 +7,13 @@ from .views.comments import Comments, comments_delete
 app_name = apps.CollectionConfig.name
 
 urlpatterns = [
+    # base urls
     path("", views.CollectionList.as_view(), name="list"),
     path("<int:pk>", views.CollectionDetails.as_view(), name="item"),
+    path("new", views.CollectionNew.as_view(), name="new"),
+    path("<int:pk>/edit", views.CollectionDetails.as_view(), name="edit"),
+    path("<int:pk>/delete", views.CollectionDelete.as_view(), name="delete"),
+    # comments
     path("<int:pk>/comments", Comments.as_view(), name="comments"),
     path(
         "<int:pk>/comments/<int:comment_id>/delete",
@@ -16,30 +21,31 @@ urlpatterns = [
         name="comment_delete",
     ),
     # linked reports
-    path("<int:pk>/edit/reports", views.reports, name="reports"),
     path(
-        "<int:pk>/edit/reports/<int:annotation_id>/delete",
-        views.reports_delete,
-        name="report_delete",
-    ),
-    path(
-        "<int:pk>/edit/reports/<int:annotation_id>",
-        views.reports,
+        "<int:collection_id>/edit/reports/<int:pk>",
+        views.ReportLinkNew.as_view(),
         name="report_edit",
     ),
-    # linked terms
-    path("<int:pk>/edit/terms", views.terms, name="terms"),
     path(
-        "<int:pk>/edit/terms/<int:annotation_id>/delete",
-        views.terms_delete,
-        name="term_delete",
+        "<int:collection_id>/edit/reports",
+        views.ReportLinkNew.as_view(),
+        name="reports",
     ),
     path(
-        "<int:pk>/edit/terms/<int:annotation_id>",
-        views.terms,
+        "<int:collection_id>/edit/reports/<int:pk>/delete",
+        views.ReportLinkDelete.as_view(),
+        name="report_delete",
+    ),
+    # linked terms
+    path(
+        "<int:collection_id>/edit/terms/<int:pk>",
+        views.TermLinkNew.as_view(),
         name="term_edit",
     ),
-    path("new", views.CollectionNew.as_view(), name="new"),
-    path("<int:pk>/edit", views.CollectionDetails.as_view(), name="edit"),
-    path("<int:pk>/delete", views.delete, name="delete"),
+    path("<int:collection_id>/edit/terms", views.TermLinkNew.as_view(), name="terms"),
+    path(
+        "<int:collection_id>/edit/terms/<int:pk>/delete",
+        views.TermLinkDelete.as_view(),
+        name="term_delete",
+    ),
 ]

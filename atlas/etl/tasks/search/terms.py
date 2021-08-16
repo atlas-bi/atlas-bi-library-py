@@ -116,9 +116,7 @@ def build_doc(term):
     for collection_link in term.collections.all():
         # Build term collection doc.
         doc["related_collections"].append(str(collection_link.collection))
-        doc["linked_description"].extend(
-            [collection_link.collection.description, collection_link.annotation]
-        )
+        doc["linked_description"].extend([collection_link.collection.description])
 
         with contextlib.suppress(AttributeError):
             doc["related_initiatives"].append(

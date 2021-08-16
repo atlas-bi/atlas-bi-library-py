@@ -1,7 +1,7 @@
 {% load markdown %}
-{% if collection.reports.all %}
+{% if reportlinks %}
     <h4>Reports</h4>
-    {% for link in collection.reports.all %}
+    {% for link in reportlinks %}
         <h4 class="drop" data-toggle="clps" data-target="collapse-reportlink-{{ link.link_id }}">
             Edit
             <span class="text-green">{{ link }}</span>

@@ -17,23 +17,22 @@ def solr_schedule():
 
 def build_task_status(task_name, task_function):
     """Get task status."""
-    task_status = {True: "success", False: "warning"}
+    task_status = {
+        "SUCCESS": "success",
+        "STARTED": "warning",
+        "FAILURE": "error",
+        "NONE": "warning",
+    }
     task = TaskResult.objects.filter(task_name=task_function)
 
     if not task.exists():
-        return {"status": task_status[False], "message": "No run history."}
+        return {"status": task_status["NONE"], "message": "No run history."}
 
     # get last task status
     task_details = task.first().as_dict()
-    periodic = PeriodicTask.objects.filter(task=task_function)
-
-    status = "warning"
-
-    if periodic.exists():
-        status = task_status[periodic.first().enabled]
 
     return {
-        "status": status,
+        "status": task_status[task_details.get("status", "NONE")],
         "message": "Last Status: %s; Last Run: %s"
         % (
             task_details["status"],

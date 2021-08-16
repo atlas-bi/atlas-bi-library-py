@@ -54,7 +54,7 @@
 </section>
 <section class="pageSection">
     <span class="location" id="collections"></span>
-    {% if initiative.collections %}
+    {% if initiative.collections.all %}
         <h3>Linked Collections</h3>
         {% for collection in initiative.collections.all %}
             <h4 class="drop" data-toggle="clps" data-target="collapse-{{ collection.collection_id }}">

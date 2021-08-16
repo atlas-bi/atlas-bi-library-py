@@ -181,12 +181,12 @@
           q = new XMLHttpRequest();
           q.open(
             "post",
-            form.getAttribute("action") + "&" + serialize(form),
+            form.getAttribute("action"),
             true
           );
           q.setRequestHeader("Content-Type", "text/plain;charset=UTF-8`");
-          q.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-          q.send();
+          q.setRequestHeader("X-CSRFToken", csrftoken);
+          q.send(serializeJSON(form));
           q.onload = function () {
             data = q.responseText;
 
@@ -212,9 +212,6 @@
           form.reset();
           form.querySelector(".dd-vsbl").value = "";
           form.querySelector("#DpTermAnnotation_Rank").value = "";
-          form.querySelector(".CodeMirror").CodeMirror.getDoc().setValue("");
-          // document.getElementsByClassName("new-term-summary")[0].innerHTML = "";
-          // document.getElementsByClassName("new-term-def")[0].innerHTML = "";
         }
       });
 
@@ -273,7 +270,6 @@
           form.reset();
           form.querySelector(".dd-vsbl").value = "";
           form.querySelector("input[name=\"rank\"]").value = "";
-          form.querySelector(".CodeMirror").CodeMirror.getDoc().setValue("");
 
         }
       });

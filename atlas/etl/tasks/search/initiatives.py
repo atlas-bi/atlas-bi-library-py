@@ -65,11 +65,11 @@ def load_initiatives(initiative_id=None):
         .select_related("financial_impact")
         .select_related("strategic_importance")
         .select_related("modified_by")
-        .prefetch_related("collections__term_annotations")
-        .prefetch_related("collections__term_annotations__term")
-        .prefetch_related("collections__report_annotations")
-        .prefetch_related("collections__report_annotations__report")
-        .prefetch_related("collections__report_annotations__report__docs")
+        .prefetch_related("collections__terms")
+        .prefetch_related("collections__terms__term")
+        .prefetch_related("collections__reports")
+        .prefetch_related("collections__reports__report")
+        .prefetch_related("collections__reports__report__docs")
     )
 
     if initiative_id:
@@ -120,44 +120,43 @@ def build_doc(initiative):
 def build_initiative_collection_doc(collection, doc):
     """Build initiative collection doc."""
     doc["related_collections"].append(str(collection))
-    doc["linked_description"].extend([collection.purpose, collection.description])
+    doc["linked_description"].extend(
+        [collection.search_summary, collection.description]
+    )
 
-    for term_annotation in collection.term_annotations.all():
-        doc["related_terms"].append(str(term_annotation.term))
+    for term_link in collection.terms.all():
+        doc["related_terms"].append(str(term_link.term))
         doc["linked_description"].extend(
             [
-                term_annotation.term.summary,
-                term_annotation.term.technical_definition,
-                term_annotation.annotation,
+                term_link.term.summary,
+                term_link.term.technical_definition,
             ]
         )
 
-    for report_annotation in collection.report_annotations.all():
-        doc = build_initiative_report_doc(report_annotation, doc)
+    for report_link in collection.reports.all():
+        doc = build_initiative_report_doc(report_link, doc)
 
     return doc
 
 
-def build_initiative_report_doc(report_annotation, doc):
+def build_initiative_report_doc(report_link, doc):
     """Build initiative report doc."""
-    doc["related_reports"].append(str(report_annotation.report))
+    doc["related_reports"].append(str(report_link.report))
 
-    doc["linked_name"].extend(
-        [report_annotation.report.name, report_annotation.report.title]
-    )
+    doc["linked_name"].extend([report_link.report.name, report_link.report.title])
 
     doc["linked_description"].extend(
         [
-            report_annotation.report.description,
-            report_annotation.report.detailed_description,
+            report_link.report.description,
+            report_link.report.detailed_description,
         ]
     )
 
     with contextlib.suppress(AttributeError):
         doc["linked_description"].extend(
             [
-                report_annotation.report.docs.description,
-                report_annotation.report.docs.assumptions,
+                report_link.report.docs.description,
+                report_link.report.docs.assumptions,
             ]
         )
 

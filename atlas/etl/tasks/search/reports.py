@@ -169,8 +169,7 @@ def build_report_collection_docs(collection_link, doc):
     doc["linked_description"].extend(
         [
             collection_link.collection.description,
-            collection_link.collection.purpose,
-            collection_link.annotation,
+            collection_link.collection.search_summary,
         ]
     )
 

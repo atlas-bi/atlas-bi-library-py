@@ -73,7 +73,7 @@ class CollectionTestCase(AtlasTestCase):
             self.client.get(
                 "/collections/%s" % (collection.collection_id + 1)
             ).status_code
-            == 302
+            == 404
         )
 
     def test_valid_collection(self):
@@ -189,8 +189,6 @@ class CollectionTestCase(AtlasTestCase):
         self.assertEqual(collection.description, data["description"])
         self.assertEqual(collection.hidden, "N")
 
-        # add term and report annotation
-
         # add checklist
 
         # complete checklist task
@@ -226,7 +224,7 @@ class CollectionTestCase(AtlasTestCase):
                 data=data,
                 content_type="application/json",
             ).status_code,
-            302,
+            200,
         )
 
         # assert that the comment stream was created
@@ -255,7 +253,7 @@ class CollectionTestCase(AtlasTestCase):
                 data=data,
                 content_type="application/json",
             ).status_code,
-            302,
+            200,
         )
         self.assertTrue(
             CollectionComments.objects.filter(
@@ -287,7 +285,7 @@ class CollectionTestCase(AtlasTestCase):
                 data=data,
                 content_type="application/json",
             ).status_code,
-            302,
+            200,
         )
         self.assertTrue(
             CollectionComments.objects.filter(
@@ -319,7 +317,7 @@ class CollectionTestCase(AtlasTestCase):
                 ),
                 content_type="application/json",
             ),
-            302,
+            200,
         )
 
         # attempt to delete a stream
@@ -337,7 +335,7 @@ class CollectionTestCase(AtlasTestCase):
                 data=data,
                 content_type="application/json",
             ),
-            302,
+            200,
         )
 
         # add a comment with no message
@@ -346,14 +344,13 @@ class CollectionTestCase(AtlasTestCase):
                 "/collections/%s/comments" % collection.collection_id,
                 content_type="application/json",
             ).status_code,
-            302,
+            200,
         )
 
-    def test_add_report_annotation(self):
-        """Test adding and removing a report annotation."""
+    def test_add_report_link(self):
+        """Test adding and removing a report link."""
         self.login()
         data = {
-            "annotation": "# this is \n\n ## amazing",
             "rank": "9",
             "report_id": "1",
         }
@@ -364,7 +361,7 @@ class CollectionTestCase(AtlasTestCase):
             data=data,
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
 
         # check with invalid report id
         data["report_id"] = 99
@@ -386,26 +383,23 @@ class CollectionTestCase(AtlasTestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertTrue(
-            CollectionReports.objects.filter(annotation=data["annotation"])
-            .filter(rank=data["rank"])
+            CollectionReports.objects.filter(rank=data["rank"])
             .filter(collection_id=1)
             .exists()
         )
 
-        annotation_id = (
-            CollectionReports.objects.filter(annotation=data["annotation"])
-            .filter(rank=data["rank"])
+        link_id = (
+            CollectionReports.objects.filter(rank=data["rank"])
             .filter(collection_id=1)
             .first()
-            .annotation_id
+            .link_id
         )
 
-        # edit the annotation
-        data.pop("rank")
-        data["annotation"] = "new annotation"
+        # edit the link
+        data["rank"] = 100
 
         response = self.client.post(
-            "/collections/1/edit/reports/%s" % annotation_id,
+            "/collections/1/edit/reports/%s" % link_id,
             data=data,
             content_type="application/json",
         )
@@ -413,28 +407,27 @@ class CollectionTestCase(AtlasTestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertTrue(
-            CollectionReports.objects.filter(annotation=data["annotation"])
-            .filter(rank=None)
+            CollectionReports.objects.filter(rank=data["rank"])
             .filter(collection_id=1)
             .exists()
         )
 
-        # delete the annotation
+        # delete the link
         response = self.client.get(
-            "/collections/1/edit/reports/%s/delete" % annotation_id
+            "/collections/1/edit/reports/%s/delete" % link_id, follow=True
         )
         self.assertEqual(response.status_code, 200)
 
         # make sure its gone
         self.assertEqual(
-            CollectionReports.objects.filter(annotation_id=annotation_id).exists(),
+            CollectionReports.objects.filter(link_id=link_id).exists(),
             False,
         )
 
-    def test_add_term_annotation(self):
-        """Test adding and removing a term annotation."""
+    def test_add_term_link(self):
+        """Test adding and removing a term link."""
         self.login()
-        data = {"annotation": "# this is \n\n ## amazing", "rank": "9", "term_id": "1"}
+        data = {"rank": "9", "term_id": "1"}
 
         # check with wrong method
         response = self.client.get(
@@ -442,7 +435,7 @@ class CollectionTestCase(AtlasTestCase):
             data=data,
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
 
         # check with invalid term id
         data["term_id"] = 99
@@ -464,46 +457,43 @@ class CollectionTestCase(AtlasTestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertTrue(
-            CollectionTerms.objects.filter(annotation=data["annotation"])
-            .filter(rank=data["rank"])
+            CollectionTerms.objects.filter(rank=data["rank"])
             .filter(collection_id=1)
             .exists()
         )
 
-        annotation_id = (
-            CollectionTerms.objects.filter(annotation=data["annotation"])
-            .filter(rank=data["rank"])
+        link_id = (
+            CollectionTerms.objects.filter(rank=data["rank"])
             .filter(collection_id=1)
             .first()
-            .annotation_id
+            .link_id
         )
 
-        # edit the annotation
-        data.pop("rank")
-        data["annotation"] = "new annotation"
+        # edit the link
+        data["rank"] = 100
 
         response = self.client.post(
-            "/collections/1/edit/terms/%s" % annotation_id,
+            "/collections/1/edit/terms/%s" % link_id,
             data=data,
             content_type="application/json",
+            follow=True,
         )
 
         self.assertEqual(response.status_code, 200)
 
         self.assertTrue(
-            CollectionTerms.objects.filter(annotation=data["annotation"])
-            .filter(rank=None)
+            CollectionTerms.objects.filter(rank=int(data["rank"]))
             .filter(collection_id=1)
             .exists()
         )
 
         # delete the annotation
         response = self.client.get(
-            "/collections/1/edit/terms/%s/delete" % annotation_id
+            "/collections/1/edit/terms/%s/delete" % link_id, follow=True
         )
         self.assertEqual(response.status_code, 200)
 
         # make sure its gone
         self.assertEqual(
-            CollectionTerms.objects.filter(annotation_id=annotation_id).exists(), False
+            CollectionTerms.objects.filter(link_id=link_id).exists(), False
         )

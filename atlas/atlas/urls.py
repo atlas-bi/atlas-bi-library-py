@@ -30,7 +30,7 @@ urlpatterns = [
     path("analytics/", include("analytics.urls")),
     path("reports/", include("report.urls")),
     path("initiatives/", include("initiative.urls")),
-    re_path(r"[tT]erms/", include("term.urls")),
+    path("terms/", include("term.urls")),
     path("users/", include("user.urls")),
     path("search/", include("search.urls")),
     path("collections/", include("collection.urls")),

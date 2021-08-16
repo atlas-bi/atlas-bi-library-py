@@ -4,10 +4,11 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
-from django.views.generic import DetailView, ListView, View
+from django.views.generic import DeleteView, DetailView, ListView, View
 from index.models import (
     CollectionTerms,
     Reports,
@@ -20,23 +21,22 @@ from index.models import (
 decorators = [never_cache, login_required]
 
 
-@login_required
-def delete(request, pk):
-    """Delete a term.
+class TermDelete(LoginRequiredMixin, DeleteView):
+    model = Terms
+    success_url = reverse_lazy("term:list")
 
-    1. comments
-    2. comment streams
-    3. report doc term links
-    4. collection annotations
-    5. term
-    """
-    TermComments.objects.filter(stream_id__term_id=pk).delete()
-    TermCommentStream.objects.filter(term_id=pk).delete()
-    ReportTerms.objects.filter(term__term_id=pk).delete()
-    CollectionTerms.objects.filter(term__term_id=pk).delete()
-    get_object_or_404(Terms, pk=pk).delete()
+    def get(self, *args, **kwargs):
+        return self.post(*args, **kwargs)
 
-    return redirect("term:list")
+    def post(self, *args, **kwargs):
+        pk = self.kwargs["pk"]
+
+        TermComments.objects.filter(stream_id__term_id=pk).delete()
+        TermCommentStream.objects.filter(term_id=pk).delete()
+        ReportTerms.objects.filter(term__term_id=pk).delete()
+        CollectionTerms.objects.filter(term__term_id=pk).delete()
+
+        return super().post(*args, **kwargs)
 
 
 class TermList(LoginRequiredMixin, ListView):

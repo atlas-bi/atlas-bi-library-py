@@ -1,6 +1,6 @@
-{% if collection.terms.all %}
+{% if termlinks %}
     <h4>Terms</h4>
-    {% for link in collection.terms.all %}
+    {% for link in termlinks %}
         <h4 class="drop" data-toggle="clps" data-target="collapse-termlink-{{ link.link_id }}">
             Edit
             <span class="text-green">{{ link }}</span>

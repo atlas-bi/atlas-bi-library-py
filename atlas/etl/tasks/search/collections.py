@@ -4,6 +4,7 @@ import contextlib
 import pysolr
 from celery import shared_task
 from django.conf import settings
+from django.db.models import Q
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from django_chunked_iterator import batch_iterator
@@ -68,20 +69,14 @@ def load_collections(collection_id=None):
     2. Bulk load to solr in batchs of x
     """
     collections = (
-        Collections.objects.exclude(hidden="Y")
-        .select_related("ops_owner")
-        .select_related("exec_owner")
-        .select_related("analytics_owner")
-        .select_related("data_owner")
-        .select_related("financial_impact")
-        .select_related("strategic_importance")
+        Collections.objects.filter(~Q(hidden="Y") | Q(hidden=None))
         .select_related("modified_by")
         .select_related("initiative")
-        .prefetch_related("term_annotations")
-        .prefetch_related("term_annotations__term")
-        .prefetch_related("report_annotations")
-        .prefetch_related("report_annotations__report")
-        .prefetch_related("report_annotations__report__docs")
+        .prefetch_related("terms")
+        .prefetch_related("terms__term")
+        .prefetch_related("reports")
+        .prefetch_related("reports__report")
+        .prefetch_related("reports__report__docs")
     )
 
     if collection_id:
@@ -112,14 +107,7 @@ def build_doc(collection):
         "visible": "Y",
         "orphan": "N",
         "runs": 10,
-        "description": [collection.purpose, collection.description],
-        "operations_owner": str(collection.ops_owner),
-        "executive_owner": str(collection.exec_owner),
-        "analytics_owner": str(collection.analytics_owner),
-        "data_owner": str(collection.data_owner),
-        "financial_impact": str(collection.financial_impact),
-        "strategic_importance": str(collection.strategic_importance),
-        "external_url": collection.external_documentation_url,
+        "description": [collection.search_summary, collection.description],
         "last_updated": solr_date(collection._modified_at),
         "updated_by": str(collection.modified_by),
         "related_initiatives": [],
@@ -133,49 +121,46 @@ def build_doc(collection):
         doc["related_initiatives"].append(str(collection.initiative))
         doc["linked_description"].append(collection.initiative.description)
 
-    for term_annotation in collection.term_annotations.all():
-        doc = build_collection_term_doc(term_annotation, doc)
+    for term_link in collection.terms.all():
+        doc = build_collection_term_doc(term_link, doc)
 
-    for report_annotation in collection.report_annotations.all():
-        doc = build_collection_report_doc(report_annotation, doc)
+    for report_link in collection.reports.all():
+        doc = build_collection_report_doc(report_link, doc)
 
     return clean_doc(doc)
 
 
-def build_collection_term_doc(term_annotation, doc):
+def build_collection_term_doc(term_link, doc):
     """Build collection term doc."""
-    doc["related_terms"].append(str(term_annotation.term))
+    doc["related_terms"].append(str(term_link.term))
     doc["linked_description"].extend(
         [
-            term_annotation.term.summary,
-            term_annotation.term.technical_definition,
-            term_annotation.annotation,
+            term_link.term.summary,
+            term_link.term.technical_definition,
         ]
     )
 
     return doc
 
 
-def build_collection_report_doc(report_annotation, doc):
+def build_collection_report_doc(report_link, doc):
     """Build collection report doc."""
-    doc["related_reports"].append(str(report_annotation.report))
+    doc["related_reports"].append(str(report_link.report))
 
-    doc["linked_name"].extend(
-        [report_annotation.report.name, report_annotation.report.title]
-    )
+    doc["linked_name"].extend([report_link.report.name, report_link.report.title])
 
     doc["linked_description"].extend(
         [
-            report_annotation.report.description,
-            report_annotation.report.detailed_description,
+            report_link.report.description,
+            report_link.report.detailed_description,
         ]
     )
 
     with contextlib.suppress(AttributeError):
         doc["linked_description"].extend(
             [
-                report_annotation.report.docs.description,
-                report_annotation.report.docs.assumptions,
+                report_link.report.docs.description,
+                report_link.report.docs.assumptions,
             ]
         )
     return doc

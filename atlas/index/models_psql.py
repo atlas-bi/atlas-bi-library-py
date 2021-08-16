@@ -819,13 +819,13 @@ class CollectionReports(models.Model):
     def get_absolute_delete_url(self):
         return reverse(
             "collection:report_delete",
-            kwargs={"pk": self.pk, collection_id: self.collection_id},
+            kwargs={"pk": self.pk, "collection_id": self.collection_id},
         )
 
     def get_absolute_edit_url(self):
         return reverse(
             "collection:report_edit",
-            kwargs={"pk": self.pk, collection_id: self.collection_id},
+            kwargs={"pk": self.pk, "collection_id": self.collection_id},
         )
 
 
@@ -853,13 +853,13 @@ class CollectionTerms(models.Model):
     def get_absolute_delete_url(self):
         return reverse(
             "collection:term_delete",
-            kwargs={"pk": self.pk, collection_id: self.collection_id},
+            kwargs={"pk": self.pk, "collection_id": self.collection_id},
         )
 
     def get_absolute_edit_url(self):
         return reverse(
             "collection:term_edit",
-            kwargs={"pk": self.pk, collection_id: self.collection_id},
+            kwargs={"pk": self.pk, "collection_id": self.collection_id},
         )
 
 
