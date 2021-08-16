@@ -336,13 +336,13 @@ a.crsl-next
 <div class="section" id="progress-bar">
 <h2>Progress bar<a class="headerlink" href="#progress-bar" title="Permalink to this headline">¶</a></h2>
 <p>A progress bar exists on all pages and can be triggered with javascript events -</p>
-<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="nb">document</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="k">new</span> <span class="nx">CustomEvent</span><span class="p">(</span><span class="s1">'progress-reset'</span><span class="p">));</span>
-<span class="nb">document</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="k">new</span> <span class="nx">CustomEvent</span><span class="p">(</span><span class="s1">'progress-start'</span><span class="p">));</span>
-<span class="nb">document</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="k">new</span> <span class="nx">CustomEvent</span><span class="p">(</span><span class="s1">'progress-finish'</span><span class="p">));</span>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="nb">document</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="ow">new</span> <span class="nx">CustomEvent</span><span class="p">(</span><span class="s1">'progress-reset'</span><span class="p">));</span>
+<span class="nb">document</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="ow">new</span> <span class="nx">CustomEvent</span><span class="p">(</span><span class="s1">'progress-start'</span><span class="p">));</span>
+<span class="nb">document</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="ow">new</span> <span class="nx">CustomEvent</span><span class="p">(</span><span class="s1">'progress-finish'</span><span class="p">));</span>
 </pre></div>
 </div>
 <p>or to specify a value besides 100% to get to</p>
-<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="nb">document</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="k">new</span> <span class="nx">CustomEvent</span><span class="p">(</span><span class="s1">'progress-start'</span><span class="p">,</span> <span class="p">{</span>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="nb">document</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="ow">new</span> <span class="nx">CustomEvent</span><span class="p">(</span><span class="s1">'progress-start'</span><span class="p">,</span> <span class="p">{</span>
                                 <span class="nx">cancelable</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
                                 <span class="nx">detail</span><span class="o">:</span> <span class="p">{</span>
                                     <span class="nx">value</span><span class="o">:</span> <span class="mf">90</span> <span class="c1">//max %</span>
