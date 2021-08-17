@@ -46,9 +46,8 @@
       sessionStorage.setItem(btoa("crumbs"), JSON.stringify(c));
     }
 
-    var el = d.getElementsByClassName("nb-cmbs")[0];
-    var q = el.offsetHeight;
-    el.innerHTML = h(c);
+    var el = d.getElementsByClassName("breadcrumb")[0];
+    el.innerHTML = '<ul>' + h(c) + '</ul>';
     el.style.opacity = 1;
   };
 
@@ -57,9 +56,9 @@
       l = "";
     c = c.slice(Math.max(c.length - 7, 0));
     c.reverse();
-    l = "</a></li><li>" + c[0].t;
+    l = "<li class='is-active'><a href='#'>" + c[0].t + "</a></li>";
     for (x = 1; x < c.length - 1; x++) {
-      l += '<li><a href="' + c[x].u + '" class="">' + c[x].t;
+      l += '<li><a href="' + c[x].u + '" class="">' + c[x].t + '</a></li>';
     }
 
     return l;

@@ -7,7 +7,7 @@
 <div class="mail-notification-container"></div>
 <!--<partial name="_Messagebox" />
 <partial name="modals\_Modals" />-->
-<div class="no-loader" data-ajax="yes" data-url="/welcome-video" data-loadtag=".video"></div>
+<!--<div class="no-loader" data-ajax="yes" data-url="/welcome-video" data-loadtag=".video"></div>-->
 <!-- text -->
 {% comment %}
 <link rel="preload"
@@ -45,6 +45,7 @@
 <link rel="preload" href="{% static '/lib/fonts/farmin/font/far.woff2?4069908' %}" as="font" type="font/woff2"/>
 <link rel="preload" href="{% static '/lib/fonts/fasmin/font/fas.woff2?1540027' %}" as="font" type="font/woff2"/>
 {% endcomment %}
+<script type="text/javascript" src="{% static '/js/nav.js' %}"></script>
 {% compress js file essential %}
     <script type="text/javascript" src="{% static '/js/essential.js' %}" defer></script>
     <script type="text/javascript" src="{% static '/js/utility/lazyload.js' %}" defer></script>

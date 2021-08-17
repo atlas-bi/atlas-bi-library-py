@@ -1,5 +1,5 @@
 <h4>Add a Report</h4>
-<form action="/collections/{{ collection.collection_id }}/edit/reports"
+<form action="{% url 'collection:reports' collection.collection_id %}"
       method="post"
       id="collection-editor-add-report-form">
     {% csrf_token %}

@@ -14,7 +14,6 @@ Run test for this app with::
 """
 # pylint: disable=C0115,C0103
 
-from django.http.response import Http404
 from index.models import Collections, Initiatives
 
 from atlas.testutils import AtlasTestCase
@@ -110,6 +109,7 @@ class InitiativeTestCase(AtlasTestCase):
         self.verify_body_links(response.content)
 
     def test_get_create_initiative(self):
+        """Check that an initiative can be created."""
         self.login()
 
         response = self.client.get("/initiatives/new", follow=False)

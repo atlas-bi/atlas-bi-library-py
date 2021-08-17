@@ -127,7 +127,7 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
         <div class="tab-cnt">
             <div class="tab-dta" id="run-time-chart">
                 <div class="atlas-chart">
-                    <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif"/>
+                    <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" alt="loader" height="25px" width="25px"/>
                 </div>
                 <script type="application/json">
                                 @{
@@ -270,8 +270,7 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
     </div>
 </div>
 }
-@if(Favorites)
-{
+{% if favorites %}
 <div >
     active</text>}" id="user-favorites">
     <h3>
@@ -301,11 +300,11 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
 </div>
 }
 </div>
-} else {
+{% else %}
 <h5>
     No activity to show
 </h5>
 <h5>
     ¯\_(ツ)_/¯
 </h5>
-}
+{% endif %}

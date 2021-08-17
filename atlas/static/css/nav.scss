@@ -44,11 +44,11 @@
 }
 
 .sideNav {
-  left: -40px;
-  position: absolute;
-  top: 116px;
-  width: auto;
-  z-index: 1;
+  // left: -40px;
+  // position: absolute;
+  // top: 116px;
+  // width: auto;
+  // z-index: 1;
 
   &.sticky {
     position: fixed;
@@ -102,94 +102,48 @@
   }
 }
 
-.nav {
-  padding: 15px;
-  width: 100%;
+.atlas-navbar {
+  padding: 16px 0;
 
-  .nav-title {
-    color: $color-text-dark-grey;
-    display: inline-block;
-    font-family: $font-serif;
-    font-size: 30px;
-    font-stretch: expanded;
-    position: relative;
-    text-decoration: none;
+  .navbar-brand {
+    margin-left: 0 !important;
+    a {
+      padding-top: 0;
+      padding-bottom: 0;
 
-    .nav-a {
-      font-family: $font-atlas-a;
-      font-size: 80px;
-      left: -70px;
-      padding-right: 10px;
-      position: absolute;
-      top: -19px;
+      img {
+        max-height: 50px;
+        height: 50px;
+      }
     }
-
+  }
+  a.navbar-item {
     &:hover {
       color: $color-text-light-grey;
-      text-decoration: none;
     }
   }
-
-  .nav-links {
-    display: inline-block;
-    float: right;
-    padding-top: 10px;
-  }
-
-  .new-mail-badge {
-    background-color: #fc433a;
-    border: 1px solid #f4f5f6;
-    border-radius: 18px;
-    color: $color-text-white;
-    display: none;
-    font-family: $font-san-serif;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 16px;
-    min-width: 18px;
-    padding: 0 4px 0 5px;
-    position: absolute;
-    right: 0;
-    top: -4px;
-  }
-
-  .nav-dropBox {
-    display: none;
-    padding-top: 15px;
-    position: absolute;
-    z-index: 1;
-
-    a {
-      color: $color-text-dark-grey;
-      display: block;
-      font-size: 17px;
-      padding: 10px;
-      text-decoration: none;
-      white-space: nowrap;
-
+  .has-dropdown {
+    .navbar-link {
       &:hover {
         color: $color-text-light-grey;
-        text-decoration: none;
-      }
-    }
-  }
-
-  .nav-drop {
-    &:hover {
-      .nav-dropBox {
-        display: block;
-      }
-
-      .nav-dropLiner {
-        background-color: $color-background-white;
-        border: 1px solid #6c757d;
-        border-radius: 3px;
-        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
       }
     }
   }
 }
 
-.nav-linkDisabled {
-  cursor: default !important;
+.new-mail-badge {
+  background-color: #fc433a;
+  border: 1px solid #f4f5f6;
+  border-radius: 18px;
+  color: $color-text-white;
+  display: none;
+  font-family: $font-san-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16px;
+  min-width: 18px;
+  padding: 0 4px 0 5px;
+  position: absolute;
+  right: 0;
+  top: -4px;
 }

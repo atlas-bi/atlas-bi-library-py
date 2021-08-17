@@ -30,7 +30,7 @@
         <!-- delete -->
         <a class="nav-link"
            data-tooltip="Delete this Collection"
-           href="{% url 'collection:delete' collection.collection_id %}"
+           href="{{ collection.get_absolute_delete_url }}"
            onclick="return confirm('Are you sure you want to remove this?');">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                 <path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/>
@@ -82,9 +82,6 @@
             {% if collection.report_annotations.all or collection.term_annotations.all %}
                 <a href="#links" class="pageNav-link">Linked Content</a>
             {% endif %}
-            {% if collection.attachments.all %}
-                <a href="#attachments" class="pageNav-link">Attachments</a>
-            {% endif %}
             {% if collection.agreements.all %}
                 <a href="#agreements" class="pageNav-link">Agreements</a>
             {% endif %}
@@ -102,12 +99,6 @@
         <span class="location" id="links"></span>
         {% if collection.report_annotations.all or collection.term_annotations.all %}
             {% include "collection_links.html.dj" %}
-        {% endif %}
-    </section>
-    <section class="pageSection">
-        <span class="location" id="attachments"></span>
-        {% if collection.attachments.all %}
-            {% include "collection_attachments.html.dj" %}
         {% endif %}
     </section>
     <section class="pageSection">

@@ -1,5 +1,5 @@
 <h4>Add a Term</h4>
-<form action="/collections/{{ collection.collection_id }}/edit/terms"
+<form action="{% url 'collection:terms' collection.collection_id %}"
       method="post"
       id="collection-editor-add-term-form">
     <div class="listDetails">

@@ -12,10 +12,10 @@
         {% for img in report.imgs.all %}
             <div class="crsl-itm pop">
                 {% if forloop.counter0 > 0 %}
-                    <img data-src="{% url 'report:image' pk=report.report_id image_id=img.image_id %}"
+                    <img data-src="{{ img.get_absolute_url }}"
                          src="{% static '/img/loader.gif' %}"/>
                 {% else %}
-                    <img src="{% url 'report:image' pk=report.report_id image_id=img.image_id %}"/>
+                    <img src="{{ img.get_absolute_url }}"/>
                 {% endif %}
             </div>
         {% endfor %}

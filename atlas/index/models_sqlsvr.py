@@ -782,6 +782,12 @@ class Initiatives(models.Model):
     def get_absolute_url(self):
         return reverse("initiative:item", kwargs={"pk": self.pk})
 
+    def get_absolute_delete_url(self):
+        return reverse("initiative:delete", kwargs={"pk": self.pk})
+
+    def get_absolute_edit_url(self):
+        return reverse("initiative:edit", kwargs={"pk": self.pk})
+
     @property
     def modified_at(self):
         if self._modified_at:
@@ -1544,6 +1550,11 @@ class ReportImages(models.Model):
     class Meta:
         managed = False
         db_table = "ReportObjectImages_doc"
+
+    def get_absolute_url(self):
+        return reverse(
+            "report:image", kwargs={"pk": self.pk, "report_id": self.report_id}
+        )
 
 
 class Reportobjectruntime(models.Model):

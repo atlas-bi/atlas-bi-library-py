@@ -19,7 +19,6 @@
                         <a class="tab-lnk active" href="#detailstab">Details</a>
                         <a class="tab-lnk" href="#reportlinkstab">Linked Reports</a>
                         <a class="tab-lnk" href="#termlinkstab">Linked Terms</a>
-                        <a class="tab-lnk" href="#attachmentstab">Attachments</a>
                         <a class="tab-lnk" href="#agreetab">Agreements</a>
                         <a class="tab-lnk" href="#milestab">Milestones</a>
                     </div>
@@ -32,9 +31,6 @@
                         </div>
                         <div class="tab-dta" id="termlinkstab">
                             {% include "collection_edit/terms.html.dj" %}
-                        </div>
-                        <div class="tab-dta" id="attachmentstab">
-                            {% include "collection_edit/attachments.html.dj" %}
                         </div>
                         <div class="tab-dta" id="agreetab">
                             {% include "collection_edit/agreements.html.dj" %}

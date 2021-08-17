@@ -1,5 +1,5 @@
 <h3>Details</h3>
-<form action="{% url 'collection:edit' collection.collection_id %}" method="post">
+<form action="{{ collection.get_absolute_edit_url }}" method="post">
     {% csrf_token %}
     <div class="listDetails">
         <label>Name</label>

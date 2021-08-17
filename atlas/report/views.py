@@ -6,6 +6,10 @@ from django.utils import timezone
 from django.views.decorators.cache import never_cache
 from index.models import ReportComments, ReportDocs, ReportImages, Reports, Terms
 
+# @login_required
+# def snippet(request,pk):
+#     return "hello"
+
 
 @login_required
 def index(request, pk):

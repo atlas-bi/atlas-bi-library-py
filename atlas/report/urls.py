@@ -9,5 +9,7 @@ urlpatterns = [
     path("<int:pk>/comments", views.comments, name="comments"),
     path("<int:pk>/profile", views.profile, name="profile"),
     path("<int:pk>/maint_status", views.maint_status, name="maint_status"),
-    path("<int:pk>/image/<int:image_id>", views.image, name="image"),
+    path("<int:report_id>/image/<int:pk>", views.image, name="image"),
+    # mini snippet of report with run links.
+    # path("<int:pk>/snippet", views.snippet, name="snippet"),
 ]

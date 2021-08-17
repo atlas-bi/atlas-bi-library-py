@@ -101,6 +101,6 @@
     {% endif %}
     <section class="pageSection">
         <span class="location" id="comments"></span>
-        <div class="comments" data-ajax="yes" data-url="/terms/{{ term.term_id }}/comments"></div>
+        <div class="comments" data-ajax="yes" data-url="{% url 'term:comments' term.term_id %}"></div>
     </section>
 {% endblock body %}

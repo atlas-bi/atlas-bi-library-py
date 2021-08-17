@@ -36,7 +36,7 @@
         <div id="collapse-initiative-{{ initiative.initiative_id }}" class="clps">
             <div class="drop-box">
                 <h5>
-                    <a class="drop-link" href="{% url 'initiative:item' initiative.initiative_id %}">
+                    <a class="drop-link" href="{{ initiative.get_absolute_url }}">
                         Open This Initiative
                     </a>
                 </h5>

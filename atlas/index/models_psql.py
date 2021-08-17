@@ -634,6 +634,12 @@ class Initiatives(models.Model):
     def get_absolute_url(self):
         return reverse("initiative:item", kwargs={"pk": self.pk})
 
+    def get_absolute_delete_url(self):
+        return reverse("initiative:delete", kwargs={"pk": self.pk})
+
+    def get_absolute_edit_url(self):
+        return reverse("initiative:edit", kwargs={"pk": self.pk})
+
     @property
     def modified_at(self):
         if self._modified_at:
@@ -1170,6 +1176,11 @@ class ReportImages(models.Model):
     image_rank = models.IntegerField()
     image_data = models.BinaryField()
     image_source = models.TextField(blank=True, default="")
+
+    def get_absolute_url(self):
+        return reverse(
+            "report:image", kwargs={"pk": self.pk, "report_id": self.report_id}
+        )
 
 
 class Reportobjectruntime(models.Model):

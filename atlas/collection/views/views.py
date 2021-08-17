@@ -4,10 +4,9 @@
 import json
 
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse_lazy
+from django.shortcuts import redirect, render
+from django.urls import reverse, reverse_lazy
 from django.views.generic import DeleteView, DetailView, ListView, View
 from index.models import (
     CollectionAttachments,
@@ -163,7 +162,7 @@ class TermLinkDelete(LoginRequiredMixin, DeleteView):
     model = CollectionTerms
 
     def get_success_url(self):
-        return reverse_lazy(
+        return reverse(
             "collection:terms", kwargs={"collection_id": self.kwargs["collection_id"]}
         )
 

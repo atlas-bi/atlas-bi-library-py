@@ -52,7 +52,7 @@
 <div id="collapse-milestone-@(t.Id)" class="clps">
     <div class="drop-box">
         <h5>
-            <a class="drop-link" href="/Collections?handler=DeleteMilestone&id=@t.Id">
+            <a class="drop-link" href="https://Collections?handler=DeleteMilestone&id=@t.Id">
                 Delete This Milestone
             </a>
         </h5>

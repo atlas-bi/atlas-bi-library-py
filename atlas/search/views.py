@@ -238,7 +238,7 @@ def user_lookup(request, role=None):
 @never_cache
 @login_required
 def collection_lookup(request):
-    """Collection lookup."""
+    """Dropdown lookup for collections."""
     search_string = build_search_string(request.GET.get("s"), search_type="fuzzy")
 
     solr = pysolr.Solr(settings.SOLR_URL, search_handler="collections")
@@ -254,7 +254,7 @@ def collection_lookup(request):
 @never_cache
 @login_required
 def report_lookup(request):
-    """Collection lookup."""
+    """Report lookup."""
     search_string = build_search_string(request.GET.get("s"), search_type="fuzzy")
 
     solr = pysolr.Solr(settings.SOLR_URL, search_handler="reports")

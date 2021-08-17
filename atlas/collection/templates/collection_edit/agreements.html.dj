@@ -41,7 +41,7 @@
 <div id="collapse-agreement-editor-@(a.Id)" class="clps">
     <div class="drop-box">
         <h5>
-            <a class="drop-link" href="/Collections?handler=RemoveAgreement&id=@a.Id">
+            <a class="drop-link" href="http:///Collections?handler=RemoveAgreement&id=@a.Id">
                 Delete This Agreement
             </a>
         </h5>

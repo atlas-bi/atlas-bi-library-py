@@ -1,0 +1,16 @@
+<!-- search -->
+{% if 19 in permissions %}
+    <div class="control has-icons-left is-flex-grow-1">
+        <input class="input"
+               type="text"
+               placeholder="search Atlas for reports, users, departments, report collections, initiatives, terms .."
+               value="{{ search_string }}"
+               maxlength="80"
+               required="required"/>
+        <span class="icon is-small is-left">
+            <i class="fas fa-search"></i>
+        </span>
+        <div class="sr-hst"></div>
+    </div>
+    </field>
+{% endif %}

@@ -4,11 +4,13 @@
 <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+{% compress css file font %}
+    <link rel="stylesheet" href="{% static 'font/rasa/stylesheet.css' %}" type="text/css" charset="utf-8"/>
+    <link rel="stylesheet" href="{% static 'font/inter/stylesheet.css' %}" type="text/css" charset="utf-8"/>
+    <link rel="stylesheet" href="{% static 'font/fontawesome/icons.scss' %}" type="text/x-scss" charset="utf-8"/>
+{% endcompress %}
+
 {% compress css file main %}
-    <link rel="stylesheet" href="{% static 'lib/fonts/impmin/stylesheet.css' %}" type="text/css" charset="utf-8"/>
-    <link rel="stylesheet" href="{% static 'lib/fonts/cheltmin/stylesheet.css' %}" type="text/css" charset="utf-8"/>
-    <link rel="stylesheet" href="{% static 'lib/fonts/sfmin/stylesheet.css' %}" type="text/css" charset="utf-8"/>
-    <link rel="stylesheet" href="{% static 'lib/fonts/marckscript/stylesheet.css' %}" type="text/css" charset="utf-8"/>
     <link rel="stylesheet" href="{% static 'css/nav.scss' %}" type="text/x-scss" charset="utf-8"/>
     <link rel="stylesheet" href="{% static 'css/crumbs.scss' %}" type="text/x-scss" charset="utf-8"/>
     <link rel="stylesheet" href="{% static 'css/favorite.scss' %}" type="text/x-scss" charset="utf-8"/>
@@ -19,16 +21,14 @@
     <link rel="stylesheet" href="{% static 'css/utility/collapse.scss' %}" type="text/x-scss" charset="utf-8"/>
     <link rel="stylesheet" href="{% static 'css/utility/modal.scss' %}" type="text/x-scss" charset="utf-8"/>
     <link rel="stylesheet" href="{% static 'css/utility/tabs.scss' %}" type="text/x-scss" charset="utf-8"/>
+
 {% endcompress %}
 {% compress css file differed %}
     <link rel="stylesheet" href="{% static 'css/page-effects.scss' %}" type="text/x-scss" charset="utf-8"/>
     <link rel="stylesheet" href="{% static 'css/favorite-effects.scss' %}" type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="{% static 'lib/fonts/fontawesome/css/mine.css' %}" type="text/css" charset="utf-8"/>
     <link rel="stylesheet" href="{% static 'css/utility/tooltip.scss' %}" type="text/x-scss" charset="utf-8"/>
     <link rel="stylesheet" href="{% static 'css/utility/drag.scss' %}" type="text/x-scss" charset="utf-8"/>
     <link rel="stylesheet" href="{% static 'css/utility/progressbar.scss' %}" type="text/x-scss" charset="utf-8"/>
-    <link rel="stylesheet" href="{% static 'lib/fonts/fasmin/css/fas.css' %}" type="text/css" charset="utf-8"/>
-    <link rel="stylesheet" href="{% static 'lib/fonts/farmin/css/far.css' %}" type="text/css" charset="utf-8"/>
     <link rel="stylesheet" href="{% static 'css/utility/chart.scss' %}" type="text/x-scss" charset="utf-8"/>
     <link rel="stylesheet" href="{% static 'css/utility/table.scss' %}" type="text/x-scss" charset="utf-8"/>
     <link rel="stylesheet" href="{% static 'css/milestone.scss' %}" type="text/x-scss" charset="utf-8"/>

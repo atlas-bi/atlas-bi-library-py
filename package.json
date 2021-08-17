@@ -102,5 +102,9 @@
       ],
       "rule-empty-line-before": null
     }
+  },
+  "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.4",
+    "fontawesome-subset": "^2.0.0"
   }
 }

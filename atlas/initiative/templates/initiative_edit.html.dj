@@ -15,7 +15,7 @@
             </div>
             <div class="editorMdl-cnt" ss-container>
                 <div class="editorMdl-cntLiner">
-                    <form action="{% url 'initiative:edit' initiative.initiative_id %}" method="post">
+                    <form action="{{ initiative.get_absolute_edit_url }}" method="post">
                         {% csrf_token %}
                         <h3>Details</h3>
                         <div class="listDetails">
