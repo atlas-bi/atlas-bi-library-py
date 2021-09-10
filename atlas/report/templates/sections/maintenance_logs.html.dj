@@ -1,6 +1,6 @@
 {% load dates %}
 {% load markdown %}
-<h3 class="pageSection-title">Maintenance Logs</h3>
+<h2 class="title is-2">Maintenance Logs</h2>
 {% for log in report.docs.logs.all %}
     <div class="maint-log">
         <div class="maint-logHeader">

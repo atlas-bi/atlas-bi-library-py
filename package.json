@@ -1,110 +1,56 @@
 {
-  "dependencies": {
-    "@unibeautify/beautifier-js-beautify": "^0.4.0",
-    "@unibeautify/beautifier-prettydiff": "^0.6.0",
-    "@unibeautify/cli": "^0.5.1",
-    "eslint": "^7.17.0",
-    "eslint-plugin-jsdoc": "^35.1.2",
-    "js-beautify": "^1.14.0",
-    "jshint": "^2.12.0",
-    "markdown-include": "^0.4.3",
-    "markdown-it": "^12.0.4",
-    "mustache": "^4.1.0",
-    "postcss": "^8.3.0",
-    "prettydiff2": "^2.2.8",
-    "stylelint-config-standard": "^22.0.0",
-    "unibeautify": "^0.15.0",
-    "unibeautify-cli": "^0.2.1"
-  },
-  "description": "atlas of information management",
-  "unibeautify": {
-    "HTML": {
-      "beautifiers": [
-        "JS-Beautify",
-        "Pretty Diff"
-      ],
-      "brace_style": "expand",
-      "end_with_newline": true,
-      "force_indentation": true,
-      "indent_comments": true,
-      "indent_inner_html": true,
-      "indent_size": 4,
-      "indent_style": "space",
-      "max_preserve_newlines": 1,
-      "quotes": "double",
-      "wrap_attributes": "auto",
-      "wrap_line_length": 99
-    }
-  },
-  "eslintConfig": {
-    "plugins": [
-      "jsdoc"
-    ],
-    "rules": {
-      "jsdoc/check-access": 1,
-      "jsdoc/check-alignment": 1,
-      "jsdoc/check-param-names": 0,
-      "jsdoc/check-property-names": 1,
-      "jsdoc/check-syntax": 1,
-      "jsdoc/check-tag-names": 1,
-      "jsdoc/check-types": 1,
-      "jsdoc/check-values": 1,
-      "jsdoc/empty-tags": 1,
-      "jsdoc/implements-on-classes": 1,
-      "jsdoc/multiline-blocks": 1,
-      "jsdoc/newline-after-description": 1,
-      "jsdoc/no-multi-asterisks": 1,
-      "jsdoc/no-undefined-types": 0,
-      "jsdoc/require-jsdoc": 1,
-      "jsdoc/require-param": 0,
-      "jsdoc/require-param-description": 1,
-      "jsdoc/require-param-name": 1,
-      "jsdoc/require-param-type": 1,
-      "jsdoc/require-property": 1,
-      "jsdoc/require-property-description": 1,
-      "jsdoc/require-property-name": 1,
-      "jsdoc/require-property-type": 1,
-      "jsdoc/require-returns": 0,
-      "jsdoc/require-returns-check": 1,
-      "jsdoc/require-returns-description": 1,
-      "jsdoc/require-returns-type": 1,
-      "jsdoc/require-yields": 1,
-      "jsdoc/require-yields-check": 1,
-      "jsdoc/tag-lines": 1,
-      "jsdoc/valid-types": 1,
-      "no-console": "error"
-    }
-  },
-  "jshintConfig": {
-    "laxbreak": true
-  },
-  "license": "AGPL-3.0-or-later",
   "name": "atlas",
+  "description": "atlas of information management",
+  "homepage": "https://demo.atlas.bi",
+  "license": "AGPL-3.0-or-later",
   "repository": {
-    "private": true
+    "type": "git",
+    "url": "github:Riverside-Healthcare/Atlas-Py"
   },
-  "stylelint": {
-    "extends": [
-      "stylelint-config-standard"
-    ],
-    "ignoreFiles": [
-      "*.min.css",
-      "lib/*.css"
-    ],
-    "rules": {
-      "selector-type-no-unknown": [
-        true,
-        {
-          "ignoreTypes": [
-            "icon"
-          ]
-        }
-      ],
-      "rule-empty-line-before": null
-    }
+  "private": true,
+  "scripts": {
+    "install": "gulp build",
+    "build": "gulp build",
+    "watch": "gulp watch"
+  },
+  "browserslist": [
+    "Firefox ESR",
+    "ie 11",
+    "last 2 Chrome versions",
+    "last 2 ChromeAndroid versions",
+    "last 2 Edge versions",
+    "last 1 Firefox version",
+    "last 2 iOS versions",
+    "last 2 Safari versions"
+  ],
+  "dependencies": {
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
+    "@fortawesome/fontawesome-free": "^5.15.4",
+    "bulma": "^0.9.3",
+    "fontawesome-subset": "^2.0.0",
+    "gulp": "^4.0.2",
+    "handlebars": "^4.7.7"
   },
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.4",
-    "fontawesome-subset": "^2.0.0"
+    "@creativebulma/bulma-badge": "github:christopherpickering/bulma-badge#patch-1",
+    "@creativebulma/bulma-tooltip": "^1.2.0",
+    "@csstools/postcss-sass": "github:sinankeskin/postcss-sass",
+    "@fontsource/inter": "^4.5.0",
+    "@fontsource/rasa": "^4.5.2",
+    "@fullhuman/postcss-purgecss": "^4.0.3",
+    "autoprefixer": "^10.3.3",
+    "bulma-switch": "github:christopherpickering/bulma-switch#patch-1",
+    "cssnano": "^5.0.8",
+    "del": "^6.0.0",
+    "gulp-postcss": "^9.0.0",
+    "gulp-purgecss": "^4.0.3",
+    "gulp-replace": "^1.1.3",
+    "gulp-sass": "^5.0.0",
+    "postcss": "^8.3.6",
+    "postcss-cli": "^8.3.1",
+    "postcss-sort-media-queries": "^3.11.12",
+    "sass": "^1.38.1"
   }
 }

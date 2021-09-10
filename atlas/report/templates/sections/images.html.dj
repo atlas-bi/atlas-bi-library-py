@@ -1,9 +1,9 @@
 {% load static %}
-<h3 class="pageSection-title">Images</h3>
+<h2 class="title is-2">Images</h2>
 {% if report.imgs.all|length == 1 %}
     <div class="pop text-center" style="max-height:400px;">
         <img class="img-responsive"
-            src="{% url 'report:image' pk=report.report_id image_id=report.imgs.all.0.image_id %}"
+            src="{{ report.imgs.all.0.get_absolute_url }}"
              alt="Main report image"
              style="max-width: 98%;max-height: 390px;min-height: 1px;">
     </div>

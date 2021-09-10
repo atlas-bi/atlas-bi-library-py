@@ -5,7 +5,7 @@
 {% block start_css %}
     {% if 20 in permissions or 22 in permissions %}
         <link rel="stylesheet" href="{% static '/lib/codemirror/mycss.css' %}" type="text/css" />
-        <link rel="stylesheet" href="{% static '/css/live-editor.scss' %}" type="text/x-scss" />
+        <link rel="stylesheet" href="{% static '/css/live-editor.css' %}" type="text/css" />
     {% endif %}
 {% endblock start_css %}
 {% block side_links %}

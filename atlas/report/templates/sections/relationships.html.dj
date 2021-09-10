@@ -1,6 +1,6 @@
 {% load markdown %}
 {% load static %}
-<h3 class="pageSection-title">Relationships</h3>
+<h2 class="title is-2">Relationships</h2>
 {% if report.groups.all %}
     <h4 class="drop" data-toggle="clps" data-target="related-groups">
         Related Groups

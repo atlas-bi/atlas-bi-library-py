@@ -6,7 +6,7 @@ Atlas of Information Management
 
 Atlas of Information Management is a business intelligence library and documentation database. ELT processes collect metadata from various reporting platforms and store it in a centraly located database. A modern web UI is used to add additional documentation to the report objects and also to provide an intuative way to search, favorite and share reporting content.
 
-|travis| |codecov| |codacy| |codeql| |climate| |quality| |docs| |demo| |browserstack|
+|travis| |codecov| |codacy| |codeql| |climate| |quality| |demo| |browserstack|
 
 Project Goals
 #############
@@ -140,6 +140,19 @@ In terminal 3, start celery beat (for scheduled ETL's):
 
     DJANGO_SETTINGS_MODULE='atlas.settings.dev' poetry run celery -A atlas beat -l DEBUG --scheduler django_celery_beat.schedulers:DatabaseScheduler
 
+In terminal 4, start static file watcher
+
+.. code:: bash
+
+    npm run watch
+
+Building Static Content
+-----------------------
+
+.. code:: bash
+
+    npm run build
+
 
 Running tests
 #############
@@ -218,31 +231,28 @@ to create cache:
     python manage.py createcachetable
 
 
-.. |travis| image:: https://travis-ci.com/Riverside-Healthcare/Atlas-Py.svg?branch=master
-    :target: https://travis-ci.com/Riverside-Healthcare/Atlas-Py
+.. |travis| image:: https://app.travis-ci.com/atlas-bi/atlas-bi-library-py.svg?branch=master
+    :target: https://app.travis-ci.com/atlas-bi/atlas-bi-library-py
 
-.. |codecov| image:: https://codecov.io/gh/Riverside-Healthcare/Atlas-Py/branch/master/graph/badge.svg?token=2JfEYNRwFl
-      :target: https://codecov.io/gh/Riverside-Healthcare/Atlas-Py
+.. |codecov| image:: https://codecov.io/gh/atlas-bi/atlas-bi-library-py/branch/master/graph/badge.svg?token=2JfEYNRwFl
+      :target: https://codecov.io/gh/atlas-bi/atlas-bi-library-py
 
 
-.. |codeql| image:: https://github.com/Riverside-Healthcare/Atlas-Py/actions/workflows/codeql.yml/badge.svg
-   :target: https://github.com/Riverside-Healthcare/Atlas-Py/actions/workflows/codeql.yml
+.. |codeql| image:: https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/codeql.yml/badge.svg)
+   :target: https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/codeql.yml
    :alt: CodeQL
 
-.. |codacy| image:: https://app.codacy.com/project/badge/Grade/ccc9f660171643669480f456be4a5e3c
-    :target: https://www.codacy.com/gh/Riverside-Healthcare/Atlas-Py/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Riverside-Healthcare/Atlas-Py&amp;utm_campaign=Badge_Grade
+.. |codacy| image:: https://app.codacy.com/project/badge/Grade/74d31f9d9f1840818bc68bb0d26a9dda
+    :target: https://www.codacy.com/gh/atlas-bi/atlas-bi-library-py/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=atlas-bi/atlas-bi-library-py&amp;utm_campaign=Badge_Grade
 
-.. |climate| image:: https://api.codeclimate.com/v1/badges/e2bbd88dae785503669a/maintainability
-   :target: https://codeclimate.com/github/Riverside-Healthcare/Atlas-Py/maintainability
+.. |climate| image:: https://api.codeclimate.com/v1/badges/5b76a0292bbe56043511/maintainability
+   :target: https://codeclimate.com/github/atlas-bi/atlas-bi-library-py/maintainability
    :alt: Maintainability
 
-.. |quality| image:: https://github.com/Riverside-Healthcare/Atlas-Py/actions/workflows/quality.yml/badge.svg
-   :target: https://github.com/Riverside-Healthcare/Atlas-Py/actions/workflows/quality.yml
+.. |quality| image:: https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/quality.yml/badge.svg
+   :target: https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/quality.yml
 
-.. |docs| image:: https://github.com/Riverside-Healthcare/Atlas-Py/actions/workflows/docs.yml/badge.svg
-   :target: https://riverside-healthcare.github.io/Atlas-Py/
-
-.. |demo| image:: https://github.com/Riverside-Healthcare/Atlas-Py/actions/workflows/demo.yml/badge.svg
+.. |demo| image:: https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/demo.yml/badge.svg
    :target: https://atlas-py.herokuapp.com
 
 .. |browserstack| image:: https://automate.browserstack.com/badge.svg?badge_key=SWVldTlYclVWZEJ5R0NQUFRTMlltSTlNQ2JRaEF1ek9NeWd1L0FjYWt1cz0tLUcyRUhJUGprRDVmTnlyUytOQmpkVWc9PQ==--017a6b444f1f4d88941b98cea65cbce32c651a58

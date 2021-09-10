@@ -1,25 +1,25 @@
 {% extends "layout.html.dj" %}
+{% load static %}
 {% block body %}
-    <div class="pageTitle loose">
-        <h2 class="pageTitle-head">
-            <span>Hi, {{ user.first_name }}</span>
+
+        <h2 class="title is-2">Hey<figure class="image is-32x32 is-inline-flex mx-3"><img src="{% static '/img/wave.png' %}" /></figure>{{ user.first_name }}, welcome to Atlas
         </h2>
-        <div class="tab">
-            <a class="tab-lnk active" href="#favorites">Favorites</a>
-            <!--
-<a class="tab-lnk" href="#mail">Mail</a>
-        -->
-    </div>
+        <div class="tabs">
+            <ul>
+            <li class="is-active" href="favorites"><a>Favorites</a></li>
+            <li href="mail"><a>Mail</a></li>
+        </ul>
+
 </div>
 <section class="tab-cnt">
-    <div class="tab-dta active" id="favorites">
+    <div class="tab-dta is-active" id="favorites">
         <h3 class="pageSection-title">My Favorites</h3>
         <div data-ajax="yes" data-url="/users/favorites"></div>
     </div>
-    <!--
+
 <div class="tab-dta" id="mail">
-            <div data-ajax="yes" data-url="/mail/get_mailbox"></div>
+<!--            <div data-ajax="yes" data-url="/mail/get_mailbox"></div>-->
         </div>
--->
+
 </section>
 {% endblock body %}

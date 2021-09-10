@@ -1,5 +1,5 @@
 {% load dates %}
-<h3 class="pageSection-title">Details</h3>
+<h2 class="title is-2">Details</h2>
 <div class="listDetails">
     {% if report.name != report.title %}
         <span class="listDetails-title">Report Name</span>

@@ -1,37 +1,27 @@
 {% load compress %}
 {% load static %}
 {% compress css inline auth %}
-    <link
-        rel="stylesheet"
-        href="{% static '/lib/fonts/sfmin/stylesheet.css' %}"
-        type="text/css"
-        charset="utf-8"/>
-    <link
-        rel="stylesheet"
-        href="{% static '/lib/fonts/cheltmin/stylesheet.css' %}"
-        type="text/css"
-        charset="utf-8"/>
-    <link type="text/x-scss" rel="stylesheet" href="{% static '/css/auth.scss' %}" />
+    <link type="text/css" rel="stylesheet" href="{% static '/css/auth.css' %}" />
 {% endcompress %}
 
 <link
     rel="preload"
-    href="{% static '/lib/fonts/cheltmin/subset-NYTCheltenham-Medium.woff2' %}"
+    href="{% static '/font/cheltmin/subset-NYTCheltenham-Medium.woff2' %}"
     as="font"
     type="font/woff2"/>
 <link
     rel="preload"
-    href="{% static '/lib/fonts/cheltmin/subset-NYTCheltenham-Bold.woff2' %}"
+    href="{% static '/font/cheltmin/subset-NYTCheltenham-Bold.woff2' %}"
     as="font"
     type="font/woff2"/>
 <link
     rel="preload"
-    href="{% static '/lib/fonts/cheltmin/subset-NYTCheltenham-MediumItalic.woff2' %}"
+    href="{% static '/font/cheltmin/subset-NYTCheltenham-MediumItalic.woff2' %}"
     as="font"
     type="font/woff2"/>
 <link
     rel="preload"
-    href="{% static '/lib/fonts/cheltmin/subset-NYTCheltenhamWide-Regular.woff2' %}"
+    href="{% static '/font/cheltmin/subset-NYTCheltenhamWide-Regular.woff2' %}"
     as="font"
     type="font/woff2"/>
 

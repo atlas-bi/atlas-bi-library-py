@@ -1,19 +1,14 @@
-{% csrf_token %}
+{% extends "layout.html.dj" %}
 {% load compress %}
 {% load static %}
-<!DOCTYPE html>
-<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
 {% compress css file etl %}
-    <link rel="stylesheet" href="{% static '/css/etl.scss' %}" type="text/x-scss" charset="utf-8" />
+{% block start_css %}
+    <link rel="stylesheet" href="{% static '/css/etl.css' %}" type="text/css" charset="utf-8" />
+{% endblock start_css %}
 {% endcompress %}
-{% compress js inline %}
-    <script>
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    </script>
-{% endcompress %}
-<body>
+
+{% block body %}
     <section class="section">
         <div class="container">
             <h1 class="title">Atlas ETL Administration</h1>
@@ -94,7 +89,7 @@
                     </div>
                 </tr>
             </thead>
-        </body>
-        {% compress js file etl %}
+        {% endblock body %}
+        {% block js %}
             <script type="text/javascript" src="{% static '/js/etl.js' %}" defer></script>
-        {% endcompress %}
+        {% endblock js %}

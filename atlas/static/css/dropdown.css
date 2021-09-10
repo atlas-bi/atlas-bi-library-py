@@ -1,0 +1,403 @@
+@font-face {
+  font-display: swap;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 400;
+  src: url(/static/font/inter/files/inter-latin-400-normal.woff2)
+      format("woff2"),
+    url(/static/font/inter/files/inter-all-400-normal.woff) format("woff");
+}
+@font-face {
+  font-display: swap;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 600;
+  src: url(/static/font/inter/files/inter-latin-600-normal.woff2)
+      format("woff2"),
+    url(/static/font/inter/files/inter-all-600-normal.woff) format("woff");
+}
+@font-face {
+  font-display: swap;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 700;
+  src: url(/static/font/inter/files/inter-latin-700-normal.woff2)
+      format("woff2"),
+    url(/static/font/inter/files/inter-all-700-normal.woff) format("woff");
+}
+@font-face {
+  font-display: swap;
+  font-family: Rasa;
+  font-style: normal;
+  font-weight: 600;
+  src: url(/static/font/rasa/files/rasa-latin-600-normal.woff2) format("woff2"),
+    url(/static/font/rasa/files/rasa-all-600-normal.woff) format("woff");
+}
+@font-face {
+  font-display: block;
+  font-family: Font Awesome\5 Free;
+  font-style: normal;
+  font-weight: 400;
+  src: url(/static/font/fontawesome/webfonts/fa-regular-400.eot);
+  src: url(/static/font/fontawesome/webfonts/fa-regular-400.eot?#iefix)
+      format("embedded-opentype"),
+    url(/static/font/fontawesome/webfonts/fa-regular-400.woff2) format("woff2"),
+    url(/static/font/fontawesome/webfonts/fa-regular-400.woff) format("woff"),
+    url(/static/font/fontawesome/webfonts/fa-regular-400.ttf) format("truetype"),
+    url(/static/font/fontawesome/webfonts/fa-regular-400.svg#fontawesome)
+      format("svg");
+}
+.far {
+  font-weight: 400;
+}
+@font-face {
+  font-display: block;
+  font-family: Font Awesome\5 Free;
+  font-style: normal;
+  font-weight: 900;
+  src: url(/static/font/fontawesome/webfonts/fa-solid-900.eot);
+  src: url(/static/font/fontawesome/webfonts/fa-solid-900.eot?#iefix)
+      format("embedded-opentype"),
+    url(/static/font/fontawesome/webfonts/fa-solid-900.woff2) format("woff2"),
+    url(/static/font/fontawesome/webfonts/fa-solid-900.woff) format("woff"),
+    url(/static/font/fontawesome/webfonts/fa-solid-900.ttf) format("truetype"),
+    url(/static/font/fontawesome/webfonts/fa-solid-900.svg#fontawesome)
+      format("svg");
+}
+.fa,
+.far,
+.fas {
+  font-family: Font Awesome\5 Free;
+}
+.fa,
+.fas {
+  font-weight: 900;
+}
+.fa-ul {
+  list-style-type: none;
+  margin-left: 2.5em;
+  padding-left: 0;
+}
+.fa-ul > li {
+  position: relative;
+}
+.fa-li {
+  left: -2em;
+  line-height: inherit;
+  position: absolute;
+  text-align: center;
+  width: 2em;
+}
+.fa-lg {
+  font-size: 1.3333333333em;
+  line-height: 0.75em;
+  vertical-align: -0.0667em;
+}
+.fa-xs {
+  font-size: 0.75em;
+}
+.fa-sm {
+  font-size: 0.875em;
+}
+.fa-2_3x {
+  font-size: 2.3em;
+}
+.fa-1x {
+  font-size: 1em;
+}
+.fa-2x {
+  font-size: 2em;
+}
+.fa-3x {
+  font-size: 3em;
+}
+.fa-4x {
+  font-size: 4em;
+}
+.fa-5x {
+  font-size: 5em;
+}
+.fa-6x {
+  font-size: 6em;
+}
+.fa-7x {
+  font-size: 7em;
+}
+.fa-8x {
+  font-size: 8em;
+}
+.fa-9x {
+  font-size: 9em;
+}
+.fa-10x {
+  font-size: 10em;
+}
+.fa,
+.fab,
+.fad,
+.fal,
+.far,
+.fas {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: auto;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  line-height: 1;
+}
+.fa-envelope:before {
+  content: "\f0e0";
+}
+.fa-list-ul:before {
+  content: "\f0ca";
+}
+.fa-wrench:before {
+  content: "\f0ad";
+}
+.fa-user:before {
+  content: "\f007";
+}
+.fa-chevron-left:before {
+  content: "\f053";
+}
+.fa-chevron-right:before {
+  content: "\f054";
+}
+.fa-search:before {
+  content: "\f002";
+}
+.fa-edit:before {
+  content: "\f044";
+}
+.fa-trash:before {
+  content: "\f1f8";
+}
+.fa-star:before {
+  content: "\f005";
+}
+.fa-share:before {
+  content: "\f064";
+}
+.fa-thumbs-up:before {
+  content: "\f164";
+}
+.fa-plus:before {
+  content: "\f067";
+}
+.fa-chart-bar:before {
+  content: "\f080";
+}
+.fa-play-circle:before {
+  content: "\f144";
+}
+.fa-universal-access:before {
+  content: "\f29a";
+}
+input[type="dynamic-dropdown"] {
+  border: 1px solid #c8c8c8;
+  border-radius: 0.4px;
+  display: block;
+  height: 30px;
+  outline: none;
+  overflow: visible;
+  padding: 3px 10px;
+  position: relative;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.dd-cntr,
+input[type="dynamic-dropdown"] {
+  color: #363636;
+  cursor: text;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+    Helvetica Neue, Lucida Sans Unicode, Lucida Grande, Arial, sans-serif,
+    Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  width: 100%;
+}
+.dd-cntr {
+  background-color: #fff;
+  display: inline-flex;
+  height: auto;
+}
+.dd-cntr:focus {
+  outline: none;
+}
+.dd-wrp {
+  border: 1px solid #c8c8c8;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow: visible;
+  padding: 3px 10px;
+  position: relative;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  width: 100%;
+}
+.dd-wrp.slim {
+  border: none;
+  padding: 0;
+}
+.dd-wrp-show {
+  z-index: 99;
+}
+.dd-wrp-invalid {
+  border-color: #dc3545;
+}
+.dd-wrp-focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  outline: 0;
+  z-index: 99;
+}
+.dd-wrp-focus.slim {
+  box-shadow: none;
+}
+.dd-hdn,
+.dd-rslts {
+  display: none;
+}
+.dd-rslts {
+  background-color: #ededed;
+  border: 1px solid #c6c6c6;
+  border-radius: 6px;
+  box-shadow: 0 10px 20px 2px #e1e1e1;
+  left: 0;
+  margin-left: -15px;
+  overflow: hidden;
+  padding: 3px 0;
+  position: absolute;
+  top: 30px;
+  white-space: nowrap;
+  z-index: 999;
+}
+.dd-rsltsLnr {
+  height: 100%;
+}
+.dd-rslt {
+  background-color: transparent;
+  cursor: pointer;
+  cursor: default;
+  margin: 0;
+  overflow: hidden;
+  padding: 1px 0.75rem;
+  position: relative;
+  transition: color 0.1s ease-in-out, background-color 0.1s ease-in-out;
+  z-index: 999;
+}
+.dd-rslt.active {
+  background-color: #3f8bf6;
+  color: #fff;
+  z-index: 0;
+}
+.dd-rslt.hidden {
+  display: none !important;
+}
+.dd-rslt > i {
+  padding-right: 0.75rem;
+}
+.dd-rslt.disabled:hover {
+  background-color: inherit;
+  color: inherit;
+}
+.dd-rslts .dd-rslt.grp {
+  color: #8e4d00;
+}
+.dd-rslts .dd-rslt.grp.active {
+  color: #ffb529;
+}
+.dd-vsbl {
+  background: transparent;
+  border: none;
+  color: #272727;
+  display: table-cell;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+    Helvetica Neue, Lucida Sans Unicode, Lucida Grande, Arial, sans-serif,
+    Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  font-size: 14px;
+  font-weight: 600;
+  height: 22px;
+  letter-spacing: 0.4px;
+  max-width: 100%;
+  outline: none;
+  -ms-user-select: text;
+  width: 1px;
+}
+.dd-wrp input:invalid {
+  border: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.dd-inpt > .dd-vsbl::-ms-clear,
+.dd-wrp > input::-ms-clear {
+  display: none;
+}
+.dd-inpt > .dd-vsbl:focus,
+.dd-wrp > input:focus {
+  border: none;
+  outline: none;
+}
+.dd-wrp .dd-inpt > .dd-vsbl:-ms-input-placeholder,
+.dd-wrp > input:-ms-input-placeholder {
+  color: #6c757d;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+    Helvetica Neue, Lucida Sans Unicode, Lucida Grande, Arial, sans-serif,
+    Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  opacity: 1;
+}
+.dd-wrp .dd-inpt > .dd-vsbl::placeholder,
+.dd-wrp > input::placeholder {
+  color: #6c757d;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+    Helvetica Neue, Lucida Sans Unicode, Lucida Grande, Arial, sans-serif,
+    Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  opacity: 1;
+}
+.dd-itm {
+  background-color: #b2d3ff;
+  border-radius: 0.25rem;
+  color: #363636;
+  cursor: default;
+  display: inline-flex;
+  margin-left: 0;
+  margin-right: 2.5px;
+  margin-top: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+  -ms-user-select: text;
+  white-space: nowrap;
+}
+.dd-itm:first-of-type {
+  margin-left: 3px;
+}
+.dd-itm.group {
+  color: #8e4d00 !important;
+}
+.dd-phdr {
+  color: #aaa;
+  content: "data-placeholder";
+  flex: 1 1 auto;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+    Helvetica Neue, Lucida Sans Unicode, Lucida Grande, Arial, sans-serif,
+    Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  margin-left: -12px;
+  opacity: 1;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.dd-inpt {
+  display: inline-flex;
+  position: relative;
+}

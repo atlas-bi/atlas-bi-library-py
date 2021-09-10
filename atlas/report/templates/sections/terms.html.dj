@@ -1,5 +1,5 @@
 {% load markdown %}
-<h3 class="pageSection-title">Terms</h3>
+<h2 class="title is-2">Terms</h2>
 {% for term in terms %}
     <h4 class="drop" data-toggle="clps" data-target="collapseTerm-{{ term.term_id }}">
         {{ term }}

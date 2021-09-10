@@ -17,7 +17,7 @@ import saml2.saml
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-BASE_URL = "https://atlas.net/"
+BASE_URL = "https://atlas.bi/"
 SAML_CONFIG = {
     "xmlsec_binary": "/usr/bin/xmlsec1",
     "entityid": BASE_URL + "saml2/metadata/",
@@ -47,7 +47,7 @@ SAML_CONFIG = {
     "metadata": {
         "remote": [
             {
-                "url": "https://rhcfs.atlas.net/FederationMetadata/2007-06/FederationMetadata.XML",
+                "url": "https://rhcfs.atlas.bi/FederationMetadata/2007-06/FederationMetadata.XML",
                 "disable_ssl_certificate_validation": True,
             },
         ],
@@ -66,7 +66,7 @@ SAML_CONFIG = {
             "given_name": "Christopher",
             "sur_name": "Pickering",
             "company": "Riverside Healthcare",
-            "email_address": "cpickering@rhc.net",
+            "email_address": "",
             "contact_type": "technical",
         },
     ],
@@ -118,7 +118,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # Nice django add ons
+    # Nice django add-ons
     "compressor",
     "djangosaml2",
     "mathfilters",
@@ -177,6 +177,7 @@ TEMPLATES = [
             "libraries": {
                 "markdown": "atlas.templatetags.markdown",
                 "dates": "atlas.templatetags.dates",
+                "helpers": "atlas.templatetags.helpers",
             },
             "debug": DEBUG,
         },
@@ -267,8 +268,15 @@ STATICFILES_FINDERS = (
     "compressor.finders.CompressorFinder",
 )
 
-COMPRESS_PRECOMPILERS = (("text/x-scss", "django_libsass.SassCompiler"),)
-
+COMPRESS_PRECOMPILERS = (
+    # ("text/x-scss", "django_libsass.SassCompiler"),
+    ("text/x-scss", "$(npm run postcss {infile} -o {outfile} --verbose)"),
+    #  ("text/javascript", "npm run babel {infile} -- --out-file {outfile}"),
+    # ("test/css", "npm run postcss {infile} -o {outfile} --verbose"),
+)
+# COMPRESS_CACHEABLE_PRECOMPILERS = (
+#     "text/javascript",
+# )
 LIBSASS_OUTPUT_STYLE = "compressed"
 
 HTML_MINIFY = True

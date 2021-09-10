@@ -1,18 +1,18 @@
-<div class="pageNav">
-    {% if report.imgs.all %}<a href="#images" class="pageNav-link">Images</a>{% endif %}
+<nav class="breadcrumb">
+    <ul>
+    {% if report.imgs.all %}<li><a href="#images">Images</a></li>{% endif %}
     {% if report.description or report.detailed_description or report.docs.developer_description or report.docs.assumptions or report.system_description %}
-        <a href="#description" class="pageNav-link">Description</a>
+        <li><a href="#description">Description</a></li>
     {% endif %}
-    {% if terms %}<a href="#terms" class="pageNav-link">Terms</a>{% endif %}
-    <a href="#details" class="pageNav-link">Details</a>
-    {% if report.queries.all %}<a href="#query" class="pageNav-link">Query</a>{% endif %}
+    {% if terms %}<li><a href="#terms">Terms</a></li>{% endif %}
+    <li><a href="#details">Details</a></li>
+    {% if report.queries.all %}<li><a href="#query">Query</a></li>{% endif %}
     {% if parents or children or groups %}
-        <a href="#relationships" class="pageNav-link">
-            Relationships
-        </a>
+        <li><a href="#relationships">Relationships</a></li>
     {% endif %}
     {% if report.docs.logs %}
-        <a href="#maintenance" class="pageNav-link">Maintenance</a>
+        <li><a href="#maintenance">Maintenance</a></li>
     {% endif %}
-    <a href="#comments" class="pageNav-link">Comments</a>
-</div>
+    <li><a href="#comments">Comments</a></li>
+    </ul>
+</nav>

@@ -131,6 +131,9 @@ class Reports(models.Model):
     def get_absolute_url(self):
         return reverse("report:index", kwargs={"pk": self.pk})
 
+    def get_absolute_comments_url(self):
+        return reverse("report:comments", kwargs={"pk": self.pk})
+
     def system_run_url(self, in_system):
         return "123.123"
 
@@ -369,7 +372,7 @@ class Users(AbstractUser):
         return self.role_links.filter(role_id=1).exists()
 
     def get_absolute_url(self):
-        return reverse("user:details", kwargs={"pk": self.pk})
+        return reverse("user:profile", kwargs={"pk": self.pk})
 
     def has_permission(self, perm, obj=None):
         # check if they have a permission
@@ -1535,7 +1538,7 @@ class ReportTerms(models.Model):
 
 class ReportImages(models.Model):
     image_id = models.AutoField(db_column="ImageID", primary_key=True)
-    report_id = models.ForeignKey(
+    report = models.ForeignKey(
         Reports,
         db_column="ReportObjectID",
         blank=True,
@@ -1553,7 +1556,7 @@ class ReportImages(models.Model):
 
     def get_absolute_url(self):
         return reverse(
-            "report:image", kwargs={"pk": self.pk, "report_id": self.report_id}
+            "report:image", kwargs={"pk": self.pk, "report_id": self.report.report_id}
         )
 
 

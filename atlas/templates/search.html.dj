@@ -3,7 +3,7 @@
     <div class="control has-icons-left is-flex-grow-1">
         <input class="input"
                type="text"
-               placeholder="search Atlas for reports, users, departments, report collections, initiatives, terms .."
+               placeholder="search for reports, users, departments, report collections, initiatives, terms .."
                value="{{ search_string }}"
                maxlength="80"
                required="required"/>

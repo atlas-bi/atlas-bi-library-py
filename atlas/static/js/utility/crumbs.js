@@ -16,53 +16,60 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 (function () {
-  var d = document;
-  d.addEventListener("ajax", function () {
+
+  // add page location to breadcrumbs when leaving page
+
+  window.onbeforeunload = function(){
     setTimeout(function () {
-      b();
+      breadcrumbs();
     }, 0);
-  });
+  }
 
-  var b = function b() {
-    var t = d.title.indexOf("-") != -1 ? d.title.split("-")[0] : d.title,
-      u = window.location.href,
+  var breadcrumbs = function() {
+    var title = document.title.indexOf("-") != -1 ? document.title.split("-")[0] : d.title,
+      url = window.location.href,
       j = {},
-      c = sessionStorage.getItem(btoa("crumbs"));
-    c = c !== null ? JSON.parse(c) : [];
+      crumbs = sessionStorage.getItem("breadcrumbs");
 
-    if (c.length === 0 || !(c[c.length - 1].t == t && c[c.length - 1].u == u)) {
-      j.t = t;
-      j.u = u;
+    crumbs = crumbs !== null ? JSON.parse(crumbs) : [];
+
+    if (crumbs.length === 0 || !(crumbs[crumbs.length - 1].title == title && crumbs[crumbs.length - 1].url == url)) {
+      j.title = title;
+      j.url = url;
 
       if (
-        c.length > 0 &&
-        c[c.length - 1].t.startsWith("Search") &&
-        j.t.startsWith("Search")
+        crumbs.length > 0 &&
+        crumbs[crumbs.length - 1].title.startsWith("Search") &&
+        j.title.startsWith("Search")
       ) {
-        c.pop();
+        crumbs.pop();
       }
 
-      c.push(j);
-      sessionStorage.setItem(btoa("crumbs"), JSON.stringify(c));
+      crumbs.push(j);
+      sessionStorage.setItem("breadcrumbs", JSON.stringify(crumbs));
     }
 
-    var el = d.getElementsByClassName("breadcrumb")[0];
-    el.innerHTML = '<ul>' + h(c) + '</ul>';
+    var el = document.getElementsByClassName("breadcrumb")[0];
+    console.log(crumbs.length)
+    if (crumbs.length <= 1) return
+    el.innerHTML = '<ul>' + buildcrumbs(crumbs) + '</ul>';
     el.style.opacity = 1;
   };
 
-  var h = function h(c) {
+  var buildcrumbs = function (crumbs) {
     var x = 0,
       l = "";
-    c = c.slice(Math.max(c.length - 7, 0));
-    c.reverse();
-    l = "<li class='is-active'><a href='#'>" + c[0].t + "</a></li>";
-    for (x = 1; x < c.length - 1; x++) {
-      l += '<li><a href="' + c[x].u + '" class="">' + c[x].t + '</a></li>';
+
+    crumbs = crumbs.slice(Math.max(crumbs.length - 7, 0));
+    crumbs.reverse();
+
+    l = "<li class='is-active'><a href='#'>" + crumbs[0].title + "</a></li>";
+    for (x = 1; x < crumbs.length; x++) {
+      l += '<li><a href="' + crumbs[x].url + '" class="">' + crumbs[x].title + '</a></li>';
     }
 
     return l;
   };
 
-  b();
+  breadcrumbs();
 })();

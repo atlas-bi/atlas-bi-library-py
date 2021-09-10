@@ -6,7 +6,7 @@ app_name = apps.UserConfig.name
 
 urlpatterns = [
     path("", views.index, name="me"),
-    path("<int:pk", views.index, name="profile"),
+    path("<int:pk>", views.index, name="profile"),
     path("favorites", views.favorites, name="favorites"),
     path(
         "favorites_create_folder",
