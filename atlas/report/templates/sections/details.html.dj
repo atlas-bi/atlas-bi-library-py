@@ -1,6 +1,8 @@
 {% load dates %}
 <h2 class="title is-2">Details</h2>
 <div class="listDetails">
+     <span class="listDetails-title">Report URL</span>
+        <span>{{ report.system_run_url }}</span>
     {% if report.name != report.title %}
         <span class="listDetails-title">Report Name</span>
         <span>{{ report.name }}</span>

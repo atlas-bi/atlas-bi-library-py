@@ -1,14 +1,17 @@
-from dateutil.relativedelta import relativedelta
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-from django.shortcuts import render
-from django.utils import timezone
-from django.views.decorators.cache import never_cache
-from index.models import ReportComments, ReportDocs, ReportImages, Reports, Terms
+import io
 
 # @login_required
 # def snippet(request,pk):
 #     return "hello"
+import regex as re
+from dateutil.relativedelta import relativedelta
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render
+from django.utils import timezone
+from django.views.decorators.cache import never_cache
+from index.models import ReportComments, ReportDocs, ReportImages, Reports, Terms
+from PIL import Image
 
 
 @login_required
@@ -59,7 +62,7 @@ def index(request, pk):
     )
     # not listing grandchildren yet.
 
-    favorite = "yes" if request.user.has_favorite("report", report_id) else "no"
+    # favorite = "yes" if request.user.has_favorite("report", report_id) else "no"
 
     terms = Terms.objects.filter(
         report_docs__report_doc__report__report_id=report_id
@@ -116,15 +119,12 @@ def index(request, pk):
         request,
         "report.html.dj",
         {
-            "permissions": request.user.get_permissions(),
             "report_id": report_id,
             "report": report,
             "parents": parents,
             "children": children,
-            "favorite": favorite,
-            "user": request.user,
+            # "favorite": favorite,
             "terms": terms,
-            "favorites": request.user.get_favorites(),
         },
     )
 
@@ -204,10 +204,48 @@ def maint_status(request, pk):
 
 @login_required
 def image(request, report_id, pk):
-    image_id = pk
-    img = ReportImages.objects.get(report_id=report_id, image_id=image_id)
+
+    image_format = "webp"
+
+    # Browsers (IE11) that do not support webp
+    if "HTTP_USER_AGENT" in request.META:
+        user_agent = request.META["HTTP_USER_AGENT"].lower()
+        if "trident" in user_agent or "msie" in user_agent:
+            image_format = "jpeg"
+
+    size = request.GET.get("size", "")
+
+    img = get_object_or_404(ReportImages, report_id=report_id, image_id=pk)
+
+    im = Image.open(io.BytesIO(img.image_data))
+
+    if re.match(r"^\d+x\d+$", size):
+
+        width, height = (int(x) for x in size.split("x"))
+
+        # image must be a perfect ratio, without distortion.
+        # first resize close to size, then crop
+
+        max_ratio = max((width / float(im.size[0])), (height / float(im.size[1])))
+
+        hsize = int(float(im.size[1]) * float(max_ratio))
+        wsize = int(float(im.size[0]) * float(max_ratio))
+
+        out = im.resize((wsize, hsize))
+        out = out.crop((0, 0, width, height))
+
+        buf = io.BytesIO()
+        out.save(buf, format=image_format)
+
+        response = HttpResponse(buf.getvalue(), content_type="application/octet-stream")
+        response["Content-Disposition"] = 'attachment; filename="{}.{}"'.format(
+            img.pk,
+            image_format,
+        )
+
+        return response
 
     response = HttpResponse(img.image_data, content_type="application/octet-stream")
-    response["Content-Disposition"] = 'attachment; filename="%s.png"' % img.image_id
+    response["Content-Disposition"] = 'attachment; filename="%s.png"' % img.pk
 
     return response

@@ -24,5 +24,5 @@ def user(request):
         return {
             "permissions": request.user.get_permissions(),
             "user": request.user,
-            "favorites": request.user.get_favorites(),
+            "favorites": request.user.get_starred_reports(),
         }

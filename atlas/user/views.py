@@ -7,7 +7,7 @@ from django.db.models import Count
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.cache import never_cache
-from index.models import FavoriteFolders, Favorites, UserPreferences, UserRoles
+from index.models import FavoriteFolders, StarredReports, UserPreferences, UserRoles
 
 from atlas.decorators import admin_required
 
@@ -15,13 +15,8 @@ from atlas.decorators import admin_required
 @login_required
 def index(request):
     """User profile page."""
-    context = {
-        "permissions": request.user.get_permissions(),
-        "user": request.user,
-        "favorites": request.user.get_favorites(),
-    }
 
-    return render(request, "user/index.html.dj", context)
+    return render(request, "user/index.html.dj")
 
 
 @admin_required
@@ -61,14 +56,17 @@ def preference_video(request, state):
 @never_cache
 def favorites(request):
     """Get users favorites."""
-    my_favorites = Favorites.objects.filter(user=request.user)
+    reports = (
+        StarredReports.objects.select_related("report")
+        .select_related("report__docs")
+        .select_related("report__type")
+        .filter(owner=request.user)
+        .order_by("rank", "report__name")
+    )
     my_folders = FavoriteFolders.objects.filter(user=request.user)
 
     context = {
-        "permissions": request.user.get_permissions(),
-        "user": request.user,
-        "favorites": request.user.get_favorites(),
-        "my_favorites": my_favorites,
+        "reports": reports,
         "my_folders": my_folders,
     }
 

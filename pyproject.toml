@@ -85,6 +85,8 @@ simplejson = "^3.17.2"
 django-chunked-iterator = "^0.6.1"
 linkify-it-py = "^1.0.1"
 mdit-py-plugins = "^0.2.8"
+Pillow = "^8.3.2"
+regex = "^2021.8.28"
 
 
 [tool.poetry.extras]

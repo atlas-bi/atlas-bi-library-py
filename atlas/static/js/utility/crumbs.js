@@ -26,7 +26,7 @@
   }
 
   var breadcrumbs = function() {
-    var title = document.title.indexOf("-") != -1 ? document.title.split("-")[0] : d.title,
+    var title = document.title.indexOf("-") != -1 ? document.title.split("-")[0] : document.title,
       url = window.location.href,
       j = {},
       crumbs = sessionStorage.getItem("breadcrumbs");
@@ -50,7 +50,6 @@
     }
 
     var el = document.getElementsByClassName("breadcrumb")[0];
-    console.log(crumbs.length)
     if (crumbs.length <= 1) return
     el.innerHTML = '<ul>' + buildcrumbs(crumbs) + '</ul>';
     el.style.opacity = 1;

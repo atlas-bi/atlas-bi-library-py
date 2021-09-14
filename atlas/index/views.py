@@ -6,9 +6,6 @@ from django.shortcuts import render
 def index(request):
 
     context = {
-        "permissions": request.user.get_permissions(),
-        "user": request.user,
-        "favorites": request.user.get_favorites(),
         "title": "Home",
     }
 
@@ -26,9 +23,6 @@ def video(request):
         video_open = False
 
     context = {
-        "permissions": request.user.get_permissions(),
-        "user": request.user,
-        "favorites": request.user.get_favorites(),
         "video_open": video_open,
     }
 

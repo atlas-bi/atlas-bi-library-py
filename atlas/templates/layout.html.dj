@@ -27,14 +27,14 @@
                 <div class="column">
                     {% block body %}{% endblock body %}
             </div>
-            <div class="column is-one-third is-hidden-mobile">
+           <!-- <div class="column is-one-third is-hidden-mobile">
                 {% if ads %}
                     <div id="related-reports"></div>
                     {% for ad in ads %}
                         <div class="col" data-ajax="yes" data-url="{{ ad.url }}"></div>
                     {% endfor %}
                 {% endif %}
-            </div>
+            </div>-->
         </div>
     </div>
 </section>

@@ -102,8 +102,6 @@ def index(request):
     )
 
     context = {
-        "permissions": request.user.get_permissions(),
-        "user": request.user,
         "top_users": top_user,
         "top_pages": top_pages,
         "access": access,
@@ -111,7 +109,6 @@ def index(request):
         "report": report,
         "term": term,
         "collection": collection,
-        "favorites": request.user.get_favorites(),
         "title": "Analytics",
     }
 

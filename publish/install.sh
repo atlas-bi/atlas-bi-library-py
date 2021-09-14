@@ -103,6 +103,23 @@ command_install libxml2-dev
 command_install libxmlsec1-dev
 command_install redis-server
 command_install ufw
+command_install nodejs
+command_install npm
+
+#  stuff for pillow image processing
+command_install libjpeg8-dev
+command_install zlib1g-dev
+command_install libfreetype6-dev
+command_install liblcms2-dev
+command_install libwebp-dev
+command_install libopenjp2-7-dev
+command_install libtiff5-dev
+command_install tcl8.6-dev
+command_install tk8.6-dev
+command_install python3-tk
+command_install libharfbuzz-dev
+command_install libfribidi-dev
+command_install libxcb1-dev
 
 
 fmt_blue "Updating timezone to CST"
@@ -228,6 +245,9 @@ fmt_blue "Starting celery service"
 sudo systemctl start "$CELERY" && sudo systemctl enable "$CELERY" && sudo systemctl is-active "$CELERY" | grep "inactive" > /dev/null && sudo systemctl status "$CELERY" && ((ERROR++))
 sudo systemctl start "$CELERY_BEAT" && sudo systemctl enable "$CELERY_BEAT" && sudo systemctl is-active "$CELERY_BEAT" | grep "inactive" > /dev/null && sudo systemctl status "$CELERY_BEAT" && ((ERROR++))
 
+# npm install
+fmt_blue "Building Static"
+npm install
 
 
 # update nginx service files

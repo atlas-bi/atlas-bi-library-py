@@ -37,14 +37,8 @@ def index(request, search_type="query", search_string=""):
     Still need to add facet ranges
 
     """
-    if request.method == "GET":
-        context = {
-            "permissions": request.user.get_permissions(),
-            "user": request.user,
-            "favorites": request.user.get_favorites(),
-        }
-
-        return render(request, "search.html.dj", context)
+    # if request.method == "GET":
+    #     return render(request, "search.html.dj")
 
     request_dict = dict(request.GET)
 
@@ -118,12 +112,12 @@ def build_collection_ads(docs):
     # get collections from results
     return list(
         Collections.objects.filter(
-            Q(term_annotations__term__term_id__in=term_ids)
-            | Q(report_annotations__report__report_id__in=report_ids)
+            Q(terms__term__term_id__in=term_ids)
+            | Q(reports__report__report_id__in=report_ids)
         )
         .filter(Q(hidden__isnull=True) | Q(hidden="N"))
         .all()
-        .values("collection_id", "purpose", "description", "name")
+        .values("collection_id", "search_summary", "name")
         .distinct()
     )
 

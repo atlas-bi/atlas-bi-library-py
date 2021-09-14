@@ -22,7 +22,7 @@ from django.urls import reverse
 class ReportGroupMemberships(models.Model):
     membership_id = models.AutoField(db_column="MembershipId", primary_key=True)
     group = models.ForeignKey(
-        "UserGroups",
+        "Groups",
         models.DO_NOTHING,
         db_column="GroupId",
         related_name="report_memberships",
@@ -84,7 +84,9 @@ class Reports(models.Model):
     _modified_at = models.DateTimeField(
         db_column="LastModifiedDate", blank=True, auto_now=True
     )
-    url = models.TextField(db_column="ReportObjectURL", blank=True, default="")
+    system_run_url = models.TextField(
+        db_column="ReportObjectURL", blank=True, default=""
+    )
     system_identifier = models.CharField(
         db_column="EpicMasterFile", max_length=3, blank=True, default=""
     )
@@ -124,6 +126,9 @@ class Reports(models.Model):
     def __str__(self):
         return self.title or self.name
 
+    def has_docs(self):
+        return hasattr(self, "docs")
+
     @property
     def friendly_name(self):
         return self.title or self.name
@@ -134,8 +139,8 @@ class Reports(models.Model):
     def get_absolute_comments_url(self):
         return reverse("report:comments", kwargs={"pk": self.pk})
 
-    def system_run_url(self, in_system):
-        return "123.123"
+    # def system_run_url(self, in_system):
+    #     return "123.123"
 
     def system_viewer_url(self, in_system):
         """Build system record viewer url."""
@@ -211,6 +216,17 @@ class Reports(models.Model):
         if self._modified_at:
             return datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
+
+        # print((
+        #     (self.docs.description or "") + " " +
+        #     (self.detailed_description or "") + " " +
+        #     (self.description or "")
+        # ).strip()[:160] + "...")
+        # return (
+        #     (self.docs.description or "") + " " +
+        #     (self.detailed_description or "") + " " +
+        #     (self.description or "")
+        # ).strip()[:160] + "..."
 
 
 class ReportHierarchies(models.Model):
@@ -409,9 +425,9 @@ class Users(AbstractUser):
         # return users preferences as queriable object
         return self.user_preferences
 
-    def get_favorites(self):
+    def get_starred_reports(self):
         # return all favorites
-        return list(self.favorites.values_list("item_type", "item_id"))
+        return list(self.starred_reports.values_list("report__report_id"))
 
     def has_favorite(self, item_type, item_id, obj=None):
         # check if they have a permission
@@ -485,7 +501,7 @@ class Users(AbstractUser):
         return "{} {}".format(self.first_name, self.last_name)
 
 
-class UserGroups(models.Model):
+class Groups(models.Model):
     group_id = models.AutoField(db_column="GroupId", primary_key=True)
     account_name = models.TextField(db_column="AccountName", blank=True, default="")
     group_name = models.TextField(db_column="GroupName", blank=True, default="")
@@ -514,7 +530,7 @@ class UserGroupMemberships(models.Model):
         related_name="group_memeberships",
     )
     group = models.ForeignKey(
-        UserGroups,
+        Groups,
         models.DO_NOTHING,
         db_column="GroupId",
         blank=True,
@@ -1714,6 +1730,12 @@ class ReportDocs(models.Model):
             return datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
+    @property
+    def created_at(self):
+        if self._created_at:
+            return datetime.strftime(self._created_at, "%m/%d/%y")
+        return ""
+
 
 class RolePermissionLinks(models.Model):
     permissionlinks_id = models.AutoField(
@@ -2071,107 +2093,294 @@ class FavoriteFolders(models.Model):
         ordering = ["rank"]
 
 
-class Favorites(models.Model):
-    favorite_id = models.AutoField(db_column="UserFavoritesId", primary_key=True)
-    item_type = models.TextField(db_column="ItemType", blank=True, default="")
-    rank = models.IntegerField(db_column="ItemRank", blank=True, null=True)
-    item_id = models.IntegerField(db_column="ItemId", blank=True, null=True)
+class StarredUsers(models.Model):
+    star_id = models.AutoField(primary_key=True)
+    rank = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
-        db_column="UserId",
+        on_delete=models.CASCADE,
         blank=True,
         null=True,
-        related_name="favorites",
+        related_name="starred",
     )
-    name = models.TextField(db_column="ItemName", blank=True, default="")
+    owner = models.ForeignKey(
+        "Users",
+        on_delete=models.CASCADE,
+        db_column="ownerid",
+        blank=True,
+        null=True,
+        related_name="starred_users",
+    )
+
+    class Meta:
+        ordering = ["rank"]
+        managed = False
+        db_table = "StarredUsers"
+
+
+class StarredReports(models.Model):
+    star_id = models.AutoField(primary_key=True)
+    rank = models.IntegerField(blank=True, null=True)
+    report = models.ForeignKey(
+        "Reports",
+        on_delete=models.CASCADE,
+        db_column="reportid",
+        blank=True,
+        null=True,
+        related_name="starred",
+    )
+    owner = models.ForeignKey(
+        "Users",
+        on_delete=models.CASCADE,
+        db_column="ownerid",
+        blank=True,
+        null=True,
+        related_name="starred_reports",
+    )
     folder = models.ForeignKey(
         FavoriteFolders,
-        models.DO_NOTHING,
-        db_column="FolderId",
+        on_delete=models.CASCADE,
+        db_column="folderid",
         blank=True,
         null=True,
         related_name="favorites",
     )
 
     class Meta:
-        managed = False
-        db_table = "UserFavorites"
         ordering = ["rank"]
+        managed = False
+        db_table = "StarredReports"
 
     def __str__(self):
-        if self.item_type.lower() == "report":
-            return str(Reports.objects.get(report_id=self.item_id))
-        elif self.item_type.lower() == "term":
-            return str(Terms.objects.get(term_id=self.item_id).name)
-        elif self.item_type.lower() == "collection":
-            return str(Collections.objects.get(collection_id=self.item_id))
-        elif self.item_type.lower() == "initiative":
-            return str(Initiatives.objects.get(initiative_id=self.item_id))
+        return str(self.report)
 
-    @property
-    def atlas_url(self):
-        return "{}s/{}".format(
-            self.item_type,
-            self.item_id,
-        )
 
-    @property
-    def system_run_url(self):
-        if self.item_type.lower() == "report":
-            return Reports.objects.get(report_id=self.item_id).system_run_url()
+class StarredCollections(models.Model):
+    star_id = models.AutoField(primary_key=True)
+    rank = models.IntegerField(blank=True, null=True)
+    collection = models.ForeignKey(
+        "Collections",
+        on_delete=models.CASCADE,
+        db_column="collectionid",
+        blank=True,
+        null=True,
+        related_name="starred",
+    )
+    owner = models.ForeignKey(
+        "Users",
+        on_delete=models.CASCADE,
+        db_column="ownerid",
+        blank=True,
+        null=True,
+        related_name="starred_collections",
+    )
 
-    @property
-    def system_manage_url(self):
-        if self.item_type.lower() == "report":
-            return Reports.objects.get(report_id=self.item_id).system_manage_url()
+    class Meta:
+        ordering = ["rank"]
+        managed = False
+        db_table = "StarredCollections"
 
-    @property
-    def system_editor_url(self):
-        if self.item_type.lower() == "report":
-            return Reports.objects.get(report_id=self.item_id).system_editor_url()
 
-    @property
-    def system_id(self):
-        if self.item_type.lower() == "report":
-            return Reports.objects.filter(report_id=self.item_id).first().system_id
+class StarredGroups(models.Model):
+    star_id = models.AutoField(primary_key=True)
+    rank = models.IntegerField(blank=True, null=True)
+    group = models.ForeignKey(
+        "Groups",
+        on_delete=models.CASCADE,
+        db_column="groupid",
+        blank=True,
+        null=True,
+        related_name="starred",
+    )
+    owner = models.ForeignKey(
+        "Users",
+        on_delete=models.CASCADE,
+        db_column="ownerid",
+        blank=True,
+        null=True,
+        related_name="starred_groups",
+    )
 
-        return None
+    class Meta:
+        ordering = ["rank"]
+        managed = False
+        db_table = "StarredGroups"
 
-    @property
-    def system_identifier(self):
-        if self.item_type.lower() == "report":
-            return (
-                Reports.objects.filter(report_id=self.item_id).first().system_identifier
-            )
 
-        return None
+class StarredTerms(models.Model):
+    star_id = models.AutoField(primary_key=True)
+    rank = models.IntegerField(blank=True, null=True)
+    term = models.ForeignKey(
+        "Terms",
+        on_delete=models.CASCADE,
+        db_column="termid",
+        blank=True,
+        null=True,
+        related_name="starred",
+    )
+    owner = models.ForeignKey(
+        "Users",
+        on_delete=models.CASCADE,
+        db_column="ownerid",
+        blank=True,
+        null=True,
+        related_name="starred_terms",
+    )
 
-    @property
-    def certification_tag(self):
-        if self.item_type.lower() == "report":
-            return Reports.objects.get(report_id=self.item_id).certification_tag
+    class Meta:
+        ordering = ["rank"]
+        managed = False
+        db_table = "StarredTerms"
 
-        return None
 
-    @property
-    def description(self):
-        if self.item_type.lower() == "report":
-            report = Reports.objects.get(report_id=self.item_id)
-            return (
-                report.docs.description
-                or report.description
-                or report.detailed_descripion
-                or report.docs.assumptions
-            )
-        elif self.item_type.lower() == "term":
-            term = Terms.objects.get(term_id=self.item_id)
-            return term.summary or term.technical_definition
-        elif self.item_type.lower() == "collection":
-            collection = Collections.objects.get(collection_id=self.item_id)
-            return collection.purpose or collection.description
-        elif self.item_type.lower() == "initiative":
-            return Initiatives.objects.get(initiative_id=self.item_id).description
+class StarredSearches(models.Model):
+    star_id = models.AutoField(primary_key=True)
+    rank = models.IntegerField(blank=True, null=True)
+    search = models.TextField(blank=True, default="")
+    owner = models.ForeignKey(
+        "Users",
+        on_delete=models.CASCADE,
+        db_column="ownerid",
+        blank=True,
+        null=True,
+        related_name="starred_searches",
+    )
+
+    class Meta:
+        ordering = ["rank"]
+        managed = False
+        db_table = "StarredSearches"
+
+
+class StarredInitiatives(models.Model):
+    star_id = models.AutoField(primary_key=True)
+    rank = models.IntegerField(blank=True, null=True)
+    initiative = models.ForeignKey(
+        "Initiatives",
+        on_delete=models.CASCADE,
+        db_column="initiativeid",
+        blank=True,
+        null=True,
+        related_name="starred",
+    )
+    owner = models.ForeignKey(
+        "Users",
+        on_delete=models.CASCADE,
+        db_column="ownerid",
+        blank=True,
+        null=True,
+        related_name="starred_initiatives",
+    )
+
+    class Meta:
+        ordering = ["rank"]
+        managed = False
+        db_table = "StarredInitiatives"
+
+
+# class Favorites(models.Model):
+#     favorite_id = models.AutoField(db_column="UserFavoritesId", primary_key=True)
+#     item_type = models.TextField(db_column="ItemType", blank=True, default="")
+#     rank = models.IntegerField(db_column="ItemRank", blank=True, null=True)
+#     item_id = models.IntegerField(db_column="ItemId", blank=True, null=True)
+#     user = models.ForeignKey(
+#         "Users",
+#         models.DO_NOTHING,
+#         db_column="UserId",
+#         blank=True,
+#         null=True,
+#         related_name="favorites",
+#     )
+#     name = models.TextField(db_column="ItemName", blank=True, default="")
+#     folder = models.ForeignKey(
+#         FavoriteFolders,
+#         models.DO_NOTHING,
+#         db_column="FolderId",
+#         blank=True,
+#         null=True,
+#         related_name="favorites",
+#     )
+
+#     class Meta:
+#         managed = False
+#         db_table = "UserFavorites"
+#         ordering = ["rank"]
+
+#     def __str__(self):
+#         if self.item_type.lower() == "report":
+#             return str(Reports.objects.get(report_id=self.item_id))
+#         elif self.item_type.lower() == "term":
+#             return str(Terms.objects.get(term_id=self.item_id).name)
+#         elif self.item_type.lower() in ["collection", "project"]:
+#             return str(Collections.objects.get(collection_id=self.item_id))
+#         elif self.item_type.lower() == "initiative":
+#             return str(Initiatives.objects.get(initiative_id=self.item_id))
+#         else:
+#             return ""
+
+#     @property
+#     def atlas_url(self):
+#         return "{}s/{}".format(
+#             self.item_type,
+#             self.item_id,
+#         )
+
+#     @property
+#     def system_run_url(self):
+#         if self.item_type.lower() == "report":
+#             return Reports.objects.get(report_id=self.item_id).system_run_url()
+
+#     @property
+#     def system_manage_url(self):
+#         if self.item_type.lower() == "report":
+#             return Reports.objects.get(report_id=self.item_id).system_manage_url()
+
+#     @property
+#     def system_editor_url(self):
+#         if self.item_type.lower() == "report":
+#             return Reports.objects.get(report_id=self.item_id).system_editor_url()
+
+#     @property
+#     def system_id(self):
+#         if self.item_type.lower() == "report":
+#             return Reports.objects.filter(report_id=self.item_id).first().system_id
+
+#         return None
+
+#     @property
+#     def system_identifier(self):
+#         if self.item_type.lower() == "report":
+#             return (
+#                 Reports.objects.filter(report_id=self.item_id).first().system_identifier
+#             )
+
+#         return None
+
+#     @property
+#     def certification_tag(self):
+#         if self.item_type.lower() == "report":
+#             return Reports.objects.get(report_id=self.item_id).certification_tag
+
+#         return None
+
+#     @property
+#     def description(self):
+#         if self.item_type.lower() == "report":
+#             report = Reports.objects.get(report_id=self.item_id)
+#             return (
+#                 report.docs.description
+#                 or report.description
+#                 or report.detailed_descripion
+#                 or report.docs.assumptions
+#             )
+#         elif self.item_type.lower() == "term":
+#             term = Terms.objects.get(term_id=self.item_id)
+#             return term.summary or term.technical_definition
+#         elif self.item_type.lower() == "collection":
+#             collection = Collections.objects.get(collection_id=self.item_id)
+#             return collection.purpose or collection.description
+#         elif self.item_type.lower() == "initiative":
+#             return Initiatives.objects.get(initiative_id=self.item_id).description
 
 
 class UserPreferences(models.Model):
