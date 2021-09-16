@@ -54,7 +54,7 @@
 {% block start_css %}
     {% if 13 in permissions and term.approved != "Y" or 11 in permissions and term.approved == "Y" %}
         <link rel="stylesheet" href="{% static 'lib/codemirror/mycss.css' %}"/>
-        <link rel="stylesheet" href="{% static 'css/live-editor.scss' %}" type="text/x-scss" charset="utf-8"/>
+<!--        <link rel="stylesheet" href="{% static 'css/live-editor.scss' %}" type="text/x-scss" charset="utf-8"/>-->
     {% endif %}
 {% endblock start_css %}
 {% block js %}

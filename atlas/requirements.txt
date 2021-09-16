@@ -16,7 +16,7 @@ bs4==0.0.1
 cached-property==1.5.2; python_version < "3.8" and python_version >= "3.6"
 celery==5.1.2; python_version >= "3.6"
 certifi==2021.5.30; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0"
-cffi==1.14.6; platform_python_implementation == "PyPy" and python_version >= "3.6" and python_version < "4" and (python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0")
+cffi==1.14.6
 cfgv==3.3.0; python_full_version >= "3.6.1"
 charset-normalizer==2.0.3; python_full_version >= "3.6.0" and python_version >= "3"
 click-didyoumean==0.0.3; python_version >= "3.6"
@@ -55,6 +55,8 @@ elementpath==2.2.3; python_version >= "3.6" and python_version < "4"
 fabric==2.6.0
 filelock==3.0.12; python_full_version >= "3.6.1"
 flower @ git+https://github.com/mher/flower.git@master
+gevent==21.8.0; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_version > "3.5")
+greenlet==1.1.1; python_version >= "2.7" and python_full_version < "3.0.0" and platform_python_implementation == "CPython" or python_version > "3.5" and python_full_version < "3.0.0" and platform_python_implementation == "CPython" or python_version > "3.5" and platform_python_implementation == "CPython" and python_full_version >= "3.5.0"
 gunicorn==20.1.0; python_version >= "3.5"
 html5lib==1.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 humanize==3.10.0; python_version >= "3.6"
@@ -88,7 +90,7 @@ psutil==5.8.0; python_version >= "2.6" and python_full_version < "3.0.0" or pyth
 psycopg2-binary==2.9.1; python_version >= "3.6"
 psycopg2==2.9.1; python_version >= "3.6"
 py==1.10.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
-pycparser==2.20; python_version >= "3.5" and python_full_version < "3.0.0" and platform_python_implementation == "PyPy" or platform_python_implementation == "PyPy" and python_version >= "3.5" and python_full_version >= "3.4.0"
+pycparser==2.20; python_version >= "2.7" and python_full_version < "3.0.0" and platform_python_implementation == "CPython" and sys_platform == "win32" and (python_version >= "2.7" and python_full_version < "3.0.0" or python_version > "3.5") or platform_python_implementation == "CPython" and sys_platform == "win32" and (python_version >= "2.7" and python_full_version < "3.0.0" or python_version > "3.5") and python_full_version >= "3.4.0"
 pygments==2.9.0; python_version >= "3.5"
 pylint==2.9.6; python_version >= "3.6" and python_version < "4.0"
 pynacl==1.4.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0"
@@ -133,4 +135,6 @@ whitenoise==5.3.0; python_version >= "3.5" and python_version < "4"
 wrapt==1.12.1; python_version >= "3.6" and python_version < "4.0"
 xmlschema==1.6.4; python_version >= "3.6" and python_version < "4"
 zipp==3.5.0; python_version >= "3.6" and python_full_version < "3.0.0" and python_version < "3.7" or python_full_version >= "3.5.0" and python_version < "3.7" and python_version >= "3.6"
+zope.event==4.5.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_version > "3.5"
+zope.interface==5.4.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_version > "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version > "3.5"
 zstandard==0.15.2; python_version >= "3.5"

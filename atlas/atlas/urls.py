@@ -47,6 +47,7 @@ if (
 ):
     urlpatterns.append(path("accounts/", include("django.contrib.auth.urls")))
 
+if hasattr(django_settings, "DEBUG") and getattr(django_settings, "DEBUG"):
     import debug_toolbar
 
     urlpatterns += (path("__debug__/", include(debug_toolbar.urls)),)

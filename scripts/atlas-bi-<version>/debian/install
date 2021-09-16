@@ -1,0 +1,2 @@
+install.sh usr/bin/atlas-bi/
+atlas_bi_supervisord.conf usr/bin/atlas-bi/

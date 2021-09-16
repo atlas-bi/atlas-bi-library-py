@@ -247,7 +247,8 @@ Function.prototype.debounce = function (delay) {
       var link = document.createElement("a");
       var title = document.createElement("strong");
       var excerpt = document.createElement("p");
-      var tool = document.createElement("span");
+      var tags = document.createElement("span");
+      var type = document.createElement("span");
 
       link.href = result.id;
       link.classList.add(
@@ -257,21 +258,48 @@ Function.prototype.debounce = function (delay) {
       );
 
       excerpt.classList.add("search-snippet");
-      excerpt.innerHTML = result.description;
+      desc = result.hasOwnProperty("description") ? result.description[0] : ""
+      console.log(typeof desc)
+      excerpt.innerHTML = desc.substr(0,160) + "…";
 
       title.classList.add("is-flex", "is-justify-content-space-between");
       title.innerText = result.name;
 
-      tool.innerText = result.certification;
-      tool.classList.add(
+      type.innerText = result.type;
+      type.classList.add(
         "tag",
         "is-info",
-        "is-light"
+        "is-light",
+        "ml-3"
 
       );
 
+      if(result.certification){
+
+        // this is dupped in the django tag. should fix sometime
+        var cert_class = {
+          "Analytics Certified": "is-success",
+          "Analytics Reviewed": "is-info",
+          "Epic Released": "is-warning",
+          "Legacy": "is-warning",
+          "High Risk": "is-danger",
+        }
+
+        var cert = document.createElement("span");
+        cert.innerText = result.certification;
+        cert.classList.add(
+          "tag",
+          cert_class[result.certification[0]],
+              "is-light"
+
+        );
+        tags.appendChild(cert)
+      }
+
       // Put all the elements together
-      title.appendChild(tool);
+
+      tags.appendChild(type)
+      title.appendChild(tags);
       link.appendChild(title);
       link.appendChild(excerpt);
       return link;
@@ -280,12 +308,6 @@ Function.prototype.debounce = function (delay) {
   formattedResults.map(function(el){
     searchResultsContainer.insertAdjacentElement("beforeend", el)
   });
-
-
-
-
-
-
 
 
   }

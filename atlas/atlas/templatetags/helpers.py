@@ -47,3 +47,11 @@ def snippet(report):
     return (
         (report.description or "") + "\n" + (report.detailed_description or "")
     ).strip()[:120] + "…"
+
+
+@register.filter(name="possessive")
+def size(value):
+    """Add size to image url."""
+    if value[-1].lower() == "s":
+        return value + "'"
+    return value + "'s"

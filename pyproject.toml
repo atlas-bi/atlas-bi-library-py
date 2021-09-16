@@ -87,6 +87,7 @@ linkify-it-py = "^1.0.1"
 mdit-py-plugins = "^0.2.8"
 Pillow = "^8.3.2"
 regex = "^2021.8.28"
+gevent = "^21.8.0"
 
 
 [tool.poetry.extras]

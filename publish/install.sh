@@ -105,6 +105,7 @@ command_install redis-server
 command_install ufw
 command_install nodejs
 command_install npm
+command_install node-gyp
 
 #  stuff for pillow image processing
 command_install libjpeg8-dev
@@ -129,8 +130,6 @@ fmt_blue "Setting up ufw port blocking"
 sudo ufw default deny > /dev/null
 sudo ufw allow ssh > /dev/null
 sudo ufw allow "Nginx Full" > /dev/null
-sudo ufw allow from 127.0.0.1 to any port 5001 > /dev/null
-sudo ufw allow from 127.0.0.1 to any port 5002 > /dev/null
 sudo ufw --force enable > /dev/null
 
 # start redis

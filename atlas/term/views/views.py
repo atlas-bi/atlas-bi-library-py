@@ -94,9 +94,9 @@ class TermDetails(LoginRequiredMixin, DetailView):
         ).distinct()
 
         context["title"] = self.object.name
-        context["favorite"] = (
-            "favorite" if self.request.user.has_favorite("term", term_id) else ""
-        )
+        # context["favorite"] = (
+        #     "favorite" if self.request.user.has_favorite("term", term_id) else ""
+        # )
 
         return context
 

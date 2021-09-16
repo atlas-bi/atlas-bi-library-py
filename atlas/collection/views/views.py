@@ -44,11 +44,11 @@ class CollectionDetails(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["favorite"] = (
-            "favorite"
-            if self.request.user.has_favorite("collection", self.kwargs["pk"])
-            else ""
-        )
+        # context["favorite"] = (
+        #     "favorite"
+        #     if self.request.user.has_favorite("collection", self.kwargs["pk"])
+        #     else ""
+        # )
         context["title"] = self.object.name
 
         return context

@@ -429,10 +429,6 @@ class Users(AbstractUser):
         # return all favorites
         return list(self.starred_reports.values_list("report__report_id"))
 
-    def has_favorite(self, item_type, item_id, obj=None):
-        # check if they have a permission
-        return self.favorites.filter(item_type=item_type, item_id=item_id).exists()
-
     @property
     def active_role(self):
         if self.user_preferences.filter(key="ActiveRole").exists():

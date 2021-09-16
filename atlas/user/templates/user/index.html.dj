@@ -1,10 +1,12 @@
 {% extends "layout.html.dj" %}
+{% load helpers %}
 {% block body %}
     <div class="pageTitle loose">
         <h2 class="pageTitle-head">
             <span>
-                Hi,
-                {{ user.first_name }}
+                {% if is_me %}My Profile
+                {% else %}{{ user.full_name|possessive }} Profile
+                {% endif %}
             </span>
         </h2>
         <div class="tab">

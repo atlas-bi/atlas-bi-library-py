@@ -5,17 +5,31 @@ import json
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.views.decorators.cache import never_cache
-from index.models import FavoriteFolders, StarredReports, UserPreferences, UserRoles
+from index.models import (
+    FavoriteFolders,
+    StarredReports,
+    UserPreferences,
+    UserRoles,
+    Users,
+)
 
 from atlas.decorators import admin_required
 
 
 @login_required
-def index(request):
+def index(request, pk=None):
     """User profile page."""
-
+    if pk:
+        return render(
+            request,
+            "user/index.html.dj",
+            {
+                "user": get_object_or_404(Users, pk=pk),
+                "is_me": (pk == request.user.user_id),
+            },
+        )
     return render(request, "user/index.html.dj")
 
 
