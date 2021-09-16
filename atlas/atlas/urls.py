@@ -44,6 +44,8 @@ if (
     and getattr(django_settings, "DEBUG")
     or hasattr(django_settings, "TESTING")
     and getattr(django_settings, "TESTING")
+    or hasattr(django_settings, "DEMO")
+    and getattr(django_settings, "DEMO")
 ):
     urlpatterns.append(path("accounts/", include("django.contrib.auth.urls")))
 
