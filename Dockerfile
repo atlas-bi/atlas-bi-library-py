@@ -44,7 +44,11 @@ COPY /atlas/requirements.txt .
 RUN pip install -r requirements.txt \
     && pip install gunicorn
 
-COPY /atlas .
+COPY . .
+
+RUN npm install && npm run build
+
+WORKDIR /atlas
 
 COPY release_tasks.sh .
 
