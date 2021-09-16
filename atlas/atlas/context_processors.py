@@ -26,4 +26,5 @@ def user(request):
             "user": request.user,
             "favorites": request.user.get_starred_reports(),
         }
+    # context processor must ALWAYS return a dict
     return {}
