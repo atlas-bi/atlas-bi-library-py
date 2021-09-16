@@ -26,3 +26,4 @@ def user(request):
             "user": request.user,
             "favorites": request.user.get_starred_reports(),
         }
+    return {}
