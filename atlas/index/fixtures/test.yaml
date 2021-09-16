@@ -92,6 +92,7 @@
   fields:
     name: Test report
     _modified_at: 2020-01-01 00:00:00+0
+    type: 1
 
 # Report docs
 - model: index.reportdocs
