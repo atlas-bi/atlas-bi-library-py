@@ -1,0 +1,22 @@
+{% extends "layout.html.dj" %}
+{% load markdown %}
+{% load compress %}
+{% load static %}
+{% block modals %}
+    {% if 7 in permissions %}
+        {% include "term/term_new.html.dj" %}
+    {% endif %}
+{% endblock modals %}
+{% block body %}
+    <h1 class="title is-1">{{ title }}</h1>
+    {% if 26 in permissions %}
+        <a class="nav-link" data-toggle="mdl" data-target="newModal" data-tooltip="Create New Term">
+            New Terms
+        </a>
+    {% endif %}
+    <div class="columns is-multiline">
+        {% for term in terms %}
+            <div class="column is-half ">{% include "term/snippet.html.dj" %}</div>
+        {% endfor %}
+    </div>
+{% endblock body %}

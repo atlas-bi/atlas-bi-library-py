@@ -1,0 +1,217 @@
+{% load dates %}
+<h2 class="title is-2">Details</h2>
+<div class="table-container">
+    <table class="table is-narrow">
+        <tbody>
+            <tr>
+                <td>Report URL</td>
+                <td>{{ report.system_run_url }}</td>
+            </tr>
+            {% if report.name != report.title %}
+                <tr>
+                    <td>Report Name</td>
+                    <td>{{ report.name }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <td>Report Type</td>
+                <td>{{ report.type }}</td>
+            </tr>
+            {% if report.etl_date %}
+                <tr>
+                    <td>Last ETL Load Date</td>
+                    <td>{{ report.etl_date|relative }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <td>Report Last Modified</td>
+                <td>
+                    {{ report.modified_at|relative }}
+                    {% if report.modified_by or report.created_by %}
+                        <span class="text-light">
+                            &nbsp;&middot;&nbsp;
+                            <a href="{% if report.modified_by %}{{ report.modified_by.get_absolute_url }}{% else %}{{ report.created_by.get_absolute_url }}{% endif %} ">
+                                {{ report.modified_by|default:report.created_by }}
+                            </a>
+                        </span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% if report.docs.modified_at %}
+                <tr>
+                    <td>Documentation Last Modified</td>
+                    <td>
+                        {{ report.docs.modified_at|relative }}
+                        {% if report.docs.modified_by or report.docs.created_by %}
+                            <span class="text-light">
+                                &nbsp;&middot;&nbsp;
+                                <a href="{% if report.docs.modified_by %}{{ report.docs.modified_by.get_absolute_url }}{% else %}{{ report.docs.created_by.get_absolute_url }}{% endif %} ">
+                                    {{ report.docs.modified_by|default:report.docs.created_by }}
+                                </a>
+                            </span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endif %}
+            {% if report.created_by %}
+                <tr>
+                    <td>Report Author</td>
+                    <td>
+                        <a href="{{ report.created_by.get_absolute_url }}">{{ report.created_by }}</a>
+                    </td>
+                </tr>
+            {% endif %}
+            {% if report.docs.requester %}
+                <tr>
+                    <td>Report Requester</td>
+                    <td>
+                        <a href="{{ report.docs.requester.get_absolute_url }}">{{ report.docs.requester }}</a>
+                    </td>
+                </tr>
+            {% endif %}
+            {% if report.docs.ops_owner %}
+                <tr>
+                    <td>Operational Owner</td>
+                    <td>
+                        <a href="{{ report.docs.ops_owner.get_absolute_url }}">{{ report.docs.ops_owner }}</a>
+                    </td>
+                </tr>
+            {% endif %}
+            {% if report.docs.collection_url %}
+                <tr>
+                    <td>Git Collection Link</td>
+                    <td>
+                        <a target="_blank" rel="noopener" href="{{ report.docs.collection_url }}">View Source</a>
+                    </td>
+                </tr>
+            {% endif %}
+            {% if report.system_identifier %}
+                <tr>
+                    <td>Epic Identifier</td>
+                    <td>
+                        {% if report.system_viewer_url %}<a href="{{ report.system_viewer_url }}">{% endif %}
+                        <span id="epic-ini">{{ report.system_identifier }}&nbsp;</span>
+                        {% if report.system_id %}
+                            <span id="epic-id" data-epic-hgr="{{ system_template_id }}">
+                                {{ report.system_id }}
+                                {% if report.system_template_id %}(Template {{ report.system_template_id }}){% endif %}
+                            </span>
+                        {% endif %}
+                        {% if report.system_viewer_url %}</a>{% endif %}
+                    </td>
+                </tr>
+            {% endif %}
+            <tr>
+                <td>Atlas Id</td>
+                <td>{{ report.report_id }}</td>
+            </tr>
+            {% if report.orphaned == "Y" %}
+                <tr>
+                    <td>Orphaned?</td>
+                    <td>Yes</td>
+                </tr>
+            {% endif %}
+            {% if report.docs.executive_report == "Y" %}
+                <tr>
+                    <td>Executive Visiblity</td>
+                    <td>Yes</td>
+                </tr>
+            {% endif %}
+            {% if report.type == "SSRS Report" %}
+                <tr>
+                    <td>Enabled for Hyperspace</td>
+                    <td>
+                        {% if report.docs.enabled_for_hyperspace == "Y" %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endif %}
+            {% if 35 in permission and report.docs.do_not_purge == "Y" %}
+                <tr>
+                    <td>Do Not Purge</td>
+                    <td>Yes</td>
+                </tr>
+            {% endif %}
+            {% if 43 in permission and report.docs.hidden == "Y" %}
+                <tr>
+                    <td>Hidden?</td>
+                    <td>Yes</td>
+                </tr>
+            {% endif %}
+            {% if report.docs.frequency %}
+                <tr>
+                    <td>
+                        Estimated Run Frequency
+                    </td>
+                    <td>
+                        {{ report.docs.frequency }}
+                    </td>
+                </tr>
+            {% endif %}
+            {% if report.docs.fragility %}
+                <tr>
+                    <td>
+                        Fragility Rating
+                    </td>
+                    <td>
+                        {{ report.docs.fragility }}
+                    </td>
+                </tr>
+            {% endif %}
+            {% if report.docs.maintenance_schedule %}
+                <tr>
+                    <td>
+                        Maintenance Schedule
+                    </td>
+                    <td>
+                        {{ report.docs.maintenance_schedule }}
+                    </td>
+                </tr>
+            {% endif %}
+            {% if report.docs.org_value %}
+                <tr>
+                    <td>
+                        Organizational Value Rating
+                    </td>
+                    <td>
+                        {{ report.docs.org_value }}
+                    </td>
+                </tr>
+            {% endif %}
+            {% if report.docs.fragility_tags.all %}
+                <tr>
+                    <td>
+                        Fragility Tags
+                    </td>
+                    <td>
+                        {% for tag in report.docs.fragility_tags.all %}
+                            {% if forloop.last %}
+                                <span class="tag">{{ tag.fragility_tag }}</span>
+                            {% else %}
+                                <span class="tag">{{ tag.fragility_tag }},</span>
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+<!-- this should be a panel -->
+<section id="report-meticket-container">
+    {% if report.tickets.all %}
+        <h4>
+            Service Request Tickets
+        </h4>
+        <div class="reportDetails">
+            {% for ticket in report.tickets.all %}
+                <a target="_blank" class="reportDetails-title" href="{{ ticket.url }}">
+                    #{{ ticket }} <code >
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+</section>

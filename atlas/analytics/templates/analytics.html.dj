@@ -15,7 +15,11 @@
     <h3>Last 7 Days - Top Ten</h3>
     <h4>Most Active Users</h4>
     <div class="atlas-chart">
-        <div class="ajaxLoader"><img class="ajaxLoader-img" src="{% static '/img/loader.gif' %}" alt="loader" height="25px" width="25px" /></div>
+        <div class="ajaxLoader"><img class="ajaxLoader-img"
+     src="{% static '/img/loader.gif' %}"
+     alt="loader"
+     height="25px"
+     width="25px"/></div>
         <script type="application/json">
             {
                 "axis": {
@@ -57,7 +61,7 @@
     <h4>Most Popular Pages</h4>
     <div class="atlas-chart">
         <div class="ajaxLoader">
-            <img class="ajaxLoader-img" src="{% static '/img/loader.gif' %}" alt="loader"  height="25px" width="25px"/>
+            <img class="ajaxLoader-img" src="{% static '/img/loader.gif' %}" alt="loader" height="25px" width="25px"/>
         </div>
         <script type="application/json">
             {
@@ -99,7 +103,11 @@
     </div>
     <h3>Access History</h3>
     <div class="atlas-chart">
-        <div class="ajaxLoader"><img class="ajaxLoader-img" src="{% static '/img/loader.gif' %}" alt="loader" height="25px" width="25px"/></div>
+        <div class="ajaxLoader"><img class="ajaxLoader-img"
+     src="{% static '/img/loader.gif' %}"
+     alt="loader"
+     height="25px"
+     width="25px"/></div>
         <script type="application/json">
             {
                 "axis": {
@@ -155,7 +163,11 @@
     </div>
     <h3>Report Access History</h3>
     <div class="atlas-chart">
-        <div class="ajaxLoader"><img class="ajaxLoader-img" src="{% static '/img/loader.gif' %}" alt="loader" height="25px" width="25px"/></div>
+        <div class="ajaxLoader"><img class="ajaxLoader-img"
+     src="{% static '/img/loader.gif' %}"
+     alt="loader"
+     height="25px"
+     width="25px"/></div>
         <script type="application/json">
             {
                 "axis": {
@@ -211,7 +223,11 @@
     </div>
     <h3>Collection Access History</h3>
     <div class="atlas-chart">
-        <div class="ajaxLoader"><img class="ajaxLoader-img" src="{% static '/img/loader.gif' %}" alt="loader" height="25px" width="25px"/></div>
+        <div class="ajaxLoader"><img class="ajaxLoader-img"
+     src="{% static '/img/loader.gif' %}"
+     alt="loader"
+     height="25px"
+     width="25px"/></div>
         <script type="application/json">
             {
                 "axis": {

@@ -84,7 +84,7 @@ def favorites(request):
         "my_folders": my_folders,
     }
 
-    return render(request, "favorites.html.dj", context)
+    return render(request, "user/favorites.html.dj", context)
 
 
 @login_required

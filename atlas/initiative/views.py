@@ -11,7 +11,7 @@ from index.models import Collections, Initiatives
 class InitiativeList(LoginRequiredMixin, ListView):
     queryset = Initiatives.objects.all().order_by("-_modified_at")
     context_object_name = "initiatives"
-    template_name = "initiatives.html.dj"
+    template_name = "initiative/all.html.dj"
     extra_context = {"title": "Initiatives"}
 
     def get(self, request, **kwargs):
@@ -22,17 +22,17 @@ class InitiativeList(LoginRequiredMixin, ListView):
 
 
 class InitiativeDetails(LoginRequiredMixin, DetailView):
-    template_name = "initiative.html.dj"
+    template_name = "initiative/one.html.dj"
     context_object_name = "initiative"
     queryset = Initiatives.objects
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["favorite"] = (
-            "favorite"
-            if self.request.user.has_favorite("initiative", self.kwargs["pk"])
-            else ""
-        )
+        # context["favorite"] = (
+        #     "favorite"
+        #     if self.request.user.has_favorite("initiative", self.kwargs["pk"])
+        #     else ""
+        # )
         context["title"] = self.object.name
 
         return context

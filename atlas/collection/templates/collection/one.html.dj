@@ -1,0 +1,28 @@
+{% extends "layout.html.dj" %}
+{% load compress %}
+{% load static %}
+{% block body %}
+    <h1 class="title is-1">{{ collection }}</h1>
+    {% include "collection/links.html.dj" %}
+    <div class="columns">
+        <div class="column is-narrow">{% include "collection/nav.html.dj" %}</div>
+        <div class="column">
+            <span class="location" id="about"></span>
+            {% include "collection/details.html.dj" %}
+            <span class="location" id="relationships"></span>
+            {% if collection.reports.all or collection.terms.all %}
+                {% include "collection/relationships.html.dj" %}
+            {% endif %}
+            <span class="location" id="agreements"></span>
+            {% if collection.agreements.all %}
+                {% include "collection/agreements.html.dj" %}
+            {% endif %}
+            <span class="location" id="tasks"></span>
+            {% if collection.tasks.all %}
+                {% include "collection/tasks.html.dj" %}
+            {% endif %}
+            <span class="location" id="comments"></span>
+            <div class="comments" data-ajax="yes" data-url="{{ collection.get_absolute_comments_url }}"></div>
+        </div>
+    </div>
+{% endblock body %}

@@ -42,7 +42,7 @@ class TermDelete(LoginRequiredMixin, DeleteView):
 class TermList(LoginRequiredMixin, ListView):
     queryset = Terms.objects.order_by("-approved", "-_modified_at")
     context_object_name = "terms"
-    template_name = "terms.html.dj"
+    template_name = "term/all.html.dj"
     extra_context = {"title": "Terms"}
 
     def get(self, request, **kwargs):
@@ -53,7 +53,7 @@ class TermList(LoginRequiredMixin, ListView):
 
 
 class TermDetails(LoginRequiredMixin, DetailView):
-    template_name = "term.html.dj"
+    template_name = "term/one.html.dj"
     context_object_name = "term"
     queryset = (
         Terms.objects.select_related("approved_by")

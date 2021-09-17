@@ -1,0 +1,35 @@
+{% extends "term/all.html.dj" %}
+{% load static %}
+{% load compress %}
+{% block modals %}
+    {{ block.super }}
+    {% if 13 in permissions and term.approved != "Y" or 11 in permissions and term.approved == "Y" %}
+        {% include "term/term_editor.html.dj" %}
+    {% endif %}
+{% endblock modals %}
+{% block body %}
+    <h1 class="title is-1">
+        {{ term.name }}
+        {% if term.approved == "Y" %}
+            <span class="tag is-pulled-right is-success is-large">Approved</span>
+        {% endif %}
+    </h1>
+    {% include "term/links.html.dj" %}
+    <div class="columns">
+        <div class="column is-narrow">{% include "term/nav.html.dj" %}</div>
+        <div class="column">
+            {% if term.summary or term.technical_definition %}
+                <span class="location" id="description"></span>
+                {% include "term/description.html.dj" %}
+            {% endif %}
+            <span class="location" id="details"></span>
+            {% include "term/details.html.dj" %}
+            {% if related_reports %}
+                <span class="location" id="reports"></span>
+                {% include "term/reports.html.dj" %}
+            {% endif %}
+            <span class="location" id="comments"></span>
+            <div class="comments" data-ajax="yes" data-url="{% url 'term:comments' term.term_id %}"></div>
+        </div>
+    </div>
+{% endblock body %}

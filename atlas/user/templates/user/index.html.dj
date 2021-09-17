@@ -4,8 +4,10 @@
     <div class="pageTitle loose">
         <h2 class="pageTitle-head">
             <span>
-                {% if is_me %}My Profile
-                {% else %}{{ user.full_name|possessive }} Profile
+                {% if is_me %}
+                    My Profile
+                {% else %}
+                    {{ user.full_name|possessive }} Profile
                 {% endif %}
             </span>
         </h2>
@@ -14,18 +16,16 @@
             <!--
 <a class="tab-lnk" href="#mail">Mail</a>
         -->
+        </div>
     </div>
-</div>
-<section class="tab-cnt">
-    <div class="tab-dta active" id="favorites">
-        <h3 class="pageSection-title">My Favorites</h3>
-        <div data-ajax="yes" data-url="{% url 'user:favorites' %}"></div>
-    </div>
+    <section class="tab-cnt">
+        <div class="tab-dta active" id="favorites">
+            <h3 class="pageSection-title">My Favorites</h3>
+            <div data-ajax="yes" data-url="{% url 'user:favorites' %}"></div></div>
     <!--
 <div class="tab-dta" id="mail">
  
-<div data-ajax="yes" data-url="/mail/get_mailbox"></div>
-    </div>
+<div data-ajax="yes" data-url="/mail/get_mailbox"></div></div>
 -->
-</section>
-{% endblock body %}
+        </section>
+    {% endblock body %}

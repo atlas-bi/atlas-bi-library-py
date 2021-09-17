@@ -15,92 +15,93 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+
 @import "./include/color.scss";
-@import "./include/font.scss";
+// @import "./include/font.scss";
 
-.nav-link,
-.nav-drop {
-  cursor: pointer;
-  display: inline-block;
-  font-family: $font-san-serif;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 20px;
-  padding: 0 10px;
-  position: relative;
-  z-index: 999;
+// .nav-link,
+// .nav-drop {
+//   cursor: pointer;
+//   display: inline-block;
+//   font-family: $font-san-serif;
+//   font-size: 20px;
+//   font-weight: 700;
+//   line-height: 20px;
+//   padding: 0 10px;
+//   position: relative;
+//   z-index: 999;
 
-  svg {
-    fill: $color-text-dark-grey;
-    height: 17px;
-    width: 17px;
-  }
+//   svg {
+//     fill: $color-text-dark-grey;
+//     height: 17px;
+//     width: 17px;
+//   }
 
-  &:hover {
-    svg {
-      fill: $color-text-light-grey;
-    }
-  }
-}
+//   &:hover {
+//     svg {
+//       fill: $color-text-light-grey;
+//     }
+//   }
+// }
 
-.sideNav {
-  // left: -40px;
-  // position: absolute;
-  // top: 116px;
-  // width: auto;
-  // z-index: 1;
+// .sideNav {
+//   // left: -40px;
+//   // position: absolute;
+//   // top: 116px;
+//   // width: auto;
+//   // z-index: 1;
 
-  &.sticky {
-    position: fixed;
-    top: 42px;
-  }
+//   &.sticky {
+//     position: fixed;
+//     top: 42px;
+//   }
 
-  a {
-    border: 1px solid #eee;
-    border-radius: 20px;
-    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05), 0 0 0.0625rem rgba(0, 0, 0, 0.1);
-    display: block;
-    height: 39px;
-    margin-bottom: 12px;
-    padding-top: 10px;
-    width: 39px;
-  }
+//   a {
+//     border: 1px solid #eee;
+//     border-radius: 20px;
+//     box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05), 0 0 0.0625rem rgba(0, 0, 0, 0.1);
+//     display: block;
+//     height: 39px;
+//     margin-bottom: 12px;
+//     padding-top: 10px;
+//     width: 39px;
+//   }
 
-  .nav-linkDisabled svg {
-    opacity: 0.7;
-    cursor: default;
-  }
+//   .nav-linkDisabled svg {
+//     opacity: 0.7;
+//     cursor: default;
+//   }
 
-  .nav-link {
-    svg {
-      fill: $color-text-light-grey;
-    }
+//   .nav-link {
+//     svg {
+//       fill: $color-text-light-grey;
+//     }
 
-    &:hover svg {
-      fill: $color-text-dark-grey;
-    }
+//     &:hover svg {
+//       fill: $color-text-dark-grey;
+//     }
 
-    &.favorite svg {
-      fill: $color-text-gold-med !important;
-    }
+//     &.favorite svg {
+//       fill: $color-text-gold-med !important;
+//     }
 
-    .nav-linkRun {
-      svg {
-        fill: #25c83a;
-      }
-    }
+//     .nav-linkRun {
+//       svg {
+//         fill: #25c83a;
+//       }
+//     }
 
-    .nav-linkRun:hover {
-      svg {
-        fill: #12a127;
-      }
-    }
+//     .nav-linkRun:hover {
+//       svg {
+//         fill: #12a127;
+//       }
+//     }
 
-    &.favorite:hover svg {
-      fill: $color-text-gold !important;
-    }
-  }
-}
+//     &.favorite:hover svg {
+//       fill: $color-text-gold !important;
+//     }
+//   }
+// }
 
 .atlas-navbar {
   padding: 16px 0;
@@ -131,19 +132,21 @@
   }
 }
 
-.new-mail-badge {
-  background-color: #fc433a;
-  border: 1px solid #f4f5f6;
-  border-radius: 18px;
-  color: $color-text-white;
-  display: none;
-  font-family: $font-san-serif;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 16px;
-  min-width: 18px;
-  padding: 0 4px 0 5px;
-  position: absolute;
-  right: 0;
-  top: -4px;
-}
+
+
+// .new-mail-badge {
+//   background-color: #fc433a;
+//   border: 1px solid #f4f5f6;
+//   border-radius: 18px;
+//   color: $color-text-white;
+//   display: none;
+//   font-family: $font-san-serif;
+//   font-size: 14px;
+//   font-weight: 600;
+//   line-height: 16px;
+//   min-width: 18px;
+//   padding: 0 4px 0 5px;
+//   position: absolute;
+//   right: 0;
+//   top: -4px;
+// }

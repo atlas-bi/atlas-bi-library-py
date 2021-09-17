@@ -9,7 +9,7 @@ def index(request):
         "title": "Home",
     }
 
-    return render(request, "index.html.dj", context)
+    return render(request, "index/index.html.dj", context)
 
 
 @login_required
@@ -26,4 +26,4 @@ def video(request):
         "video_open": video_open,
     }
 
-    return render(request, "video.html.dj", context)
+    return render(request, "index/video.html.dj", context)

@@ -7,11 +7,9 @@
 {% compress css file font %}
     <link rel="stylesheet" href="{% static 'css/include/font.css' %}" type="text/css" charset="utf-8"/>
 {% endcompress %}
-
 {% compress css file theme %}
-<link rel="stylesheet" href="{% static 'css/theme.css' %}" type="text/css" charset="utf-8"/>
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}" type="text/css" charset="utf-8"/>
 {% endcompress %}
-
 {% compress css file main %}
     <link rel="stylesheet" href="{% static 'css/nav.css' %}" type="text/css" charset="utf-8"/>
     <link rel="stylesheet" href="{% static 'css/crumbs.css' %}" type="text/css" charset="utf-8"/>
@@ -23,12 +21,13 @@
     <link rel="stylesheet" href="{% static 'css/utility/collapse.css' %}" type="text/css" charset="utf-8"/>
     <link rel="stylesheet" href="{% static 'css/utility/modal.css' %}" type="text/css" charset="utf-8"/>
     <link rel="stylesheet" href="{% static 'css/utility/tabs.css' %}" type="text/css" charset="utf-8"/>
-
 {% endcompress %}
 {% compress css file differed %}
     <link rel="stylesheet" href="{% static 'css/page-effects.css' %}" type="text/css" charset="utf-8"/>
     <link rel="stylesheet" href="{% static 'css/favorite-effects.css' %}" type="text/css" charset="utf-8"/>
-<!--    <link rel="stylesheet" href="{% static 'css/utility/tooltip.css' %}" type="text/css" charset="utf-8"/>-->
+<!--    
+<link rel="stylesheet" href="{% static 'css/utility/tooltip.css' %}" type="text/css" charset="utf-8"/>
+-->
     <link rel="stylesheet" href="{% static 'css/utility/drag.css' %}" type="text/css" charset="utf-8"/>
     <link rel="stylesheet" href="{% static 'css/utility/progressbar.css' %}" type="text/css" charset="utf-8"/>
     <link rel="stylesheet" href="{% static 'css/utility/chart.css' %}" type="text/css" charset="utf-8"/>
@@ -56,10 +55,8 @@
         }
     })();
     </script>
-
 {% endcompress %}
-{% block start_css %}
-{% endblock start_css %}
+{% block start_css %}{% endblock start_css %}
 {% compress js file %}
     {% block start_js %}{% endblock start_js %}
 {% endcompress %}

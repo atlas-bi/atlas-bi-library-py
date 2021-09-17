@@ -39,14 +39,25 @@ def size(value, arg):
 
 
 @register.filter(name="snippet")
-def snippet(report):
+def snippet(model):
+    if model._meta.model.__name__ == "Reports":
+        if model.has_docs() and model.docs.description:
+            return (model.docs.description).strip()[:120] + "…"
 
-    if report.has_docs() and report.docs.description:
-        return (report.docs.description).strip()[:120] + "…"
+        return (
+            (model.description or "") + "\n" + (model.detailed_description or "")
+        ).strip()[:120] + "…"
 
-    return (
-        (report.description or "") + "\n" + (report.detailed_description or "")
-    ).strip()[:120] + "…"
+    if model._meta.model.__name__ == "Collections":
+        return (model.search_summary or model.description or "").strip()[:120] + "…"
+
+    if model._meta.model.__name__ == "Initiatives":
+        return (model.description or "").strip()[:120] + "…"
+
+    if model._meta.model.__name__ == "Terms":
+        return (model.summary or model.technical_definition or "").strip()[:120] + "…"
+
+    return "…"
 
 
 @register.filter(name="possessive")

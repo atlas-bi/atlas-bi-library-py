@@ -27,7 +27,7 @@ from index.models import (
 class CollectionList(LoginRequiredMixin, ListView):
     queryset = Collections.objects.all().order_by("-_modified_at")
     context_object_name = "collections"
-    template_name = "collections.html.dj"
+    template_name = "collection/all.html.dj"
     extra_context = {"title": "Collections"}
 
     def get(self, request, **kwargs):
@@ -38,7 +38,7 @@ class CollectionList(LoginRequiredMixin, ListView):
 
 
 class CollectionDetails(LoginRequiredMixin, DetailView):
-    template_name = "collection.html.dj"
+    template_name = "collection/one.html.dj"
     context_object_name = "collection"
     queryset = Collections.objects
 
@@ -133,7 +133,7 @@ class ReportLinkNew(LoginRequiredMixin, View):
 
         return render(
             self.request,
-            "collection_edit/current_reports.html.dj",
+            "collection/edit/current_reports.html.dj",
             {"reportlinks": reportlinks},
         )
 
@@ -178,7 +178,7 @@ class TermLinkNew(LoginRequiredMixin, View):
 
         return render(
             self.request,
-            "collection_edit/current_terms.html.dj",
+            "collection/edit/current_terms.html.dj",
             {"termlinks": termlinks},
         )
 

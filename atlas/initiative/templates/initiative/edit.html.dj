@@ -1,0 +1,84 @@
+<div class="mdl" id="editModal" tabindex="-1">
+    <div class="mdl-d editorMdl">
+        <div class="mdl-c editorMdl-inner">
+            <div class="editorMdl-title">
+                <h2 class="editorMdl-titleText">
+                    Editing
+                    <span class="text-green">{{ initiative }}</span>
+                    <button type="button"
+                            class="editorMdl-close"
+                            data-dismiss="mdl"
+                            data-tooltip="Close">&times;</button>
+                </h2>
+                <div id="editorMdl-titleSave">changes saved.</div>
+            </div>
+            <div class="editorMdl-cnt" ss-container>
+                <div class="editorMdl-cntLiner">
+                    <form action="{{ initiative.get_absolute_edit_url }}" method="post">
+                        {% csrf_token %}
+                        <h3>Details</h3>
+                        <div class="listDetails">
+                            <label>Name</label>
+                            <input name="name" required value="{{ initiative }}" />
+                            <label>External Contacts</label>
+                            <select type="dynamic-dropdown"
+                                    name="linked_contacts"
+                                    search-area="lookup/initiative_contacts"
+                                    method="fullList">
+                                {% for contact_link in initiative.contact_links.all %}
+                                    <option selected="selected" value="{{ contact_link.contact_id }}">
+                                        {{ contact_link }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <label>Operations Owner</label>
+                            <input type="dynamic-dropdown"
+                                   name="ops_owner_id"
+                                   value="{{ initiative.ops_owner_id|default:"" }}"
+                                   visible-value="{{ initiative.ops_owner|default:"" }}"
+                                   search-area="user_lookup"/>
+                            <label>Executive Owner</label>
+                            <input type="dynamic-dropdown"
+                                   name="exec_owner_id"
+                                   value="{{ initiative.exec_owner_id|default:"" }}"
+                                   visible-value="{{ initiative.exec_owner|default:"" }}"
+                                   search-area="user_lookup"/>
+                            <label>Financial Impact</label>
+                            <input type="dynamic-dropdown"
+                                   name="financial_impact_id"
+                                   search-area="lookup/financial_impact"
+                                   method="fullList"
+                                   visible-value="{{ initiative.financial_impact|default:"" }}"
+                                   value="{{ initiative.financial_impact_id|default:"" }}"/>
+                            <label>Strategic Importance</label>
+                            <input type="dynamic-dropdown"
+                                   name="strategic_importance_id"
+                                   search-area="lookup/strategic_importance"
+                                   method="fullList"
+                                   visible-value="{{ initiative.strategic_importance|default:"" }}"
+                                   value="{{ initiative.strategic_importance_id|default:"" }}"/>
+                            <label>Linked Collections</label>
+                            <select type="dynamic-dropdown"
+                                    name="linked_data_collections"
+                                    id="linked-data-collections"
+                                    search-area="collection_lookup">
+                                {% for collection in initiative.collections.all %}
+                                    <option selected="selected" value="{{ collection.collection_id }}">
+                                        {{ collection }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <h3>Description</h3>
+                        <div class="editor" data-inputName="description" data-inputId="description">
+                            <textarea>{{ initiative.description|default:""|safe }}</textarea>
+                        </div>
+                        <h3>
+                            <button class="editor-save" type="submit">Save</button>
+                        </h3>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

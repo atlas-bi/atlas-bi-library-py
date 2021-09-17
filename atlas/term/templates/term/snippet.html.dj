@@ -1,0 +1,30 @@
+{% load helpers %}
+{% load static %}
+{% load markdown %}
+<div class="card">
+    <div class="card-header">
+        <p class="card-header-title is-justify-content-space-between">
+            {{ term }}
+            {% if term.approved == "Y" %}<span class="tag is-success">Approved</span>{% endif %}
+        </p>
+    </div>
+    <div class="card-content">
+        <div class="media">
+            <div class="media-left">
+                <figure class="image is-96x96">
+                    <img data-src="" src="" alt="report image" />
+                </figure>
+            </div>
+            <div class="media-content">
+                {{ term|snippet|markdown|safe }}
+                <br>
+                <p class="subtitle is-6">
+                    blank
+                </p>
+            </div>
+        </div>
+    </div>
+    <footer class="card-footer">
+        <a href="{{ term.get_absolute_url }}" class="card-footer-item">Open</a>
+    </footer>
+</div>

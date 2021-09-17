@@ -98,3 +98,11 @@ img[data-src] {
   background-color: $info-light;
   color: $info;
 }
+
+/* badge in headings */
+
+.title.is-2 .badge {
+  height:25px;
+  font-size: 50%;
+  padding: 6px;
+}

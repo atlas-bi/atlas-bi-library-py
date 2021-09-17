@@ -15,16 +15,13 @@
                 <span aria-hidden="true"></span>
             </a>
         </div>
-        <div class="navbar-start is-flex is-flex-grow-1 is-align-items-center px-3 pt-5">
-            {% include 'search.html.dj' %}
-        </div>
-
+        <div class="navbar-start is-flex is-flex-grow-1 is-align-items-center px-3 pt-5">{% include 'search.html.dj' %}</div>
         <div class="navbar-menu is-flex-grow-0" id="atlas-main-nav">
             <div class="navbar-end">
                 <a class="navbar-item" href="#mail">
                     <span class="icon is-medium is-relative">
                         <i class="far fa-lg fa-envelope"></i>
-                         <span title="mail count" class="badge" id="nav_unread_message_count">0</span>
+                        <span title="mail count" class="badge" id="nav_unread_message_count">0</span>
                     </span>
                     <span class="hide-desktop">Mail</span>
                 </a>
@@ -47,18 +44,16 @@
                                 {% endif %}
                             -->
                             {% if 36 in permissions %}
-                                <a class="navbar-item" href="{% url 'analytics:index' %}">
-                                    Analytics
-                                </a>
+                                <a class="navbar-item" href="{% url 'analytics:index' %}">Analytics</a>
                             {% endif %}
                             {% if 36 in permissions %}
                                 <!-- permission should be added for etl -->
-                                <a class="navbar-item" href="{% url 'etl:index' %}">
-                                    ETL
-                                </a>
+                                <a class="navbar-item" href="{% url 'etl:index' %}">ETL</a>
                             {% endif %}
                             <hr class=" hide-desktop dropdown-divider">
-                            <!--<a href="/tasks">Tasks</a>-->
+                            <!--
+<a href="/tasks">Tasks</a>
+-->
                         </div>
                     </div>
                 {% endif %}
@@ -71,15 +66,9 @@
                     </div>
                     <div class="navbar-dropdown">
                         <hr class=" hide-desktop dropdown-divider">
-                        <a class="navbar-item" href="{% url 'initiative:list' %}" title="initiatives">
-                            Initiatives
-                        </a>
-                        <a class="navbar-item" href="{% url 'collection:list' %}" title="collections">
-                            Collections
-                        </a>
-                        <a class="navbar-item" href="{% url 'term:list' %}" title="terms">
-                            Terms
-                        </a>
+                        <a class="navbar-item" href="{% url 'initiative:list' %}" title="initiatives">Initiatives</a>
+                        <a class="navbar-item" href="{% url 'collection:list' %}" title="collections">Collections</a>
+                        <a class="navbar-item" href="{% url 'term:list' %}" title="terms">Terms</a>
                         <hr class=" hide-desktop dropdown-divider">
                     </div>
                 </div>
@@ -131,8 +120,7 @@
         </nav>
         <section class="level mt-5">
             <div class="container">
-                <nav class="breadcrumb">
-                </nav>
+                <nav class="breadcrumb"></nav>
             </div>
         </section>
     </div>

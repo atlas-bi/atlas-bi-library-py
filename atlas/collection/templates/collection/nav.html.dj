@@ -1,0 +1,63 @@
+<aside class="menu">
+    <ul>
+        {% if 28 in permissions %}
+            <!-- editor -->
+            <li>
+                <a class="has-tooltip-arrow has-tooltip-right"
+                   data-toggle="mdl"
+                   data-target="editModal"
+                   data-tooltip="Open Atlas Editor">
+                    <span class="icon has-text-grey is-large">
+                        <i class="fas fa-lg fa-edit"></i>
+                    </span>
+                </a>
+            </li>
+        {% endif %}
+        {% if 27 in permissions %}
+            <!-- delete -->
+            <li>
+                <a class="has-tooltip-arrow has-tooltip-right"
+                   data-tooltip="Delete this Collection"
+                   href="{{ collection.get_absolute_delete_url }}"
+                   onclick="return confirm('Are you sure you want to remove this?');">
+                    <span class="icon has-text-grey is-large">
+                        <i class="fas fa-lg fa-trash"></i>
+                    </span>
+                </a>
+            </li>
+        {% endif %}
+        <li>
+            <a class="has-tooltip-arrow has-tooltip-right {{ favorite }}"
+               data-tooltip=" {% if favorite %} Remove from Favorites {% else %} Add to Favorites {% endif %} "
+               fav-type="collection"
+               object-id="{{ collection.collection_id }}">
+                <span class="icon has-text-grey is-large">
+                    <i class="fas fa-lg fa-star"></i>
+                </span>
+            </a>
+        </li>
+        <li>
+            <a class="has-tooltip-arrow has-tooltip-right"
+               data-tooltip="Share"
+               data-toggle="mdl"
+               data-target="shareModal"
+               data-name="{{ collection }}"
+               data-type="collection">
+                <span class="icon has-text-grey is-large">
+                    <i class="fas fa-lg fa-share"></i>
+                </span>
+            </a>
+        </li>
+        <li>
+            <a class="has-tooltip-arrow has-tooltip-right"
+               data-tooltip="Share Feedback"
+               data-toggle="mdl"
+               data-target="shareFeedback"
+               data-name="{{ collection }}">
+                <span class="icon has-text-grey is-large">
+                    <i class="far fa-lg fa-thumbs-up"></i>
+                </span>
+            </a>
+        </li>
+    </ul>
+</aside>

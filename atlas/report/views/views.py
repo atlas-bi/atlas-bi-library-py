@@ -117,7 +117,7 @@ def index(request, pk):
 
     return render(
         request,
-        "report.html.dj",
+        "report/one.html.dj",
         {
             "report_id": report_id,
             "report": report,
@@ -134,7 +134,7 @@ def profile(request, pk):
     report_id = pk
     return render(
         request,
-        "report_profile.html.dj",
+        "report/report_profile.html.dj",
         {"maint_status": True},
     )
 
@@ -166,7 +166,7 @@ def maint_status(request, pk):
     ):
         return render(
             request,
-            "sections/maint_status.html.dj",
+            "report/sections/maint_status.html.dj",
             context,
         )
 
@@ -197,7 +197,7 @@ def maint_status(request, pk):
 
     return render(
         request,
-        "sections/maint_status.html.dj",
+        "report/sections/maint_status.html.dj",
         context,
     )
 
@@ -233,6 +233,28 @@ def image(request, report_id, pk):
 
         out = im.resize((wsize, hsize))
         out = out.crop((0, 0, width, height))
+
+        buf = io.BytesIO()
+        out.save(buf, format=image_format)
+
+        response = HttpResponse(buf.getvalue(), content_type="application/octet-stream")
+        response["Content-Disposition"] = 'attachment; filename="{}.{}"'.format(
+            img.pk,
+            image_format,
+        )
+
+        return response
+
+    # if only a width is specified
+    if re.match(r"^\d+x_$", size):
+        width = int(size.split("x")[0])
+
+        max_ratio = width / float(im.size[0])
+
+        hsize = int(float(im.size[1]) * float(max_ratio))
+        wsize = int(float(im.size[0]) * float(max_ratio))
+
+        out = im.resize((wsize, hsize))
 
         buf = io.BytesIO()
         out.save(buf, format=image_format)

@@ -14,96 +14,96 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-@import "./include/color.scss";
-.comments-title {
-  border-top: 1px solid #dee2e6;
-  margin-bottom: 0;
-  margin-top: 20px;
-  padding-bottom: 10px;
-  padding-left: calc(25% + 15px);
-  padding-top: 20px;
-}
+// */
+// @import "./include/color.scss";
+// .comments-title {
+//   border-top: 1px solid #dee2e6;
+//   margin-bottom: 0;
+//   margin-top: 20px;
+//   padding-bottom: 10px;
+//   padding-left: calc(25% + 15px);
+//   padding-top: 20px;
+// }
 
-.comments-group {
-  margin-left: 25%;
-  margin-right: 25%;
-}
+// .comments-group {
+//   margin-left: 25%;
+//   margin-right: 25%;
+// }
 
-.comments-msg {
-  background-color: #f5f5f5;
-  background-color: var(--off-white);
-  border-radius: 10px;
-  margin: 15px;
-  margin-top: 0;
-  padding: 15px;
-  position: relative;
-  width: calc(100% - 15px);
-}
+// .comments-msg {
+//   background-color: #f5f5f5;
+//   background-color: var(--off-white);
+//   border-radius: 10px;
+//   margin: 15px;
+//   margin-top: 0;
+//   padding: 15px;
+//   position: relative;
+//   width: calc(100% - 15px);
+// }
 
-.comments-msgHdr {
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-}
+// .comments-msgHdr {
+//   display: flex;
+//   justify-content: space-between;
+//   position: relative;
+// }
 
-.comments-date {
-  color: $color-text-light-grey;
-}
+// .comments-date {
+//   color: $color-text-light-grey;
+// }
 
-.comments-cntrls {
-  display: flex;
-  justify-content: flex-end;
-}
+// .comments-cntrls {
+//   display: flex;
+//   justify-content: flex-end;
+// }
 
-.comments-btn {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  display: inline-block;
-  margin-top: -8px;
-  outline: none;
-  padding: 10px;
-  padding-bottom: 0;
-  padding-right: 0;
-  user-select: none;
-}
+// .comments-btn {
+//   background-color: transparent;
+//   border: none;
+//   cursor: pointer;
+//   display: inline-block;
+//   margin-top: -8px;
+//   outline: none;
+//   padding: 10px;
+//   padding-bottom: 0;
+//   padding-right: 0;
+//   user-select: none;
+// }
 
-.comments-btn:focus,
-.comments-btn:active,
-.comments-btn:visited,
-.comments-btn:hover {
-  outline: none;
-}
+// .comments-btn:focus,
+// .comments-btn:active,
+// .comments-btn:visited,
+// .comments-btn:hover {
+//   outline: none;
+// }
 
-.comments-txt {
-  margin-bottom: 0;
-}
+// .comments-txt {
+//   margin-bottom: 0;
+// }
 
-.comments-newReply {
-  height: 50px;
-  margin-bottom: 15px;
-  margin-left: 50px;
-  position: relative;
-  width: calc(100% - 50px);
-}
+// .comments-newReply {
+//   height: 50px;
+//   margin-bottom: 15px;
+//   margin-left: 50px;
+//   position: relative;
+//   width: calc(100% - 50px);
+// }
 
-.comments-newMsgReply {
-  background-color: #f5f5f5;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  margin-left: 50px;
-  padding: 15px;
-  position: relative;
-  width: calc(100% - 50px);
-}
+// .comments-newMsgReply {
+//   background-color: #f5f5f5;
+//   border-radius: 10px;
+//   margin-bottom: 15px;
+//   margin-left: 50px;
+//   padding: 15px;
+//   position: relative;
+//   width: calc(100% - 50px);
+// }
 
-.comments-newMsgReply:not(:first-of-type)::before,
-.comments-msg::before {
-  color: $color-text-blue;
-  content: "❝";
-  font-size: 40px;
-  left: -15px;
-  position: absolute;
-  top: -12px;
-}
+// .comments-newMsgReply:not(:first-of-type)::before,
+// .comments-msg::before {
+//   color: $color-text-blue;
+//   content: "❝";
+//   font-size: 40px;
+//   left: -15px;
+//   position: absolute;
+//   top: -12px;
+// }

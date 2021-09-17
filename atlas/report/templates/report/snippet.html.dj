@@ -1,0 +1,40 @@
+{% load helpers %}
+{% load static %}
+{% load markdown %}
+<div class="card {{ report.certification_tag|risk_level }}">
+    <div class="card-header">
+        <div class="columns is-flex-grow-1">
+            <div class="column is-narrow is-flex is-align-items-center ml-3">{% include "report/run.html.dj" %}</div>
+            <div class="column">
+                <p class="card-header-title pl-0 is-justify-content-space-between">
+                    {{ report }}
+                    <span class="tag {{ report.certification_tag|risk_level }}">{{ report.certification_tag }}</span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="card-content">
+        <div class="media">
+            <div class="media-left">
+                <figure class="image is-96x96">
+                    <img data-src="{% if report.imgs.exists %}{{ report.imgs.first.get_absolute_url|size:"96x96"}}
+                         {% else %}{% static '/img/report_thumb_placeholder_400x300.png' %}
+                         {% endif %}" src="{% static '/img/loader.gif' %}"
+                         alt="report image"/>
+                </figure>
+            </div>
+            <div class="media-content">
+                {{ report|snippet|markdown|safe }}
+                <br>
+                <p class="subtitle is-6">
+                    {{ report.type.short }}
+                </p>
+            </div>
+        </div>
+    </div>
+    <footer class="card-footer">
+        <a href="{{ report.get_absolute_url }}" class="card-footer-item">Open</a>
+        <a href="#" class="card-footer-item">Edit</a>
+        <a href="#" class="card-footer-item">Manage</a>
+    </footer>
+</div>

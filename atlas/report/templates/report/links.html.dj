@@ -1,0 +1,40 @@
+<nav class="breadcrumb">
+    <ul>
+        {% if report.imgs.all %}
+            <li>
+                <a href="#images">Images</a>
+            </li>
+        {% endif %}
+        {% if report.description or report.detailed_description or report.docs.developer_description or report.docs.assumptions or report.system_description %}
+            <li>
+                <a href="#description">Description</a>
+            </li>
+        {% endif %}
+        {% if terms %}
+            <li>
+                <a href="#terms">Terms</a>
+            </li>
+        {% endif %}
+        <li>
+            <a href="#details">Details</a>
+        </li>
+        {% if report.queries.all %}
+            <li>
+                <a href="#query">Query</a>
+            </li>
+        {% endif %}
+        {% if parents or children or groups %}
+            <li>
+                <a href="#relationships">Relationships</a>
+            </li>
+        {% endif %}
+        {% if report.docs.logs %}
+            <li>
+                <a href="#maintenance">Maintenance</a>
+            </li>
+        {% endif %}
+        <li>
+            <a href="#comments">Comments</a>
+        </li>
+    </ul>
+</nav>

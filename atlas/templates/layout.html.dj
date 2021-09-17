@@ -20,32 +20,36 @@
         <div class="container">
             <div class="columns">
                 <div class="column is-narrow">
-                    <!--<nav class="sideNav">-->
-                        {% block side_links %}{% endblock side_links %}
-                    <!--</nav>-->
+                    <!--
+<nav class="sideNav">
+-->
+                    {% block side_links %}{% endblock side_links %}
+                    <!--
+</nav>
+-->
                 </div>
-                <div class="column">
-                    {% block body %}{% endblock body %}
-            </div>
-           <!-- <div class="column is-one-third is-hidden-mobile">
+                <div class="column">{% block body %}{% endblock body %}</div>
+           <!-- 
+<div class="column is-one-third is-hidden-mobile">
                 {% if ads %}
                     <div id="related-reports"></div>
                     {% for ad in ads %}
                         <div class="col" data-ajax="yes" data-url="{{ ad.url }}"></div>
                     {% endfor %}
                 {% endif %}
-            </div>-->
+            </div>
+-->
+            </div>
         </div>
-    </div>
-</section>
-<!-- modals -->
-<section class="modal">
-{% block modals %}
-    {% include "modals.html.dj" %}
-{% endblock modals %}
-</section>
-<!-- footer -->
-{% include "footer.html.dj" %}
-{% include "tail.html.dj" %}
-{% block js %}{% endblock js %}
+    </section>
+    <!-- modals -->
+    <section class="modal">
+        {% block modals %}
+            {% include "modals.html.dj" %}
+        {% endblock modals %}
+    </section>
+    <!-- footer -->
+    {% include "footer.html.dj" %}
+    {% include "tail.html.dj" %}
+    {% block js %}{% endblock js %}
 </body>
