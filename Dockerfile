@@ -46,7 +46,7 @@ RUN pip install -r requirements.txt \
 
 COPY . .
 
-RUN npm install && npm run build
+RUN npm install; npm run build
 
 WORKDIR /atlas
 
