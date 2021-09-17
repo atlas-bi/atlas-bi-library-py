@@ -76,7 +76,7 @@
             {% endif %}
             <span class="location" id="maintenance"></span>
             {% if report.docs.logs.all %}
-                {% include 'sections/maintenance_logs.html.dj' %}
+                {% include 'report/sections/maintenance_logs.html.dj' %}
             {% endif %}
             <span class="location" id="comments"></span>
             <div class="comments" data-ajax="yes" data-url="/reports/{{ report.report_id }}/comments"></div>
