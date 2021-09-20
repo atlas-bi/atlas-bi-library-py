@@ -44,6 +44,7 @@
     "bulma-switch": "github:christopherpickering/bulma-switch#patch-1",
     "cssnano": "^5.0.8",
     "del": "^6.0.0",
+    "fonteditor-core": "^2.1.8",
     "gulp-postcss": "^9.0.0",
     "gulp-purgecss": "^4.0.3",
     "gulp-replace": "^1.1.3",

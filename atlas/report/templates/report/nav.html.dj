@@ -26,8 +26,8 @@
             </a>
         </li>
         <li>
-            <a class=" {% if favorite == "yes" %}favorite{% endif %} has-tooltip-arrow has-tooltip-right" data-tooltip=" {% if favorite == "yes" %}
-               Remove from Favorites {% else %}Add to Favorites{% endif %}"
+            <a class=" {% if favorite == "yes" %}favorite{% endif %} has-tooltip-arrow has-tooltip-right"
+               data-tooltip=" {% if favorite == "yes" %} Remove from Favorites {% else %}Add to Favorites{% endif %}"
                fav-type="report"
                object-id="{{ report.report_id }}">
                 <span class="icon has-text-grey is-large ">

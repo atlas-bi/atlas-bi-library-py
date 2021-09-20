@@ -11,10 +11,7 @@
                        {% if open %}autoplay="autoplay" {% endif %}
                        muted="true"
                        loop="loop">
-                    <source {% if not open %} data-src="{% static '/lib/video/AtlasIntro_2_7mb.mp4' %}
-                            {% else %} data-src="{% static '/lib/video/AtlasIntro_2_7mb.mp4' %}
-                            endif
-                            type="video/mp4"/>
+                    <source {% if not open %} data-src="{% static '/lib/video/AtlasIntro_2_7mb.mp4' %} {% else %} data-src="{% static '/lib/video/AtlasIntro_2_7mb.mp4' %} endif type="video/mp4"/>
                 </video>
             </div>
         </div>

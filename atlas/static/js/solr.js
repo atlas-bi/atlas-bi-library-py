@@ -245,10 +245,18 @@ Function.prototype.debounce = function (delay) {
       console.log(result)
       // Create elements
       var link = document.createElement("a");
+      var media = document.createElement("div");
+      var img = document.createElement("div");
+      var content = document.createElement("div");
       var title = document.createElement("strong");
       var excerpt = document.createElement("p");
       var tags = document.createElement("span");
       var type = document.createElement("span");
+
+      media.classList.add("media")
+
+      img.classList.add("media-left")
+      content.classList.add("media-content")
 
       link.href = result.id;
       link.classList.add(
@@ -297,11 +305,24 @@ Function.prototype.debounce = function (delay) {
       }
 
       // Put all the elements together
+      img.innerHTML = `
+                <figure class="image is-64x64"><img data-src="` + result.id + `/image?size=64x64"
+                         src="/static/img/loader.gif"
+                         alt="report image"/>
+                </figure>`
+
 
       tags.appendChild(type)
       title.appendChild(tags);
-      link.appendChild(title);
-      link.appendChild(excerpt);
+      content.appendChild(title)
+      content.appendChild(excerpt)
+      media.appendChild(img);
+
+      media.appendChild(content);
+
+
+      link.appendChild(media);
+
       return link;
    });
 
@@ -309,7 +330,7 @@ Function.prototype.debounce = function (delay) {
     searchResultsContainer.insertAdjacentElement("beforeend", el)
   });
 
-
+  document.dispatchEvent(new CustomEvent("lazy"))
   }
   var hAjx = null;
   d

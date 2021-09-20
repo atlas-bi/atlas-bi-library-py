@@ -446,6 +446,10 @@ class Users(AbstractUser):
         return self.build_full_name()
 
     @property
+    def first_initial(self):
+        return self.full_name[0]
+
+    @property
     def first_name(self):
         if self._first_name:
             return self._first_name

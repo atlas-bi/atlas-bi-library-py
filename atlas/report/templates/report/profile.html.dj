@@ -238,33 +238,21 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
                     <th>Description</th>
                     <th>Last Run</th>
                     <th>Message</th>
-                    <th>
-                        User
-                    </th>
-                    <th>
-                        Subscribed As
-                    </th>
+                    <th>User</th>
+                    <th>Subscribed As</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach(var s in Model.Subscriptions)
                 {
                 <tr>
-                    <td>
-                        @s.Description
-                    </td>
-                    <td>
-                        @s.LastRun
-                    </td>
-                    <td>
-                        @s.LastStatus
-                    </td>
+                    <td>@s.Description</td>
+                    <td>@s.LastRun</td>
+                    <td>@s.LastStatus</td>
                     <td>
                         <a href="@s.UserUrl">@s.User</a>
                     </td>
-                    <td>
-                        @s.Subscription
-                    </td>
+                    <td>@s.Subscription</td>
                 </tr>
                 }
             </tbody>
@@ -275,16 +263,12 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
 {% if favorites %}
     <div >
         active</text>}" id="user-favorites">
-        <h3>
-            User Favorites
-        </h3>
+        <h3>User Favorites</h3>
         <div class="table-responsive">
             <table class="table sort">
                 <thead>
                     <tr>
-                        <th>
-                            User
-                        </th>
+                        <th>User</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -303,10 +287,6 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
     }
 </div>
 {% else %}
-<h5>
-    No activity to show
-</h5>
-<h5>
-    ¯\_(ツ)_/¯
-</h5>
+<h5>No activity to show</h5>
+<h5>¯\_(ツ)_/¯</h5>
 {% endif %}

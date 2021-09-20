@@ -69,8 +69,8 @@
         <script type="text/javascript" src="{% static '/js/favorites.js' %}" defer></script>
         <script type="text/javascript" src="{% static '/js/video.js' %}" defer></script>
         <script type="text/javascript" src="{% static '/js/messagebox.js' %}" defer></script>
-        <!--<script type="text/javascript" src="{% static '/js/mail.js' %}" defer></script>
-    -->
+            <!--<script type="text/javascript" src="{% static '/js/mail.js' %}" defer></script>
+        -->
     <script type="text/javascript" src="{% static '/js/input.js' %}" defer></script>
     <script type="text/javascript" src="{% static '/js/comments.js' %}" defer></script>
     <script type="text/javascript" src="{% static '/js/dropdown.js' %}" defer></script>

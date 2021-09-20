@@ -43,7 +43,7 @@
   };
 
   load();
-  d.addEventListener("ajax", function () {
+  d.addEventListener("lazy", function () {
     setTimeout(function () {
       load();
     }, 0);

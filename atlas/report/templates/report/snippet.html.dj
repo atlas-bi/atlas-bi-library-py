@@ -17,9 +17,8 @@
         <div class="media">
             <div class="media-left">
                 <figure class="image is-96x96">
-                    <img data-src="{% if report.imgs.exists %}{{ report.imgs.first.get_absolute_url|size:"96x96"}}
-                         {% else %}{% static '/img/report_thumb_placeholder_400x300.png' %}
-                         {% endif %}" src="{% static '/img/loader.gif' %}"
+                    <img data-src="{% if report.imgs.exists %}{{ report.imgs.first.get_absolute_url|size:"96x96" }} {% else %}{% static '/img/report_thumb_placeholder_400x300.png' %} {% endif %}"
+                         src="{% static '/img/loader.gif' %}"
                          alt="report image"/>
                 </figure>
             </div>

@@ -1,10 +1,12 @@
 """Atlas User views."""
 
+import io
 import json
+import re
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
-from django.http import JsonResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.cache import never_cache
 from index.models import (
@@ -14,6 +16,7 @@ from index.models import (
     UserRoles,
     Users,
 )
+from PIL import Image, ImageDraw, ImageFont
 
 from atlas.decorators import admin_required
 
@@ -146,6 +149,42 @@ def favorites_reorder(request):
 
         return JsonResponse({"success": "reordered favorites."}, status=200)
     return JsonResponse({"error": "failed to reorder favorites."}, status=500)
+
+
+def image(request, pk):
+
+    user = get_object_or_404(Users, pk=pk)
+    image_format = "webp"
+
+    # Browsers (IE11) that do not support webp
+    if "HTTP_USER_AGENT" in request.META:
+        user_agent = request.META["HTTP_USER_AGENT"].lower()
+        if "trident" in user_agent or "msie" in user_agent:
+            image_format = "jpeg"
+
+    size = request.GET.get("size", "")
+
+    if re.match(r"^\d+x\d+$", size):
+        width, height = (int(x) for x in size.split("x"))
+        im = Image.new("RGB", (width, height), color=(197, 197, 197))
+        fnt = ImageFont.truetype(
+            "./static/font/rasa/files/rasa-latin-600-normal.ttf", 60
+        )
+        out = ImageDraw.Draw(im)
+        out.text((15, 5), user.first_initial, font=fnt, fill=(149, 149, 149))
+
+        buf = io.BytesIO()
+        im.save(buf, format=image_format)
+
+        response = HttpResponse(buf.getvalue(), content_type="application/octet-stream")
+        response["Content-Disposition"] = 'attachment; filename="{}.{}"'.format(
+            user.pk,
+            image_format,
+        )
+
+        return response
+    else:
+        raise Http404("Image not found...")
 
 
 def favorites_change_folder(request):

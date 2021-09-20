@@ -6,7 +6,7 @@ import io
 import regex as re
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
@@ -203,7 +203,7 @@ def maint_status(request, pk):
 
 
 @login_required
-def image(request, report_id, pk):
+def image(request, report_id, pk=None):
 
     image_format = "webp"
 
@@ -215,7 +215,14 @@ def image(request, report_id, pk):
 
     size = request.GET.get("size", "")
 
-    img = get_object_or_404(ReportImages, report_id=report_id, image_id=pk)
+    if pk:
+        img = get_object_or_404(ReportImages, report_id=report_id, image_id=pk)
+    else:
+        img = ReportImages.objects.filter(report_id=report_id)
+        if img.exists():
+            img = img.first()
+        else:
+            raise Http404("Image not found...")
 
     im = Image.open(io.BytesIO(img.image_data))
 

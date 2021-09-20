@@ -143,49 +143,31 @@
             {% endif %}
             {% if report.docs.frequency %}
                 <tr>
-                    <td>
-                        Estimated Run Frequency
-                    </td>
-                    <td>
-                        {{ report.docs.frequency }}
-                    </td>
+                    <td>Estimated Run Frequency</td>
+                    <td>{{ report.docs.frequency }}</td>
                 </tr>
             {% endif %}
             {% if report.docs.fragility %}
                 <tr>
-                    <td>
-                        Fragility Rating
-                    </td>
-                    <td>
-                        {{ report.docs.fragility }}
-                    </td>
+                    <td>Fragility Rating</td>
+                    <td>{{ report.docs.fragility }}</td>
                 </tr>
             {% endif %}
             {% if report.docs.maintenance_schedule %}
                 <tr>
-                    <td>
-                        Maintenance Schedule
-                    </td>
-                    <td>
-                        {{ report.docs.maintenance_schedule }}
-                    </td>
+                    <td>Maintenance Schedule</td>
+                    <td>{{ report.docs.maintenance_schedule }}</td>
                 </tr>
             {% endif %}
             {% if report.docs.org_value %}
                 <tr>
-                    <td>
-                        Organizational Value Rating
-                    </td>
-                    <td>
-                        {{ report.docs.org_value }}
-                    </td>
+                    <td>Organizational Value Rating</td>
+                    <td>{{ report.docs.org_value }}</td>
                 </tr>
             {% endif %}
             {% if report.docs.fragility_tags.all %}
                 <tr>
-                    <td>
-                        Fragility Tags
-                    </td>
+                    <td>Fragility Tags</td>
                     <td>
                         {% for tag in report.docs.fragility_tags.all %}
                             {% if forloop.last %}
@@ -203,9 +185,7 @@
 <!-- this should be a panel -->
 <section id="report-meticket-container">
     {% if report.tickets.all %}
-        <h4>
-            Service Request Tickets
-        </h4>
+        <h4>Service Request Tickets</h4>
         <div class="reportDetails">
             {% for ticket in report.tickets.all %}
                 <a target="_blank" class="reportDetails-title" href="{{ ticket.url }}">
