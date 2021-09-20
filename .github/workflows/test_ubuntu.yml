@@ -1,0 +1,47 @@
+name: test
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: python ${{ matrix.python-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.7, 3.8, 3.9]
+      fail-fast: true
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v2
+    - name: setup python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: install deps
+      run: |
+        cd solr && docker run -d -v "$PWD:/var/solr/mine" -p 8983:8983 --name solr_dev solr:8; docker exec -it solr_dev bash -c "source /var/solr/mine/setup_cores.sh;"
+        python -m pip install tox poetry tox-poetry codecov
+        apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl
+    - name: start redis
+      uses: supercharge/redis-github-action@1.2.0
+    - name: start PostgreSQL
+      run: |
+        sudo systemctl start postgresql.service
+        pg_isready
+    - name: Create scheduler user
+      run: |
+        sudo -u postgres psql --command="CREATE USER scheduler PASSWORD 'somestrong'" --command="\du"
+    - name: Create timetable database
+      run: |
+        sudo -u postgres createdb --owner=scheduler timetable
+        PGPASSWORD=somestrong psql --username=scheduler --host=localhost --list timetable
+    - name: test
+      run: tox -e clean,test,cov
+    - name: upload cov
+      uses: codecov/codecov-action@v1
+      with:
+        files: ./coverage.xml
+        fail_ci_if_error: true
+        verbose: true
