@@ -109,13 +109,16 @@ ln -s publish/nginx /etc/nginx/sites-enabled/atlas_bi
 
 fmt_blue "Installing Apache Solr"
 # install Apache Solr
-wget https://archive.apache.org/dist/lucene/solr/8.9.0/solr-8.9.0.tgz
-tar xzf solr-8.9.0.tgz
+wget -q --show-progress -O- "https://archive.apache.org/dist/lucene/solr/8.9.0/solr-8.9.0.tgz" | tar xzf .
+
 solr-8.9.0/bin/install_solr_service.sh solr-8.9.0.tgz
 
-
+# should only do this if not existing.
 fmt_blue "Setting Up Database"
 su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER atlas_me WITH SUPERUSER PASSWORD 'nothing';\"  && createdb -O atlas_me atlas_db"
+
+# run database migrations
+
 
 # not a docker image.. has systemd installed and running
 if [ "$(pidof systemd)" != "" ]; then
