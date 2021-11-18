@@ -8,17 +8,22 @@ on:
 jobs:
   tagged-release:
     name: "Tagged Release"
-    runs-on: "ubuntu-latest"
+    runs-on: ubuntu-latest
 
     steps:
+      - name: Get the tag name
+        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+
       - name: "Check out the repo"
         uses: "actions/checkout@v2"
 
       - name: "Build & test"
-        run: npm build
+        run: |
+         npm build
+         tar -czvf ${{ env.TAG }}_build.tar.gz .
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
-          files: "*"
+          files: "${{ env.TAG }}_build.tar.gz"
