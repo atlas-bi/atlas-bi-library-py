@@ -230,6 +230,13 @@ to create cache:
 
     python manage.py createcachetable
 
+Release Process
+===============
+
+1. run gulp build
+2. put output into a release
+3. build .deb's (see ``/scripts/readme.md``)
+
 
 .. |travis| image:: https://app.travis-ci.com/atlas-bi/atlas-bi-library-py.svg?branch=master
     :target: https://app.travis-ci.com/atlas-bi/atlas-bi-library-py

@@ -51,7 +51,7 @@ task('packages:fontawesome', function(done) {
     fontawesomeSubset({
       regular:['envelope', 'thumbs-up', 'play-circle'],
       solid: ['wrench',  'user', 'list-ul', 'chevron-left', 'chevron-right', 'search', 'edit', 'trash', 'star', 'share', 'plus', 'chart-bar', 'universal-access']
-          }, 'atlas/static/font/fontawesome/webfonts')
+          }, 'atlas/static/font/fontawesome/webfonts');
 
     done();
 });

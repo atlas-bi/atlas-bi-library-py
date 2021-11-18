@@ -3,8 +3,10 @@ Section: unknown
 Priority: optional
 Maintainer: Christopher Pickering <christopher@atlas.bi>
 Build-Depends: debhelper-compat (= 12)
-Standards-Version: 4.4.1
+Standards-Version: 4.5.1
+Rules-Requires-Root: no
 Homepage: https://atlas.bi
+
 #Vcs-Browser: https://salsa.debian.org/debian/atlas-bi
 #Vcs-Git: https://salsa.debian.org/debian/atlas-bi.git
 
@@ -51,5 +53,10 @@ Depends: libssl-dev,
          libxcb1-dev,
          python-is-python3,
          tar,
-         node-gyp
+         node-gyp,
+         python3-venv,
+         wget,
+         default-jdk,
+         postgresql,
+         postgresql-contrib
 Description: Atlas BI Library

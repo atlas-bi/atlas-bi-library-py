@@ -74,26 +74,29 @@ echo "
 
 "
 
-fmt_green "Thanks for installing Atlas of Information Management!"
+fmt_green "Thanks for installing Atlas BI Library!"
 
 wget -q --show-progress -O- "https://github.com/atlas-bi/atlas-bi-library-py/archive/refs/tags/$VERSION.tar.gz" | tar -xz -C .
 
 cd "atlas-bi-library-py-$VERSION"
 
+# static should be pre-built in release and not need this command.
 fmt_blue "Building static"
 npm install
 npm run build
-fmt_blue "Updating python settings"
-export PYTHONDONTWRITEBYTECODE=1
-# virtualenv required by Poetry
-$(which python3) -m pip install --disable-pip-version-check --quiet virtualenv > /dev/null
 
+
+# fmt_blue "Updating python settings"
+# virtualenv required by Poetry
+# $(which python3) -m pip install --disable-pip-version-check --quiet virtualenv > /dev/null
+
+fmt_blue "Installing Poetry"
 curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | $(which python3) -
 
 # remove poetry config > it conflicts with install config.
-/usr/local/bin/poetry config --local virtualenvs.in-project true
-/usr/local/bin/poetry config --local virtualenvs.create true
-/usr/local/bin/poetry install --no-dev
+"$HOME/.local/bin/poetry" config --local virtualenvs.in-project true
+"$HOME/.local/bin/poetry" config --local virtualenvs.create true
+"$HOME/.local/bin/poetry" install --no-dev
 
 fmt_blue "Updating nginx"
 
@@ -102,6 +105,17 @@ touch nginx_error.log
 
 rm /etc/nginx/sites-enabled/atlas_bi 2> /dev/null
 ln -s publish/nginx /etc/nginx/sites-enabled/atlas_bi
+
+
+fmt_blue "Installing Apache Solr"
+# install Apache Solr
+wget https://archive.apache.org/dist/lucene/solr/8.9.0/solr-8.9.0.tgz
+tar xzf solr-8.9.0.tgz
+solr-8.9.0/bin/install_solr_service.sh solr-8.9.0.tgz
+
+
+fmt_blue "Setting Up Database"
+su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER atlas_me WITH SUPERUSER PASSWORD 'nothing';\"  && createdb -O atlas_me atlas_db"
 
 # not a docker image.. has systemd installed and running
 if [ "$(pidof systemd)" != "" ]; then
@@ -116,6 +130,9 @@ if [ "$(pidof systemd)" != "" ]; then
     systemctl enable atlas_bi_celery.service
     systemctl enable atlas_bi_celery_beat.service
     systemctl enable atlas_bi_gunicorn.service
+
+    fmt_green "Starting Solr!"
+    systemctl enable solr
 else
     # use supervisord
     # supervisord should have
@@ -125,9 +142,9 @@ else
     # - celerybeat
     # - redis
     fmt_blue "Using supervisor as service runner"
-    /usr/local/bin/poetry add --lock supervisor
-    /usr/local/bin/poetry install --no-dev
+    "$HOME/.local/bin/poetry" add --lock supervisor
+    "$HOME/.local/bin/poetry" install --no-dev
     pkill -f supervisord
-    /usr/local/bin/poetry run supervisord -c ../atlas_bi_supervisord.conf -d "/usr/bin/atlas-bi/atlas-bi-library-py-$VERSION"
+    "$HOME/.local/bin/poetry" run supervisord -c ../atlas_bi_supervisord.conf -d "/usr/bin/atlas-bi/atlas-bi-library-py-$VERSION"
 fi
 
