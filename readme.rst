@@ -233,6 +233,14 @@ to create cache:
 Release Process
 ===============
 
+create a new tag
+
+.. code:: python
+
+   git tag x.x.x
+   git push origin --tags
+
+
 1. run gulp build
 2. put output into a release
 3. build .deb's (see ``/scripts/readme.md``)

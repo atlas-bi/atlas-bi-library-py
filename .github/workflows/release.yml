@@ -1,0 +1,24 @@
+name: "pre-release"
+
+on:
+  push:
+    tags:
+      - "*.*.*"
+
+jobs:
+  tagged-release:
+    name: "Tagged Release"
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Check out the repo"
+        uses: "actions/checkout@v2"
+
+      - name: "Build & test"
+        run: npm build
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: "*"
