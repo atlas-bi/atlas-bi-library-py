@@ -41,6 +41,8 @@ jobs:
       - name: "Clone PPA"
         uses: actions/checkout@v2
         with:
+          persist-credentials: false
+          fetch-depth: 0
           repository: atlas-bi/ppa
           token: ${{ secrets.PPA_REPO_PAT }}
           path: ppa
@@ -71,8 +73,8 @@ jobs:
       - name: Commit changes
         run: |
             cd ./ppa
-            git config user.name "$USER"
-            git config user.email "$EMAIL"
+            git config --local user.name "$USER"
+            git config --lcoal user.email "$EMAIL"
             git add .
             git commit -m "added release $VERSION"
             git push origin HEAD:master
