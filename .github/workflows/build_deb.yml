@@ -22,12 +22,12 @@ jobs:
       - name: "Check out repository"
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0
           persist-credentials: false
+          path: atlas
 
       - name: "Build deb"
         run: |
-          cd scripts
+          cd atlas/scripts
           cp -r "atlas-bi-<version>" "atlas-bi-$VERSION"
           cd "atlas-bi-$VERSION"
           find . -type f -name "*" -exec sed -i'' -e "s/<version>/$VERSION/g" {} +
@@ -44,11 +44,11 @@ jobs:
           fetch-depth: 0
           repository: atlas-bi/ppa
           token: ${{ secrets.PPA_REPO_PAT }}
-          path: "./ppa"
+          path: ppa
 
       - name: "Move deb to PPA"
         run: |
-          cp scripts/*.deb ./ppa/deb
+          cp ./atlas/scripts/*.deb ./ppa/deb
 
       - name: "Update Lists"
         run: |
@@ -63,7 +63,11 @@ jobs:
           gpg -abs -o - Release > Release.gpg
           gpg --clearsign -o - Release > InRelease
 
+          # update list
+          echo "deb https://atlas-bi.github.io/ppa/deb ./" > atlas.list
+
           cd ..
+          ls
 
       - name: Commit changes
         run: |
@@ -71,7 +75,7 @@ jobs:
             git config user.email "$EMAIL"
             git add .
             git commit -m "added release $VERSION"
-            git push
+            git push origin HEAD:master
         env:
           VERSION: ${{ github.event.release.tag_name }}
           USER: ${{ secrets.GIT_USER }}
