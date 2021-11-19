@@ -29,10 +29,13 @@ jobs:
         run: |
           ls
           cd scripts
-          rm -r "atlas-bi-$VERSION" 2>/dev/null
+          ls
           cp -r "atlas-bi-<version>" "atlas-bi-$VERSION"
+          ls
           cd "atlas-bi-$VERSION"
+          ls
           find . -type f -name "*" -exec sed -i'' -e "s/<version>/$VERSION/g" {} +
+          echo "building"
           debuild -us -uc
           cd ..
           ls
