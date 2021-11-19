@@ -71,6 +71,7 @@ jobs:
 
       - name: Commit changes
         run: |
+            cd ./ppa
             git config user.name "$USER"
             git config user.email "$EMAIL"
             git add .
