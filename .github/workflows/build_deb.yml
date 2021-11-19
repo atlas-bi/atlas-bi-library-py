@@ -77,7 +77,6 @@ jobs:
             git config --local user.email "$EMAIL"
             git add .
             git commit -m "added release $VERSION"
-            git push origin HEAD:master
         env:
           VERSION: ${{ github.event.release.tag_name }}
           USER: ${{ secrets.GIT_USER }}

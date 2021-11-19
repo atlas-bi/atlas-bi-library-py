@@ -1,75 +1,28 @@
-Atlas of Information Management
-===============================
+Atlas BI Libarary
+=================
 
-    This is a Python version of the `Atlas web app <https://github.com/Riverside-Healthcare/Atlas>`_ and is currently under development. The dotnet version of the app is still being maintained.
+    This is a Python version `Atlas BI Library <https://github.com/atlas-bi/atlas-bi-library>`_ and is currently under development. The dotnet version of the app is still being maintained.
 
-
-Atlas of Information Management is a business intelligence library and documentation database. ELT processes collect metadata from various reporting platforms and store it in a centraly located database. A modern web UI is used to add additional documentation to the report objects and also to provide an intuative way to search, favorite and share reporting content.
-
-|travis| |codecov| |codacy| |codeql| |climate| |quality| |demo| |browserstack|
+|codecov| |codacy| |codeql| |climate| |quality| |demo| |browserstack|
 
 Project Goals
 #############
 
-Take a look at the `github project <https://github.com/Riverside-Healthcare/Atlas-Py/projects/1>`_ to see where the project is heading. Here's a summary of new features planned.
-
-- Authentication
-    - Single sign on with SAML2
-    - LDAP Auth
-- Testing
-    - Include automated browser testing
-    - Include code tests w/ 95% coverage
-- Database
-    - Convert to Postgres database
-- Enhanced search
-    - Use Apache Solr search engine
-    - Allow search favorites
-    - Allow clearing search history
-    - Add search tags to reports
-    - Improve sql searching
-    - Option to export search results
-- Dedicated Admin section of app
-    - ability to manage security by etl'd groups
-    - ability to monitor/manage ETL from inside the app
-    - include additional report library status reports
-    - include additional top-user metrics
-    - include report profiles for user roles
-- Mail features
-    - Enable SMTP notifications
-    - Allow sending attachments
-    - Creating folders
-    - Keyboard navigation
-    - Sorting
-    - Notification when a favorite report is modified
-    - Allow markdown in messages
-    - Enable conversation grouping
-    - Add markers for replied/forwarded message
-    - Ability to receive/open ssrs subscriptions in app
-- Data Projects
-    - Allow data project annotations to be "archived" vs deleted
-    - Allow data project annotation groups
-    - Auto build recommended projects based on analytics
-- Report Documentation
-    - Convert editor to browser/js markdown rendering engine
-    - Add hidden dev notes fields to documentation for developers
-- Add filters to charts
-- Ability to save SSRS parameterized urls in favorites
-- Convert css to scss
+Take a look at the `github project <https://github.com/atlas-bi/atlas-bi-library-py/projects/1>`_ to see a list of planned features.
 
 =============
 Documentation
 =============
 
-See the `project documentation <https://riverside-healthcare.github.io/Atlas-Py/>`_
+See the `project documentation <https://atlas-bi.github.io/atlas-bi-library-py/>`_
 
 =====================
 How can I contribute?
 =====================
 
-- `Suggest a new feature or idea in our discussion board! <https://github.com/Riverside-Healthcare/Atlas-Py/discussions>`_
-- Try out the `daily build demo <https://atlas-py.herokuapp.com>`_. Please `create an issue <https://github.com/Riverside-Healthcare/Atlas-Py/issues/new>`_ for any bugs you find!
+- `Suggest a new feature or idea in our discussion board! <https://github.com/atlas-bi/atlas-bi-library-py/discussions>`_
+- Try out the `daily build demo <https://demo.atlas.bi/>`_. Please `create an issue <https://github.com/atlas-bi/atlas-bi-library-py/issues>`_ for any bugs you find!
 - Contribute to the code!
-
 
 Development
 ###########
@@ -146,12 +99,16 @@ In terminal 4, start static file watcher
 
     npm run watch
 
+
 Building Static Content
 -----------------------
 
 .. code:: bash
 
     npm run build
+
+    # or live
+    npm run watch
 
 
 Running tests
@@ -194,30 +151,10 @@ See /solr/readme.rst for a guide.
       tox -e clean,browsertest,cov -r
 
 
-Linting
-=======
-
-Node is used for linting. Install packages in project > npm install
-
-Todo:
-add html lint
-
-
-Server setup
-============
-
-install
-- memcache (check if online q/ telnet 127.0.0.1 11211)
-- redis (check if online with ping redis)
-
-
 Database
 ========
 
-Currently db first, using a pre-existing mssql atlas database. https://docs.djangoproject.com/en/3.1/howto/legacy-databases/
-
-The tests are run with a separate model designed for postgres, which is the ultimate direction of atlas.
-
+Integrates with db-first sqlserver, or managed postres db.
 
 Caching
 =======
@@ -240,14 +177,10 @@ create a new tag
    git tag x.x.x
    git push origin --tags
 
+This will trigger a workflow to build a release.
 
-1. run gulp build
-2. put output into a release
-3. build .deb's (see ``/scripts/readme.md``)
+Edit release to trigger build of .deb installer.
 
-
-.. |travis| image:: https://app.travis-ci.com/atlas-bi/atlas-bi-library-py.svg?branch=master
-    :target: https://app.travis-ci.com/atlas-bi/atlas-bi-library-py
 
 .. |codecov| image:: https://codecov.io/gh/atlas-bi/atlas-bi-library-py/branch/master/graph/badge.svg?token=2JfEYNRwFl
       :target: https://codecov.io/gh/atlas-bi/atlas-bi-library-py
