@@ -73,11 +73,11 @@ repos:
     rev: v2.19.4
     hooks:
       - id: pyupgrade
-  # - repo: https://github.com/christopherpickering/pre-commit-hooks
-  #   rev: 0.0.6
-  #   hooks:
-  #     - id: poetry-to-requirements
-  #       args: [--dev,--output=atlas/requirements.txt]
+  - repo: https://github.com/christopherpickering/pre-commit-hooks
+    rev: 0.0.6
+    hooks:
+      - id: poetry-to-requirements
+        args: [--output=atlas/requirements.txt]
   - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
     rev: v2.1.0
     hooks:

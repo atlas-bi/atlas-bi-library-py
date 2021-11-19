@@ -127,6 +127,7 @@ $icons: (
         chart-bar: $fa-var-chart-bar,
         play-circle: $fa-var-play-circle,
         universal-access: $fa-var-universal-access,
+        sliders-h: $fa-var-sliders-h,
 );
 
 @each $key, $value in $icons {

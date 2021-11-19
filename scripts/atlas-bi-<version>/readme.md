@@ -25,7 +25,7 @@ rm -r "atlas-bi-$VERSION" 2>/dev/null; \
 cp -r "atlas-bi-<version>" "atlas-bi-$VERSION" \
 && cd "atlas-bi-$VERSION" \
 && find . -type f -name "*" -exec sed -i'' -e "s/<version>/$VERSION/g" {} + \
-&& debuild -us -uc --no-tgz-check \
+&& debuild --no-tgz-check -us -uc \
 && cd .. \
 && apt-get install ./atlas-bi_*.deb -y
 
