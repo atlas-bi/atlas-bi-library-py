@@ -72,13 +72,13 @@ jobs:
             git add .
             git commit -m "added release $VERSION"
             git push
+        env:
+          VERSION: ${{ github.event.release.tag_name }}
+          USER: ${{ secrets.GIT_USER }}
+          EMAIL: ${{ secrets.GIT_EMAIL }}
 
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.PPA_REPO_PAT }}
           branch: "master"
-        env:
-          VERSION: ${{ github.event.release.tag_name }}
-          USER: ${{ secrets.GIT_USER }}
-          EMAIL: ${{ secrets.GIT_EMAIL }}
