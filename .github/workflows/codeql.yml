@@ -2,6 +2,8 @@ name: codeQL
 
 on:
   push:
+    tags-ignore:
+      - "*.*.*"
   pull_request:
   schedule:
     - cron: '16 7 * * 4'

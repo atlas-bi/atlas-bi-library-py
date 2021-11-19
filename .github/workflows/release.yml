@@ -20,8 +20,8 @@ jobs:
       - name: "Build & test"
         run: |
          npm install
-         npm build
-         tar -czvf ${{ env.TAG }}_build.tar.gz .
+         npm run build
+         tar -czvf ${{ env.TAG }}_build.tar.gz atlas solr publish
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
