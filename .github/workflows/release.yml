@@ -17,14 +17,13 @@ jobs:
       - name: "Check out the repo"
         uses: "actions/checkout@v2"
 
-      - name: "Build & test"
+      - name: "npm Build"
         run: |
          npm install
-         npm run build
          tar -czvf ${{ env.TAG }}_build.tar.gz atlas solr publish
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: false
+          prerelease: true
           files: "${{ env.TAG }}_build.tar.gz"

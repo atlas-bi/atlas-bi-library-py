@@ -5,13 +5,13 @@ on:
   release:
 
 jobs:
-  cancel:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: "Install deps"
         run: |
-          apt-get update
-          apt-get install dh-make devscripts dpkg-dev gzip apt-utils -y
+          sudo apt-get update
+          sudo apt-get install dh-make devscripts dpkg-dev gzip apt-utils -y
 
       - name: "Load GPG Keys"
         run: |
