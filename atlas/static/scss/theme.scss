@@ -76,6 +76,7 @@ img[data-src] {
   display: none !important;
 }
 
+.search-wrap:active .search-results-wrap,
 #search-form:focus-within #search-results
 {
   display:block;

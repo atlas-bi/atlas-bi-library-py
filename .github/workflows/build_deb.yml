@@ -27,16 +27,12 @@ jobs:
 
       - name: "Build deb"
         run: |
-          ls
           cd scripts
-          ls
           cp -r "atlas-bi-<version>" "atlas-bi-$VERSION"
-          ls
           cd "atlas-bi-$VERSION"
-          ls
           find . -type f -name "*" -exec sed -i'' -e "s/<version>/$VERSION/g" {} +
           echo "building"
-          debuild -us -uc
+          debuild --no-tgz-check -us -uc
           cd ..
           ls
         env:
