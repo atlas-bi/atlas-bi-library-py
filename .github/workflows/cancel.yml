@@ -6,7 +6,8 @@ name: cancel
 on:
   push:
     branches:
-      - "**"
+      # - "**"
+      - "blah"
     tags-ignore:
       - "*.*.*"
 
