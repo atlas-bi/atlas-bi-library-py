@@ -1,0 +1,12 @@
+
+name: build deb
+
+on:
+  release:
+
+jobs:
+  cancel:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Build Release"
+        run: echo "building"
