@@ -41,7 +41,6 @@ jobs:
       - name: "Clone PPA"
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0
           repository: atlas-bi/ppa
           token: ${{ secrets.PPA_REPO_PAT }}
           path: ppa
