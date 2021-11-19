@@ -74,7 +74,7 @@ jobs:
         run: |
             cd ./ppa
             git config --local user.name "$USER"
-            git config --lcoal user.email "$EMAIL"
+            git config --local user.email "$EMAIL"
             git add .
             git commit -m "added release $VERSION"
             git push origin HEAD:master
