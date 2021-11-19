@@ -3,6 +3,7 @@ name: build deb
 
 on:
   release:
+    types: [published]
 
 jobs:
   build:
@@ -27,6 +28,7 @@ jobs:
 
       - name: "Build deb"
         run: |
+          ls
           cd scripts
           rm -r "atlas-bi-$VERSION" 2>/dev/null
           cp -r "atlas-bi-<version>" "atlas-bi-$VERSION"
