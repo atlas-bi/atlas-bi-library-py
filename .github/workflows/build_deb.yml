@@ -41,17 +41,18 @@ jobs:
       - name: "Clone PPA"
         uses: actions/checkout@v2
         with:
+          fetch-depth: 0
           repository: atlas-bi/ppa
           token: ${{ secrets.PPA_REPO_PAT }}
           path: "./ppa"
 
       - name: "Move deb to PPA"
         run: |
-          cp scripts/*.deb ./ppa/
+          cp scripts/*.deb ./ppa/deb
 
       - name: "Update Lists"
         run: |
-          cd ./ppa
+          cd ./ppa/deb
 
           # Packages & Packages.gz
           dpkg-scanpackages --multiversion . > Packages
@@ -62,9 +63,22 @@ jobs:
           gpg -abs -o - Release > Release.gpg
           gpg --clearsign -o - Release > InRelease
 
-          # Commit & push
-          git add -A
-          git commit -m "added release $VERSION"
-          git push
+          cd ..
+
+      - name: Commit changes
+        run: |
+            git config user.name "$USER"
+            git config user.email "$EMAIL"
+            git add .
+            git commit -m "added release $VERSION"
+            git push
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.PPA_REPO_PAT }}
+          branch: "master"
         env:
           VERSION: ${{ github.event.release.tag_name }}
+          USER: ${{ secrets.GIT_USER }}
+          EMAIL: ${{ secrets.GIT_EMAIL }}
