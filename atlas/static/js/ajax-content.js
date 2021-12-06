@@ -142,6 +142,7 @@
 
     el.style.visibility = "visible";
     d.dispatchEvent(new CustomEvent("ajax"));
+    d.dispatchEvent(new CustomEvent("lazy"));
   };
 
   var loadAdAjaxContent = debounce(function () {

@@ -19,7 +19,8 @@ COMPRESS_ENABLED = True
 DATABASES = {}
 DATABASES["default"] = dj_database_url.config(conn_max_age=600)
 
-DEBUG = False
+# debug true as we run w/out a static file server (nginx.)
+DEBUG = True
 ALLOWED_HOSTS = ["*"]
 DATABASE_ROUTERS: list = []
 

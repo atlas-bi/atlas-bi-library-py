@@ -16,13 +16,13 @@
                     <i class="fas fa-search"></i>
                 </span>
             </div>
-            <div class="control">
+            <!--<div class="control">
                 <a class="button has-text-grey-light" href="/search">
                     <span class="icon">
                         <i class="fas fa-sliders-h"></i>
                     </span>
                 </a>
-            </div>
+            </div>-->
         </div>
         <div id="search-results" class="panel has-background-white"></div>
     </form>
