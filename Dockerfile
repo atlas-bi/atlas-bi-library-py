@@ -46,8 +46,6 @@ RUN pip install -r requirements.txt \
 
 COPY . .
 
-RUN npm install; npm run build
-
 WORKDIR /atlas
 
 COPY release_tasks.sh .
