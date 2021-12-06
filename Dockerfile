@@ -41,8 +41,7 @@ WORKDIR /app
 
 COPY /atlas/requirements.txt .
 
-RUN pip install -r requirements.txt \
-    && pip install gunicorn
+RUN pip install -r requirements.txt
 
 COPY . .
 
