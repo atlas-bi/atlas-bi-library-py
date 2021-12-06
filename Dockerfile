@@ -46,7 +46,7 @@ RUN pip install -r requirements.txt \
 
 COPY . .
 
-WORKDIR /atlas
+WORKDIR /app/atlas
 
 COPY release_tasks.sh .
 
