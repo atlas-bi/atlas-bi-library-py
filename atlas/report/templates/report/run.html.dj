@@ -1,6 +1,7 @@
 {% if report.system_run_url %}
     <a href="{{ report.system_run_url }}">
-        <span class="icon is-large has-text-success has-tooltip-arrow has-tooltip-right" data-tooltip="Run Report">
+        <span class="icon is-large has-text-success has-tooltip-arrow has-tooltip-right"
+              data-tooltip="Run Report">
             <i class="far fa-2_3x fa-play-circle"></i>
         </span>
     </a>

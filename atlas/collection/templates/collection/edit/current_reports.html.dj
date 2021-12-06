@@ -1,8 +1,11 @@
 {% load markdown %}
+
 {% if reportlinks %}
     <h4>Reports</h4>
     {% for link in reportlinks %}
-        <h4 class="drop" data-toggle="clps" data-target="collapse-reportlink-{{ link.link_id }}">
+        <h4 class="drop"
+            data-toggle="clps"
+            data-target="collapse-reportlink-{{ link.link_id }}">
             Edit
             <span class="text-green">{{ link }}</span>
             Link
@@ -21,7 +24,9 @@
                         Delete This Link
                     </a>
                 </h5>
-                <form action="{{ link.get_absolute_edit_url }}" method="post" id="collection-editor-edit-report-form">
+                <form action="{{ link.get_absolute_edit_url }}"
+                      method="post"
+                      id="collection-editor-edit-report-form">
                     <div class="listDetails">
                         <label>Rank</label>
                         <input name="rank" type="number" value="{{ link.rank }}" />

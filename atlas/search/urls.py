@@ -20,4 +20,9 @@ urlpatterns = [
     path("lookup/<str:lookup>", views.dropdown_lookup, name="dropdown_lookup"),
     # ajax search page. Type is typically "reports", "terms", "collections", etc.
     path("<str:search_type>/<str:search_string>", views.index, name="index"),
+    path(
+        "instant_search/<str:search_type>/<str:search_string>",
+        views.index,
+        name="index",
+    ),
 ]

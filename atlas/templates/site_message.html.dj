@@ -1,4 +1,5 @@
 {% load static %}
+
 <!-- site message -->
 {% if site_message and site_message != "" %}
     <div class="site-message">

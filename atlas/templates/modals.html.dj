@@ -13,7 +13,9 @@
                 </p>
                 <p>
                     Please select your director
-                    <input type="dynamic-dropdown" id="director-name" search-area="user_lookup/director"/>
+                    <input type="dynamic-dropdown"
+                           id="director-name"
+                           search-area="user_lookup/director"/>
                 </p>
             </div>
             <div class="mdl-f">
@@ -47,37 +49,41 @@
                             <div class="mlbx-dvdr"></div>
                             <div class="mlbx-newMsgRecip">
                                 <span>To:</span>
-                                <select id="user" class="slim" search-area="UserSearchMail" placeholder=" "></select>
+                                <select id="user" class="slim" search-area="UserSearchMail" placeholder=" ">
+                                </select>
                             </div>
                             <div class="mlbx-dvdr"></div>
                             <div class=" mlbx-newMsgSubj">
                                 <span>Subject:</span>
-                                <div class="mlbx-newMsgSubjIpt" contenteditable="true"></div></div>
-                                <div class="mlbx-dvdr"></div></div>
-                                <div class="mlbx-newMsgMsgBx">
-                                    <div class="mlbx-newMsgMsg" contenteditable="true"></div></div>
-                                </form>
+                                <div class="mlbx-newMsgSubjIpt" contenteditable="true"></div>
                             </div>
+                            <div class="mlbx-dvdr"></div>
                         </div>
-                    </div>
+                        <div class="mlbx-newMsgMsgBx">
+                            <div class="mlbx-newMsgMsg" contenteditable="true"></div>
+                        </div>
+                    </form>
                 </div>
             </div>
-            <cache>
-                <div class="mdl" id="shareFeedback" tabindex="-1">
-                    <div class="mdl-d">
-                        <div class="mdl-c">
-                            <div class="mdl-h">
-                                <button type="button" class="close" data-dismiss="mdl">&times;</button>
-                                <h2>Share Feedback</h2>
-                            </div>
-                            <div class="mdl-b">
-                                <h4>Please share some feedback!</h4>
-                    <textarea name="description"></textarea>
-                            </div>
-                            <div class="mdl-f">
-                                <button type="submit" class="share-feedback">Submit</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </cache>
+        </div>
+    </div>
+</div>
+<cache>
+<div class="mdl" id="shareFeedback" tabindex="-1">
+    <div class="mdl-d">
+        <div class="mdl-c">
+            <div class="mdl-h">
+                <button type="button" class="close" data-dismiss="mdl">&times;</button>
+                <h2>Share Feedback</h2>
+            </div>
+            <div class="mdl-b">
+                <h4>Please share some feedback!</h4>
+                <textarea name="description"></textarea>
+            </div>
+            <div class="mdl-f">
+                <button type="submit" class="share-feedback">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+</cache>

@@ -84,11 +84,13 @@
     this.ddWrp.classList.add("dd-wrp");
     if (b.classList.contains("slim")) this.ddWrp.classList.add("slim");
     this.ddHdn.classList.add("dd-hdn");
+    this.ddHdn.setAttribute("type","hidden")
     this.ddPhdr.classList.add("dd-phdr");
-    this.ddInpt.classList.add("dd-inpt");
+    this.ddInpt.classList.add("dd-inpt", "input");
     this.ddVsbl.classList.add("dd-vsbl");
-    this.ddRslts.classList.add("dd-rslts");
-    this.ddRslts.setAttribute("ss-container", "true");
+    this.ddRslts.classList.add("dd-rslts", "panel", "has-background-white");
+   
+   // this.ddRslts.setAttribute("ss-container", "true");
     //this.ddRsltsLnr.classList.add('dd-rsltsLnr');
 
     /* add attributes */
@@ -501,7 +503,7 @@
               }
               var id = el.ObjectId || el.Description;
               result +=
-                '<div class="dd-rslt ' +
+                '<div class="dd-rslt panel-block is-block p-3 ' +
                 hiddenClass +
                 '" value="' +
                 id +
@@ -800,7 +802,7 @@
                   var id = data[x].ObjectId || data[x].Description;
 
                   var div = document.createElement("div");
-                  div.classList.add("dd-rslt");
+                  div.classList.add("dd-rslt", "panel-block","is-block","p-3");
                   if (data[x].Type == "g") div.classList.add("group");
                   div.setAttribute("value", id);
                   div.innerHTML = data[x].Name;

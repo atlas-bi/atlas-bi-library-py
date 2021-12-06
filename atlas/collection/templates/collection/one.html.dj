@@ -1,6 +1,8 @@
 {% extends "layout.html.dj" %}
+
 {% load compress %}
 {% load static %}
+
 {% block body %}
     <h1 class="title is-1">{{ collection }}</h1>
     {% include "collection/links.html.dj" %}
@@ -22,7 +24,9 @@
                 {% include "collection/tasks.html.dj" %}
             {% endif %}
             <span class="location" id="comments"></span>
-            <div class="comments" data-ajax="yes" data-url="{{ collection.get_absolute_comments_url }}"></div>
+            <div class="comments"
+                 data-ajax="yes"
+                 data-url="{{ collection.get_absolute_comments_url }}"></div>
         </div>
     </div>
 {% endblock body %}

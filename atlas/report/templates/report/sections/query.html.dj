@@ -7,13 +7,14 @@
             </svg>
         </button>
         <div class="query-box">
-            <div class="query-box-inner light ss-preview" id="query-{{ query.query_id }} ss-container">
-                    <pre>
+            <div class="query-box-inner light ss-preview"
+                 id="query-{{ query.query_id }} ss-container">
+                <pre>
                     <code class="sql" id="{{ query.query_id }}">{{ query }}</code></pre>
             </div>
         </div>
     {% endfor %}
-        <!-- metric queries
+    <!-- metric queries
         @if (Model.ComponentQuery.Count > 0)
         {
             @foreach(var t in Model.ComponentQuery)

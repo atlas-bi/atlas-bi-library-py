@@ -36,11 +36,21 @@
                         <td>{{ job.queue }}</td>
                         <td>{{ job.one_off }}</td>
                         <td>{{ job.start_time }}</td>
-                        <td>{{ job.enabled }}</td>
-                        <td>{{ job.last_run_at }}</td>
-                        <td>{{ job.total_run_count }}</td>
-                        <td>{{ job.date_changed }}</td>
-                        <td>{{ job.description }}</td>
+                        <td>
+                            {{ job.enabled }}
+                        </td>
+                        <td>
+                            {{ job.last_run_at }}
+                        </td>
+                        <td>
+                            {{ job.total_run_count }}
+                        </td>
+                        <td>
+                            {{ job.date_changed }}
+                        </td>
+                        <td>
+                            {{ job.description }}
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -50,7 +60,9 @@
     <div class="content">
         <p>
             No scheduled jobs....
-            <span data-color="warning">Is celery offline?</span>
+            <span data-color="warning">
+                Is celery offline?
+            </span>
         </p>
     </div>
 {% endif %}

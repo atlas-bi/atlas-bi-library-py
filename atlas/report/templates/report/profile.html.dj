@@ -13,19 +13,24 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
     <a class="tab-lnk active" href="#top-users">Top Users</a>
     }
     @if(RunHistory){
-    <a class="tab-lnk @if(!TopUsers){<text>
-        active</text>}" href="#run-history">Run History
-    </a>
+    <a class="tab-lnk @if(!TopUsers){<text> active</text>}"
+       href="#run-history">Run History</a>
     }
     @if(FailedRuns){
-    <a >active</text>}" href="#failed-runs">Failed Runs</a>
+    <a >
+        active</text>}" href="#failed-runs">Failed Runs
+    </a>
     }
     @if(Subscriptions){
-    <a >active</text>}" href="#user-subscriptions">User Subscriptions</a>
+    <a >
+        active</text>}" href="#user-subscriptions">User Subscriptions
+    </a>
     }
     @if(Favorites)
     {
-    <a >active</text>}" href="#user-favorites">User Favorites</a>
+    <a >
+        active</text>}" href="#user-favorites">User Favorites
+    </a>
     }
 </div>
 <div class="tab-cnt">
@@ -115,8 +120,8 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
     }
     @if(RunHistory)
     {
-    <div class="tab-dta @if(!TopUsers){<text>
-        active</text>} my-4" id="run-history">
+    <div class="tab-dta @if(!TopUsers){<text> active</text>} my-4"
+         id="run-history">
         <h3>Historical Run Time</h3>
         <div class="tab">
             <a class="tab-lnk" href="#run-time-chart">Chart</a>
@@ -125,13 +130,14 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
         <div class="tab-cnt">
             <div class="tab-dta" id="run-time-chart">
                 <div class="atlas-chart">
-                    <div class="ajaxLoader"><img class="ajaxLoader-img"
-     src="/img/loader.gif"
-     alt="loader"
-     height="25px"
-     width="25px"/>
-                </div>
-                <script type="application/json">
+                    <div class="ajaxLoader">
+                        <img class="ajaxLoader-img"
+                             src="/img/loader.gif"
+                             alt="loader"
+                             height="25px"
+                             width="25px"/>
+                    </div>
+                    <script type="application/json">
                                 @{
                                     var runs = Model.RunTime.Take(25);
                                     var last = runs.Last();
@@ -167,116 +173,69 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
                                             ]
                                        }]
                                     }
-                </script>
-                <span class="text-light">Data grouped into weekly buckets.</span>
+                    </script>
+                    <span class="text-light">Data grouped into weekly buckets.</span>
+                </div>
+            </div>
+            <div class="tab-dta active" id="run-time-table">
+                <span class="text-light">Data shown represents the last two years of usage.</span>
+                <div class="table-responsive">
+                    <table class="table sort">
+                        <thead>
+                            <tr>
+                                <th>Week Starting At</th>
+                                <th>Total Hits</th>
+                                <th>Average Run Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var u in Model.RunTime.OrderBy(x => x.Date))
+                            {
+                            <tr>
+                                <td>@u.Date</td>
+                                <td>@u.Cnt</td>
+                                <td>@u.Avg</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-        <div class="tab-dta active" id="run-time-table">
-            <span class="text-light">Data shown represents the last two years of usage.</span>
-            <div class="table-responsive">
-                <table class="table sort">
-                    <thead>
-                        <tr>
-                            <th>Week Starting At</th>
-                            <th>Total Hits</th>
-                            <th>Average Run Time</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var u in Model.RunTime.OrderBy(x => x.Date))
-                        {
-                        <tr>
-                            <td>@u.Date</td>
-                            <td>@u.Cnt</td>
-                            <td>@u.Avg</td>
-                        </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
     </div>
-</div>
-}
-@if(FailedRuns)
-{
-<div class="tab-dta @if(!TopUsers && !RunHistory){<text>
-    active</text>} my-4" id="failed-runs">
-    <h3>Failed Runs</h3>
-    <div class="table-responsive">
-        <table class="table sort">
-            <thead>
-                <tr>
-                    <th>Run Date</th>
-                    <th>Run By</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var run in Model.FailedRuns)
-                {
-                <tr>
-                    <td>@run.Date</td>
-                    <td>@run.RunUser</td>
-                    <td>@run.RunStatus</td>
-                </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
-}
-@if(Subscriptions)
-{
-<div class="tab-dta @if(!TopUsers && !RunHistory && !FailedRuns){<text>
-    active</text>}" id="user-subscriptions">
-    <h3>Subscriptions</h3>
-    <div class="table-responsive">
-        <table class="table sort">
-            <thead>
-                <tr>
-                    <th>Description</th>
-                    <th>Last Run</th>
-                    <th>Message</th>
-                    <th>User</th>
-                    <th>Subscribed As</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach(var s in Model.Subscriptions)
-                {
-                <tr>
-                    <td>@s.Description</td>
-                    <td>@s.LastRun</td>
-                    <td>@s.LastStatus</td>
-                    <td>
-                        <a href="@s.UserUrl">@s.User</a>
-                    </td>
-                    <td>@s.Subscription</td>
-                </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
-}
-{% if favorites %}
-    <div >
-        active</text>}" id="user-favorites">
-        <h3>User Favorites</h3>
+    }
+    @if(FailedRuns)
+    {
+    <div class="tab-dta @if(!TopUsers && !RunHistory){<text> active</text>} my-4"
+         id="failed-runs">
+        <h3>Failed Runs</h3>
         <div class="table-responsive">
             <table class="table sort">
                 <thead>
                     <tr>
-                        <th>User</th>
+                        <th>
+                            Run Date
+                        </th>
+                        <th>
+                            Run By
+                        </th>
+                        <th>
+                            Status
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(var s in Model.ProfileFavorites)
+                    @foreach (var run in Model.FailedRuns)
                     {
                     <tr>
                         <td>
-                            <a href="@s.UserUrl">@s.User</a>
+                            @run.Date
+                        </td>
+                        <td>
+                            @run.RunUser
+                        </td>
+                        <td>
+                            @run.RunStatus
                         </td>
                     </tr>
                     }
@@ -285,8 +244,99 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
         </div>
     </div>
     }
-</div>
+    @if(Subscriptions)
+    {
+    <div class="tab-dta @if(!TopUsers && !RunHistory && !FailedRuns){<text> active</text>}"
+         id="user-subscriptions">
+        <h3>
+            Subscriptions
+        </h3>
+        <div class="table-responsive">
+            <table class="table sort">
+                <thead>
+                    <tr>
+                        <th>
+                            Description
+                        </th>
+                        <th>
+                            Last Run
+                        </th>
+                        <th>
+                            Message
+                        </th>
+                        <th>
+                            User
+                        </th>
+                        <th>
+                            Subscribed As
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var s in Model.Subscriptions)
+                    {
+                    <tr>
+                        <td>
+                            @s.Description
+                        </td>
+                        <td>
+                            @s.LastRun
+                        </td>
+                        <td>
+                            @s.LastStatus
+                        </td>
+                        <td>
+                            <a href="@s.UserUrl">
+                                @s.User
+                            </a>
+                        </td>
+                        <td>
+                            @s.Subscription
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    }
+    {% if favorites %}
+        <div >
+            active</text>}" id="user-favorites">
+            <h3>
+                User Favorites
+            </h3>
+            <div class="table-responsive">
+                <table class="table sort">
+                    <thead>
+                        <tr>
+                            <th>
+                                User
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var s in Model.ProfileFavorites)
+                        {
+                        <tr>
+                            <td>
+                                <a href="@s.UserUrl">
+                                    @s.User
+                                </a>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        }
+    </div>
 {% else %}
-<h5>No activity to show</h5>
-<h5>¯\_(ツ)_/¯</h5>
+    <h5>
+        No activity to show
+    </h5>
+    <h5>
+        ¯\_(ツ)_/¯
+    </h5>
 {% endif %}

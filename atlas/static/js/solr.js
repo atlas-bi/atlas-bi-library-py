@@ -239,7 +239,7 @@ Function.prototype.debounce = function (delay) {
     // d.dispatchEvent(new CustomEvent("progress-finish"));
 
     // m.innerHTML = my_div.innerHTML;
-    console.log(my_json)
+
 
     var formattedResults = my_json["docs"].map(function(result){
       console.log(result)
@@ -333,10 +333,10 @@ Function.prototype.debounce = function (delay) {
   document.dispatchEvent(new CustomEvent("lazy"))
   }
   var hAjx = null;
-  d
-    .getElementById('search')
-    .addEventListener("input",  search.debounce(250));
-  d.getElementById('search-form').addEventListener("submit", (e) => e.preventDefault());
+  // d
+  //   .getElementById('search')
+  //   .addEventListener("input",  instant_search.debounce(250));
+  // d.getElementById('search-form').addEventListener("submit", (e) => e.preventDefault());
 
   // hide search suggestions/history on scroll
   // d.addEventListener(
@@ -409,7 +409,8 @@ Function.prototype.debounce = function (delay) {
   /**
    *
    */
-  function search(page){
+
+  function instant_search(page){
     var t0 = performance.now();
 
 
@@ -429,7 +430,7 @@ Function.prototype.debounce = function (delay) {
     // );
 
     // vars
-    var search_url = "/search/";
+    var search_url = "/search/instant_search/";
 
     // build search url
     // get any checked filters and add to search query.
@@ -439,7 +440,9 @@ Function.prototype.debounce = function (delay) {
     var search_text = d.getElementById('search').value;
 
     // search_url += type + "/" + search_text;
-    search_url += "query/" + search_text
+    search_url += "query/" + search_text;
+    // mirror search url to advanced filters box
+    d.getElementById('search').closest('form').querySelector('.control a.button').setAttribute('href', search_url);
 
     // 2. get filters
     // var filters = d.querySelectorAll('.search-filter[group]:not([group="type"])[group-value] input:checked');

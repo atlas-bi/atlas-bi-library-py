@@ -1,6 +1,8 @@
 <h3>New Agreement</h3>
 <form asp-page-handler="AddAgreement" method="post">
-    <input asp-for="MyDpAgreement.DataCollectionId" type="hidden" value='@Model.DataCollection.Id' />
+    <input asp-for="MyDpAgreement.DataCollectionId"
+           type="hidden"
+           value='@Model.DataCollection.Id'/>
     <div class="listDetails">
         <label>Meeting Date</label>
         <input asp-for="MyDpAgreement.MeetingDate" required type="date" />
@@ -15,10 +17,13 @@
                 asp-for="DpAgreementUsers"
                 value=""
                 visible-value=""
-                search-area="user_lookup"></select>
+                search-area="user_lookup">
+        </select>
     </div>
     <h3>Description</h3>
-    <div class="editor" data-inputName="MyDpAgreement.Description" data-inputId="MyDpAgreement_Description"></div>
+    <div class="editor"
+         data-inputName="MyDpAgreement.Description"
+         data-inputId="MyDpAgreement_Description"></div>
     <h3>
         <button class="editor-save" type="submit">Save</button>
     </h3>
@@ -28,7 +33,9 @@
 <h3>Existing Agreements</h3>
 @foreach (var a in Model.DataCollection.Agreements)
 {
-<h4 class="drop" data-toggle="clps" data-target="collapse-agreement-editor-@(a.Id)">
+<h4 class="drop"
+    data-toggle="clps"
+    data-target="collapse-agreement-editor-@(a.Id)">
     Edit
     <span class="text-green">@a.Description.Substring(0,Math.Min(30,@a.Description.Length)) ...</span>
     Agreement
@@ -39,16 +46,25 @@
 <div id="collapse-agreement-editor-@(a.Id)" class="clps">
     <div class="drop-box">
         <h5>
-            <a class="drop-link" href="http:///Collections?handler=RemoveAgreement&id=@a.Id">Delete This Agreement</a>
+            <a class="drop-link"
+               href="http:///Collections?handler=RemoveAgreement&id=@a.Id">Delete This Agreement</a>
         </h5>
         <form asp-page-handler="EditAgreement" method="post">
-            <input asp-for="MyDpAgreement.DataCollectionId" type="hidden" value='@Model.DataCollection.Id'/>
+            <input asp-for="MyDpAgreement.DataCollectionId"
+                   type="hidden"
+                   value='@Model.DataCollection.Id'/>
             <input asp-for="MyDpAgreement.AgreementId" type="hidden" value="@a.Id" />
             <div class="listDetails">
                 <label>Meeting Date</label>
-                <input asp-for="MyDpAgreement.MeetingDate" required type="date" value="@a.MeetingDate"/>
+                <input asp-for="MyDpAgreement.MeetingDate"
+                       required
+                       type="date"
+                       value="@a.MeetingDate"/>
                 <label>Effective Date</label>
-                <input asp-for="MyDpAgreement.EffectiveDate" required type="date" value="@a.EffectiveDate"/>
+                <input asp-for="MyDpAgreement.EffectiveDate"
+                       required
+                       type="date"
+                       value="@a.EffectiveDate"/>
                 <label>Rank</label>
                 <input asp-for="MyDpAgreement.Rank" type="number" value="@a.Rank" />
                 <label>Participants</label>
@@ -67,7 +83,9 @@
                 </select>
             </div>
             <h3>Description</h3>
-            <div class="editor" data-inputName="MyDpAgreement.Description" data-inputId="MyDpAgreement_Description">
+            <div class="editor"
+                 data-inputName="MyDpAgreement.Description"
+                 data-inputId="MyDpAgreement_Description">
                 <textarea>@a.Description</textarea>
             </div>
             <h3>

@@ -1,6 +1,7 @@
 {% load helpers %}
 {% load static %}
 {% load markdown %}
+
 <div class="card">
     <div class="card-header">
         <p class="card-header-title">
@@ -11,7 +12,7 @@
         <div class="media">
             <div class="media-left">
                 <figure class="image is-96x96">
-                    <img data-src="" src="" alt="report image" />
+                    <img src="{% static "img/report_placeholder.png" %}" alt="report image" />
                 </figure>
             </div>
             <div class="media-content">

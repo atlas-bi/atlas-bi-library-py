@@ -28,7 +28,12 @@
         {% endif %}
         <li>
             <a class="has-tooltip-arrow has-tooltip-right"
-               data-tooltip=" {% if favorite != '' %} Remove from Favorites {% else %} Add to Favorites {% endif %} "
+               data-tooltip="
+               {% if favorite != '' %}
+                   Remove from Favorites
+               {% else %}
+                   Add to Favorites
+               {% endif %} "
                fav-type="term"
                object-id="{{ term.term_id }}">
                 <span class="icon has-text-grey is-large">

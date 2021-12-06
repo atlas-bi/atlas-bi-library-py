@@ -1,57 +1,99 @@
-<div class="mdl" id="newModal" tabindex="-1">
-    <div class="mdl-d editorMdl">
-        <div class="mdl-c editorMdl-inner">
-            <div class="editorMdl-title">
-                <h2 class="editorMdl-titleText">
-                    Create a New Initiative
-                    <button type="button"
-                            class="editorMdl-close"
-                            data-dismiss="mdl"
-                            data-tooltip="Close">&times;</button>
-                </h2>
-                <div id="editorMdl-titleSave">changes saved.</div>
-            </div>
-            <div class="editorMdl-cnt" ss-container>
-                <div class="editorMdl-cntLiner">
-                    <form action="{% url 'initiative:new' %}" method="post" >
+{% extends "layout.html.dj" %}
+
+{% load compress %}
+{% load static %}
+
+{% block body %}
+    {% if 21 not in permissions %}
+        Sorry, you do not have permission to do that.
+        {% else %}
+
+        <h1 class="title is-1">Create a New Initiative</h1>
+
+                    <form action="{% url 'initiative:new' %}" method="post">
                         {% csrf_token %}
-                        <h3>Details</h3>
-                        <div class="listDetails">
-                            <label>Name</label>
-                            <input name="name" required />
-                            <label>External Contacts</label>
-                            <select type="dynamic-dropdown"
-                                    name="linked_contacts"
-                                    search-area="lookup/initiative_contacts"
-                                    method="fullList"></select>
-                            <label>Operations Owner</label>
-                            <input type="dynamic-dropdown" name="ops_owner_id" search-area="user_lookup"/>
-                            <label>Executive Owner</label>
-                            <input type="dynamic-dropdown" name="exec_owner_id" search-area="user_lookup"/>
-                            <label>Financial Impact</label>
-                            <input type="dynamic-dropdown"
+
+                        <h2 class="title is-2">Details</h2>
+
+<div class="field">
+  <label class="label">Name</label>
+  <div class="control">
+    <input class="input" type="text" name="name" placeholder="initiative name" required>
+  </div>
+</div>
+
+<div class="field">
+  <label class="label">External Contacts</label>
+  <div class="control">
+  <input class="input" type="dynamic-dropdown"
+            name="linked_contacts"
+            search-area="lookup/initiative_contacts"
+            method="fullList">
+  </input>
+</div>
+</div>
+
+<div class="field">
+  <label class="label">Operations Owner</label>
+  <div class="control">
+  <input class="input" type="dynamic-dropdown" name="ops_owner_id" search-area="user_lookup"/>
+  </input>
+</div>
+</div>
+
+<div class="field">
+  <label class="label">Executive Owner</label>
+  <div class="control">
+  <input class="input" type="dynamic-dropdown"
+                                   name="exec_owner_id"
+                                   search-area="user_lookup"/>
+  </input>
+</div>
+</div>
+
+<div class="field">
+  <label class="label">Financial Impact</label>
+  <div class="control">
+  <input class="input" type="dynamic-dropdown"
                                    name="financial_impact_id"
                                    search-area="lookup/financial_impact"
                                    method="fullList"/>
-                            <label>Strategic Importance</label>
-                            <input type="dynamic-dropdown"
+  </input>
+</div>
+</div>
+
+<div class="field">
+  <label class="label">Strategic Importance</label>
+  <div class="control">
+  <input class="input" type="dynamic-dropdown"
                                    name="strategic_importance_id"
                                    search-area="lookup/strategic_importance"
                                    method="fullList"/>
-                            <label>Linked Collections</label>
-                            <select type="dynamic-dropdown"
+  </input>
+</div>
+</div>
+
+
+<div class="field">
+  <label class="label">Linked Collections</label>
+  <div class="control">
+  <input class="input" type="dynamic-dropdown"
                                     name="linked_data_collections"
                                     id="linked-data-collections"
-                                    search-area="collection_lookup"></select>
-                        </div>
-                        <h3>Description</h3>
-                        <div class="editor" data-inputName="description" data-inputId="description"></div>
-                        <h3>
-                            <button class="editor-save" type="submit">Save</button>
-                        </h3>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+                                    search-area="collection_lookup"/>
+  </input>
 </div>
+</div>
+
+
+                        <h2 clas="title is-2">Description</h2>
+                        <div class="editor"
+                             data-inputName="description"
+                             data-inputId="description"></div>
+
+
+                        <button class="button" type="submit">Save</button>
+
+                </form>
+    {% endif %}
+{% endblock body %}

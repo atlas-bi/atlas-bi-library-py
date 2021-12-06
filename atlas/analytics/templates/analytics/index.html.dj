@@ -1,26 +1,29 @@
 {% extends "layout.html.dj" %}
+
 {% load compress %}
 {% load mathfilters %}
 {% load static %}
+
 {% block start_js %}
     {% compress js inline %}
         <script src="{% static '/js/realtime.min.js' %}"></script>
     {% endcompress %}
 {% endblock start_js %}
 {% block body %}
-    <div class="pageTitle">
-        <h2 class="pageTitle-head">Analytics</h2>
-    </div>
+    <h1 class="title is-1">Analytics</h1>
     <div id="active-users"></div>
-    <h3>Last 7 Days - Top Ten</h3>
-    <h4>Most Active Users</h4>
-    <div class="atlas-chart">
-        <div class="ajaxLoader"><img class="ajaxLoader-img"
-     src="{% static '/img/loader.gif' %}"
-     alt="loader"
-     height="25px"
-     width="25px"/></div>
-        <script type="application/json">
+    <h2 class="title is-2">Last 7 Days - Top Ten</h2>
+    <h3 class="title is-3">Most Active Users</h3>
+    <div class="box">
+        <div class="atlas-chart block">
+            <div class="ajaxLoader">
+                <img class="ajaxLoader-img"
+                     src="{% static '/img/loader.gif' %}"
+                     alt="loader"
+                     height="25px"
+                     width="25px"/>
+            </div>
+            <script type="application/json">
             {
                 "axis": {
                     "0": {"title":"seconds"},
@@ -56,14 +59,20 @@
                         ]
                    }]
                 }
-        </script>
-    </div>
-    <h4>Most Popular Pages</h4>
-    <div class="atlas-chart">
-        <div class="ajaxLoader">
-            <img class="ajaxLoader-img" src="{% static '/img/loader.gif' %}" alt="loader" height="25px" width="25px"/>
+            </script>
         </div>
-        <script type="application/json">
+    </div>
+    <h3 class="title is-3">Most Popular Pages</h3>
+    <div class="box">
+        <div class="atlas-chart block">
+            <div class="ajaxLoader">
+                <img class="ajaxLoader-img"
+                     src="{% static '/img/loader.gif' %}"
+                     alt="loader"
+                     height="25px"
+                     width="25px"/>
+            </div>
+            <script type="application/json">
             {
                 "axis": {
                     "0": {"title":"seconds"},
@@ -99,16 +108,20 @@
                         ]
                    }]
                 }
-        </script>
+            </script>
+        </div>
     </div>
-    <h3>Access History</h3>
-    <div class="atlas-chart">
-        <div class="ajaxLoader"><img class="ajaxLoader-img"
-     src="{% static '/img/loader.gif' %}"
-     alt="loader"
-     height="25px"
-     width="25px"/></div>
-        <script type="application/json">
+    <h3 class="title is-3">Access History</h3>
+    <div class="box">
+        <div class="atlas-chart block">
+            <div class="ajaxLoader">
+                <img class="ajaxLoader-img"
+                     src="{% static '/img/loader.gif' %}"
+                     alt="loader"
+                     height="25px"
+                     width="25px"/>
+            </div>
+            <script type="application/json">
             {
                 "axis": {
                     "0": {"title":"visits"}
@@ -130,14 +143,20 @@
                         ]
                    }]
                 }
-        </script>
-    </div>
-    <h3>Search Access History</h3>
-    <div class="atlas-chart">
-        <div class="ajaxLoader">
-            <img class="ajaxLoader-img" src="{% static '/img/loader.gif' %}" alt="loader" height="25px" width="25px"/>
+            </script>
         </div>
-        <script type="application/json">
+    </div>
+    <h3 class="title is-3">Search Access History</h3>
+    <div class="box">
+        <div class="atlas-chart block">
+            <div class="ajaxLoader">
+                <img class="ajaxLoader-img"
+                     src="{% static '/img/loader.gif' %}"
+                     alt="loader"
+                     height="25px"
+                     width="25px"/>
+            </div>
+            <script type="application/json">
             {
                 "axis": {
                     "0": {"title":"searches"}
@@ -159,16 +178,20 @@
                         ]
                    }]
                 }
-        </script>
+            </script>
+        </div>
     </div>
-    <h3>Report Access History</h3>
-    <div class="atlas-chart">
-        <div class="ajaxLoader"><img class="ajaxLoader-img"
-     src="{% static '/img/loader.gif' %}"
-     alt="loader"
-     height="25px"
-     width="25px"/></div>
-        <script type="application/json">
+    <h3 class="title is-3">Report Access History</h3>
+    <div class="box">
+        <div class="atlas-chart block">
+            <div class="ajaxLoader">
+                <img class="ajaxLoader-img"
+                     src="{% static '/img/loader.gif' %}"
+                     alt="loader"
+                     height="25px"
+                     width="25px"/>
+            </div>
+            <script type="application/json">
             {
                 "axis": {
                     "0": {"title":"visits"}
@@ -190,14 +213,20 @@
                         ]
                    }]
                 }
-        </script>
-    </div>
-    <h3>Term Access History</h3>
-    <div class="atlas-chart">
-        <div class="ajaxLoader">
-            <img class="ajaxLoader-img" src="{% static '/img/loader.gif' %}" alt="loader" height="25px" width="25px"/>
+            </script>
         </div>
-        <script type="application/json">
+    </div>
+    <h3 class="title is-3">Term Access History</h3>
+    <div class="box">
+        <div class="atlas-chart block">
+            <div class="ajaxLoader">
+                <img class="ajaxLoader-img"
+                     src="{% static '/img/loader.gif' %}"
+                     alt="loader"
+                     height="25px"
+                     width="25px"/>
+            </div>
+            <script type="application/json">
             {
                 "axis": {
                     "0": {"title":"visits"}
@@ -219,16 +248,20 @@
                         ]
                    }]
                 }
-        </script>
+            </script>
+        </div>
     </div>
-    <h3>Collection Access History</h3>
-    <div class="atlas-chart">
-        <div class="ajaxLoader"><img class="ajaxLoader-img"
-     src="{% static '/img/loader.gif' %}"
-     alt="loader"
-     height="25px"
-     width="25px"/></div>
-        <script type="application/json">
+    <h3 class="title is-3">Collection Access History</h3>
+    <div class="box">
+        <div class="atlas-chart block">
+            <div class="ajaxLoader">
+                <img class="ajaxLoader-img"
+                     src="{% static '/img/loader.gif' %}"
+                     alt="loader"
+                     height="25px"
+                     width="25px"/>
+            </div>
+            <script type="application/json">
             {
                 "axis": {
                     "0": {"title":"visits"}
@@ -250,6 +283,7 @@
                         ]
                    }]
                 }
-        </script>
+            </script>
+        </div>
     </div>
 {% endblock body %}

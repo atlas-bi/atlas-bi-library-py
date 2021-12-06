@@ -31,3 +31,12 @@ cp -r "atlas-bi-<version>" "atlas-bi-$VERSION" \
 
 
 ```
+
+## To install a build
+
+```sh
+curl -s --compressed "https://atlas-bi.github.io/ppa/deb/KEY.gpg" | sudo apt-key add -
+sudo curl -s --compressed -o /etc/apt/sources.list.d/atlas.list "https://atlas-bi.github.io/ppa/deb/atlas.list"
+sudo apt update
+sudo apt install atlas-bi
+

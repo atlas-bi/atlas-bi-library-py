@@ -1,11 +1,15 @@
 {% extends "layout.html.dj" %}
+
 {% load markdown %}
 {% load compress %}
 {% load static %}
+
 {% block start_css %}
     {% if 26 in permissions %}
-        <link rel="stylesheet" href="{% static '/lib/codemirror/mycss.css' %}" type="text/css" />
-<!--        
+        <link rel="stylesheet"
+              href="{% static '/lib/codemirror/mycss.css' %}"
+              type="text/css"/>
+        <!--
 <link rel="stylesheet" href="{% static '/css/live-editor.css' %}" type="text/css" />
 -->
     {% endif %}
@@ -18,9 +22,10 @@
 {% block body %}
     <h1 class="title is-1">{{ title }}</h1>
     {% if 26 in permissions %}
-        <a class="nav-link" data-toggle="mdl" data-target="newModal" data-tooltip="Create New Collection">
-            New Collections
-        </a>
+        <a class="nav-link"
+           data-toggle="mdl"
+           data-target="newModal"
+           data-tooltip="Create New Collection">New Collections</a>
     {% endif %}
     <div class="columns is-multiline">
         {% for collection in collections %}

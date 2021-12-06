@@ -5,7 +5,10 @@
     {% csrf_token %}
     <div class="listDetails">
         <label>Report Name</label>
-        <input type="dynamic-dropdown" class="head-light" name="report_id" search-area="report_lookup"/>
+        <input type="dynamic-dropdown"
+               class="head-light"
+               name="report_id"
+               search-area="report_lookup"/>
         <label>Rank</label>
         <input name="rank" type="number" />
     </div>
@@ -16,5 +19,6 @@
 <div id="collection-editor-currentreports-container">
     <div id="collection-editor-currentreports-container"
          data-ajax="yes"
-         data-url="{% url 'collection:reports' collection.collection_id %}"></div>
+         data-url="{% url 'collection:reports' collection.collection_id %}">
+    </div>
 </div>
