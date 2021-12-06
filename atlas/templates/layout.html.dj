@@ -1,9 +1,11 @@
 {% load cache %}
 {% load compress %}
 {% load static %}
+
 {% include "head.html.dj" %}
 {% compress css file extra %}
-    {% block start_css %}{% endblock start_css %}
+    {% block start_css %}
+    {% endblock start_css %}
 {% endcompress %}
 <body>
     {% include "site_message.html.dj" %}
@@ -23,19 +25,21 @@
                     <!--
 <nav class="sideNav">
 -->
-                    {% block side_links %}{% endblock side_links %}
+                    {% block side_links %}
+                    {% endblock side_links %}
                     <!--
 </nav>
 -->
                 </div>
-                <div class="column">{% block body %}{% endblock body %}</div>
-           <!-- 
+                <div class="column">
+                    {% block body %}
+                    {% endblock body %}
+                </div>
+                <!--
 <div class="column is-one-third is-hidden-mobile">
                 {% if ads %}
                     <div id="related-reports"></div>
-                    {% for ad in ads %}
-                        <div class="col" data-ajax="yes" data-url="{{ ad.url }}"></div>
-                    {% endfor %}
+                    {% for ad in ads %}<div class="col" data-ajax="yes" data-url="{{ ad.url }}"></div>{% endfor %}
                 {% endif %}
             </div>
 -->
@@ -51,5 +55,6 @@
     <!-- footer -->
     {% include "footer.html.dj" %}
     {% include "tail.html.dj" %}
-    {% block js %}{% endblock js %}
+    {% block js %}
+    {% endblock js %}
 </body>

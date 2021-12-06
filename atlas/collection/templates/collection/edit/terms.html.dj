@@ -4,7 +4,10 @@
       id="collection-editor-add-term-form">
     <div class="listDetails">
         <label>Term Name</label>
-        <input type="dynamic-dropdown" class="head-light" name="term_id" search-area="term_lookup"/>
+        <input type="dynamic-dropdown"
+               class="head-light"
+               name="term_id"
+               search-area="term_lookup"/>
         <label>Rank</label>
         <input name="rank" type="number" />
     </div>
@@ -15,5 +18,6 @@
 <div id="collection-editor-currentterms-container">
     <div id="collection-editor-currentterms-container"
          data-ajax="yes"
-         data-url="{% url 'collection:terms' collection.collection_id %}"></div>
+         data-url="{% url 'collection:terms' collection.collection_id %}">
+    </div>
 </div>

@@ -1,7 +1,9 @@
 <!-- search -->
 {% if 19 in permissions %}
-    <form id="search-form" class="is-flex is-flex-grow-1 is-align-items-center mx-3 ml-5" style="position: relative;">
-        <div class="field has-addons">
+    <form id="search-form"
+          class="is-flex is-flex-grow-1 is-align-items-center mx-3 ml-5"
+          style="position: relative;">
+        <div class="field has-addons is-flex-grow-1 mb-0">
             <div class="control has-icons-left is-flex-grow-1">
                 <input class="input"
                        id="search"
@@ -15,12 +17,12 @@
                 </span>
             </div>
             <div class="control">
-                <a class="button is-info">
-                 <span class="icon is-small is-right">
-      <i class="fas fa-sliders-h fa-xs"></i>
-    </span>
+                <a class="button has-text-grey-light" href="/search">
+                    <span class="icon">
+                        <i class="fas fa-sliders-h"></i>
+                    </span>
                 </a>
-              </div>
+            </div>
         </div>
         <div id="search-results" class="panel has-background-white"></div>
     </form>

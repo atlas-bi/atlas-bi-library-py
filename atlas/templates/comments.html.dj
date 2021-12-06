@@ -6,35 +6,36 @@
                 <span class="badge is-top-left">{{ comments|length }}</span>
             </h2>
         </div>
-        <div class="column"></div></div>
-        <article class="media">
-<!--        
+        <div class="column"></div>
+    </div>
+    <article class="media">
+        <!--
 <form action="{{ comments_url }}" method="post" class="comments-form">
             <input type="nice-input" data-initial-content="Add a comment.." name="message" class="submit" value=""/>
         </form>
     -->
-            {% if comments|length > 0 %}
-                {% for comment in comments %}
-                    <div class="media-content"
-                         {% ifchanged comment.stream_id %} comments-msg {% else %} comments-newMsgReply {% endifchanged %}>
-                        <div class="content">
-                            <p>
-                                <strong>
+        {% if comments|length > 0 %}
+            {% for comment in comments %}
+                <div class="media-content"
+                     {% ifchanged comment.stream_id %} comments-msg {% else %} comments-newMsgReply {% endifchanged %}>
+                    <div class="content">
+                        <p>
+                            <strong>
                                 <a href="{{ comment.user.get_absolute_url }}">{{ comment.user.full_name }}</a>
-                                </strong>
-                                <br>
-                                {{ comment.message|safe }}
-                                <br>
-                                <small>
+                            </strong>
+                            <br>
+                            {{ comment.message|safe }}
+                            <br>
+                            <small>
                                 <a>Delete</a>
                                 ·
                                 <a>Reply</a>
                                 · {{ comment.posted_at }}
-                                </small>
-                            </p>
-                        </div>
+                            </small>
+                        </p>
                     </div>
-                    <!--
+                </div>
+                <!--
 <div class="comments-msgHdr">
                         <div class="comments-cntrls">
                             {% if 25 in permissions %}
@@ -74,22 +75,22 @@
                     </div>
                 </div>
 -->
-                {% endfor %}
-            {% endif %}
-        </article>
-        <article class="media">
-            <div class="media-content">
-                <div class="field">
-                    <p class="control">
-        <textarea class="textarea" placeholder="Add a comment..."></textarea>
-                    </p>
-                </div>
-                <div class="field">
-                    <p class="control">
-                        <button class="button">Post comment</button>
-                    </p>
-                </div>
+            {% endfor %}
+        {% endif %}
+    </article>
+    <article class="media">
+        <div class="media-content">
+            <div class="field">
+                <p class="control">
+                    <textarea class="textarea" placeholder="Add a comment..."></textarea>
+                </p>
             </div>
-        </article>
-    </div>
+            <div class="field">
+                <p class="control">
+                    <button class="button">Post comment</button>
+                </p>
+            </div>
+        </div>
+    </article>
+</div>
 </div>

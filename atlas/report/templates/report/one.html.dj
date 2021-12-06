@@ -1,10 +1,18 @@
 {% extends "layout.html.dj" %}
+
 {% load compress %}
 {% load static %}
 {% load helpers %}
+
 {% block start_css %}
-    <link rel="stylesheet" href="{% static '/css/reports.css' %}" type="text/css" charset="utf-8"/>
-    <link rel="stylesheet" href="{% static '/css/utility/carousel.css' %}" type="text/css" charset="utf-8"/>
+    <link rel="stylesheet"
+          href="{% static '/css/reports.css' %}"
+          type="text/css"
+          charset="utf-8"/>
+    <link rel="stylesheet"
+          href="{% static '/css/utility/carousel.css' %}"
+          type="text/css"
+          charset="utf-8"/>
 {% endblock start_css %}
 {% block body %}
     <div class="columns mb-0">
@@ -46,7 +54,9 @@
     </div>
     {% if 12 in permissions %}
         <!-- maintenance status alert -->
-        <div data-ajax="yes" class="no-loader" data-url="/reports/{{ report.report_id }}/maint_status"></div>
+        <div data-ajax="yes"
+             class="no-loader"
+             data-url="/reports/{{ report.report_id }}/maint_status"></div>
     {% endif %}
     {% include 'report/links.html.dj' %}
     <div class="columns">
@@ -79,7 +89,9 @@
                 {% include 'report/sections/maintenance_logs.html.dj' %}
             {% endif %}
             <span class="location" id="comments"></span>
-            <div class="comments" data-ajax="yes" data-url="/reports/{{ report.report_id }}/comments"></div>
+            <div class="comments"
+                 data-ajax="yes"
+                 data-url="/reports/{{ report.report_id }}/comments"></div>
         </div>
     </div>
     {% if 12 in permissions %}
@@ -94,7 +106,9 @@
                     <h2>Image</h2>
                 </div>
                 <div class="mdl-b">
-                    <img src="" class="imagepreview img-thumbnail" style="max-width: 100%; max-height:100%" />
+                    <img src=""
+                         class="imagepreview img-thumbnail"
+                         style="max-width: 100%; max-height:100%"/>
                 </div>
             </div>
         </div>
@@ -107,37 +121,51 @@
                     <button type="button" class="close" data-dismiss="mdl">&times;</button>
                     <h2>Report Profile</h2>
                 </div>
-                <div class="mdl-b"></div></div>
+                <div class="mdl-b"></div>
             </div>
         </div>
-    {% endblock body %}
-    {% block js %}
-        {% compress js file flowchart %}
-            <script src="{% static '/lib/flowchart/raphael.min.js' %}"></script>
-            <script src="{% static '/lib/flowchart/flowchart.min.js' %}"></script>
-            <script src="{% static '/lib/flowchart/custom.js' %}"></script>
+    </div>
+{% endblock body %}
+{% block js %}
+    {% compress js file flowchart %}
+        <script src="{% static '/lib/flowchart/raphael.min.js' %}"></script>
+        <script src="{% static '/lib/flowchart/flowchart.min.js' %}"></script>
+        <script src="{% static '/lib/flowchart/custom.js' %}"></script>
+    {% endcompress %}
+    <script>hljs.highlightAll();
+    </script>
+    {% if 12 in permissions %}
+        {% compress js file editor %}
+            <script src="{% static '/lib/codemirror/codemirror.js' %}">
+            </script>
+            <script src="{% static '/lib/codemirror/autorefresh.js' %}">
+            </script>
+            <script src="{% static '/lib/codemirror/overlay.js' %}">
+            </script>
+            <script src="{% static '/lib/codemirror/markdown.js' %}">
+            </script>
+            <script src="{% static '/lib/codemirror/gfm.js' %}">
+            </script>
+            <script src="{% static '/lib/codemirror/python.js' %}">
+            </script>
+            <script src="{% static '/lib/codemirror/r.js' %}">
+            </script>
+            <script src="{% static '/lib/codemirror/shell.js' %}">
+            </script>
+            <script src="{% static '/lib/codemirror/sql.js' %}">
+            </script>
+            <script src="{% static '/js/editor.js' %}">
+            </script>
+            <script src="{% static '/js/utility/checkbox.js' %}">
+            </script>
         {% endcompress %}
-        <script>hljs.highlightAll();
-        </script>
-        {% if 12 in permissions %}
-            {% compress js file editor %}
-                <script src="{% static '/lib/codemirror/codemirror.js' %}" ></script>
-                <script src="{% static '/lib/codemirror/autorefresh.js' %}" ></script>
-                <script src="{% static '/lib/codemirror/overlay.js' %}" ></script>
-                <script src="{% static '/lib/codemirror/markdown.js' %}" ></script>
-                <script src="{% static '/lib/codemirror/gfm.js' %}" ></script>
-                <script src="{% static '/lib/codemirror/python.js' %}" ></script>
-                <script src="{% static '/lib/codemirror/r.js' %}" ></script>
-                <script src="{% static '/lib/codemirror/shell.js' %}" ></script>
-                <script src="{% static '/lib/codemirror/sql.js' %}" ></script>
-                <script src="{% static '/js/editor.js' %}" ></script>
-                <script src="{% static '/js/utility/checkbox.js' %}" ></script>
-            {% endcompress %}
-            {% compress js file report_editor %}
-                <script src="{% static '/js/reportEditor.js' %}" async></script>
-            {% endcompress %}
-        {% endif %}
-    {% endblock js %}
-    {% block start_js_inline %}
-        <script src="{% static '/js/reportProfile.js' %}"></script>
-    {% endblock start_js_inline %}
+        {% compress js file report_editor %}
+            <script src="{% static '/js/reportEditor.js' %}" async>
+            </script>
+        {% endcompress %}
+    {% endif %}
+{% endblock js %}
+{% block start_js_inline %}
+    <script src="{% static '/js/reportProfile.js' %}">
+    </script>
+{% endblock start_js_inline %}

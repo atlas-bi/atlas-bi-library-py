@@ -1,11 +1,17 @@
 {% extends "layout.html.dj" %}
+
 {% load compress %}
 {% load static %}
+
 {% block start_css %}
     {{ block.super }}
     {% if 22 in permissions or 21 in permissions %}
-        <link rel="stylesheet" href="{% static '/lib/codemirror/mycss.css' %}" type="text/css" />
-        <link rel="stylesheet" href="{% static '/css/live-editor.css' %}" type="text/css" />
+        <link rel="stylesheet"
+              href="{% static '/lib/codemirror/mycss.css' %}"
+              type="text/css"/>
+        <link rel="stylesheet"
+              href="{% static '/css/live-editor.css' %}"
+              type="text/css"/>
     {% endif %}
 {% endblock start_css %}
 {% block modals %}
@@ -13,9 +19,7 @@
     {% if 22 in permissions %}
         {% include "initiative/edit.html.dj" %}
     {% endif %}
-    {% if 21 in permissions %}
-        {% include "initiative/new.html.dj" %}
-    {% endif %}
+
 {% endblock modals %}
 {% block body %}
     <h1 class="title is-1">{{ initiative }}</h1>

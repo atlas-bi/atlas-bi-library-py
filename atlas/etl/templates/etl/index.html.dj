@@ -1,9 +1,14 @@
 {% extends "layout.html.dj" %}
+
 {% load compress %}
 {% load static %}
+
 {% compress css file etl %}
     {% block start_css %}
-        <link rel="stylesheet" href="{% static '/css/etl.css' %}" type="text/css" charset="utf-8" />
+        <link rel="stylesheet"
+              href="{% static '/css/etl.css' %}"
+              type="text/css"
+              charset="utf-8"/>
     {% endblock start_css %}
 {% endcompress %}
 {% block body %}
@@ -78,9 +83,7 @@
                 <table class="table is-striped is-narrow">
                     <thead>
                         <tr>
-                            {% for key, values in history.0.items %}
-                                <td>{{ key }}</td>
-                            {% endfor %}
+                            {% for key, values in history.0.items %}<td>{{ key }}</td>{% endfor %}
                         </tr>
                     </thead>
                     <tbody>

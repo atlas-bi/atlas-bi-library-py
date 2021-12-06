@@ -1,5 +1,7 @@
 {% extends "layout.html.dj" %}
+
 {% load static %}
+
 {% block body %}
     <h2 class="title is-2">
         Hey
@@ -20,9 +22,11 @@
     </div>
     <section class="tab-cnt">
         <div class="tab-dta is-active" id="stars">
-            <div data-ajax="yes" data-url="/users/favorites"></div></div>
-            <div class="tab-dta" id="mail">
-<!--            
-<div data-ajax="yes" data-url="/mail/get_mailbox"></div>--></div>
-            </section>
-        {% endblock body %}
+            <div data-ajax="yes" data-url="/users/favorites"></div>
+        </div>
+        <div class="tab-dta" id="mail">
+            <!--
+<div data-ajax="yes" data-url="/mail/get_mailbox"></div>-->
+        </div>
+    </section>
+{% endblock body %}

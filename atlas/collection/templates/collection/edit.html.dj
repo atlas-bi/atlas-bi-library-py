@@ -22,8 +22,7 @@
                         <a class="tab-lnk" href="#milestab">Milestones</a>
                     </div>
                     <div class="tab-cnt">
-                        <div class="tab-dta active"
-                             id="detailstab">{% include "collection/edit/details.html.dj" %}</div>
+                        <div class="tab-dta active" id="detailstab">{% include "collection/edit/details.html.dj" %}</div>
                         <div class="tab-dta" id="reportlinkstab">{% include "collection/edit/reports.html.dj" %}</div>
                         <div class="tab-dta" id="termlinkstab">{% include "collection/edit/terms.html.dj" %}</div>
                         <div class="tab-dta" id="agreetab">{% include "collection/edit/agreements.html.dj" %}</div>

@@ -1,5 +1,6 @@
 {% load static %}
-<div class="video {% if not open %}video-closed {% endif %} ">
+
+<div class="video {% if not open %}video-closed{% endif %} ">
     <div class="video-ctnr">
         <button class="video-close video-btn"></button>
         <button class="video-min video-btn"></button>
@@ -8,10 +9,16 @@
             <div class="video-liner">
                 <video width="100%"
                        height="100%"
-                       {% if open %}autoplay="autoplay" {% endif %}
+                       {% if open %}
+                           autoplay="autoplay"
+                       {% endif %}
                        muted="true"
                        loop="loop">
-                    <source {% if not open %} data-src="{% static '/lib/video/AtlasIntro_2_7mb.mp4' %} {% else %} data-src="{% static '/lib/video/AtlasIntro_2_7mb.mp4' %} endif type="video/mp4"/>
+                    <source {% if not open %}
+                                data-src="{% static '/lib/video/AtlasIntro_2_7mb.mp4' %} {% else %} data-src="
+                                {% static '/lib/video/AtlasIntro_2_7mb.mp4' %}
+                                endif
+                                type="video/mp4"/>
                 </video>
             </div>
         </div>

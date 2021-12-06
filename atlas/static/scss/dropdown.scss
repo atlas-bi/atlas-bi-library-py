@@ -1,21 +1,3 @@
-/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-
 // @import "./include/color.scss";
 // @import "./include/font.scss";
 
@@ -97,6 +79,22 @@
 // .dd-hdn {
 //   display: none;
 // }
+
+.dd-rslts {
+    position: absolute;
+    top:40px;
+    white-space: nowrap;
+    z-index: 999;
+    display: none;
+    left: 0;
+    right:0;
+    border-radius:4px;
+    overflow: scroll;
+}
+
+.dd-wrp-focus .dd-rslts{
+    display:block
+}
 
 // .dd-rslts {
 //   background-color: #ededed;
@@ -180,16 +178,16 @@
 //   box-shadow: none;
 // }
 
-// .dd-wrp > input::-ms-clear,
-// .dd-inpt > .dd-vsbl::-ms-clear {
-//   display: none;
-// }
+.dd-wrp > input::-ms-clear,
+.dd-inpt > .dd-vsbl::-ms-clear {
+  display: none;
+}
 
-// .dd-wrp > input:focus,
-// .dd-inpt > .dd-vsbl:focus {
-//   border: none;
-//   outline: none;
-// }
+.dd-wrp > input:focus,
+.dd-inpt > .dd-vsbl:focus {
+  border: none;
+  outline: none;
+}
 
 // .dd-wrp > input::placeholder,
 // .dd-wrp .dd-inpt > .dd-vsbl::placeholder {
@@ -237,7 +235,7 @@
 //   white-space: nowrap;
 // }
 
-// .dd-inpt {
-//   display: inline-flex;
-//   position: relative;
-// }
+.dd-inpt {
+  display: inline-flex;
+  position: relative;
+}

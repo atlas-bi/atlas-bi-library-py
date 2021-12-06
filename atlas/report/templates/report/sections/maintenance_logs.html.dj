@@ -1,5 +1,6 @@
 {% load dates %}
 {% load markdown %}
+
 <h2 class="title is-2">Maintenance Logs</h2>
 <nav class="panel">
     <p class="panel-heading">

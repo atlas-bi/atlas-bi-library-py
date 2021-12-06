@@ -1,4 +1,5 @@
 {% load markdown %}
+
 <span class="location" id="details"></span>
 {% if initiative.description %}
     <h2 class="title is-2">Description</h2>

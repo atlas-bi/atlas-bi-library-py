@@ -1,4 +1,5 @@
 {% load static %}
+
 <nav class="navbar is-transparent atlas-navbar has-shadow">
     <div class="container">
         <div class="navbar-brand">
@@ -36,12 +37,8 @@
                         <div class="navbar-dropdown">
                             <hr class=" hide-desktop dropdown-divider">
                             <!--
-                                {% if 18 in permissions or 1 in permissions %}
-                                    <a href="/accesscontrol">Access Control</a>
-                                {% endif %}
-                                {% if 33 in permissions or 34 in permissions %}
-                                    <a href="/parameters">Parameters</a>
-                                {% endif %}
+                                {% if 18 in permissions or 1 in permissions %}<a href="/accesscontrol">Access Control</a>{% endif %}
+                                {% if 33 in permissions or 34 in permissions %}<a href="/parameters">Parameters</a>{% endif %}
                             -->
                             {% if 36 in permissions %}
                                 <a class="navbar-item" href="{% url 'analytics:index' %}">Analytics</a>
@@ -66,8 +63,12 @@
                     </div>
                     <div class="navbar-dropdown">
                         <hr class=" hide-desktop dropdown-divider">
-                        <a class="navbar-item" href="{% url 'initiative:list' %}" title="initiatives">Initiatives</a>
-                        <a class="navbar-item" href="{% url 'collection:list' %}" title="collections">Collections</a>
+                        <a class="navbar-item"
+                           href="{% url 'initiative:list' %}"
+                           title="initiatives">Initiatives</a>
+                        <a class="navbar-item"
+                           href="{% url 'collection:list' %}"
+                           title="collections">Collections</a>
                         <a class="navbar-item" href="{% url 'term:list' %}" title="terms">Terms</a>
                         <hr class=" hide-desktop dropdown-divider">
                     </div>
@@ -120,7 +121,8 @@
         </nav>
         <section class="level mt-5">
             <div class="container">
-                <nav class="breadcrumb"></nav>
+                <nav class="breadcrumb">
+                </nav>
             </div>
         </section>
     </div>

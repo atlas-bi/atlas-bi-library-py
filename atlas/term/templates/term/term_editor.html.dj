@@ -21,7 +21,8 @@
                             <label>Name</label>
                             <input name="name" required value="{{ term }}"/>
                             <label>External Standard Link</label>
-                            <input name="external_standard_url" value="{{ term.external_standard_url|default:"/>
+                            <input name="external_standard_url"
+                                   value="{{ term.external_standard_url|default:"/>
                             <label>Valid From</label>
                             <input type="date" name="valid_from" value="{{ term.valid_from|default:"/>
                         </div>
@@ -30,7 +31,9 @@
                             <textarea>{{ term.summary|default:""|safe }}</textarea>
                         </div>
                         <h3>Technical Definition</h3>
-                        <div class="editor" data-inputName="technical_definition" data-inputId="technical_definition">
+                        <div class="editor"
+                             data-inputName="technical_definition"
+                             data-inputId="technical_definition">
                             <textarea>{{ term.technical_definition|default:""|safe }}</textarea>
                         </div>
                         {% if 6 in permissions %}

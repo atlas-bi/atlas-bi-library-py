@@ -178,3 +178,6 @@ include-naming-hint="no"
 [tool.djangodoctor]
 directories = ["atlas"]
 
+[tool.djlint]
+blank_line_after_tag = "extends,load"
+

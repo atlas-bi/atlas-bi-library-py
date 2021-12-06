@@ -28,7 +28,9 @@
         <input class="checklistitem" />
     </div>
     <h4>Description</h4>
-    <div class="editor" data-inputName="DpMilestone.Description" data-inputId="DpMilestone_Description">
+    <div class="editor"
+         data-inputName="DpMilestone.Description"
+         data-inputId="DpMilestone_Description">
         <textarea></textarea>
     </div>
     <h3>
@@ -39,7 +41,9 @@
 <h3>Existing Milestones</h3>
 @foreach (var t in Model.DataCollection.MilestoneTasks)
 {
-<h4 class="drop" data-toggle="clps" data-target="collapse-milestone-@(t.Id)">
+<h4 class="drop"
+    data-toggle="clps"
+    data-target="collapse-milestone-@(t.Id)">
     Edit
     <span class="text-green">@t.Description.Substring(0,Math.Min(30,@t.Description.Length)) ...</span>
     Milestone
@@ -50,15 +54,21 @@
 <div id="collapse-milestone-@(t.Id)" class="clps">
     <div class="drop-box">
         <h5>
-            <a class="drop-link" href="https://Collections?handler=DeleteMilestone&id=@t.Id">Delete This Milestone</a>
+            <a class="drop-link"
+               href="https://Collections?handler=DeleteMilestone&id=@t.Id">Delete This Milestone</a>
         </h5>
         <form asp-page-handler="EditMilestone" method="post">
             <input asp-for="DpMilestone.MilestoneTaskId" type="hidden" value="@t.Id" />
-            <input asp-for="DpMilestone.DataCollectionId" type="hidden" value="@Model.DataCollection.Id"/>
+            <input asp-for="DpMilestone.DataCollectionId"
+                   type="hidden"
+                   value="@Model.DataCollection.Id"/>
             <input type='hidden' name='DpChecklist' value='' />
             <div class="listDetails">
                 <label>Start Date</label>
-                <input asp-for="DpMilestone.StartDate" required type="date" value="@t.StartDateInput"/>
+                <input asp-for="DpMilestone.StartDate"
+                       required
+                       type="date"
+                       value="@t.StartDateInput"/>
                 <label>End Date</label>
                 <input asp-for="DpMilestone.EndDate" type="date" value="@t.EndDateInput" />
                 <label>Template</label>
@@ -90,7 +100,9 @@
                 <input class="checklistitem" />
             </div>
             <h4>Description</h4>
-            <div class="editor" data-inputName="DpMilestone.Description" data-inputId="DpMilestone_Description">
+            <div class="editor"
+                 data-inputName="DpMilestone.Description"
+                 data-inputId="DpMilestone_Description">
                 <textarea>>@Html.Raw(@t.Description)</textarea>
             </div>
             <h3>

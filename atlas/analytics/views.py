@@ -114,7 +114,7 @@ def index(request):
 
     return render(
         request,
-        "analytics.html.dj",
+        "analytics/index.html.dj",
         context,
     )
 

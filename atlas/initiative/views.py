@@ -2,7 +2,7 @@
 # pylint: disable=C0116,C0115,W0613,W0212,R0201
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import DeleteView, DetailView, ListView, View
 from index.models import Collections, Initiatives
@@ -61,6 +61,8 @@ class InitiativeDetails(LoginRequiredMixin, DetailView):
 
 
 class InitiativeNew(LoginRequiredMixin, View):
+    template_name = "initiative/new.html.dj"
+
     def post(self, request):
         initiative = Initiatives(
             name=request.POST.get("name", ""),
@@ -82,7 +84,7 @@ class InitiativeNew(LoginRequiredMixin, View):
         return redirect(initiative.get_absolute_url())
 
     def get(self, request):
-        return redirect("initiative:list")
+        return render(request, self.template_name)
 
 
 class InitiativeDelete(LoginRequiredMixin, DeleteView):

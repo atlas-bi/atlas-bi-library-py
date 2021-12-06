@@ -1,19 +1,23 @@
 {% load static %}
 {% load helpers %}
+
 <h2 class="title is-2">Images</h2>
 {% if report.imgs.all|length == 1 %}
     <div class="pop text-center block" style="max-height:400px;">
         <img class="img-responsive"
              src="{{ report.imgs.all.0.get_absolute_url|size:"1272x_" }}"
              alt="Main report image"
-             style="max-width: 98%;max-height: 390px;min-height: 1px;">
+             style="max-width: 98%;
+                    max-height: 390px;
+                    min-height: 1px;">
     </div>
 {% else %}
     <div class="crsl no-select">
         {% for img in report.imgs.all %}
             <div class="crsl-itm pop">
                 {% if forloop.counter0 > 0 %}
-                    <img data-src="{{ img.get_absolute_url|size:"1272x_" }}" src="{% static '/img/loader.gif' %}"/>
+                    <img data-src="{{ img.get_absolute_url|size:"1272x_" }}"
+                         src="{% static '/img/loader.gif' %}"/>
                 {% else %}
                     <img src="{{ img.get_absolute_url|size:"1272x_" }}"/>
                 {% endif %}
@@ -21,7 +25,10 @@
         {% endfor %}
         <div class="crsl-ind">
             {% for img in report.imgs.all %}
-                <span class="crsl-dot {% if forloop.counter0 == 0 %}active {% endif %} "
+                <span class="crsl-dot
+                             {% if forloop.counter0 == 0 %}
+                                 active
+                             {% endif %} "
                       slide="{{ forloop.counter0 }}"></span>
             {% endfor %}
         </div>

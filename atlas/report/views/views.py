@@ -1,4 +1,5 @@
 import io
+from pathlib import Path
 
 # @login_required
 # def snippet(request,pk):
@@ -222,9 +223,16 @@ def image(request, report_id, pk=None):
         if img.exists():
             img = img.first()
         else:
-            raise Http404("Image not found...")
+            img = None
 
-    im = Image.open(io.BytesIO(img.image_data))
+    if img:
+        im = Image.open(io.BytesIO(img.image_data))
+        pk = img.pk
+    else:
+        im = Image.open(
+            Path(__file__).parent.parent.parent / "static/img/report_placeholder.png"
+        )
+        pk = "report_placeholder"
 
     if re.match(r"^\d+x\d+$", size):
 
@@ -245,10 +253,9 @@ def image(request, report_id, pk=None):
         out.save(buf, format=image_format)
 
         response = HttpResponse(buf.getvalue(), content_type="application/octet-stream")
-        response["Content-Disposition"] = 'attachment; filename="{}.{}"'.format(
-            img.pk,
-            image_format,
-        )
+        response[
+            "Content-Disposition"
+        ] = f'attachment; filename="{pk}_{width}x{height}.{image_format}"'
 
         return response
 
@@ -268,13 +275,13 @@ def image(request, report_id, pk=None):
 
         response = HttpResponse(buf.getvalue(), content_type="application/octet-stream")
         response["Content-Disposition"] = 'attachment; filename="{}.{}"'.format(
-            img.pk,
+            pk,
             image_format,
         )
 
         return response
 
     response = HttpResponse(img.image_data, content_type="application/octet-stream")
-    response["Content-Disposition"] = 'attachment; filename="%s.png"' % img.pk
+    response["Content-Disposition"] = f'attachment; filename="{pk}_{wsize}x{hsize}.png"'
 
     return response

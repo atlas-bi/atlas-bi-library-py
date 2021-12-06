@@ -27,7 +27,9 @@
                             <textarea></textarea>
                         </div>
                         <h3>Description</h3>
-                        <div class="editor" data-inputName="description" data-inputId="description">
+                        <div class="editor"
+                             data-inputName="description"
+                             data-inputId="description">
                             <textarea></textarea>
                         </div>
                         <h3>

@@ -1,6 +1,8 @@
 {% extends "term/all.html.dj" %}
+
 {% load static %}
 {% load compress %}
+
 {% block modals %}
     {{ block.super }}
     {% if 13 in permissions and term.approved != "Y" or 11 in permissions and term.approved == "Y" %}
@@ -10,9 +12,7 @@
 {% block body %}
     <h1 class="title is-1">
         {{ term.name }}
-        {% if term.approved == "Y" %}
-            <span class="tag is-pulled-right is-success is-large">Approved</span>
-        {% endif %}
+        {% if term.approved == "Y" %}<span class="tag is-pulled-right is-success is-large">Approved</span>{% endif %}
     </h1>
     {% include "term/links.html.dj" %}
     <div class="columns">
@@ -29,7 +29,9 @@
                 {% include "term/reports.html.dj" %}
             {% endif %}
             <span class="location" id="comments"></span>
-            <div class="comments" data-ajax="yes" data-url="{% url 'term:comments' term.term_id %}"></div>
+            <div class="comments"
+                 data-ajax="yes"
+                 data-url="{% url 'term:comments' term.term_id %}"></div>
         </div>
     </div>
 {% endblock body %}
