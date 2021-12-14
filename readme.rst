@@ -1,7 +1,32 @@
 Atlas BI Libarary
 =================
 
-    This is a Python version `Atlas BI Library <https://github.com/atlas-bi/atlas-bi-library>`_ and is currently under development. The dotnet version of the app is still being maintained.
+What is Atlas Py?
+#################
+
+This is a Python version of the `Atlas BI Library <https://github.com/atlas-bi/atlas-bi-library>`_ DotNet webapp. It is currently under development.
+
+In our love of open source we felt the need for a version of the Atlas BI Library webapp that used completely open source tools. This version of the app will effectively mirror the DotNet version in functionality and appearance, but will be installed on Ubuntu server.
+
+
+======================
+Advantages of Atlas Py
+======================
+
++-----------------+-------------------+-----------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Feature         | DotNet            | Python                | Discussion                                                                                                                                                                                                  |
++=================+===================+=======================+=============================================================================================================================================================================================================+
+| Authentication  | IIS Windows Auth  | Saml2                 | Saml2 is superior to IISWA in a few areas - primary, it allows users to login on generic workstations, through IOS devices, and it allows 2 factor authentication.                                                   |
++-----------------+-------------------+-----------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Speed           | Fast              | Very Fast             | Django ORM database queries outperform DotNet Linq queries, improving site performance. We are also able to do complex image optimization on linux to improve image load times.                                                                                               |
++-----------------+-------------------+-----------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Database        | Sql Server        | Sql Server, Postgres  | Multiple databases are supported.                                                                                                                                                                            |
++-----------------+-------------------+-----------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Testing         | Difficult         | Simple                | Code testing is much simpler in Python and we anticipate having a full code base and UI test suite.                                                                                                           |
++-----------------+-------------------+-----------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Install         | Manual            | Semi-Automated        | The DotNet version requires quite a bit of manual server setup and work during install, while the python version uses apt installers which configure the server and install or update in a single command.  |
++-----------------+-------------------+-----------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
 
 |codecov| |codacy| |codeql| |climate| |quality| |demo| |browserstack|
 
