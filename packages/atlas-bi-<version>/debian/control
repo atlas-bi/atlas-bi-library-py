@@ -7,9 +7,6 @@ Standards-Version: 4.5.1
 Rules-Requires-Root: no
 Homepage: https://atlas.bi
 
-#Vcs-Browser: https://salsa.debian.org/debian/atlas-bi
-#Vcs-Git: https://salsa.debian.org/debian/atlas-bi.git
-
 Package: atlas-bi
 Architecture: all
 Depends: libssl-dev,
@@ -35,9 +32,6 @@ Depends: libssl-dev,
          libxml2-dev,
          libxmlsec1-dev,
          redis-server,
-         ufw,
-         nodejs,
-         npm,
          libjpeg8-dev,
          zlib1g-dev,
          libfreetype6-dev,
@@ -52,11 +46,10 @@ Depends: libssl-dev,
          libfribidi-dev,
          libxcb1-dev,
          python-is-python3,
-         tar,
-         node-gyp,
          python3-venv,
          wget,
          default-jdk,
          postgresql,
          postgresql-contrib
 Description: Atlas BI Library
+  Atlas business intelligence library plugs in to your existing reporting platforms, extracts useful metadata, and displays it in a unified report library where you can easily search for, document, and launch reports.
