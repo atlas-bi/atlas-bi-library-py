@@ -40,7 +40,7 @@
             {% endif %}
             {% if initiative.strategic_importance %}
                 <tr>
-                    <td>Strategic Impact</td>
+                    <td>Strategic Importance</td>
                     <td>{{ initiative.strategic_importance }}</td>
                 </tr>
             {% endif %}
