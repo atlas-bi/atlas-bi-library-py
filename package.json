@@ -27,7 +27,7 @@
     "@babel/cli": "7.17.6",
     "@babel/core": "7.17.8",
     "@babel/preset-env": "7.16.11",
-    "@fortawesome/fontawesome-free": "^5.15.4",
+    "@fortawesome/fontawesome-free": "5.15.4",
     "bulma": "0.9.3",
     "fontawesome-subset": "2.0.0",
     "gulp": "4.0.2",
