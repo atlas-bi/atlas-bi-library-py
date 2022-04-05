@@ -1,5 +1,5 @@
 publish:
-  image: python:3.9
+  image: python:3.10
   stage: deploy
   environment: Production
   before_script:

@@ -19,7 +19,7 @@
 py39:
   extends: ".base"
   stage: test
-  image: python:3.9
+  image: python:3.10
   variables:
     PYVR: "py39"
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
@@ -31,20 +31,20 @@ py39:
 py38:
   extends: ".base"
   stage: test
-  image: python:3.8
+  image: python:3.10
   variables:
     PYVR: "py38"
 
 py37:
   extends: ".base"
   stage: test
-  image: python:3.7
+  image: python:3.10
   variables:
     PYVR: "py37"
 
 py36:
   extends: ".base"
   stage: test
-  image: python:3.6
+  image: python:3.10
   variables:
     PYVR: "py36"
