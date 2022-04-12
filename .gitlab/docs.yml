@@ -1,5 +1,5 @@
 pages:
-  image: python:3.9
+  image: python:3.10
   interruptible: true
   stage: docs
   before_script:

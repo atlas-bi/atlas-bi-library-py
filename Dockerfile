@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM python:3.10
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONDONTWRITEBYTECODE=1 \
