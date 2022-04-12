@@ -25,7 +25,7 @@
   ],
   "dependencies": {
     "@babel/cli": "7.17.6",
-    "@babel/core": "7.17.8",
+    "@babel/core": "7.17.9",
     "@babel/preset-env": "7.16.11",
     "@fortawesome/fontawesome-free": "5.15.4",
     "bulma": "0.9.3",
@@ -52,6 +52,6 @@
     "postcss": "8.4.12",
     "postcss-cli": "8.3.1",
     "postcss-sort-media-queries": "3.12.13",
-    "sass": "1.49.11"
+    "sass": "1.50.0"
   }
 }
