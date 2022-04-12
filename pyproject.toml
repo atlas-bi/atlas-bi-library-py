@@ -52,7 +52,7 @@ toml = { version = "^0.10.2", optional = true }
 relative-to-now = "^0.0.8"
 djangosaml2 = "^1.0.4"
 django-mathfilters = "^1.0.0"
-Django = "^3.2"
+Django = "^4.0"
 psycopg2-binary = "^2.8.6"
 markdown-it-py = "^1.1.0"
 sphinx-autoapi = { version = "^1.5.1", optional = true }
