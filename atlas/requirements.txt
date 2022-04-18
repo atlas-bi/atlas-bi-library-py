@@ -9,7 +9,7 @@ backports.entry-points-selectable==1.1.1; python_full_version >= "3.6.1" and pyt
 bcrypt==3.2.0; python_version >= "3.6"
 beautifulsoup4==4.11.1; python_full_version > "3.0.0"
 billiard==3.6.4.0; python_version >= "3.6"
-black==20.8b1; python_version >= "3.6"
+black==22.3.0; python_version >= "3.6"
 brotli==1.0.9
 browserstack-local==1.2.3
 bs4==0.0.1
