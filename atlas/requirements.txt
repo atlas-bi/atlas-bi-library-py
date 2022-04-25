@@ -1,7 +1,7 @@
 amqp==5.1.1; python_version >= "3.6"
 appdirs==1.4.4; python_version >= "3.6"
 asgiref==3.5.0; python_version >= "3.6"
-astroid==2.11.2; python_version >= "3.6" and python_version < "4.0"
+astroid==2.11.3; python_version >= "3.6" and python_version < "4.0"
 asttokens==2.0.5
 atomicwrites==1.4.0; python_version >= "3.6" and python_full_version < "3.0.0" and sys_platform == "win32" or sys_platform == "win32" and python_version >= "3.6" and python_full_version >= "3.4.0"
 attrs==21.4.0; python_version >= "3.6" and python_full_version < "3.0.0" and python_version < "4.0" or python_version >= "3.6" and python_version < "4.0" and python_full_version >= "3.5.0"
@@ -80,7 +80,7 @@ paramiko==2.10.3
 pathlib2==2.3.7.post1
 pathspec==0.9.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
 pillow==9.1.0; python_version >= "3.6"
-platformdirs==2.5.1; python_version >= "3.6" and python_version < "4.0" and (python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6") and python_full_version >= "3.6.1"
+platformdirs==2.5.2; python_version >= "3.6" and python_version < "4.0" and (python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6") and python_full_version >= "3.6.1"
 pluggy==1.0.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
 pre-commit==2.18.1; python_full_version >= "3.6.1"
 prometheus-client==0.14.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0"
@@ -90,8 +90,8 @@ psycopg2-binary==2.9.3; python_version >= "3.6"
 psycopg2==2.9.3; python_version >= "3.6"
 py==1.11.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
 pycparser==2.21; python_version >= "2.7" and python_full_version < "3.0.0" and platform_python_implementation == "CPython" and sys_platform == "win32" and (python_version >= "2.7" and python_full_version < "3.0.0" or python_version > "3.5") or platform_python_implementation == "CPython" and sys_platform == "win32" and (python_version >= "2.7" and python_full_version < "3.0.0" or python_version > "3.5") and python_full_version >= "3.4.0"
-pygments==2.11.2; python_version >= "3.5"
-pylint==2.13.5; python_version >= "3.6" and python_version < "4.0"
+pygments==2.12.0; python_version >= "3.5"
+pylint==2.13.7; python_version >= "3.6" and python_version < "4.0"
 pynacl==1.5.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0"
 pyodbc==4.0.32
 pyopenssl==20.0.1; python_version >= "3.6" and python_full_version < "3.0.0" and python_version < "4" or python_version >= "3.6" and python_version < "4" and python_full_version >= "3.5.0"
