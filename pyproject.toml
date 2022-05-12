@@ -112,7 +112,7 @@ selenium = "^3.141.0"
 browserstack-local = "^1.2.3"
 flower = {git = "https://github.com/mher/flower.git"}
 django-doctor = "^2.4.0"
-djlint = "^0.7.0"
+djlint = "^1.0.0"
 
 
 [build-system]
