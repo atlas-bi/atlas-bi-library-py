@@ -29,7 +29,7 @@
     "@babel/preset-env": "7.17.10",
     "@fortawesome/fontawesome-free": "5.15.4",
     "bulma": "0.9.4",
-    "fontawesome-subset": "2.0.0",
+    "fontawesome-subset": "3.0.0",
     "gulp": "4.0.2",
     "handlebars": "4.7.7"
   },
