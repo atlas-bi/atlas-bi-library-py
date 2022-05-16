@@ -43,7 +43,7 @@
     "autoprefixer": "10.4.7",
     "bulma-switch": "github:christopherpickering/bulma-switch#patch-1",
     "cssnano": "5.1.7",
-    "del": "6.0.0",
+    "del": "6.1.0",
     "fonteditor-core": "2.1.8",
     "gulp-postcss": "9.0.1",
     "gulp-purgecss": "4.1.3",
