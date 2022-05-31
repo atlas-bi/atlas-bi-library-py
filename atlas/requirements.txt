@@ -14,7 +14,7 @@ brotli==1.0.9
 browserstack-local==1.2.3
 bs4==0.0.1
 cached-property==1.5.2; python_version < "3.8" and python_version >= "3.6"
-celery==5.2.6; python_version >= "3.6"
+celery==5.2.7; python_version >= "3.6"
 certifi==2021.10.8; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0"
 cffi==1.15.0
 cfgv==3.3.1; python_full_version >= "3.6.1"
@@ -51,7 +51,7 @@ django==4.0.4; python_version >= "3.6"
 djangosaml2==1.5.0
 djlint==1.1.1; python_version >= "3.6"
 dparse==0.5.1; python_version >= "3.5"
-elementpath==2.5.2; python_version >= "3.6" and python_version < "4"
+elementpath==2.5.3; python_version >= "3.6" and python_version < "4"
 fabric==2.7.0
 filelock==3.7.0; python_full_version >= "3.6.1"
 gevent==21.12.0; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_version > "3.5")
