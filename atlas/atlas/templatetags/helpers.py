@@ -40,6 +40,7 @@ def size(value, arg):
 
 @register.filter(name="snippet")
 def snippet(model):
+    """Create code snippet."""
     if model._meta.model.__name__ == "Reports":
         if model.has_docs() and model.docs.description:
             return (model.docs.description).strip()[:120] + "…"
@@ -61,7 +62,7 @@ def snippet(model):
 
 
 @register.filter(name="possessive")
-def size(value):
+def possessive(value):
     """Add size to image url."""
     if value[-1].lower() == "s":
         return value + "'"

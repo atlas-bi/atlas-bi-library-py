@@ -78,7 +78,7 @@
             {% include 'report/sections/details.html.dj' %}
             {% if report.queries.all %}
                 <span class="location" id="query"></span>
-                {% include 'sections/query.html.dj' %}
+                {% include 'report/sections/query.html.dj' %}
             {% endif %}
             {% if parents or children or report.groups.all %}
                 <span class="location" id="relationships"></span>
