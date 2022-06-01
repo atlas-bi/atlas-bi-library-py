@@ -111,9 +111,9 @@ def favorites_delete_folder(request):
 
     if request.method == "POST" and "folder_id" in data:
         # remove any report links to this folder
-        Favorites.objects.filter(folder__folder_id=data["folder_id"]).update(
-            folder=None
-        )
+        # Favorites.objects.filter(folder__folder_id=data["folder_id"]).update(
+        #     folder=None
+        # )
 
         # remove the folder
         FavoriteFolders.objects.get(folder_id=data["folder_id"]).delete()
@@ -138,14 +138,14 @@ def favorites_reorder_folder(request):
 
 def favorites_reorder(request):
     """Change the order of favorites."""
-    data = json.loads(request.body.decode("UTF-8"))
+    # data = json.loads(request.body.decode("UTF-8"))
 
     if request.method == "POST":
 
-        for favorite in data:
-            Favorites.objects.filter(user=request.user).filter(
-                favorite_id=favorite["favorite_id"]
-            ).update(rank=favorite["favorite_rank"])
+        # for favorite in data:
+        #     Favorites.objects.filter(user=request.user).filter(
+        #         favorite_id=favorite["favorite_id"]
+        #     ).update(rank=favorite["favorite_rank"])
 
         return JsonResponse({"success": "reordered favorites."}, status=200)
     return JsonResponse({"error": "failed to reorder favorites."}, status=500)
@@ -189,11 +189,11 @@ def image(request, pk):
 
 def favorites_change_folder(request):
     """Move a favorite between folders."""
-    data = json.loads(request.body.decode("UTF-8"))
+    # data = json.loads(request.body.decode("UTF-8"))
 
-    Favorites.objects.filter(user=request.user).filter(
-        favorite_id=data["favorite_id"]
-    ).update(folder=data["folder_id"])
+    # Favorites.objects.filter(user=request.user).filter(
+    #     favorite_id=data["favorite_id"]
+    # ).update(folder=data["folder_id"])
 
     # return current folders and count
 
@@ -206,7 +206,7 @@ def favorites_change_folder(request):
     folder_counts.append(
         {
             "folder_id": "all",
-            "count": Favorites.objects.filter(user=request.user).count(),
+            # "count": Favorites.objects.filter(user=request.user).count(),
         }
     )
     return JsonResponse(folder_counts, safe=False, status=200)

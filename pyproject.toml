@@ -15,7 +15,7 @@ authors = [
     "Eric Shultz"
 ]
 license = "GPL-3.0-or-later"
-readme = "readme.rst"
+readme = "readme.md"
 classifiers=[
     "Programming Language :: Python :: 3 :: Only",
     "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
