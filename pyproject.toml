@@ -54,7 +54,7 @@ djangosaml2 = "^1.0.4"
 django-mathfilters = "^1.0.0"
 Django = "^4.0"
 psycopg2-binary = "^2.8.6"
-markdown-it-py = "^1.1.0"
+markdown-it-py = "^2.0.0"
 sphinx-autoapi = { version = "^1.5.1", optional = true }
 coverage = { version = "^6.0.0", optional = true }
 Pygments = { version = "^2.7.3", optional = true }
