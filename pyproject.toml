@@ -83,7 +83,7 @@ django-celery-beat = "^2.2.0"
 pysolr = {git = "https://github.com/christopherpickering/pysolr.git"}
 simplejson = "^3.17.2"
 django-chunked-iterator = "^0.6.1"
-linkify-it-py = "^1.0.1"
+linkify-it-py = "^2.0.0"
 mdit-py-plugins = "^0.3.0"
 Pillow = "^9.0.0"
 regex = "^2021.8.28"
