@@ -52,6 +52,6 @@
     "postcss": "8.4.14",
     "postcss-cli": "8.3.1",
     "postcss-sort-media-queries": "3.12.13",
-    "sass": "1.52.3"
+    "sass": "1.53.0"
   }
 }
