@@ -84,7 +84,7 @@ platformdirs==2.5.2; python_version >= "3.6" and python_version < "4.0" and (pyt
 pluggy==1.0.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
 pre-commit==2.19.0; python_full_version >= "3.6.1"
 prometheus-client==0.14.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0"
-prompt-toolkit==3.0.29; python_full_version >= "3.6.1" and python_version >= "3.6"
+prompt-toolkit==3.0.30; python_full_version >= "3.6.1" and python_version >= "3.6"
 psutil==5.9.1; python_version >= "2.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0"
 psycopg2-binary==2.9.3; python_version >= "3.6"
 psycopg2==2.9.3; python_version >= "3.6"
