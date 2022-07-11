@@ -51,7 +51,7 @@
     "gulp-sass": "5.1.0",
     "postcss": "8.4.14",
     "postcss-cli": "10.0.0",
-    "postcss-sort-media-queries": "3.12.13",
+    "postcss-sort-media-queries": "4.2.1",
     "sass": "1.53.0"
   }
 }
