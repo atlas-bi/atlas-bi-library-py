@@ -1,6 +1,6 @@
 {
   "name": "linkify-it",
-  "version": "3.0.17",
+  "version": "3.0.18",
   "description": "Links recognition library with FULL unicode support",
   "keywords": [
     "linkify",
@@ -37,7 +37,7 @@
     "gh-pages": "4.0.0",
     "mdurl": "1.0.1",
     "mocha": "10.0.0",
-    "ndoc": "5.0.2",
+    "ndoc": "6.0.0",
     "nyc": "15.1.0",
     "pug-cli": "1.0.0-alpha6",
     "shelljs": "0.8.5",
