@@ -22,7 +22,7 @@ if (window.document.documentMode) {
   function _instanceof(left, right) {
     if (
       right != null &&
-      typeof Symbol !== "undefined" &&
+      typeof Symbol !== 'undefined' &&
       right[Symbol.hasInstance]
     ) {
       return !!right[Symbol.hasInstance](left);
@@ -53,17 +53,17 @@ if (window.document.documentMode) {
           cancelable: !1,
           detail: void 0,
         };
-        var n = document.createEvent("CustomEvent");
+        var n = document.createEvent('CustomEvent');
         return n.initCustomEvent(t, e.bubbles, e.cancelable, e.detail), n;
       }
 
-      if ("function" != typeof window.CustomEvent) {
+      if ('function' != typeof window.CustomEvent) {
         t.prototype = window.Event.prototype;
         window.CustomEvent = t;
       }
     })(),
     String.prototype.startsWith ||
-      (Object.defineProperty(String.prototype, "startsWith", {
+      (Object.defineProperty(String.prototype, 'startsWith', {
         value: function value(t, e) {
           var n = e > 0 ? 0 | e : 0;
           return this.substring(n, n + t.length) === t;
@@ -74,7 +74,7 @@ if (window.document.documentMode) {
           var t = Object.prototype.toString,
             e = function e(_e) {
               return (
-                "function" == typeof _e || "[object Function]" === t.call(_e)
+                'function' == typeof _e || '[object Function]' === t.call(_e)
               );
             },
             n = Math.pow(2, 53) - 1,
@@ -95,7 +95,7 @@ if (window.document.documentMode) {
             var n = Object(t);
             if (null == t)
               throw new TypeError(
-                "Array.from requires an array-like object - not null or undefined"
+                'Array.from requires an array-like object - not null or undefined',
               );
             var o,
               a = arguments.length > 1 ? arguments[1] : void 0;
@@ -103,7 +103,7 @@ if (window.document.documentMode) {
             if (void 0 !== a) {
               if (!e(a))
                 throw new TypeError(
-                  "Array.from: when provided, the second argument must be a function"
+                  'Array.from: when provided, the second argument must be a function',
                 );
               if (arguments.length > 2) o = arguments[2];
             }
@@ -129,8 +129,8 @@ if (window.document.documentMode) {
         Document.prototype,
         DocumentFragment.prototype,
       ].forEach(function (t) {
-        t.hasOwnProperty("append") ||
-          Object.defineProperty(t, "append", {
+        t.hasOwnProperty('append') ||
+          Object.defineProperty(t, 'append', {
             configurable: !0,
             enumerable: !0,
             writable: !0,
@@ -158,7 +158,7 @@ if (window.document.documentMode) {
         n = i.prototype;
 
       function i() {
-        "use strict";
+        'use strict';
         o.set(this, t(null));
       }
 
@@ -173,11 +173,11 @@ if (window.document.documentMode) {
       function a(e) {
         var t = e.options;
         t && t.once && e.target.removeEventListener(this.type, e.listener),
-          "function" == typeof e.listener
+          'function' == typeof e.listener
             ? e.listener.call(e.target, this)
             : e.listener.handleEvent(this);
       }
-      s(n, "addEventListener", function (e, t, n) {
+      s(n, 'addEventListener', function (e, t, n) {
         for (
           var r = o.get(this), i = r[e] || (r[e] = []), s = 0, a = i.length;
           s < a;
@@ -190,19 +190,19 @@ if (window.document.documentMode) {
           options: n,
         });
       }),
-        s(n, "dispatchEvent", function (e) {
+        s(n, 'dispatchEvent', function (e) {
           var t = o.get(this)[e.type];
           return (
             t &&
-              (s(e, "target", this),
-              s(e, "currentTarget", this),
+              (s(e, 'target', this),
+              s(e, 'currentTarget', this),
               t.slice(0).forEach(a, e),
               delete e.currentTarget,
               delete e.target),
             !0
           );
         }),
-        s(n, "removeEventListener", function (e, t) {
+        s(n, 'removeEventListener', function (e, t) {
           for (
             var n = o.get(this), r = n[e] || (n[e] = []), i = 0, s = r.length;
             i < s;
@@ -216,7 +216,7 @@ if (window.document.documentMode) {
 
   (function () {
     var supportsPassive = false;
-    document.createElement("div").addEventListener("test", function () {}, {
+    document.createElement('div').addEventListener('test', function () {}, {
       get passive() {
         supportsPassive = true;
         return false;
@@ -235,7 +235,7 @@ if (window.document.documentMode) {
         var passive = false;
         var fieldId;
         if (options) {
-          if (typeof options === "object") {
+          if (typeof options === 'object') {
             passive = options.passive ? true : false;
             useCapture = options.useCapture ? true : false;
           } else {
@@ -253,7 +253,7 @@ if (window.document.documentMode) {
       Event.prototype.preventDefault = function () {
         if (this.__passive) {
           console.warn(
-            "Ignored attempt to preventDefault an event from a passive listener"
+            'Ignored attempt to preventDefault an event from a passive listener',
           );
           return;
         }
@@ -263,7 +263,7 @@ if (window.document.documentMode) {
       EventTarget.prototype.addEventListener = function (
         type,
         listener,
-        options
+        options,
       ) {
         var super_this = this;
         parseOptions(
@@ -286,7 +286,7 @@ if (window.document.documentMode) {
               var wrapped = {
                 handleEvent: function (e) {
                   e.__passive = passive;
-                  if (typeof listener === "function") {
+                  if (typeof listener === 'function') {
                     listener(e);
                   } else {
                     listener.handleEvent(e);
@@ -299,24 +299,24 @@ if (window.document.documentMode) {
                 super_this,
                 type,
                 wrapped,
-                useCapture
+                useCapture,
               );
             } else {
               super_add_event_listener.call(
                 super_this,
                 type,
                 listener,
-                useCapture
+                useCapture,
               );
             }
-          }
+          },
         );
       };
 
       EventTarget.prototype.removeEventListener = function (
         type,
         listener,
-        options
+        options,
       ) {
         var super_this = this;
         parseOptions(
@@ -335,7 +335,7 @@ if (window.document.documentMode) {
                 super_this,
                 type,
                 this.__event_listeners_options[type][listener][fieldId],
-                false
+                false,
               );
               delete this.__event_listeners_options[type][listener][fieldId];
               if (this.__event_listeners_options[type][listener].length == 0)
@@ -345,10 +345,10 @@ if (window.document.documentMode) {
                 super_this,
                 type,
                 listener,
-                useCapture
+                useCapture,
               );
             }
-          }
+          },
         );
       };
     }

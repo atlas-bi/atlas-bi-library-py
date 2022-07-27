@@ -15,8 +15,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-@import "../include/color.scss";
-@import "../include/font.scss";
+@import '../include/color.scss';
+@import '../include/font.scss';
 
 @keyframes tt-fade {
   from {
@@ -61,7 +61,7 @@
   border: 1px solid #d1d1d1;
   border-bottom-width: 0;
   border-left-width: 0;
-  content: "";
+  content: '';
   height: 10px;
   pointer-events: none;
   position: absolute;
@@ -111,6 +111,6 @@
 }
 .tt-right[data-tooltip]:hover::before {
   left: calc(100% + 10px);
-  width:200px;
-  right:unset;
+  width: 200px;
+  right: unset;
 }

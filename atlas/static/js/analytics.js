@@ -58,21 +58,21 @@
       return a;
     },
     getOrResetSessionId = function (reset) {
-      if (reset == "clear") {
-        sessionStorage.removeItem("_sid");
+      if (reset == 'clear') {
+        sessionStorage.removeItem('_sid');
         return false;
       }
 
-      if (reset == "reset" || typeof sessionStorage._sid === "undefined") {
+      if (reset == 'reset' || typeof sessionStorage._sid === 'undefined') {
         sessionStorage._sid = btoa(new Date().toString());
-        getOrResetPageId("reset");
+        getOrResetPageId('reset');
         timeOnPage = new Date();
       }
 
       return sessionStorage._sid;
     },
     getOrResetPageId = function (reset) {
-      if (reset == "reset" || typeof sessionStorage._pid === "undefined") {
+      if (reset == 'reset' || typeof sessionStorage._pid === 'undefined') {
         timeOnPage = new Date();
         sessionStorage._pid = btoa(new Date().toString());
       }
@@ -80,23 +80,23 @@
       return sessionStorage._pid;
     },
     postAnalytics = function (loadTime, type) {
-      if (type == "newpage") {
-        getOrResetPageId("reset");
+      if (type == 'newpage') {
+        getOrResetPageId('reset');
         window.ajaxOn = true;
       }
 
       if (window.ajaxOn === true) {
         if (navigator.sendBeacon) {
           navigator.sendBeacon(
-            "/analytics/log",
-            JSON.stringify(buildAnalyticsPackage(loadTime))
+            '/analytics/log',
+            JSON.stringify(buildAnalyticsPackage(loadTime)),
           );
         } else {
           var s = new XMLHttpRequest();
-          s.open("post", "/analytics/log", true);
-          s.setRequestHeader("Content-Type", "text/plain;charset=UTF-8`");
-          s.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-          s.setRequestHeader("X-CSRFToken", csrftoken);
+          s.open('post', '/analytics/log', true);
+          s.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8`');
+          s.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+          s.setRequestHeader('X-CSRFToken', csrftoken);
           s.send(JSON.stringify(buildAnalyticsPackage(loadTime)));
         }
       }
@@ -115,26 +115,26 @@
           startPageTimer();
           window.ajaxOn = true;
         })(),
-        500
+        500,
       );
     },
     doInactive = function () {
       window.ajaxOn = false;
-      getOrResetSessionId("clear");
+      getOrResetSessionId('clear');
       sessionStorage.clear();
     },
     setupPageTimer = function () {
-      document.addEventListener("mousemove", resetPageTimer, false);
-      document.addEventListener("mousedown", resetPageTimer, false);
-      document.addEventListener("keypress", resetPageTimer, false);
-      document.addEventListener("touchmove", resetPageTimer, false);
+      document.addEventListener('mousemove', resetPageTimer, false);
+      document.addEventListener('mousedown', resetPageTimer, false);
+      document.addEventListener('keypress', resetPageTimer, false);
+      document.addEventListener('touchmove', resetPageTimer, false);
       document.addEventListener(
-        "scroll",
+        'scroll',
         resetPageTimer,
         {
           passive: true,
         },
-        false
+        false,
       );
       startPageTimer();
     },
@@ -142,7 +142,7 @@
       var analitycsUpdateTimeout = 0.5 * 60000;
       analitycsUpdateTimeoutId = window.setTimeout(
         postAnalytics,
-        analitycsUpdateTimeout
+        analitycsUpdateTimeout,
       );
     },
     resetAnalyticsTimer = function () {
@@ -151,22 +151,22 @@
     };
 
   // if document is already loaded
-  if (document.readyState == "complete") {
+  if (document.readyState == 'complete') {
     setupPageTimer();
     postAnalytics();
   }
   // if document has not loaded yet
   window.addEventListener(
-    "load",
+    'load',
     function () {
       setupPageTimer();
       postAnalytics();
     },
-    false
+    false,
   );
 
-  document.addEventListener("analytics-post", function (e) {
-    if (typeof e.detail !== "undefined") {
+  document.addEventListener('analytics-post', function (e) {
+    if (typeof e.detail !== 'undefined') {
       postAnalytics(e.detail.value, e.detail.type);
     }
   });

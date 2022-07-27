@@ -9,13 +9,18 @@
 var gulp = require('gulp');
 var path = require('path');
 
-const paths = ({
-    'style:scss': path.join('./atlas/static/**/*.scss'),
-    'packages:fontawesome': path.join('./gulpfile.js/packages.js'),
-});
+const paths = {
+  'style:scss': path.join('./atlas/static/**/*.scss'),
+  'packages:fontawesome': path.join('./gulpfile.js/packages.js'),
+};
 
-
-gulp.task('watch', gulp.series('build', function (cb) {
+gulp.task(
+  'watch',
+  gulp.series('build', function (cb) {
     gulp.watch(paths['style:scss'], gulp.series('style:scss'));
-    gulp.watch(paths['packages:fontawesome'], gulp.series('packages:fontawesome'));
-}));
+    gulp.watch(
+      paths['packages:fontawesome'],
+      gulp.series('packages:fontawesome'),
+    );
+  }),
+);

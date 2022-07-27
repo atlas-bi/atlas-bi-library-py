@@ -81,19 +81,19 @@
 // }
 
 .dd-rslts {
-    position: absolute;
-    top:40px;
-    white-space: nowrap;
-    z-index: 999;
-    display: none;
-    left: 0;
-    right:0;
-    border-radius:4px;
-    overflow: scroll;
+  position: absolute;
+  top: 40px;
+  white-space: nowrap;
+  z-index: 999;
+  display: none;
+  left: 0;
+  right: 0;
+  border-radius: 4px;
+  overflow: scroll;
 }
 
-.dd-wrp-focus .dd-rslts{
-    display:block
+.dd-wrp-focus .dd-rslts {
+  display: block;
 }
 
 // .dd-rslts {

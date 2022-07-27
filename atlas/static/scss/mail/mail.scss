@@ -15,8 +15,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-@import "../include/color.scss";
-@import "../include/font.scss";
+@import '../include/color.scss';
+@import '../include/font.scss';
 .mlbx {
   border-radius: 6px;
   border: 1px solid rgb(202, 202, 200);
@@ -48,7 +48,7 @@
 
 .mlbx-bd::after {
   position: absolute;
-  content: "";
+  content: '';
   bottom: -35px;
   height: 35px;
   background: $color-background-white;
@@ -58,7 +58,7 @@
 }
 
 .mlbx-bd::before {
-  content: "";
+  content: '';
   height: 50px;
   margin-top: -35px;
   background: $color-background-white;
@@ -87,19 +87,21 @@
 .mailbox-filters-outer {
   height: 30px;
   background: rgb(208, 208, 208);
-  background:
-    -moz-linear-gradient(
-      180deg,
-      rgba(208, 208, 208, 1) 35%,
-      rgba(201, 201, 201, 1) 100%
-    );
-  background:
-    -webkit-linear-gradient(
-      180deg,
-      rgba(208, 208, 208, 1) 35%,
-      rgba(201, 201, 201, 1) 100%
-    );
-  background: linear-gradient(180deg, rgba(208, 208, 208, 1) 35%, rgba(201, 201, 201, 1) 100%);
+  background: -moz-linear-gradient(
+    180deg,
+    rgba(208, 208, 208, 1) 35%,
+    rgba(201, 201, 201, 1) 100%
+  );
+  background: -webkit-linear-gradient(
+    180deg,
+    rgba(208, 208, 208, 1) 35%,
+    rgba(201, 201, 201, 1) 100%
+  );
+  background: linear-gradient(
+    180deg,
+    rgba(208, 208, 208, 1) 35%,
+    rgba(201, 201, 201, 1) 100%
+  );
   filter: progid:dximagetransform.microsoft.gradient(startColorstr="#d0d0d0", endColorstr="#c9c9c9", GradientType=1);
 }
 

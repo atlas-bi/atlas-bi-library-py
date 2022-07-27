@@ -1,6 +1,4 @@
-
 # Ubuntu Build
-
 
 ```sh
 apt-get update
@@ -15,6 +13,7 @@ copy files to ppa repo
 ```
 
 ## To run in local docker
+
 ```sh
 docker run --rm -it -v $(PWD):/atlas ubuntu:latest /bin/bash
 
@@ -40,3 +39,4 @@ sudo curl -s --compressed -o /etc/apt/sources.list.d/atlas.list "https://atlas-b
 sudo apt update
 sudo apt install atlas-bi
 
+```

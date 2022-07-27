@@ -66,15 +66,15 @@
   var d = document,
     l = debounce(function () {
       setTimeout(function () {
-        var dest = document.getElementsByClassName("atlas-chart");
+        var dest = document.getElementsByClassName('atlas-chart');
         for (var el = 0; el < dest.length; el++) {
-          var a = dest[el].getElementsByTagName("script")[0].innerHTML;
-          if (dest[el].getElementsByClassName("chart").length > 0) {
-            dest[el].removeChild(dest[el].getElementsByClassName("chart")[0]);
+          var a = dest[el].getElementsByTagName('script')[0].innerHTML;
+          if (dest[el].getElementsByClassName('chart').length > 0) {
+            dest[el].removeChild(dest[el].getElementsByClassName('chart')[0]);
           }
-          if (dest[el].getElementsByClassName("ajaxLoader").length > 0) {
+          if (dest[el].getElementsByClassName('ajaxLoader').length > 0) {
             dest[el].removeChild(
-              dest[el].getElementsByClassName("ajaxLoader")[0]
+              dest[el].getElementsByClassName('ajaxLoader')[0],
             );
           }
 
@@ -90,7 +90,7 @@
         return setTimeout(b, 0);
       },
     build = function (json, w) {
-      var chart = "";
+      var chart = '';
       try {
         chart = JSON.parse(json);
       } catch (e) {}
@@ -98,7 +98,7 @@
         options = chart.options,
         charts = chart.data,
         axis = chart.axis,
-        html = "",
+        html = '',
         cWidth = w || 800,
         c,
         q,
@@ -111,9 +111,9 @@
         a,
         bars = 0,
         colWidth,
-        numbers = ["one", "two", "three", "four", "five"];
+        numbers = ['one', 'two', 'three', 'four', 'five'];
 
-      this.table = document.createElement("table");
+      this.table = document.createElement('table');
 
       for (c in charts) {
         if (axii.indexOf(charts[c].axis) == -1) {
@@ -125,27 +125,27 @@
         marLeft = (Math.floor(axii.length / 2) + (axii.length % 2)) * 70,
         marRight = axii.length > 1 ? Math.floor(axii.length / 2) * 70 : 0;
 
-      this.table.classList.add("chart");
-      this.table.style.height = height + "px";
-      this.table.style.marginRight = marRight + "px";
-      this.table.style.marginLeft = marLeft + "px";
-      this.table.style.width = width + "px";
+      this.table.classList.add('chart');
+      this.table.style.height = height + 'px';
+      this.table.style.marginRight = marRight + 'px';
+      this.table.style.marginLeft = marLeft + 'px';
+      this.table.style.width = width + 'px';
 
       this.table.innerHTML +=
-        '<caption class="chart-caption">' + chart.title + "</caption>";
+        '<caption class="chart-caption">' + chart.title + '</caption>';
 
       if (
         (!!options &&
-          options.hasOwnproperty("legend") &&
-          options.legend !== "false") ||
+          options.hasOwnproperty('legend') &&
+          options.legend !== 'false') ||
         !options
       ) {
-        this.thead = document.createElement("thead");
-        this.thead.classList.add("chart-head");
+        this.thead = document.createElement('thead');
+        this.thead.classList.add('chart-head');
 
         var th;
         for (c in charts) {
-          th = document.createElement("th");
+          th = document.createElement('th');
           th.innerHTML +=
             '<span class="chart-headClr ' +
             numbers[c] +
@@ -156,8 +156,8 @@
         this.table.appendChild(this.thead);
       }
 
-      this.table.addEventListener("mouseover", this.mouseover.bind(this));
-      this.table.addEventListener("mouseout", this.mouseout.bind(this));
+      this.table.addEventListener('mouseover', this.mouseover.bind(this));
+      this.table.addEventListener('mouseout', this.mouseout.bind(this));
 
       /* end of table head */
 
@@ -197,24 +197,24 @@
       for (c in charts) {
         chart.lastlinePointY = null;
         chart.lastlinePointX = null;
-        bars += charts[c].type == "bar" ? 1 : 0;
+        bars += charts[c].type == 'bar' ? 1 : 0;
       }
 
       /* table body */
-      html = "<tbody>";
+      html = '<tbody>';
       for (var d = 0; d < cols; d++) {
         // tooltip
-        var tooltip = charts[0].data[d].title + ": ";
+        var tooltip = charts[0].data[d].title + ': ';
         for (c in charts) {
           tooltip +=
-            charts[c].data[d].data + " " + axis[charts[c].axis].title + "; ";
+            charts[c].data[d].data + ' ' + axis[charts[c].axis].title + '; ';
         }
 
         // create point element
         html +=
           '<tr class="chart-col" style="left:' +
           colWidth * d +
-          "%;width:calc(" +
+          '%;width:calc(' +
           colWidth +
           '% - 10px);">';
         var barnum = 0;
@@ -227,7 +227,7 @@
               ? 0
               : (parseFloat(thisChart.data[d].data) / thisChart.range) * 100;
           maxHeight = Math.max(maxHeight, lheight);
-          var lwidth = "calc(" + 100 / bars + "% - 5px)";
+          var lwidth = 'calc(' + 100 / bars + '% - 5px)';
 
           if (c === 0)
             html +=
@@ -237,38 +237,38 @@
               thisChart.data[d].title;
 
           var p =
-            (lheight / 100) * height < 30 ? 'style="margin-top:-22px"' : "";
-          if (thisChart.type == "bar") {
+            (lheight / 100) * height < 30 ? 'style="margin-top:-22px"' : '';
+          if (thisChart.type == 'bar') {
             html +=
               '<td class="chart-' +
               thisChart.type +
-              " " +
+              ' ' +
               numbers[c] +
               '" style="height:' +
               lheight +
-              "%;width:" +
+              '%;width:' +
               lwidth +
-              ";left:" +
+              ';left:' +
               (barnum / bars) * 100 +
               '%"><p ' +
               p +
-              "></p></td>";
-          } else if (thisChart.type == "line") {
+              '></p></td>';
+          } else if (thisChart.type == 'line') {
             html +=
               '<td class="chart-' +
               thisChart.type +
-              " " +
+              ' ' +
               numbers[c] +
               '" style="height:' +
               lheight +
               '%">';
-            html += "<p " + p + "></p>";
+            html += '<p ' + p + '></p>';
             if (!!thisChart.lastlinePointY || thisChart.lastlinePointY === 0) {
               w = (colWidth / 100) * width;
               var angle =
                 (Math.atan2(
                   (lheight / 100) * height - thisChart.lastlinePointY,
-                  -w
+                  -w,
                 ) *
                   180) /
                 Math.PI;
@@ -276,20 +276,20 @@
                 Math.pow(w, 2) +
                   Math.pow(
                     (lheight / 100) * height - thisChart.lastlinePointY,
-                    2
-                  )
+                    2,
+                  ),
               );
               html +=
                 '<div style="width:' +
                 distance +
-                "px;transform: rotate(" +
+                'px;transform: rotate(' +
                 angle +
                 'deg);"></div>';
             }
             thisChart.lastlinePointY = (lheight / 100) * height;
           }
-          if (thisChart.type == "bar") barnum++;
-          html += "</td>";
+          if (thisChart.type == 'bar') barnum++;
+          html += '</td>';
         }
         html +=
           '<td class="chart-tooltip" data-tooltip="' +
@@ -297,27 +297,27 @@
           '" style="height:calc(' +
           maxHeight +
           '% + 20px)"></td>';
-        html += "</tr>";
+        html += '</tr>';
       }
-      this.table.innerHTML += html + "</tbody>";
+      this.table.innerHTML += html + '</tbody>';
       // build grid lines. scale is every 50 px
 
       // titles
       html = '<caption class="chart-ticks">';
       for (c in axii) {
         style = (Math.floor(c / 2) + 1) * 55;
-        side = c % 2 === 1 ? "right" : "left";
-        if (typeof axis[a] != "undefined") {
+        side = c % 2 === 1 ? 'right' : 'left';
+        if (typeof axis[a] != 'undefined') {
           html +=
             '<div class="chart-yAxisTitle ' +
             side +
             '" style="' +
             side +
-            ":-" +
+            ':-' +
             style +
             'px"><p>' +
             axis[c].title +
-            "</p></div>";
+            '</p></div>';
         }
       }
 
@@ -326,27 +326,27 @@
       for (c = 1; c <= ticks; c++) {
         html +=
           '<div class="chart-ticksTick' +
-          (c === 1 ? " first " : "") +
-          (c == ticks ? " last " : "") +
+          (c === 1 ? ' first ' : '') +
+          (c == ticks ? ' last ' : '') +
           '">';
         for (q in range) {
           style = (Math.floor(q / 2) + 1) * (q % 2 === 1 ? 30 : 30);
-          side = q % 2 === 1 ? "right" : "left";
+          side = q % 2 === 1 ? 'right' : 'left';
           if (range[q] > 0) {
             var val = range[q] - (range[q] / ticks) * (c - 1);
             val = val < 10 ? val.toFixed(2) : Math.round(val);
 
-            if (side == "left") {
+            if (side == 'left') {
               style += parseFloat((val.toString().length - 1) * 3);
             }
-            html += '<p style="' + side + ":-" + style + 'px">' + val + "</p>";
+            html += '<p style="' + side + ':-' + style + 'px">' + val + '</p>';
           }
         }
-        html += "</div>";
+        html += '</div>';
       }
-      html += "</table>";
+      html += '</table>';
 
-      this.table.innerHTML += "</tbody>" + html;
+      this.table.innerHTML += '</tbody>' + html;
 
       return this.table;
     };
@@ -359,36 +359,36 @@
       k(function () {
         // remove all hover class
         hover = Array.prototype.slice.call(
-          t.closest("table").getElementsByClassName("hover")
+          t.closest('table').getElementsByClassName('hover'),
         );
         for (var x = 0; x < hover.length; x++)
-          hover[x].classList.remove("hover");
+          hover[x].classList.remove('hover');
 
-        if (t.closest(".chart-head th")) {
+        if (t.closest('.chart-head th')) {
           lines = Array.prototype.slice.call(
             t
-              .closest("table")
+              .closest('table')
               .getElementsByClassName(
-                "chart-line " +
+                'chart-line ' +
                   t
-                    .closest(".chart-head th")
-                    .getElementsByTagName("span")[0]
-                    .classList.value.replace("chart-headClr", "")
-              )
+                    .closest('.chart-head th')
+                    .getElementsByTagName('span')[0]
+                    .classList.value.replace('chart-headClr', ''),
+              ),
           );
-          for (x = 0; x < lines.length; x++) lines[x].classList.add("hover");
+          for (x = 0; x < lines.length; x++) lines[x].classList.add('hover');
           bars = Array.prototype.slice.call(
             t
-              .closest("table")
+              .closest('table')
               .getElementsByClassName(
-                "chart-bar " +
+                'chart-bar ' +
                   t
-                    .closest(".chart-head th")
-                    .getElementsByTagName("span")[0]
-                    .classList.value.replace("chart-headClr", "")
-              )
+                    .closest('.chart-head th')
+                    .getElementsByTagName('span')[0]
+                    .classList.value.replace('chart-headClr', ''),
+              ),
           );
-          for (x = 0; x < bars.length; x++) bars[x].classList.add("hover");
+          for (x = 0; x < bars.length; x++) bars[x].classList.add('hover');
         }
       });
     },
@@ -398,28 +398,28 @@
 
       k(function () {
         hover = Array.prototype.slice.call(
-          t.closest("table").getElementsByClassName("hover")
+          t.closest('table').getElementsByClassName('hover'),
         );
         for (var x = 0; x < hover.length; x++)
-          hover[x].classList.remove("hover");
+          hover[x].classList.remove('hover');
       });
     },
   };
   l();
 
-  d.addEventListener("load-charts", function () {
+  d.addEventListener('load-charts', function () {
     l();
   });
-  d.addEventListener("mdl-open", function () {
+  d.addEventListener('mdl-open', function () {
     l();
   });
-  d.addEventListener("tab-opened", function () {
+  d.addEventListener('tab-opened', function () {
     l();
   });
-  d.addEventListener("collapse-opened", function () {
+  d.addEventListener('collapse-opened', function () {
     l();
   });
-  window.addEventListener("resize", function () {
+  window.addEventListener('resize', function () {
     l();
   });
 })();

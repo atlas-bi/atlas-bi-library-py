@@ -92,7 +92,6 @@ gevent = "^21.8.0"
 
 [tool.poetry.extras]
 test = ["Pygments", "toml", "coverage", "selenium", "browserstack-local"]
-docs = ["Sphinx", "Pygments", "sphinx-autoapi", "sphinx-book-theme", "sphinx-copybutton", "sphinx-inline-tabs", "sphinx-panels", "sphinxcontrib-youtube", "furo", "colorama"]
 
 
 [tool.poetry.dev-dependencies]

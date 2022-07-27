@@ -1,16 +1,17 @@
-@import "./include/color.scss";
-@import "./include/font.scss";
+@import './include/color.scss';
+@import './include/font.scss';
 
-$family-sans-serif: "Inter", BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-$family-serif: "Rasa", "Georgia", "Times New Roman", serif;
+$family-sans-serif: 'Inter', BlinkMacSystemFont, -apple-system, 'Segoe UI',
+  'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+  'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+$family-serif: 'Rasa', 'Georgia', 'Times New Roman', serif;
 
 $title-family: $family-serif;
 
-@import "../../../node_modules/bulma/bulma";
-@import "../../../node_modules/@creativebulma/bulma-badge/src/sass/index";
-@import "../../../node_modules/bulma-switch/src/sass/index";
-@import "../../../node_modules/@creativebulma/bulma-tooltip/src/sass/index";
-
+@import '../../../node_modules/bulma/bulma';
+@import '../../../node_modules/@creativebulma/bulma-badge/src/sass/index';
+@import '../../../node_modules/bulma-switch/src/sass/index';
+@import '../../../node_modules/@creativebulma/bulma-tooltip/src/sass/index';
 
 html {
   height: 100%;
@@ -21,7 +22,6 @@ body {
   flex-direction: column;
   min-height: 100%;
 }
-
 
 @media screen and (min-width: $desktop) {
   .atlas-navbar .navbar-start {
@@ -41,20 +41,28 @@ div.column.is-narrow:empty {
 
 /* remove tooltip underline*/
 span {
-  &[data-tooltip]{
+  &[data-tooltip] {
     border-bottom: unset;
     border-bottom-color: unset;
-}}
+  }
+}
 
 /* card colors */
 
-$card-colors: ("warning": $warning, "danger": $danger, "success": $success, "info": $info);
+$card-colors: (
+  'warning': $warning,
+  'danger': $danger,
+  'success': $success,
+  'info': $info,
+);
 @each $code, $color in $card-colors {
   .card.is-#{$code} {
-      box-shadow: 0 0.5em 1em -0.125em rgba($color, 0.7), 0 0px 0 1px rgba($scheme-invert, 0.02)
+    box-shadow: 0 0.5em 1em -0.125em rgba($color, 0.7),
+      0 0px 0 1px rgba($scheme-invert, 0.02);
   }
   .card.is-#{$code}:hover {
-      box-shadow: 0 0 1.5em -0.125em rgba($color, 0.7), 0 0px 0 2px rgba($scheme-invert, 0.02)
+    box-shadow: 0 0 1.5em -0.125em rgba($color, 0.7),
+      0 0px 0 2px rgba($scheme-invert, 0.02);
   }
   // .card.is-#{$code} .card-header {
   //   background:$color;
@@ -71,16 +79,15 @@ img[data-src] {
 
 /* search */
 
-
 #search-results {
-  position:absolute;
-  top:50px;
-  left:0;
-  right:0;
-  display:none;
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 0;
+  display: none;
   border-radius: $radius;
-  max-height:90vh;
-  overflow:scroll;
+  max-height: 90vh;
+  overflow: scroll;
 }
 
 #search-results:empty {
@@ -88,15 +95,14 @@ img[data-src] {
 }
 
 .search-wrap:active .search-results-wrap,
-#search-form:focus-within #search-results
-{
-  display:block;
+#search-form:focus-within #search-results {
+  display: block;
   box-shadow: $shadow;
   border: 1px solid $border;
 }
 
 #search-results:active {
-  display:block;
+  display: block;
   box-shadow: $shadow;
   border: 1px solid $border;
 }
@@ -118,7 +124,7 @@ img[data-src] {
 /* badge in headings */
 
 .title.is-2 .badge {
-  height:25px;
+  height: 25px;
   font-size: 50%;
   padding: 6px;
 }

@@ -18,12 +18,12 @@
 (function () {
   var d = document,
     load = debounce(function () {
-      [].forEach.call(d.querySelectorAll("img[data-src]"), function (img) {
+      [].forEach.call(d.querySelectorAll('img[data-src]'), function (img) {
         if (isInViewport(img)) {
           // set image to nothing to clear, then load new
-          img.setAttribute("src", "");
-          img.setAttribute("src", img.getAttribute("data-src"));
-          img.removeAttribute("data-src");
+          img.setAttribute('src', '');
+          img.setAttribute('src', img.getAttribute('data-src'));
+          img.removeAttribute('data-src');
         }
       });
     }, 250);
@@ -43,18 +43,18 @@
   };
 
   load();
-  d.addEventListener("lazy", function () {
+  d.addEventListener('lazy', function () {
     setTimeout(function () {
       load();
     }, 0);
   });
   d.addEventListener(
-    "scroll",
+    'scroll',
     function () {
       debounce(load(), 100);
     },
     {
       passive: true,
-    }
+    },
   );
 })();

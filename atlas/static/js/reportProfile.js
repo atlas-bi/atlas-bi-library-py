@@ -1,23 +1,23 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener('DOMContentLoaded', function () {
   var d = document,
     a = function (url) {
       if (cache.exists(url)) {
         load(cache.get(url));
       } else {
         var q = new XMLHttpRequest();
-        q.open("get", url, true);
+        q.open('get', url, true);
         q.setRequestHeader(
-          "Content-Type",
-          "application/x-www-form-urlencoded; charset=UTF-8"
+          'Content-Type',
+          'application/x-www-form-urlencoded; charset=UTF-8',
         );
-        q.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+        q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         q.send();
 
         q.onload = function () {
           load(q.responseText);
           var ccHeader =
-            q.getResponseHeader("Cache-Control") != null
-              ? (q.getResponseHeader("Cache-Control").match(/\d+/) || [null])[0]
+            q.getResponseHeader('Cache-Control') != null
+              ? (q.getResponseHeader('Cache-Control').match(/\d+/) || [null])[0]
               : null;
 
           if (ccHeader) {
@@ -29,13 +29,13 @@ document.addEventListener("DOMContentLoaded", function () {
       window.profileLoad = undefined;
     },
     load = function (text) {
-      if (d.getElementsByClassName("profile-buttonHidden")[0]) {
-        d.getElementsByClassName("profile-buttonHidden")[0].classList.remove(
-          "profile-buttonHidden"
+      if (d.getElementsByClassName('profile-buttonHidden')[0]) {
+        d.getElementsByClassName('profile-buttonHidden')[0].classList.remove(
+          'profile-buttonHidden',
         );
       }
-      d.querySelector("#profile-modal .mdl-b").innerHTML = text;
-      d.dispatchEvent(new CustomEvent("load-charts"));
+      d.querySelector('#profile-modal .mdl-b').innerHTML = text;
+      d.dispatchEvent(new CustomEvent('load-charts'));
     };
-  a(window.location.pathname + "/profile");
+  a(window.location.pathname + '/profile');
 });

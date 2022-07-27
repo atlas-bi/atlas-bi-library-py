@@ -1,6 +1,5 @@
 # Atlas BI Libarary
 
-
 ## What is Atlas Py?
 
 This is a Python version of the [Atlas BI Library](https://github.com/atlas-bi/atlas-bi-library) DotNet webapp. It is currently under development.
@@ -9,16 +8,15 @@ In our love of open source we felt the need for a version of the Atlas BI Librar
 
 ### Advantages of Atlas Py
 
-| Feature | DotNet | Python | Discussion |
-|-------|-------|------|---------|
-| Authentication | IIS Windows | Saml2 | Saml2 is superior to IISWA in a few areas - primary, it allows users to login on generic workstations, through IOS devices, and it allows 2 factor.
-| Speed | Fast | Very Fast | Django ORM database queries outperform DotNet Linq queries, improving site performance. We are also able to do complex image optimization on linux to improve image load times.
-| Database | Sql Server | Sql Server,  Postgres | Multiple databases are supported.
-| Testing | Difficult | Simple | Code testing is much simpler in Python and we anticipate having a full code base and UI test suite.
-| Install | Manual | Semi-Automated | The DotNet version requires quite a bit of manual server setup and work during install, while the python version uses apt installers which configure the server and install or update in a single command.
+| Feature        | DotNet      | Python               | Discussion                                                                                                                                                                                                 |
+| -------------- | ----------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Authentication | IIS Windows | Saml2                | Saml2 is superior to IISWA in a few areas - primary, it allows users to login on generic workstations, through IOS devices, and it allows 2 factor.                                                        |
+| Speed          | Fast        | Very Fast            | Django ORM database queries outperform DotNet Linq queries, improving site performance. We are also able to do complex image optimization on linux to improve image load times.                            |
+| Database       | Sql Server  | Sql Server, Postgres | Multiple databases are supported.                                                                                                                                                                          |
+| Testing        | Difficult   | Simple               | Code testing is much simpler in Python and we anticipate having a full code base and UI test suite.                                                                                                        |
+| Install        | Manual      | Semi-Automated       | The DotNet version requires quite a bit of manual server setup and work during install, while the python version uses apt installers which configure the server and install or update in a single command. |
 
-
-[![codecov](https://codecov.io/gh/atlas-bi/atlas-bi-library-py/branch/master/graph/badge.svg?token=2JfEYNRwFl)](https://codecov.io/gh/atlas-bi/atlas-bi-library-py) [![codacy](https://app.codacy.com/project/badge/Grade/74d31f9d9f1840818bc68bb0d26a9dda)](https://www.codacy.com/gh/atlas-bi/atlas-bi-library-py/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=atlas-bi/atlas-bi-library-py&amp;utm_campaign=Badge_Grade) [![CodeQL](https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/codeql.yml/badge.svg)](https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/codeql.yml) [![Maintainability](https://api.codeclimate.com/v1/badges/5b76a0292bbe56043511/maintainability)](https://codeclimate.com/github/atlas-bi/atlas-bi-library-py/maintainability) [![quality](https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/quality.yml/badge.svg)](https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/quality.yml) [![demo](https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/demo.yml/badge.svg)](https://atlas-py.herokuapp.com) [![browserstack](https://automate.browserstack.com/badge.svg?badge_key=SWVldTlYclVWZEJ5R0NQUFRTMlltSTlNQ2JRaEF1ek9NeWd1L0FjYWt1cz0tLUcyRUhJUGprRDVmTnlyUytOQmpkVWc9PQ==--017a6b444f1f4d88941b98cea65cbce32c651a58)](https://automate.browserstack.com/public-build/SWVldTlYclVWZEJ5R0NQUFRTMlltSTlNQ2JRaEF1ek9NeWd1L0FjYWt1cz0tLUcyRUhJUGprRDVmTnlyUytOQmpkVWc9PQ==--017a6b444f1f4d88941b98cea65cbce32c651a58)
+[![codecov](https://codecov.io/gh/atlas-bi/atlas-bi-library-py/branch/master/graph/badge.svg?token=2JfEYNRwFl)](https://codecov.io/gh/atlas-bi/atlas-bi-library-py) [![codacy](https://app.codacy.com/project/badge/Grade/74d31f9d9f1840818bc68bb0d26a9dda)](https://www.codacy.com/gh/atlas-bi/atlas-bi-library-py/dashboard?utm_source=github.com&utm_medium=referral&utm_content=atlas-bi/atlas-bi-library-py&utm_campaign=Badge_Grade) [![CodeQL](https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/codeql.yml/badge.svg)](https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/codeql.yml) [![Maintainability](https://api.codeclimate.com/v1/badges/5b76a0292bbe56043511/maintainability)](https://codeclimate.com/github/atlas-bi/atlas-bi-library-py/maintainability) [![quality](https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/quality.yml/badge.svg)](https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/quality.yml) [![demo](https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/demo.yml/badge.svg)](https://atlas-py.herokuapp.com) [![browserstack](https://automate.browserstack.com/badge.svg?badge_key=SWVldTlYclVWZEJ5R0NQUFRTMlltSTlNQ2JRaEF1ek9NeWd1L0FjYWt1cz0tLUcyRUhJUGprRDVmTnlyUytOQmpkVWc9PQ==--017a6b444f1f4d88941b98cea65cbce32c651a58)](https://automate.browserstack.com/public-build/SWVldTlYclVWZEJ5R0NQUFRTMlltSTlNQ2JRaEF1ek9NeWd1L0FjYWt1cz0tLUcyRUhJUGprRDVmTnlyUytOQmpkVWc9PQ==--017a6b444f1f4d88941b98cea65cbce32c651a58)
 
 ## Project Goals
 
@@ -30,9 +28,9 @@ See the [project documentation](https://atlas-bi.github.io/atlas-bi-library-py/)
 
 ## How can I contribute?
 
--   [Suggest a new feature or idea in our discussion board!](https://github.com/atlas-bi/atlas-bi-library-py/discussions)
--   Try out the [daily build demo](https://demo.atlas.bi/). Please  [create an issue](https://github.com/atlas-bi/atlas-bi-library-py/issues) for any bugs you find!
--   Contribute to the code!
+- [Suggest a new feature or idea in our discussion board!](https://github.com/atlas-bi/atlas-bi-library-py/discussions)
+- Try out the [daily build demo](https://demo.atlas.bi/). Please [create an issue](https://github.com/atlas-bi/atlas-bi-library-py/issues) for any bugs you find!
+- Contribute to the code!
 
 ## Development
 
@@ -177,4 +175,3 @@ git push origin --tags
 This will trigger a workflow to build a release.
 
 Edit release to trigger build of .deb installer.
-

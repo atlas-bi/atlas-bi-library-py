@@ -1,4 +1,3 @@
-
 var postcss = require('gulp-postcss');
 var gulp = require('gulp');
 var autoprefixer = require('autoprefixer');
@@ -7,14 +6,12 @@ var sass = require('gulp-sass')(require('sass'));
 var sortMediaQueries = require('postcss-sort-media-queries');
 var purgecss = require('gulp-purgecss');
 
-gulp.task('style:scss', function() {
-  var plugins = [
-        sortMediaQueries(),
-        autoprefixer(),
-        cssnano(),
-    ];
+gulp.task('style:scss', function () {
+  var plugins = [sortMediaQueries(), autoprefixer(), cssnano()];
 
-  return gulp.src('./atlas/static/scss/**/*.scss')
+  return (
+    gulp
+      .src('./atlas/static/scss/**/*.scss')
       .pipe(sass().on('error', sass.logError))
       .pipe(postcss(plugins))
       // .pipe(purgecss({
@@ -23,9 +20,8 @@ gulp.task('style:scss', function() {
       //         deep: [/breadcrumb/],
       //       }
       //     }))
-      .pipe(gulp.dest('./atlas/static/css/'));
-
+      .pipe(gulp.dest('./atlas/static/css/'))
+  );
 });
-
 
 gulp.task('style', gulp.parallel('style:scss'));
