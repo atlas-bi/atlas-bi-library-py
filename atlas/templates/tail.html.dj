@@ -2,100 +2,31 @@
 {% load compress %}
 {% load static %}
 
-<div class="prg">
-    <div class="prg-b" style="width: 0%"></div>
-</div>
 <div class="mail-notification-container"></div>
-<!--<partial name="_Messagebox" />
-<partial name="modals\_Modals" />-->
-<!--
-<div class="no-loader" data-ajax="yes" data-url="/welcome-video" data-loadtag=".video"></div>
--->
-<!-- text -->
-{% comment %}
-        <link rel="preload" href="{% static '/font/impmin/subset-NYTImperial-Regular.woff2' %}" as="font" type="font/woff2"/>
-        <link rel="preload" href="{% static '/font/impmin/subset-NYTImperial-Bold.woff2' %}" as="font" type="font/woff2"/>
-        <!-- headings -->
-        <link rel="preload" href="{% static '/font/cheltmin/subset-NYTCheltenham-Medium.woff2' %}" as="font" type="font/woff2"/>
-        <link rel="preload" href="{% static '/font/cheltmin/subset-NYTCheltenham-Bold.woff2' %}" as="font" type="font/woff2"/>
-        <link rel="preload" href="{% static '/font/cheltmin/subset-NYTCheltenham-MediumItalic.woff2' %}" as="font" type="font/woff2"/>
-        <link rel="preload" href="{% static '/font/cheltmin/subset-NYTCheltenhamWide-Regular.woff2' %}" as="font" type="font/woff2"/>
-        <!-- san serif -->
-        <link rel="preload" href="{% static '/font/sfmin/subset-SFProDisplay-Regular.woff2' %}" as="font" type="font/woff2"/>
-        <link rel="preload" href="{% static '/font/sfmin/subset-SFProDisplay-Medium.woff2' %}" as="font" type="font/woff2"/>
-        <!-- icon font generated at fontello.comm -->
-        <link rel="preload" href="{% static '/font/farmin/font/far.woff2?4069908' %}" as="font" type="font/woff2"/>
-        <link rel="preload" href="{% static '/font/fasmin/font/fas.woff2?1540027' %}" as="font" type="font/woff2"/>
-    {% endcomment %}
-<script type="text/javascript" src="{% static '/js/nav.js' %}"></script>
-{% compress js file essential %}
-    <script type="text/javascript" src="{% static '/js/essential.js' %}" defer></script>
-    <script type="text/javascript"
-            src="{% static '/js/utility/lazyload.js' %}"
-            defer></script>
-    <script type="text/javascript"
-            src="{% static '/js/utility/crumbs.js' %}"
-            defer></script>
-    {% if 19 in permissions %}
-        <script type="text/javascript" src="{% static '/js/solr.js' %}" defer></script>
-    {% endif %}
-    {% if 19 in permissions %}
-        <script type="text/javascript"
-                src="{% static '/js/instant_search.js' %}"
-                defer></script>
-    {% endif %}
-{% endcompress %}
-{% comment %}
-    {% compress js file ie11 %}
-        <script type="text/javascript"
-                src="{% static '/js/utility/polyfill.js' %}"
-                async></script>
-    {% endcompress %}
-    {% compress js file main %}
-        <script type="text/javascript"
-                src="{% static '/js/utility/modal.js' %}"
-                defer></script>
-        <script type="text/javascript" src="{% static '/js/page.js' %}" defer></script>
-        <script type="text/javascript" src="{% static '/js/hyperspace.js' %}" defer></script>
-        <script type="text/javascript" src="{% static '/js/ajax-content.js' %}" defer></script>
-        <script type="text/javascript" src="{% static '/js/favorites.js' %}" defer></script>
-        <script type="text/javascript" src="{% static '/js/video.js' %}" defer></script>
-        <script type="text/javascript" src="{% static '/js/messagebox.js' %}" defer></script>
-        <!--<script type="text/javascript" src="{% static '/js/mail.js' %}" defer></script>
-                    -->
-        <script type="text/javascript" src="{% static '/js/input.js' %}" defer></script>
-        <script type="text/javascript" src="{% static '/js/comments.js' %}" defer></script>
-        <script type="text/javascript" src="{% static '/js/dropdown.js' %}" defer></script>
-    {% endcompress %}
-    {% compress js file code %}
-        <script type="text/javascript"
-                src="{% static '/lib/highlight/highlight.js' %}"></script>
-    {% endcompress %}
-    {% compress js file scroll %}
-        <script type="text/javascript"
-                src="{% static '/lib/scrollbars/simple-scrollbar.js' %}"
-                defer></script>
-    {% endcompress %}
-    {% compress js file utility %}
-        <script type="text/javascript"
-                src="{% static '/js/utility/progressbar.js' %}"
-                defer></script>
-        <script type="text/javascript" src="{% static '/js/utility/tabs.js' %}" defer></script>
-        <script type="text/javascript"
-                src="{% static '/js/utility/collapse.js' %}"
-                defer></script>
-        <script type="text/javascript" src="{% static '/js/utility/carousel.js' %}" defer>
-        </script>
-        <script type="text/javascript" src="{% static '/js/utility/table.js' %}" defer>
-        </script>
-        <script type="text/javascript" src="{% static '/js/utility/drag.js' %}" defer>
-        </script>
-        <script type="text/javascript" src="{% static '/js/utility/charts.js' %}" defer>
-        </script>
-        <script type="text/javascript" src="{% static '/js/analytics.js' %}" defer>
-        </script>
-    {% endcompress %}
-    {% block end_js %}
-    {% endblock end_js %}
+<div class="fixed-notification-wrapper"></div>
+<script src="{% static '/js/shared.min.js' %}"></script>
+<script src="{% static '/js/alive.min.js' %}"></script>
+<script src="{% static '/js/search.min.js' %}" defer async></script>
+<script src="{% static '/js/utility.min.js' %}" defer async></script>
 
-{% endcomment %}
+{% compress js file main %}
+    <script src="{% static '/js/essential.js' %}" defer async></script>
+    <script src="{% static '/lib/scrollbars/simple-scrollbar.js' %}" defer async></script>
+{% endcompress %}
+
+<script src="{% static '/js/profile.min.js' %}" defer async></script>
+<script src="{% static '/js/editor.min.js' %}" defer async></script>
+<script>
+    (function() {
+        try {
+            new Function('async () => {}')();
+            console.log("loading code highlight")
+            var element = document.createElement("script");
+            element.type = 'text/javascript';
+            element.src = "{% static '/js/highlight.min.js' %}";
+            document.body.appendChild(element);
+        } catch (error) {}
+    })()
+</script>
+{% block end_js %}
+{% endblock end_js %}

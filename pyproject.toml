@@ -127,5 +127,8 @@ directories = ["atlas"]
 
 [tool.djlint]
 blank_line_after_tag = "extends,load, endcompress"
+blank_line_before_tag = "extends, load, compress"
 profile = "django"
+format_css = true
+format_js = true
 
