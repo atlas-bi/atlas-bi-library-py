@@ -45,54 +45,57 @@
                 defer></script>
     {% endif %}
 {% endcompress %}
-{% compress js file ie11 %}
-    <script type="text/javascript"
-            src="{% static '/js/utility/polyfill.js' %}"
-            async></script>
-{% endcompress %}
-{% compress js file main %}
-    <script type="text/javascript"
-            src="{% static '/js/utility/modal.js' %}"
-            defer></script>
-    <script type="text/javascript" src="{% static '/js/page.js' %}" defer></script>
-    <script type="text/javascript" src="{% static '/js/hyperspace.js' %}" defer></script>
-    <script type="text/javascript" src="{% static '/js/ajax-content.js' %}" defer></script>
-    <script type="text/javascript" src="{% static '/js/favorites.js' %}" defer></script>
-    <script type="text/javascript" src="{% static '/js/video.js' %}" defer></script>
-    <script type="text/javascript" src="{% static '/js/messagebox.js' %}" defer></script>
-    <!--<script type="text/javascript" src="{% static '/js/mail.js' %}" defer></script>
-                -->
-    <script type="text/javascript" src="{% static '/js/input.js' %}" defer></script>
-    <script type="text/javascript" src="{% static '/js/comments.js' %}" defer></script>
-    <script type="text/javascript" src="{% static '/js/dropdown.js' %}" defer></script>
-{% endcompress %}
-{% compress js file code %}
-    <script type="text/javascript"
-            src="{% static '/lib/highlight/highlight.js' %}"></script>
-{% endcompress %}
-{% compress js file scroll %}
-    <script type="text/javascript"
-            src="{% static '/lib/scrollbars/simple-scrollbar.js' %}"
-            defer></script>
-{% endcompress %}
-{% compress js file utility %}
-    <script type="text/javascript"
-            src="{% static '/js/utility/progressbar.js' %}"
-            defer></script>
-    <script type="text/javascript" src="{% static '/js/utility/tabs.js' %}" defer></script>
-    <script type="text/javascript"
-            src="{% static '/js/utility/collapse.js' %}"
-            defer></script>
-    <script type="text/javascript" src="{% static '/js/utility/carousel.js' %}" defer>
-    </script>
-    <script type="text/javascript" src="{% static '/js/utility/table.js' %}" defer>
-    </script>
-    <script type="text/javascript" src="{% static '/js/utility/drag.js' %}" defer>
-    </script>
-    <script type="text/javascript" src="{% static '/js/utility/charts.js' %}" defer>
-    </script>
-    <script type="text/javascript" src="{% static '/js/analytics.js' %}" defer>
-    </script>
-{% endcompress %}
-{% block end_js %}
-{% endblock end_js %}
+{% comment %}
+    {% compress js file ie11 %}
+        <script type="text/javascript"
+                src="{% static '/js/utility/polyfill.js' %}"
+                async></script>
+    {% endcompress %}
+    {% compress js file main %}
+        <script type="text/javascript"
+                src="{% static '/js/utility/modal.js' %}"
+                defer></script>
+        <script type="text/javascript" src="{% static '/js/page.js' %}" defer></script>
+        <script type="text/javascript" src="{% static '/js/hyperspace.js' %}" defer></script>
+        <script type="text/javascript" src="{% static '/js/ajax-content.js' %}" defer></script>
+        <script type="text/javascript" src="{% static '/js/favorites.js' %}" defer></script>
+        <script type="text/javascript" src="{% static '/js/video.js' %}" defer></script>
+        <script type="text/javascript" src="{% static '/js/messagebox.js' %}" defer></script>
+        <!--<script type="text/javascript" src="{% static '/js/mail.js' %}" defer></script>
+                    -->
+        <script type="text/javascript" src="{% static '/js/input.js' %}" defer></script>
+        <script type="text/javascript" src="{% static '/js/comments.js' %}" defer></script>
+        <script type="text/javascript" src="{% static '/js/dropdown.js' %}" defer></script>
+    {% endcompress %}
+    {% compress js file code %}
+        <script type="text/javascript"
+                src="{% static '/lib/highlight/highlight.js' %}"></script>
+    {% endcompress %}
+    {% compress js file scroll %}
+        <script type="text/javascript"
+                src="{% static '/lib/scrollbars/simple-scrollbar.js' %}"
+                defer></script>
+    {% endcompress %}
+    {% compress js file utility %}
+        <script type="text/javascript"
+                src="{% static '/js/utility/progressbar.js' %}"
+                defer></script>
+        <script type="text/javascript" src="{% static '/js/utility/tabs.js' %}" defer></script>
+        <script type="text/javascript"
+                src="{% static '/js/utility/collapse.js' %}"
+                defer></script>
+        <script type="text/javascript" src="{% static '/js/utility/carousel.js' %}" defer>
+        </script>
+        <script type="text/javascript" src="{% static '/js/utility/table.js' %}" defer>
+        </script>
+        <script type="text/javascript" src="{% static '/js/utility/drag.js' %}" defer>
+        </script>
+        <script type="text/javascript" src="{% static '/js/utility/charts.js' %}" defer>
+        </script>
+        <script type="text/javascript" src="{% static '/js/analytics.js' %}" defer>
+        </script>
+    {% endcompress %}
+    {% block end_js %}
+    {% endblock end_js %}
+
+{% endcomment %}

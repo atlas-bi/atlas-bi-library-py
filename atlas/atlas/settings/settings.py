@@ -110,7 +110,10 @@ SESSION_REDIS = {
     "retry_on_timeout": False,
 }
 
+GULP_DEVELOP_COMMAND = "gulp watch"
+GULP_PRODUCTION_COMMAND = "gulp build"
 INSTALLED_APPS = [
+    "django_gulp",
     # "django.contrib.admin",
     # django stuff
     "django.contrib.auth",
@@ -178,6 +181,7 @@ TEMPLATES = [
                 "markdown": "atlas.templatetags.markdown",
                 "dates": "atlas.templatetags.dates",
                 "helpers": "atlas.templatetags.helpers",
+                "atlas_static": "atlas.templatetags.static",
             },
             "debug": DEBUG,
         },

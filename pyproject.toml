@@ -40,84 +40,39 @@ documentation = "https://riverside-healthcare.github.io/Atlas-Py/"
 
 
 [tool.poetry.dependencies]
-python = "^3.6.1"
-django-mssql-backend = "^2.8.1"
+python = "^3.8"
 django-compressor = "^4.0"
 python-memcached = "^1.59"
 django-htmlmin = "^0.11.0"
 django-redis-sessions = "^0.6.2"
 django-compression-middleware = "^0.4.1"
-dataclasses = { version = "*", python = ">=3.6,<3.7" }
-toml = { version = "^0.10.2", optional = true }
-relative-to-now = "^0.0.8"
-djangosaml2 = "^1.0.4"
+relative-to-now = "^1.0.0"
+djangosaml2 = "^1.5.1"
 django-mathfilters = "^1.0.0"
-Django = "^4.0"
-psycopg2-binary = "^2.8.6"
-markdown-it-py = "^2.0.0"
-sphinx-autoapi = { version = "^1.5.1", optional = true }
-coverage = { version = "^6.0.0", optional = true }
-Pygments = { version = "^2.7.3", optional = true }
-pylint = { version = "^2.8.2", optional = true }
-sphinx-copybutton = { version = "^0.5.0", optional = true }
-Sphinx = { version = "^5.0.0", optional = true }
-sphinx-book-theme = { version = "^0.3.0", optional = true }
-django-debug-toolbar = { version = "^3.2", optional = true }
-sphinx-inline-tabs = { version = "^2021.4.11-beta.9", python = ">=3.8,<4.0.0", optional = true }
-sphinx-panels = {version = "^0.6.0", optional = true }
-sphinxcontrib-youtube = {git = "https://github.com/sphinx-contrib/youtube.git", optional = true }
-furo = { version = "^2022.0.0", optional = true }
-colorama = { version = "^0.4.4", optional = true }
-psycopg2 = "^2.8.6"
-PyYAML = "^5.4.1"
-tblib = "^1.7.0"
-selenium = { version = "^3.141.0", optional = true }
-browserstack-local = { version = "^1.2.3", optional = true }
-virtualenv = "^20.4.4"
-django-libsass = "^0.9"
-dj-database-url = "^0.5.0"
-gunicorn = "^20.1.0"
-celery = "^5.1.0"
-django-celery-results = "^2.0.1"
-django-celery-beat = "^2.2.0"
-pysolr = {git = "https://github.com/christopherpickering/pysolr.git"}
-simplejson = "^3.17.2"
-django-chunked-iterator = "^0.6.1"
-linkify-it-py = "^2.0.0"
+Django = "^4.0.6"
+psycopg2-binary = "^2.9.3"
+markdown-it-py = "^2.1.0"
+psycopg2 = "^2.9.3"
+gevent = "^21.12.0"
+regex = "^2022.7.25"
+Pillow = "^9.2.0"
 mdit-py-plugins = "^0.3.0"
-Pillow = "^9.0.0"
-regex = "^2021.8.28"
-gevent = "^21.8.0"
-
-
-[tool.poetry.extras]
-test = ["Pygments", "toml", "coverage", "selenium", "browserstack-local"]
-
-
-[tool.poetry.dev-dependencies]
-pre-commit = "^2.10.1"
-django-debug-toolbar = "^3.2"
-coverage = "^6.0.0"
-pytest ="^6.2.1"
-black = "^20.8b1"
-tox = "^3.20.1"
-fabric = "^2.6.0"
-bs4 = "^0.0.1"
-django-heroku = "^0.3.1"
-whitenoise = "^5.2.0"
-python-binary-memcached = "^0.31.0"
-django-bmemcached = "^0.3.0"
-selenium = "^3.141.0"
-browserstack-local = "^1.2.3"
-flower = {git = "https://github.com/mher/flower.git"}
-django-doctor = "^2.4.0"
-djlint = "^1.0.0"
+linkify-it-py = "^2.0.0"
+django-chunked-iterator = "^0.6.1"
+simplejson = "^3.17.6"
+django-celery-beat = "^2.3.0"
+django-celery-results = "^2.4.0"
+celery = "^5.2.7"
+gunicorn = "^20.1.0"
+dj-database-url = "^0.5.0"
+pysolr = "^3.9.0"
+mssql-django = "^1.1.3"
+django-gulp = "^4.1.0"
 
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-
 
 [tool.black]
 max_line_length = 99
@@ -145,16 +100,8 @@ exclude = '''
     )/
     '''
 
-
 [tool.isort]
 profile = "black"
-# multi_line_output = 3
-# include_trailing_comma = true
-# force_grid_wrap = 0
-# use_parentheses = true
-# ensure_newline_before_comments = true
-# line_length = 99
-# quiet = true
 sections="FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
 
 
@@ -169,7 +116,6 @@ disable = "R0903, E0401, C0415, F0401"
 max-line-length = 99
 max-module-lines=1000
 
-
 [tool.pylint.basic]
 good-names = "i,j,k,ex,Run,x,id,e,me,l,_,pk"
 include-naming-hint="no"
@@ -178,6 +124,6 @@ include-naming-hint="no"
 directories = ["atlas"]
 
 [tool.djlint]
-blank_line_after_tag = "extends,load"
+blank_line_after_tag = "extends,load, endcompress"
 profile = "django"
 

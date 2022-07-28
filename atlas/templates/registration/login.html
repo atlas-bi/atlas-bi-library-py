@@ -1,79 +1,100 @@
 {% load compress %}
 {% load static %}
+{% load atlas_static %}
+
 {% compress css inline auth %}
-    <link type="text/css" rel="stylesheet" href="{% static '/css/auth.css' %}" />
+    <link type="text/css"
+          rel="stylesheet"
+          href="{% static '/css/auth.min.css' %}"/>
 {% endcompress %}
 
-<link
-    rel="preload"
-    href="{% static '/font/cheltmin/subset-NYTCheltenham-Medium.woff2' %}"
-    as="font"
-    type="font/woff2"/>
-<link
-    rel="preload"
-    href="{% static '/font/cheltmin/subset-NYTCheltenham-Bold.woff2' %}"
-    as="font"
-    type="font/woff2"/>
-<link
-    rel="preload"
-    href="{% static '/font/cheltmin/subset-NYTCheltenham-MediumItalic.woff2' %}"
-    as="font"
-    type="font/woff2"/>
-<link
-    rel="preload"
-    href="{% static '/font/cheltmin/subset-NYTCheltenhamWide-Regular.woff2' %}"
-    as="font"
-    type="font/woff2"/>
-
-<div class="login">
-    <div class="login-cntr">
-        <form action="" method="post" autocomplete="off">
-            {% csrf_token %}
-            <h2 class="login-ttl">{{ settings.LOGIN_TITLE|default:"Atlas Dev" }}</h2>
-            {% if settings.DEMO %}
-                <p>
-                    <pre class="login-subTtl">
-                    Demo Login Information:
-                    Basic User - user@user.user, pass: 123
-                    Admin User - admin@admin.admin, pass: 123
-                    </pre>
-                </p>
-            {% endif %}
-
-            <div class="login-inputGrp">
-                <div class="login-inputTtl" >Email</div>
-                <input
-                    class="login-input"
-                    autocapitalize="none"
-                    autocomplete="username"
-                    autofocus=""
-                    id="id_username"
-                    maxlength="254"
-                    name="username"
-                    required=""
-                    type="text" />
+<link rel="preload"
+      href="{% static_hashed '/font/inter/files/inter-latin-400-normal.woff2' %}"
+      as="font"
+      type="font/woff2"/>
+<link rel="preload"
+      href="{% static_hashed '/font/inter/files/inter-latin-700-normal.woff2' %}"
+      as="font"
+      type="font/woff2"/>
+<link rel="preload"
+      href="{% static_hashed '/font/inter/files/inter-latin-500-normal.woff2' %}"
+      as="font"
+      type="font/woff2"/>
+<link rel="preload"
+      href="{% static_hashed '/font/fontawesome/webfonts/fa-solid-900.woff2' %}"
+      as="font"
+      type="font/woff2"/>
+<link rel="preload"
+      href="{% static_hashed '/font/fontawesome/webfonts/fa-regular-400.woff2' %}"
+      as="font"
+      type="font/woff2"/>
+<section class="hero is-fullheight">
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-5-tablet is-4-desktop is-3-widescreen">
+                    <form class="box" action="" method="post" autocomplete="off">
+                        {% csrf_token %}
+                        <figure class="image container is-133x40 mb-5">
+                            <img src="{% static 'img/thinking-face-text-266x80.png' %}"
+                                 width="162"
+                                 height="50"
+                                 alt="{{ settings.LOGIN_TITLE|default:"Atlas Dev" }}"/>
+                        </figure>
+                        {% if settings.DEMO %}
+                        <div class="notification">
+                            <h4 class="title is-4 has-text-centered">Demo Login Information</h4>
+                            User: user@user.user, pass: 123
+                            Admin: admin@admin.admin, pass: 123
+                        </div>
+                        {% endif %}
+                        <div class="field">
+                            <label class="label has-text-grey">Email Address</label>
+                            <div class="control has-icons-left">
+                                <input class="input"
+                                       autocapitalize="none"
+                                       autocomplete="username"
+                                       autofocus=""
+                                       id="id_username"
+                                       maxlength="254"
+                                       name="username"
+                                       required=""
+                                       type="text"/>
+                                <span class="icon is-small is-left">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label has-text-grey">Password</label>
+                            <div class="control has-icons-left">
+                                <input class="input"
+                                       autocomplete="current-password"
+                                       id="id_password"
+                                       name="password"
+                                       required=""
+                                       type="password"
+                                       value="123"/>
+                                <span class="icon is-small is-left">
+                                    <i class="fa-solid fa-lock"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="field mt-5 ">
+                            <button class="button is-danger is-light is-fullwidth"
+                                    type="submit"
+                                    value="Submit">Log In</button>
+                        </div>
+                        {% for error in form.username.errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
+                        {% if form.non_field_errors %}
+                            {% for error in form.non_field_errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
+                        {% endif %}
+                    </form>
+                    <div class="has-text-centered">
+                        <small class="has-text-grey">©{% now "Y" %} | {{ settings.ORG_NAME }}</small>
+                    </div>
+                </div>
             </div>
-            <div class="login-inputGrp">
-                <div class="login-inputTtl">Password</div>
-                <input
-                    class="login-input"
-                    autocomplete="current-password"
-                    id="id_password"
-                    name="password"
-                    required=""
-                    type="password"
-                    value="123" />
-            </div>
-            <button class="login-btn" type="submit" value="Submit">Log In</button>
-            {% for error in form.username.errors %}
-                <p class="text-danger">{{ error }}</p>
-            {% endfor %}
-            {% if form.non_field_errors %}
-                {% for error in form.non_field_errors %}
-                    <p class="text-danger">{{ error }}</p>
-                {% endfor %}
-            {% endif %}
-        </form>
-        <div class="login-copy">&copy; {% now "Y" %} - {{ settings.ORG_NAME }}</div>
+        </div>
     </div>
-</div>
+</section>

@@ -1,3 +1,33 @@
-.tab-cnt > .tab-dta:not(.is-active) {
+.tab .tab-lnk + .tab-lnk::before {
+  color: $grey-light;
+  content: '/';
+  margin: 8px;
+}
+
+.tab-cnt {
+  display: block;
+}
+
+.tab-cnt > .tab-dta,
+.panel-tab-data,
+.step-tab-data {
+  animation: fadein 0.1s;
   display: none;
+  width: 100%;
+}
+
+.tab-cnt > .tab-dta.active,
+.panel-tab-data.is-active,
+.step-tab-data.is-active {
+  display: block;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0.2;
+  }
+
+  to {
+    opacity: 1;
+  }
 }

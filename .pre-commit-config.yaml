@@ -11,16 +11,16 @@ exclude: >
 files: ^atlas/
 
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.2.0
-    hooks:
-      - id: pretty-format-json
-        args: [--autofix]
-      - id: check-json
-        exclude: package-lock.json
-      - id: check-toml
-      - id: check-yaml
-      - id: end-of-file-fixer
+  # - repo: https://github.com/pre-commit/pre-commit-hooks
+  #   rev: v4.2.0
+  #   hooks:
+  #     - id: pretty-format-json
+  #       args: [--autofix]
+  #     - id: check-json
+  #       exclude: package-lock.json
+  #     - id: check-toml
+  #     - id: check-yaml
+  #     - id: end-of-file-fixer
   - repo: https://github.com/timothycrosley/isort
     rev: 5.10.1
     hooks:
@@ -79,12 +79,12 @@ repos:
   #   hooks:
   #     - id: poetry-to-requirements
   #       args: [--output=atlas/requirements.txt]
-  - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-    rev: v2.3.0
-    hooks:
-      - id: pretty-format-toml
-        args: [--autofix]
-      - id: pretty-format-ini
-        args: [--autofix]
-      - id: pretty-format-yaml
-        args: [--autofix, --indent, '2']
+  # - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+  #   rev: v2.3.0
+  #   hooks:
+  #     - id: pretty-format-toml
+  #       args: [--autofix]
+  #     - id: pretty-format-ini
+  #       args: [--autofix]
+  #     - id: pretty-format-yaml
+  #       args: [--autofix, --indent, '2']

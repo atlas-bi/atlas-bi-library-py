@@ -1,187 +1,411 @@
-/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-
 (function () {
-  window.ajaxOn = true;
-  var timeOnPage = new Date(),
-    sessionTimerId,
-    analitycsUpdateTimeoutId,
-    buildAnalyticsPackage = function (loadTime) {
-      var a = {},
-        n = navigator,
-        w = window,
-        d = document;
-      l = w.location;
-      a.appCodeName = n.appCodeName;
-      a.appName = n.appName;
-      a.appVersion = n.appVersion;
-      a.cookieEnabled = n.cookieEnabled;
-      a.language = n.language;
-      a.oscpu = n.oscpu;
-      a.platform = n.platform;
-      a.userAgent = n.userAgent;
-      a.host = l.host;
-      a.hostname = l.hostname;
-      a.href = l.href;
-      a.protocol = l.protocol;
-      a.search = l.search;
-      a.pathname = l.pathname;
-      a.hash = l.hash;
-      a.screenHeight = d.documentElement.clientHeight;
-      a.screenWidth = d.documentElement.clientWidth;
-      a.origin = w.origin;
-      a.title = d.title;
-      a.referrer = d.referrer;
-      a.loadTime =
-        loadTime ||
-        w.performance.timing.domContentLoadedEventEnd -
-          w.performance.timing.navigationStart;
-      a.zoom = w.devicePixelRatio;
-      a.sessionId = getOrResetSessionId();
-      a.pageId = getOrResetPageId();
-      a.pageTime = new Date().getTime() - timeOnPage.getTime();
-      return a;
-    },
-    getOrResetSessionId = function (reset) {
-      if (reset == 'clear') {
-        sessionStorage.removeItem('_sid');
-        return false;
-      }
-
-      if (reset == 'reset' || typeof sessionStorage._sid === 'undefined') {
-        sessionStorage._sid = btoa(new Date().toString());
-        getOrResetPageId('reset');
-        timeOnPage = new Date();
-      }
-
-      return sessionStorage._sid;
-    },
-    getOrResetPageId = function (reset) {
-      if (reset == 'reset' || typeof sessionStorage._pid === 'undefined') {
-        timeOnPage = new Date();
-        sessionStorage._pid = btoa(new Date().toString());
-      }
-
-      return sessionStorage._pid;
-    },
-    postAnalytics = function (loadTime, type) {
-      if (type == 'newpage') {
-        getOrResetPageId('reset');
-        window.ajaxOn = true;
-      }
-
-      if (window.ajaxOn === true) {
-        if (navigator.sendBeacon) {
-          navigator.sendBeacon(
-            '/analytics/log',
-            JSON.stringify(buildAnalyticsPackage(loadTime)),
-          );
-        } else {
-          var s = new XMLHttpRequest();
-          s.open('post', '/analytics/log', true);
-          s.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8`');
-          s.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-          s.setRequestHeader('X-CSRFToken', csrftoken);
-          s.send(JSON.stringify(buildAnalyticsPackage(loadTime)));
-        }
-      }
-
-      resetAnalyticsTimer();
-    },
-    startPageTimer = function () {
-      var sessionTimeout = 2 * 60000;
-      sessionTimerId = window.setTimeout(doInactive, sessionTimeout);
-      getOrResetSessionId();
-    },
-    resetPageTimer = function () {
-      debounce(
-        (function () {
-          window.clearTimeout(sessionTimerId);
-          startPageTimer();
-          window.ajaxOn = true;
-        })(),
-        500,
-      );
-    },
-    doInactive = function () {
-      window.ajaxOn = false;
-      getOrResetSessionId('clear');
-      sessionStorage.clear();
-    },
-    setupPageTimer = function () {
-      document.addEventListener('mousemove', resetPageTimer, false);
-      document.addEventListener('mousedown', resetPageTimer, false);
-      document.addEventListener('keypress', resetPageTimer, false);
-      document.addEventListener('touchmove', resetPageTimer, false);
-      document.addEventListener(
-        'scroll',
-        resetPageTimer,
-        {
-          passive: true,
-        },
-        false,
-      );
-      startPageTimer();
-    },
-    startAnalyticsTimer = function () {
-      var analitycsUpdateTimeout = 0.5 * 60000;
-      analitycsUpdateTimeoutId = window.setTimeout(
-        postAnalytics,
-        analitycsUpdateTimeout,
-      );
-    },
-    resetAnalyticsTimer = function () {
-      window.clearTimeout(analitycsUpdateTimeoutId);
-      startAnalyticsTimer();
-    };
-
-  // if document is already loaded
-  if (document.readyState == 'complete') {
-    setupPageTimer();
-    postAnalytics();
+  function bigNumber(text) {
+    let n = parseInt(text, 10);
+    const d = 10 ** 0;
+    let i = 7;
+    let s;
+    while (i)
+      // eslint-disable-next-line no-unused-expressions
+      (s = 10 ** (i-- * 3)) <= n &&
+        (n = Math.round((n * d) / s) / d + 'kMGTPE'[i]);
+    return n;
   }
-  // if document has not loaded yet
-  window.addEventListener(
-    'load',
-    function () {
-      setupPageTimer();
-      postAnalytics();
-    },
-    false,
-  );
 
-  document.addEventListener('analytics-post', function (e) {
-    if (typeof e.detail !== 'undefined') {
-      postAnalytics(e.detail.value, e.detail.type);
+  const primaryChart = document.querySelector('#visits-chart');
+
+  let primaryChartAjax = null;
+  const config = {
+    type: 'bar',
+    options: {
+      tooltips: {
+        position: 'nearest',
+        mode: 'label',
+      },
+      animation: {
+        duration: 300,
+      },
+      hover: {
+        animationDuration: 0,
+      },
+      responsive: true,
+      responsiveAnimationDuration: 0,
+      maintainAspectRatio: false,
+      legend: {
+        display: true,
+        position: 'bottom',
+        userPointStyle: true,
+      },
+      title: {
+        display: false,
+      },
+      scales: {
+        yAxes: [
+          {
+            id: '1',
+            ticks: {
+              beginAtZero: true,
+              callback(value) {
+                return bigNumber(value);
+              },
+            },
+            stacked: false,
+            type: 'linear',
+            position: 'left',
+          },
+          {
+            id: '2',
+            ticks: {
+              beginAtZero: true,
+              callback(value) {
+                return Math.round(value * 10) / 10 + 's';
+              },
+            },
+            stacked: false,
+            type: 'linear',
+            position: 'right',
+          },
+        ],
+        xAxes: [
+          {
+            stacked: true,
+            gridLines: {
+              display: false,
+            },
+          },
+        ],
+      },
+    },
+  };
+  const ctx = document.querySelector('#visits-chart').getContext('2d');
+
+  const activate = () => {
+    // /* analytics page js for charts */
+
+    window.visitsChart = new Chart(ctx, config);
+
+    loadChart();
+    loadBoxes();
+
+    const {
+      addHours,
+      addDays,
+      addYears,
+      startOfDay,
+      startOfWeek,
+      startOfMonth,
+      startOfYear,
+      endOfDay,
+      endOfWeek,
+      endOfMonth,
+      endOfYear,
+      differenceInSeconds,
+    } = require('date-fns');
+
+    document
+      .querySelectorAll(
+        '.dropdown.is-select[data-target="views-chart"] .dropdown-item',
+      )
+      .forEach(($x) =>
+        $x.addEventListener('click', (event) => {
+          (
+            event.target
+              .closest('.dropdown')
+              .querySelectorAll('.dropdown-item.is-active') || []
+          ).forEach(($element) => {
+            $element.classList.remove('is-active');
+          });
+          event.target.classList.add('is-active');
+          const $target = event.target.closest(
+            '.dropdown.is-select .dropdown-item',
+          );
+
+          $target
+            .closest('.dropdown')
+            .querySelector('.select-value').textContent = $target.textContent;
+
+          /* Build date parameters */
+          const now = new Date();
+
+          let dataset;
+          switch ($target.dataset.range) {
+            case '1':
+              // Today
+
+              dataset =
+                '?start_at=' +
+                differenceInSeconds(startOfDay(now), now) +
+                '&end_at=' +
+                differenceInSeconds(endOfDay(now), now);
+
+              break;
+
+            case '3':
+              // This week
+
+              dataset =
+                '?start_at=' +
+                differenceInSeconds(startOfWeek(now, -24), now) +
+                '&end_at=' +
+                differenceInSeconds(endOfWeek(now), now);
+              break;
+            case '4':
+              // Last 7 days
+
+              dataset =
+                '?start_at=' +
+                differenceInSeconds(startOfDay(addDays(now, -7)), now) +
+                '&end_at=0';
+              break;
+            case '5':
+              // This month
+
+              dataset =
+                '?start_at=' +
+                differenceInSeconds(startOfMonth(now), now) +
+                '&end_at=' +
+                differenceInSeconds(endOfMonth(now), now);
+              break;
+            case '6':
+              // Last 30 days
+
+              dataset =
+                '?start_at=' +
+                differenceInSeconds(startOfDay(addDays(now, -30)), now) +
+                '&end_at=0';
+              break;
+            case '7':
+              // Last 90 days
+
+              dataset =
+                '?start_at=' +
+                differenceInSeconds(startOfDay(addDays(now, -90)), now) +
+                '&end_at=0';
+              break;
+            case '8':
+              // This year
+
+              dataset =
+                '?start_at=' +
+                differenceInSeconds(startOfYear(now), now) +
+                '&end_at=' +
+                differenceInSeconds(endOfYear(now), now);
+              break;
+            case '9':
+              // All time
+
+              dataset =
+                '?start_at=' +
+                differenceInSeconds(addYears(now, -10), now) +
+                '&end_at=0';
+              break;
+            case '10':
+              // Custom range
+
+              break;
+            case '2':
+            default:
+              // Last 24 hours
+
+              dataset =
+                '?start_at=' +
+                differenceInSeconds(addHours(now, -24), now) +
+                '&end_at=0';
+
+              break;
+          }
+
+          loadChart(dataset);
+          loadBoxes(dataset);
+          loadAjax(dataset);
+        }),
+      );
+  };
+
+  function buildDataTable(data) {
+    if (data.length > 0) {
+      const table = document.createElement('table');
+      table.classList.add('table', 'is-no-border', 'is-fullwidth', 'bar');
+      const header = document.createElement('tr');
+      header.innerHTML = `<tr><th>${data[0].title_one}</th><th class="is-narrow">${data[0].title_two}</th></tr>`;
+      table.append(header);
+      data.forEach(($r) => {
+        const row = document.createElement('tr');
+        const $link = $r.href ? `<a href="${$r.href}">${$r.key}</a>` : $r.key;
+        row.innerHTML = `<td class="is-middle">${$link}</td><td class="is-narrow has-text-right"><strong class="mr-2">${bigNumber(
+          $r.count,
+        )}</strong>`;
+        if ($r.percent) {
+          row.innerHTML += `<div class="bar-percent py-2 is-relative has-text-centered"><div class="bar-percent-fill" style="width:${
+            $r.percent * 100
+          }%"></div><span><strong class="has-text-grey-light">${Math.round(
+            $r.percent * 100,
+          )}%</strong></span>`;
+        }
+
+        row.innerHTML += `</td>`;
+        table.append(row);
+      });
+      return table;
+    }
+
+    return document.createElement('span');
+  }
+
+  function loadAjax(parameters = '') {
+    (document.querySelectorAll('.analytics[data-url]') || []).forEach(
+      ($element) => {
+        $element.setAttribute('data-parameters', parameters);
+        $element.dispatchEvent(new CustomEvent('reload'));
+      },
+    );
+  }
+
+  function loadBoxes(parameters = '') {
+    (
+      document.querySelectorAll('.bar-data-wrapper.analytics[data-url]') || []
+    ).forEach(($element) => {
+      $element.style.opacity = '.5';
+      const aj = new XMLHttpRequest();
+      aj.open('get', $element.dataset.url + parameters.replace('?', '&'), true);
+      aj.setRequestHeader(
+        'Content-Type',
+        'application/x-www-form-urlencoded; charset=UTF-8',
+      );
+      aj.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      aj.send();
+
+      aj.addEventListener('load', function () {
+        $element.innerHTML = '';
+        $element.append(buildDataTable(JSON.parse(aj.responseText)));
+        $element.style.visibility = 'visible';
+        $element.style.opacity = '1';
+      });
+    });
+  }
+
+  function loadChart(parameters = '') {
+    primaryChart.style.opacity = '.5';
+
+    const views = document.querySelector('#analytics-views');
+    const visitors = document.querySelector('#analytics-visitors');
+    const loadTime = document.querySelector('#analytics-load-time');
+
+    views.style.opacity = '.5';
+    visitors.style.opacity = '.5';
+    loadTime.style.opacity = '.5';
+
+    if (primaryChartAjax !== null) {
+      primaryChartAjax.abort();
+    }
+
+    if (primaryChart.dataset.url.includes('?')) {
+      parameters = parameters.replace('?', '&');
+    }
+
+    primaryChartAjax = new XMLHttpRequest();
+    primaryChartAjax.open('get', primaryChart.dataset.url + parameters, true);
+    primaryChartAjax.setRequestHeader(
+      'Content-Type',
+      'application/x-www-form-urlencoded; charset=UTF-8',
+    );
+    primaryChartAjax.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    primaryChartAjax.send();
+
+    primaryChartAjax.addEventListener('load', function () {
+      const rep = JSON.parse(primaryChartAjax.responseText);
+
+      if (views) {
+        views.textContent = bigNumber(rep.views);
+      }
+
+      if (visitors) {
+        visitors.textContent = bigNumber(rep.visitors);
+      }
+
+      if (loadTime) {
+        loadTime.textContent = rep.load_time;
+      }
+
+      window.visitsChart.data = rep.data;
+      window.visitsChart.update();
+      primaryChart.style.opacity = '1';
+      views.style.opacity = '1';
+      visitors.style.opacity = '1';
+      loadTime.style.opacity = '1';
+    });
+  }
+
+  document.addEventListener('click', (event) => {
+    if (
+      (event.target.matches('.trace-resolved[type="checkbox"]') ||
+        event.target.matches('.error-resolved[type="checkbox"]')) &&
+      event.target.tagName === 'INPUT'
+    ) {
+      const i = event.target;
+      let type = 1;
+
+      if (i.hasAttribute('checked')) {
+        i.removeAttribute('checked');
+        type = 2;
+        i.closest('tr.has-text-grey-light').classList.remove(
+          'has-text-grey-light',
+        );
+        (
+          i.closest('tr').querySelectorAll('a.has-text-grey-light') || []
+        ).forEach(($i) => {
+          $i.classList.remove('has-text-grey-light');
+        });
+        (i.closest('tr').querySelectorAll('div.notification') || []).forEach(
+          ($i) => {
+            $i.classList.add('is-danger');
+          },
+        );
+      } else {
+        i.setAttribute('checked', 'checked');
+        i.closest('tr').classList.add('has-text-grey-light');
+        (i.closest('tr').querySelectorAll('a') || []).forEach(($i) => {
+          $i.classList.add('has-text-grey-light');
+        });
+        (
+          i.closest('tr').querySelectorAll('div.notification.is-danger') || []
+        ).forEach(($i) => {
+          $i.classList.remove('is-danger');
+        });
+      }
+
+      const data = {
+        Id: i.dataset.id,
+        Type: type,
+      };
+      const url = Object.keys(data)
+        .map(function (k) {
+          return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]);
+        })
+        .join('&');
+      const q = new XMLHttpRequest();
+      q.open('post', i.dataset.url + '?handler=Resolved&' + url, true);
+      q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
+      q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      q.send();
     }
   });
-  /*
-    1. create sessionid, store in browser.
-    2. clear sessionid  when inactive
-    3. to find session time > sum pagetime, group by sessionid + userid
-    4. create pageid, store in browser
-    5. reset pageid when url changes
-    6. timer for pageid, clear timer when page changes
-    7. analtic for page is updated, so there will only be 1 row in db per page + session
-    8. when session becomes inactive stop all ajax requests
-    9. when session becomes active resume all ajax requests
-     while ajax = on
-      send analitycs update every timeout interval.
-      if update is sent because of page load, reset intereval (so we don't have dup data sends)
-    */
+  let test = 0;
+  function load() {
+    // Wait for chartjs to load.. basically 15 seconds max
+    if (test === 300) {
+      return false;
+    }
+
+    if (typeof Chart === 'undefined') {
+      setTimeout(function () {
+        test++;
+        load();
+      }, 100);
+    } else {
+      test = 0;
+      activate();
+    }
+  }
+
+  load();
 })();

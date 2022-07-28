@@ -22,25 +22,21 @@ In our love of open source we felt the need for a version of the Atlas BI Librar
 
 Take a look at the [github project](https://github.com/atlas-bi/atlas-bi-library-py/projects/1) to see a list of planned features.
 
-## Documentation
-
-See the [project documentation](https://atlas-bi.github.io/atlas-bi-library-py/)
-
 ## How can I contribute?
 
-- [Suggest a new feature or idea in our discussion board!](https://github.com/atlas-bi/atlas-bi-library-py/discussions)
-- Try out the [daily build demo](https://demo.atlas.bi/). Please [create an issue](https://github.com/atlas-bi/atlas-bi-library-py/issues) for any bugs you find!
-- Contribute to the code!
+-   [Suggest a new feature or idea in our discussion board!](https://github.com/atlas-bi/atlas-bi-library-py/discussions)
+-   Try out the [daily build demo](https://demo.atlas.bi/). Please [create an issue](https://github.com/atlas-bi/atlas-bi-library-py/issues) for any bugs you find!
+-   Contribute to the code!
 
 ## Development
 
 This version of the app is built using python + django.
 
-- [Precommit](https://pre-commit.com) `pre-commit install`
-- [Poetry](https://python-poetry.org)
-- [Pyenv](https://github.com/pyenv/pyenv) `pyenv local 3.6.2 3.7.0 3.8.0 3.9.0`
-- [NodeJS](https://nodejs.dev)
-- Developing on windows is difficult, but can be done. [Git sdk64](https://github.com/git-for-windows/git-sdk-64) works well for installing and running these tools.
+-   [Precommit](https://pre-commit.com) `pre-commit install`
+-   [Poetry](https://python-poetry.org)
+-   [Pyenv](https://github.com/pyenv/pyenv) `pyenv local 3.6.2 3.7.0 3.8.0 3.9.0`
+-   [NodeJS](https://nodejs.dev)
+-   Developing on windows is difficult, but can be done. [Git sdk64](https://github.com/git-for-windows/git-sdk-64) works well for installing and running these tools.
 
 There are a few settings files to run the app. The required settings have already been set in the existing files. Org specific settings can be added in `*_cust.py` files. They will be ignored in commits.
 
@@ -48,10 +44,10 @@ If you need to override any of the default config, add your overrides to the `*_
 
 The names should be:
 
-- `settings_cust.py`
-- `dev_cust.py`
-- `prod_cust.py`
-- `test_cust.py`
+-   `settings_cust.py`
+-   `dev_cust.py`
+-   `prod_cust.py`
+-   `test_cust.py`
 
 As an example, if you want to use an existing Atlas sql server database, you can add a database config like this:
 
