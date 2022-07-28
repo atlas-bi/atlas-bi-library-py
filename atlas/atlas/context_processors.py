@@ -10,6 +10,7 @@ def settings(request):
         "ORG_NAME",
         "LOGIN_TITLE",
         "DEMO",
+        "FOOTER_SUBTITLE",
     ]:  # Write here the settings you want to expose to the templates.
         if hasattr(django_settings, attr):
             settings_in_templates[attr] = getattr(django_settings, attr)

@@ -51,7 +51,8 @@ gulp.task('css:build', function () {
     .pipe(
       purgecss({
         content: [
-          'web/Pages/**/*.cshtml',
+          'atlas/**/*.html',
+          'atlas/**/*.html.dj',
           'atlas/static/js/**/*.js',
           '!atlas/static/js/**/*build.js',
           '!atlas/static/js/**/*min.js',
@@ -84,7 +85,8 @@ gulp.task('css:rejected', function () {
     .pipe(
       purgecss({
         content: [
-          'web/Pages/**/*.cshtml',
+          'atlas/**/*.html',
+          'atlas/**/*.html.dj',
           'atlas/static/js/**/*.js',
           '!atlas/static/js/**/*build.js',
           '!atlas/static/js/**/*min.js',

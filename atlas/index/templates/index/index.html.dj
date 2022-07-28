@@ -6,7 +6,7 @@
     <h2 class="title is-2">
         Hey
         <figure class="image is-32x32 is-inline-flex mx-3">
-            <img src="{% static '/img/wave.png' %}" />
+            {# <img src="{% static '/img/wave.png' %}" /> #}
         </figure>
         {{ user.first_name }}, welcome to Atlas
     </h2>

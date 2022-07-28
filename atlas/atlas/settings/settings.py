@@ -11,9 +11,15 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
 from pathlib import Path
+from typing import Optional
 
 import saml2
 import saml2.saml
+
+try:
+    import tomllib
+except ImportError:
+    import tomli as tomllib  # type: ignore
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -88,6 +94,7 @@ SECRET_KEY = os.environ.get(
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
+DEMO = False
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -174,8 +181,9 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "atlas.context_processors.settings",
+                # "atlas.context_processors.settings",
                 "atlas.context_processors.user",
+                "django_settings_export.settings_export",
             ],
             "libraries": {
                 "markdown": "atlas.templatetags.markdown",
@@ -340,8 +348,54 @@ LOGGING = {
 }
 
 
+def find_project_root(src: Path) -> Path:
+    """Attempt to get the project root."""
+    for directory in [src, *src.resolve().parents]:
+
+        if (directory / "pyproject.toml").is_file():
+            return directory
+
+    # pylint: disable=W0631
+    return directory
+
+
+def find_pyproject(root: Path) -> Optional[Path]:
+    """Search upstream for a pyproject.toml file."""
+
+    pyproject = root / "pyproject.toml"
+
+    if pyproject.is_file():
+        return pyproject
+
+    return None
+
+
+pyproject_file = find_pyproject(find_project_root(Path(__file__)))
+
+if pyproject_file:
+    content = tomllib.load(pyproject_file.open("rb"))
+    try:
+        VERSION = content["tool"]["poetry"]["version"]  # type: ignore
+    except KeyError:
+        VERSION = ""
+        logger.info("No pyproject.toml found.")
+
+
+FOOTER = {
+    "SUBTITLE": "Atlas was created by the Riverside Healthcare Analytics team.",
+    "LINKS": {
+        "Status": {
+            "Epic": "https://bigbrother.riversidehealthcare.net/status/epic",
+            "Atlas": "https://bigbrother.riversidehealthcare.net/status/atlas",
+        }
+    },
+}
+
 # import custom overrides
 try:
     from .settings_cust import *
 except ImportError:
     pass
+
+
+SETTINGS_EXPORT = ["ORG_NAME", "LOGIN_TITLE", "DEMO", "FOOTER", "VERSION"]

@@ -12,7 +12,7 @@
     "install": "gulp build",
     "build": "gulp build",
     "watch": "gulp watch",
-    "commit": "git add . && pre-commit run &&  npm run pre-commit && git add . && cz --no-verify",
+    "commit": "git add . && pre-commit run ;  npm run pre-commit && git add . && cz --no-verify",
     "format": "prettier --config .prettierrc \"**/*.{ts,css,less,scss,js,json,md,yaml}\" --write",
     "test": "npm run test:eslint; npm run test:prettier",
     "test:eslint": "eslint \"./atlas/**/*.js\" --color",
