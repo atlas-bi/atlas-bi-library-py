@@ -783,7 +783,7 @@ class Collections(models.Model):
 
 
 class CollectionReports(models.Model):
-    link_id = models.AutoField(db_column="ReportAnnotationID", primary_key=True)
+    link_id = models.AutoField(db_column="LinkId", primary_key=True)
     report = models.ForeignKey(
         "Reports",
         models.DO_NOTHING,
@@ -1090,6 +1090,13 @@ class MaintenanceLogs(models.Model):
         related_name="logs",
     )
 
+    report = models.ForeignKey(
+        "ReportDocs",
+        models.DO_NOTHING,
+        db_column="ReportId",
+        related_name="maintenance_logs",
+    )
+
     class Meta:
         managed = False
         db_table = "MaintenanceLog"
@@ -1097,8 +1104,8 @@ class MaintenanceLogs(models.Model):
 
 
 class MaintenanceLogStatus(models.Model):
-    status_id = models.AutoField(db_column="MaintenanceLogStatusID", primary_key=True)
-    name = models.TextField(db_column="MaintenanceLogStatusName")
+    status_id = models.AutoField(db_column="Id", primary_key=True)
+    name = models.TextField(db_column="Name")
 
     class Meta:
         managed = False
@@ -1109,8 +1116,8 @@ class MaintenanceLogStatus(models.Model):
 
 
 class MaintenanceSchedule(models.Model):
-    schedule_id = models.AutoField(db_column="MaintenanceScheduleID", primary_key=True)
-    name = models.TextField(db_column="MaintenanceScheduleName")
+    schedule_id = models.AutoField(db_column="Id", primary_key=True)
+    name = models.TextField(db_column="Name")
 
     class Meta:
         managed = False
@@ -1121,8 +1128,8 @@ class MaintenanceSchedule(models.Model):
 
 
 class OrganizationalValue(models.Model):
-    value_id = models.AutoField(db_column="OrganizationalValueID", primary_key=True)
-    name = models.TextField(db_column="OrganizationalValueName", blank=True, default="")
+    value_id = models.AutoField(db_column="Id", primary_key=True)
+    name = models.TextField(db_column="Name", blank=True, default="")
 
     class Meta:
         managed = False
@@ -1211,25 +1218,6 @@ class ReportFragilityTags(models.Model):
         managed = False
         db_table = "ReportObjectDocFragilityTags"
         unique_together = (("report", "fragility_tag"),)
-
-
-class ReportMaintenanceLogs(models.Model):
-    link_id = models.AutoField(db_column="LinkId", primary_key=True)
-    report = models.ForeignKey(
-        "ReportDocs", models.DO_NOTHING, db_column="ReportObjectID", related_name="logs"
-    )
-    log = models.ForeignKey(
-        MaintenanceLogs,
-        models.DO_NOTHING,
-        db_column="MaintenanceLogID",
-        related_name="reports",
-    )
-
-    class Meta:
-        managed = False
-        db_table = "ReportObjectDocMaintenanceLogs"
-        unique_together = (("report", "log"),)
-        ordering = ["-log__maintained_at"]
 
 
 class ReportTerms(models.Model):
