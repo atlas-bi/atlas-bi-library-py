@@ -2,43 +2,199 @@
 {% load static %}
 {% load markdown %}
 
-<div class="card {{ report.certification_tag|risk_level }}">
+<div class="card">
     <div class="card-header">
-        <div class="columns is-flex-grow-1">
-            <div class="column is-narrow is-flex is-align-items-center ml-3">{% include "report/run.html.dj" %}</div>
-            <div class="column">
-                <p class="card-header-title pl-0 is-justify-content-space-between">
+         <div class="card-header-title py-2 is-justify-content-space-between">
+            <span class="is-flex is-align-items-center">
+                {% if report.attachments.any %}
+                    <a aria-label="run" class="is-flex mr-2 has-tooltip-arrow has-tooltip-right js-modal-trigger" data-target="report-run-@Model.ReportObjectId" data-tooltip="Run Report" data-runurl="@Model.RunReportUrl(Context,Configuration, (await Authorization.AuthorizeAsync(User,Model, "ReportRunPolicy")).Succeeded)">
+                        <span class="icon is-large has-text-success">
+                            <i class="far fa-2_3x fa-circle-play"></i>
+                        </span>
+                    </a>
+                {% elif  False %}
+                {# else if (!string.IsNullOrEmpty(Model.RunReportUrl(Context,Configuration, (await Authorization.AuthorizeAsync(User,Model, "ReportRunPolicy")).Succeeded))) #}
+                    <a aria-label="run" class="is-flex mr-2 has-tooltip-arrow has-tooltip-right" target="_blank" data-tooltip="Run Report" href="@Model.RunReportUrl(Context,Configuration, (await Authorization.AuthorizeAsync(User,Model, "ReportRunPolicy")).Succeeded)">
+                        <span class="icon is-large has-text-success">
+                            <i class="far fa-2_3x fa-circle-play"></i>
+                        </span>
+                    </a>
+                {% else %}
+                    {% if report.system_identifier == "IDB" %}
+                        <a aria-label="run" class="is-flex mr-2 is-disabled has-tooltip-arrow has-tooltip-right" data-tooltip="Open a related dashboard that uses this.">
+                            <span class="icon is-large has-text-grey-light">
+                                <i class="far fa-2_3x fa-circle-play"></i>
+                            </span>
+                        </a>
+                    {% elif False %}
+                    {# else if (!string.IsNullOrEmpty(Model.EditReportUrl(Context,Configuration))) #}
+                        <a aria-label="run" class="is-flex mr-2 is-disabled has-tooltip-arrow has-tooltip-right" data-tooltip="Open in report library.">
+                            <span class="icon is-large has-text-grey-light">
+                                <i class="far fa-2_3x fa-circle-play"></i>
+                            </span>
+                        </a>
+                    {% elif report.system_identifier %}
+                        <a aria-label="run" class="is-flex mr-2 is-disabled has-tooltip-arrow has-tooltip-right" data-tooltip="Run from the Hyperspace report library.">
+                            <span class="icon is-large has-text-grey-light">
+                                <i class="far fa-2_3x fa-circle-play"></i>
+                            </span>
+                        </a>
+                    {% endif %}
+                {% endif %}
+
+                <a class="has-text-dark" href="{{ report.get_absolute_url }}">
                     {{ report }}
-                    <span class="tag {{ report.certification_tag|risk_level }}">{{ report.certification_tag }}</span>
-                </p>
-            </div>
+                </a>
+                {% if report.is_certified %}
+                    <div class="fa-layers ml-2 fa-lg">
+                        <span class="icon has-text-info "><i class="fas fa-certificate"></i></span>
+                        <span class="icon has-text-white fa-transform"><i class="fas fa-check shrink-5"></i></span>
+
+                    </div>
+                {% endif %}
+
+            </span>
+            <span class="tags">
+                <span class="tag">{{ report.type.short }}</span>
+                {% for link in report.tag_links.all %}
+                    {% if link.show_in_header == "Y" or link.tag.show_in_header == "Y" %}
+                        <span class="tag {{ link.tag|slugify }}">{{ link.tag }}</span>
+                    {% endif %}
+                {% endfor %}
+                {% comment %}
+                @if(!string.IsNullOrEmpty(ViewBag.SearchMatch))
+                {
+                    <div class="tags has-addons mb-0">
+                        <span class="tag is-info is-light">Matched</span>
+                        <span class="tag is-info">@ViewBag.SearchMatch</span>
+                    </div>
+                }
+                {% endcomment %}
+            </span>
         </div>
     </div>
-    <div class="card-content">
+    <div class="card-content pt-3 pb-2">
         <div class="media">
-            <div class="media-left">
-                <figure class="image is-96x96">
-                    <img data-src="{% if report.imgs.exists %}
-                                       {{ report.imgs.first.get_absolute_url|size:"96x96" }}
-                                   {% else %}
-                                       {% static '/img/report_thumb_placeholder_400x300.png' %}
-                                   {% endif %}"
-                         src="{% static '/img/loader.gif' %}"
-                         alt="report image"/>
+            <div class="media-left js-modal-trigger"  data-target="report-image-@Model.ReportObjectId">
+                <figure class="image is-128x128">
+                    <picture>
+                        {% if report.imgs.exists %}
+                        <source data-srcset="{{ report.imgs.first.get_absolute_url }}?size=128x128&format=webp" srcset="{% static '/img/report_placeholder_128x128.webp' %}" type="image/webp" loading="lazy">
+                        <source srcset="{{ report.imgs.first.get_absolute_url }}?size=128x128&format=jpeg" type="image/jpeg" loading="lazy">
+                        <img data-src="{{ report.imgs.first.get_absolute_url }}?size=128x128&format=jpeg" src="{% static '/img/report_placeholder_128x128.png' %}" alt="report image" loading="lazy">
+                        {% else %}
+                            <source srcset="{% static '/img/report_placeholder_128x128.webp' %}" type="image/webp" loading="lazy">
+                            <img src="{% static '/img/report_placeholder_128x128.png' %}" alt="report image" loading="lazy">
+
+                       {% endif %}
+                    </picture>
+
                 </figure>
             </div>
-            <div class="media-content">
-                {{ report|snippet|markdown|safe }}
-                <br>
-                <p class="subtitle is-6">
-                    {{ report.type.short }}
-                </p>
+            <div class="modal" id="report-image-@Model.ReportObjectId">
+                <div class="modal-background"></div>
+                <div class="modal-content modal-image">
+                    <p class="image">
+                        {% comment %}
+                        <picture>
+                            <source srcset="/data/img?handler=Thumb&id=@Model.ReportObjectId&size=1200x1200&type=webp 800w,
+                                            /data/img?handler=Thumb&id=@Model.ReportObjectId&size=2000x2000&type=webp 1200w"
+                                    type="image/webp"
+                                    loading="lazy"
+                                    sizes="100vw">
+                            <img src="/data/img?handler=Thumb&id=@Model.ReportObjectId&size=1200x2000" alt="report image" loading="lazy">
+                        </picture>
+                        {% endcomment %}
+                    </p>
+                </div>
+                <button class="modal-close is-large" aria-label="close"></button>
+            </div>
+            <div class="is-flex is-flex-direction-column is-flex-grow-1">
+                <a class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96  has-text-dark" href="/Reports?id=@Model.ReportObjectId" >
+                    <p>
+                        {% if report|snippet %}
+                            {{ report|snippet|markdown }}
+                            <span class="has-text-link">read more</span>
+                        {% else %}
+                            <span class="has-text-link">Open to view details.</span>
+                        {% endif %}
+                    </p>
+                </a>
             </div>
         </div>
     </div>
     <footer class="card-footer">
-        <a href="{{ report.get_absolute_url }}" class="card-footer-item">Open</a>
-        <a href="#" class="card-footer-item">Edit</a>
-        <a href="#" class="card-footer-item">Manage</a>
+        <a class="card-footer-item star px-0" data-href="/users/favorites/?handler=Edit&type=report&id=@Model.ReportObjectId">
+            <span class="icon-text">
+                {% if report.report_id in user.get_starred_reports %}
+                    <span class="icon has-text-gold">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <span>Starred <span class="tag is-rounded star-count">{{ report.starred.all.count }}</span></span>
+                {% else %}
+                    <span class="icon ">
+                        <i class="far fa-star"></i>
+                    </span>
+                    <span>Star <span class="tag is-rounded star-count">{{ report.starred.all.count }}</span></span>
+                {% endif %}
+            </span>
+        </a>
+        {% if "Open In Editor" in perms %}
+        {# @if (!string.IsNullOrEmpty(Model.EditReportUrl(Context,Configuration)) && User.HasPermission("Open In Editor")) #}
+
+            <a class="card-footer-item px-0" target="_blank" href="@Model.EditReportUrl(Context,Configuration)">
+                <span class="icon-text">
+                    <span class="icon">
+                        <i class="fas fa-pen-to-square"></i>
+                    </span>
+                    <span>Edit</span>
+                </span>
+            </a>
+        {# } #}
+        {% endif %}
+        {% if "Open In Editor" in perms %}
+        {# @if (!string.IsNullOrEmpty(@Model.ManageReportUrl(Context,Configuration)) && User.HasPermission("Open In Editor")) #}
+
+            <a class="card-footer-item px-0" target="_blank" href="@Model.ManageReportUrl(Context,Configuration)">
+                <span class="icon-text">
+                    <span class="icon">
+                        <i class="fas fa-gears"></i>
+                    </span>
+                    <span>Manage</span>
+                </span>
+            </a>
+        {% endif %}
+        <div class="card-footer-item px-0">
+            <a class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2" data-target="report-profile-@Model.ReportObjectId" data-tooltip="Open Report Profile">
+                <span class="icon has-text-grey ">
+                    <i class="fas fa-chart-bar"></i>
+                </span>
+            </a>
+            {# @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true") #}
+            {# { #}
+                <a class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2" data-tooltip="Share"  data-target="report-share-@Model.ReportObjectId">
+                    <span class="icon has-text-grey">
+                        <i class="fas fa-share"></i>
+                    </span>
+                </a>
+            {# } #}
+            {# @if (@Configuration["features:enable_request_access"] == null || @Configuration["features:enable_request_access"].ToString().ToLower() == "true") #}
+            {# { #}
+                {# @if (Model.ReportObjectAttachments.Count() > 0 || !string.IsNullOrEmpty(Model.RunReportUrl(Context,Configuration,(await Authorization.AuthorizeAsync(User,Model, "ReportRunPolicy")).Succeeded))) #}
+                {# { #}
+                    <a class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2" data-tooltip="Request Access" data-target="request-access-@Model.ReportObjectId">
+                        <span class="icon has-text-grey">
+                            <i class="fas fa-universal-access"></i>
+                        </span>
+                    </a>
+                {# } #}
+            {# } #}
+        </div>
     </footer>
 </div>
+{# <partial name="Reports/_Modals" /> #}
+
+
+
+
+

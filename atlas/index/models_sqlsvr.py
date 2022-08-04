@@ -123,6 +123,12 @@ class Reports(models.Model):
     def __str__(self):
         return self.title or self.name
 
+    @property
+    def is_certified(self):
+        return self.tag_links.filter(
+            tag__name__in=["Analytics Certified", "Analytics Reviewed"]
+        ).exists()
+
     def has_docs(self):
         return hasattr(self, "docs")
 
@@ -226,14 +232,36 @@ class Reports(models.Model):
         # ).strip()[:160] + "..."
 
 
-class Tags(models.Model):
-    tagid = models.AutoField(
+class ReportAttachments(models.Model):
+    attachment_id = models.AutoField(
+        db_column="ReportObjectAttachmentId", primary_key=True
+    )  # Field name made lowercase.
+    report = models.ForeignKey(
+        Reports,
+        models.DO_NOTHING,
+        db_column="ReportObjectId",
+        related_name="attachments",
+    )
+    name = models.TextField(db_column="Name")  # Field name made lowercase.
+    path = models.TextField(db_column="Path")  # Field name made lowercase.
+    _created_at = models.DateTimeField(db_column="CreationDate", blank=True, null=True)
+    source = models.TextField(db_column="Source", blank=True, null=True)
+    type = models.TextField(db_column="Type", blank=True, null=True)
+    etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = "ReportObjectAttachments"
+
+
+class ReportTags(models.Model):
+    tag_id = models.AutoField(
         db_column="TagID", primary_key=True
     )  # Field name made lowercase.
-    epictagid = models.DecimalField(
+    system_id = models.DecimalField(
         db_column="EpicTagID", max_digits=18, decimal_places=0, blank=True, null=True
     )  # Field name made lowercase.
-    tagname = models.CharField(
+    name = models.CharField(
         db_column="TagName", max_length=200, blank=True, null=True
     )  # Field name made lowercase.
 
@@ -242,8 +270,23 @@ class Tags(models.Model):
         db_table = "ReportObjectTags"
 
 
-class ReportTagLinks(models.Model):
-    taglink_id = models.AutoField(
+class Tags(models.Model):
+    tag_id = models.AutoField(db_column="TagId", primary_key=True)
+    name = models.CharField(db_column="Name", max_length=450, blank=True, null=True)
+    description = models.TextField(db_column="Description", blank=True, null=True)
+    priority = models.IntegerField(db_column="Priority", blank=True, null=True)
+    showinheader = models.TextField(db_column="ShowInHeader", blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = "Tags"
+
+    def __str__(self):
+        return self.name
+
+
+class ReportSystemTagLinks(models.Model):
+    link_id = models.AutoField(
         db_column="TagMembershipID", primary_key=True
     )  # Field name made lowercase.
     report = models.ForeignKey(
@@ -252,11 +295,14 @@ class ReportTagLinks(models.Model):
         db_column="ReportObjectId",
         blank=True,
         default="",
-        related_name="report_tags",
+        related_name="system_tag_links",
     )
 
     tag = models.ForeignKey(
-        Tags, models.DO_NOTHING, db_column="TagID", related_name="tag_reports"
+        ReportTags,
+        models.DO_NOTHING,
+        db_column="TagID",
+        related_name="system_report_links",
     )
     line = models.IntegerField(
         db_column="Line", blank=True, null=True
@@ -265,6 +311,28 @@ class ReportTagLinks(models.Model):
     class Meta:
         managed = False
         db_table = "ReportObjectTagMemberships"
+
+
+class ReportTagLinks(models.Model):
+    link_id = models.AutoField(
+        db_column="ReportTagLinkId", primary_key=True
+    )  # Field name made lowercase.
+    report = models.ForeignKey(
+        Reports,
+        models.DO_NOTHING,
+        db_column="ReportId",
+        blank=True,
+        default="",
+        related_name="tag_links",
+    )
+    tag = models.ForeignKey(
+        Tags, models.DO_NOTHING, db_column="TagId", related_name="system_report_links"
+    )
+    show_in_header = models.TextField(db_column="ShowInHeader", blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = "ReportTagLinks"
 
 
 class ReportHierarchies(models.Model):
@@ -486,7 +554,7 @@ class Users(AbstractUser, PermissionsMixin):
 
     def get_starred_reports(self):
         # return all favorites
-        return list(self.starred_reports.values_list("report__report_id"))
+        return list(self.starred_reports.values_list("report__report_id", flat=True))
 
     @property
     def password(self):

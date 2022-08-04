@@ -30,7 +30,10 @@ def index(request):
         request.user.starred_reports.select_related("report")
         .select_related("report__docs")
         .select_related("report__type")
-        .filter(owner=request.user)
+        .prefetch_related("report__attachments")
+        .prefetch_related("report__tag_links__tag")
+        .prefetch_related("report__starred")
+        # .filter(owner=request.user)
         .order_by("rank", "report__name")
     )
 
