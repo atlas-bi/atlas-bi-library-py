@@ -46,7 +46,7 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
             <div class="tab-dta" id="top-user-chart">
                 <div class="atlas-chart">
                     <div class="ajaxLoader">
-                        <img class="ajaxLoader-img" src="/img/loader.gif"/>
+                        <img class="ajaxLoader-img" src="{% static '/img/loader.gif' %}"/>
                     </div>
                     <script type="application/json">
                                 @{

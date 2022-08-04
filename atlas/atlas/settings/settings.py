@@ -236,10 +236,14 @@ AUTH_PASSWORD_VALIDATORS = [
 
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.memcached.MemcachedCache",
+        "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
         "LOCATION": "127.0.0.1:11211",
     }
 }
+CACHE_MIDDLEWARE_ALIAS = "default"
+CACHE_MIDDLEWARE_SECONDS = 20
+CACHE_MIDDLEWARE_KEY_PREFIX = ""
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
@@ -390,12 +394,121 @@ FOOTER = {
         }
     },
 }
-
+SITE_MESSAGE = "Welcom to Atlas"
+LOGO = "img/thinking-face-text-266x80.png"
 # import custom overrides
 try:
     from .settings_cust import *
 except ImportError:
     pass
 
+SETTINGS_EXPORT = [
+    "ORG_NAME",
+    "LOGIN_TITLE",
+    "DEMO",
+    "FOOTER",
+    "VERSION",
+    "SITE_MESSAGE",
+]
 
-SETTINGS_EXPORT = ["ORG_NAME", "LOGIN_TITLE", "DEMO", "FOOTER", "VERSION"]
+SAFE_HTML_TAGS = [
+    "a",
+    "abbr",
+    "acronym",
+    "address",
+    "area",
+    "article",
+    "aside",
+    "audio",
+    "b",
+    "big",
+    "blockquote",
+    "br",
+    "button",
+    "canvas",
+    "caption",
+    "center",
+    "cite",
+    "code",
+    "col",
+    "colgroup",
+    "command",
+    "datagrid",
+    "datalist",
+    "dd",
+    "del",
+    "details",
+    "dfn",
+    "dialog",
+    "dir",
+    "div",
+    "dl",
+    "dt",
+    "em",
+    "event-source",
+    "fieldset",
+    "figcaption",
+    "figure",
+    "footer",
+    "font",
+    "form",
+    "header",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "i",
+    "img",
+    "input",
+    "ins",
+    "keygen",
+    "kbd",
+    "label",
+    "legend",
+    "li",
+    "m",
+    "map",
+    "menu",
+    "meter",
+    "multicol",
+    "nav",
+    "nextid",
+    "ol",
+    "output",
+    "optgroup",
+    "option",
+    "p",
+    "pre",
+    "progress",
+    "q",
+    "s",
+    "samp",
+    "section",
+    "select",
+    "small",
+    "sound",
+    "source",
+    "spacer",
+    "span",
+    "strike",
+    "strong",
+    "sub",
+    "sup",
+    "table",
+    "tbody",
+    "td",
+    "textarea",
+    "time",
+    "tfoot",
+    "th",
+    "thead",
+    "tr",
+    "tt",
+    "u",
+    "ul",
+    "var",
+    "video",
+]

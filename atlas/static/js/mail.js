@@ -56,6 +56,7 @@
           'Content-Type',
           'application/x-www-form-urlencoded; charset=UTF-8',
         );
+        sendMes.setRequestHeader('X-CSRFToken', csrftoken);
         sendMes.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         sendMes.send(JSON.stringify(data));
         sendMes.addEventListener('load', function () {

@@ -14,7 +14,7 @@
 import re
 from datetime import datetime
 
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.db import models
 from django.urls import reverse
 
@@ -115,9 +115,6 @@ class Reports(models.Model):
     )
     system_path = models.TextField(db_column="ReportServerPath", blank=True, default="")
     etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
-    certification_tag = models.CharField(
-        db_column="CertificationTag", max_length=200, blank=True, default=""
-    )
 
     class Meta:
         managed = False
@@ -227,6 +224,47 @@ class Reports(models.Model):
         #     (self.detailed_description or "") + " " +
         #     (self.description or "")
         # ).strip()[:160] + "..."
+
+
+class Tags(models.Model):
+    tagid = models.AutoField(
+        db_column="TagID", primary_key=True
+    )  # Field name made lowercase.
+    epictagid = models.DecimalField(
+        db_column="EpicTagID", max_digits=18, decimal_places=0, blank=True, null=True
+    )  # Field name made lowercase.
+    tagname = models.CharField(
+        db_column="TagName", max_length=200, blank=True, null=True
+    )  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = "ReportObjectTags"
+
+
+class ReportTagLinks(models.Model):
+    taglink_id = models.AutoField(
+        db_column="TagMembershipID", primary_key=True
+    )  # Field name made lowercase.
+    report = models.ForeignKey(
+        Reports,
+        models.DO_NOTHING,
+        db_column="ReportObjectId",
+        blank=True,
+        default="",
+        related_name="report_tags",
+    )
+
+    tag = models.ForeignKey(
+        Tags, models.DO_NOTHING, db_column="TagID", related_name="tag_reports"
+    )
+    line = models.IntegerField(
+        db_column="Line", blank=True, null=True
+    )  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = "ReportObjectTagMemberships"
 
 
 class ReportHierarchies(models.Model):
@@ -354,7 +392,7 @@ class ReportTypes(models.Model):
         return self.short_name or self.name
 
 
-class Users(AbstractUser):
+class Users(AbstractUser, PermissionsMixin):
     user_id = models.AutoField(db_column="UserID", primary_key=True)
     username = models.TextField(db_column="Username")
     employee_id = models.TextField(db_column="EmployeeID", blank=True, default="")
@@ -362,6 +400,8 @@ class Users(AbstractUser):
     display_name = models.TextField(db_column="DisplayName", blank=True, default="")
     _full_name = models.TextField(db_column="FullName", blank=True, default="")
     _first_name = models.TextField(db_column="FirstName", blank=True, default="")
+    full_name = models.TextField(db_column="Fullname_calc", blank=True, null=True)
+    first_name = models.TextField(db_column="Firstname_calc", blank=True, null=True)
     last_name = models.TextField(db_column="LastName", blank=True, default="")
     department = models.TextField(db_column="Department", blank=True, default="")
     title = models.TextField(db_column="Title", blank=True, default="")
@@ -373,7 +413,7 @@ class Users(AbstractUser):
     last_login = models.DateTimeField(db_column="LastLogin", blank=True, null=True)
     is_active = True
     date_joined = None
-    is_superuser = True  # check permissions for admin
+    # is_superuser = True  # check permissions for admin
     is_staff = True
 
     class Meta:
@@ -381,124 +421,80 @@ class Users(AbstractUser):
         db_table = "User"
 
     def __str__(self):
-        return self.build_full_name()
+        return self.full_name
 
     @property
-    def is_admin(self):
-        return self.role_links.filter(role_id=1).exists()
+    def is_superuser(self):
+        # either an admin, or in a group that is an admin.
+        return (
+            self.role_links.filter(role__name="Administrator").exists()
+            or self.group_links.filter(
+                group__role_links__role__name="Administrator"
+            ).exists()
+        )
+
+    def get_user_permissions(self, obj=None):
+        # if an active admin, return all permissions
+        if (
+            not self.user_preferences.filter(key="AdminDisabled").exists()
+            and self.is_superuser
+        ):
+            return RolePermissions.objects.all().values_list("name", flat=True)
+
+        # otherwise get the users group permissions, and add in the default user permissions.
+        return (
+            self.role_links.exclude(role__name__in=["Administrator", "User"])
+            .values_list("role__permission_links__permission__name", flat=True)
+            .union(
+                RolePermissions.objects.filter(
+                    role_permission_links__role__name="User"
+                ).values_list("name", flat=True)
+            )
+        )
+
+    def get_group_permissions(self, obj=None):
+        # don't need to get admin or user permissions here, they are passed from the user permissions check.
+        return (
+            UserRoles.objects.filter(
+                name__in=self.group_links.values_list(
+                    "group__role_links__role__name", flat=True
+                )
+            )
+            .exclude(name__in=["Administrator", "User"])
+            .values_list("permission_links__permission__name", flat=True)
+        )
+
+    def get_all_permissions(self, obj=None):
+        return self.get_user_permissions().union(self.get_group_permissions())
+
+    def has_perm(self, perm, obj=None):
+        return perm in self.get_all_permissions()
+
+    def has_perms(self, perms, obj=None):
+        return set(perms) < set(self.get_all_permissions())
+        pass
+
+    # def has_module_perms(self, obj=None):
+    #     pass
 
     def get_absolute_url(self):
         return reverse("user:profile", kwargs={"pk": self.pk})
 
-    def has_permission(self, perm, obj=None):
-        # check if they have a permission
-        return (
-            self.role_links.filter(role_id=1).exists()
-            or self.role_links.permission_links.filter(permissions_id=perm).exists()
-        )
-
-    def get_roles(self):
-        """Get users roles."""
-        return list(self.role_links.values_list("role__name"))
-
-    def get_permissions(self):
-        # return all permissions
-        if self.role_links.filter(role_id=1).exists():
-            return list(
-                RolePermissions.objects.all().values_list("permissions_id", flat=True)
-            )
-
-        return list(
-            self.role_links.values_list(
-                "role_id__permission_links__permission_id", flat=True
-            )
-        ).append(
-            # every one can get ``user`` permissions.
-            list(
-                RolePermissions.objects.filter(
-                    role_permission_links__role_id=6
-                ).values_list("permissions_id", flat=True)
-            )
-        )
-
     def get_preferences(self):
         # return users preferences as queriable object
-        return self.user_preferences
+        return dict(self.user_preferences.values_list("key", "value"))
 
     def get_starred_reports(self):
         # return all favorites
         return list(self.starred_reports.values_list("report__report_id"))
 
     @property
-    def active_role(self):
-        if self.user_preferences.filter(key="ActiveRole").exists():
-            return UserRoles.objects.filter(
-                role_id=self.user_preferences.filter(key="ActiveRole").first().value
-            ).first()
-        return None
-
-    @property
     def password(self):
         return 123
 
     @property
-    def full_name(self):
-        return self.build_full_name()
-
-    @property
     def first_initial(self):
         return self.full_name[0]
-
-    @property
-    def first_name(self):
-        if self._first_name:
-            return self._first_name
-
-        # if the name format is "last, first" > "First Last"
-        if self.account_name and "," in self.account_name:
-            name = self.account_name.replace(", ", ",").split(" ")[0].split(",")
-            if len(name) > 1:
-                return name[1].title()
-
-        # if the name format is "domain\first-last" > "First Last"
-        if self.account_name:
-            return re.sub(r".+?\\+", "", self.account_name).split("-")[0].title()
-
-        # if the name format is "last, first" > "First Last"
-        if self.username and "," in self.username:
-            name = self.username.replace(", ", ",").split(" ")[0].split(",")
-            if len(name) > 1:
-                return name[1].title()
-
-        # if the name format is "domain\first-last" > "First Last"
-        if self.username:
-            return re.sub(r".+?\\+", "", self.username).split("-")[0].title()
-
-    def build_full_name(self):
-        if self._full_name:
-            return self._full_name
-
-        # if the name format is "last, first" > "First Last"
-        if self.account_name and "," in self.account_name:
-            name = self.account_name.replace(", ", ",").split(" ")[0].split(",")
-            if len(name) > 1:
-                return ("{} {}".format(name[1], name[0])).title()
-
-        # if the name format is "domain\first-last" > "First Last"
-        if self.account_name:
-            return re.sub(r".+?\\+", "", self.account_name).replace("-", " ").title()
-
-        # if the name format is "last, first" > "First Last"
-        if self.username and "," in self.username:
-            name = self.username.replace(", ", ",").split(" ")[0].split(",")
-            if len(name) > 1:
-                return ("{} {}".format(name[1], name[0])).title()
-
-        # if the name format is "domain\first-last" > "First Last"
-        if self.username:
-            return re.sub(r".+?\\+", "", self.username).replace("-", " ").title()
-
-        return "{} {}".format(self.first_name, self.last_name)
 
 
 class Groups(models.Model):
@@ -527,7 +523,7 @@ class UserGroupMemberships(models.Model):
         db_column="UserId",
         blank=True,
         default="",
-        related_name="group_memeberships",
+        related_name="group_links",
     )
     group = models.ForeignKey(
         Groups,
@@ -546,16 +542,8 @@ class UserGroupMemberships(models.Model):
 
 class Analytics(models.Model):
     analytics_id = models.AutoField(db_column="Id", primary_key=True)
-    username = models.TextField(db_column="Username", blank=True, default="")
-    app_code_name = models.TextField(db_column="appCodeName", blank=True, default="")
-    app_name = models.TextField(db_column="appName", blank=True, default="")
-    app_version = models.TextField(db_column="appVersion", blank=True, default="")
-    cookie_enabled = models.TextField(db_column="cookieEnabled", blank=True, default="")
     language = models.TextField(blank=True, default="")
-    oscpu = models.TextField(blank=True, default="")
-    platform = models.TextField(blank=True, default="")
     useragent = models.TextField(db_column="userAgent", blank=True, default="")
-    host = models.TextField(blank=True, default="")
     hostname = models.TextField(blank=True, default="")
     href = models.TextField(blank=True, default="")
     protocol = models.TextField(blank=True, default="")
@@ -565,7 +553,6 @@ class Analytics(models.Model):
     screen_height = models.TextField(db_column="screenHeight", blank=True, default="")
     screen_width = models.TextField(db_column="screenWidth", blank=True, default="")
     origin = models.TextField(blank=True, default="")
-    title = models.TextField(blank=True, default="")
     load_time = models.TextField(db_column="loadTime", blank=True, default="")
     access_date = models.DateTimeField(
         db_column="accessDateTime", blank=True, null=True
@@ -584,7 +571,6 @@ class Analytics(models.Model):
     page_id = models.TextField(db_column="pageId", blank=True, default="")
     session_id = models.TextField(db_column="sessionId", blank=True, default="")
     page_time = models.IntegerField(db_column="pageTime", blank=True, null=True)
-    session_time = models.IntegerField(db_column="sessionTime", blank=True, null=True)
     update_time = models.DateTimeField(db_column="updateTime", blank=True, null=True)
 
     class Meta:
@@ -592,158 +578,8 @@ class Analytics(models.Model):
         db_table = "Analytics"
 
 
-class CollectionAgreements(models.Model):
-    agreement_id = models.AutoField(db_column="AgreementID", primary_key=True)
-    description = models.TextField(db_column="Description", blank=True, default="")
-    _met_at = models.DateTimeField(db_column="MeetingDate", blank=True, null=True)
-    _effective_from = models.DateTimeField(
-        db_column="EffectiveDate", blank=True, null=True
-    )
-    _modified_at = models.DateTimeField(
-        db_column="LastUpdateDate", blank=True, auto_now=True
-    )
-    modified_by = models.ForeignKey(
-        "Users",
-        models.DO_NOTHING,
-        related_name="collection_agreement_modifier",
-        db_column="LastUpdateUser",
-        blank=True,
-        null=True,
-    )
-    collection_id = models.ForeignKey(
-        "Collections",
-        models.DO_NOTHING,
-        db_column="DataProjectId",
-        blank=True,
-        null=True,
-        related_name="agreements",
-    )
-    rank = models.IntegerField(db_column="Rank", blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = "DP_Agreement"
-
-    @property
-    def met_at(self):
-        if self._met_at:
-            return datetime.strftime(self._met_at, "%m/%d/%y")
-        return ""
-
-    @property
-    def effective_from(self):
-        if self._effective_from:
-            return datetime.strftime(self._effective_from, "%m/%d/%y")
-        return ""
-
-    @property
-    def modified_at(self):
-        if self._modified_at:
-            return datetime.strftime(self._modified_at, "%m/%d/%y")
-        return ""
-
-
-class CollectionAgreementUsers(models.Model):
-    agreementusers_id = models.AutoField(db_column="AgreementUsersID", primary_key=True)
-    agreement = models.ForeignKey(
-        CollectionAgreements,
-        models.DO_NOTHING,
-        db_column="AgreementID",
-        blank=True,
-        null=True,
-        related_name="agreement_users",
-    )
-    user = models.ForeignKey(
-        "Users",
-        models.DO_NOTHING,
-        db_column="UserId",
-        blank=True,
-        null=True,
-        related_name="collection_agreement",
-    )
-    modified_at = models.DateTimeField(
-        db_column="LastUpdateDate", blank=True, null=True
-    )
-    modified_by = models.ForeignKey(
-        "Users",
-        models.DO_NOTHING,
-        related_name="collection_agreement_users_modifier",
-        db_column="LastUpdateUser",
-        blank=True,
-        null=True,
-    )
-
-    class Meta:
-        managed = False
-        db_table = "DP_AgreementUsers"
-
-
-class CollectionAttachments(models.Model):
-    attachment_id = models.AutoField(db_column="AttachmentId", primary_key=True)
-    collection = models.ForeignKey(
-        "Collections",
-        models.DO_NOTHING,
-        db_column="DataProjectId",
-        related_name="attachments",
-    )
-    rank = models.IntegerField(db_column="Rank")
-    data = models.BinaryField(db_column="AttachmentData")
-    category = models.TextField(db_column="AttachmentType")
-    name = models.TextField(db_column="AttachmentName", blank=True, default="")
-    size = models.IntegerField(db_column="AttachmentSize", blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = "DP_Attachments"
-
-
-class InitiativeContacts(models.Model):
-    contact_id = models.AutoField(db_column="ContactID", primary_key=True)
-    name = models.TextField(db_column="Name", blank=True, default="")
-    email = models.TextField(db_column="Email", blank=True, default="")
-    phone = models.CharField(db_column="Phone", max_length=55, blank=True, default="")
-    company = models.TextField(db_column="Company", blank=True, default="")
-
-    class Meta:
-        managed = False
-        db_table = "DP_Contact"
-
-    def __str__(self):
-        return self.name
-
-
-class InitiativeContactLinks(models.Model):
-    link_id = models.AutoField(db_column="LinkId", primary_key=True)
-    initiative = models.ForeignKey(
-        "Initiatives",
-        models.DO_NOTHING,
-        db_column="InitiativeId",
-        blank=True,
-        null=True,
-        related_name="contact_links",
-    )
-    contact = models.ForeignKey(
-        InitiativeContacts,
-        models.DO_NOTHING,
-        db_column="ContactId",
-        blank=True,
-        null=True,
-        related_name="initiative_links",
-    )
-
-    class Meta:
-        managed = False
-        db_table = "DP_Contact_Links"
-
-    def __str__(self):
-        return "{} @{}".format(
-            self.contact.name,
-            self.contact.company,
-        )
-
-
 class Initiatives(models.Model):
-    initiative_id = models.AutoField(db_column="DataInitiativeID", primary_key=True)
+    initiative_id = models.AutoField(db_column="InitiativeID", primary_key=True)
     name = models.TextField(db_column="Name", blank=True, default="")
     description = models.TextField(db_column="Description", blank=True, default="")
     ops_owner = models.ForeignKey(
@@ -790,10 +626,11 @@ class Initiatives(models.Model):
         blank=True,
         null=True,
     )
+    hidden = models.CharField(db_column="Hidden", max_length=1, blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = "DP_DataInitiative"
+        db_table = "Initiative"
 
     def __str__(self):
         return self.name
@@ -807,6 +644,9 @@ class Initiatives(models.Model):
     def get_absolute_edit_url(self):
         return reverse("initiative:edit", kwargs={"pk": self.pk})
 
+    def stars(self):
+        return self.stars.count()
+
     @property
     def modified_at(self):
         if self._modified_at:
@@ -815,12 +655,12 @@ class Initiatives(models.Model):
 
 
 class Collections(models.Model):
-    collection_id = models.AutoField(db_column="DataProjectID", primary_key=True)
+    collection_id = models.AutoField(db_column="CollectionId", primary_key=True)
 
     initiative = models.ForeignKey(
         "Initiatives",
         models.DO_NOTHING,
-        db_column="DataInitiativeID",
+        db_column="InitiativeId",
         blank=True,
         null=True,
         related_name="collections",
@@ -850,7 +690,7 @@ class Collections(models.Model):
 
     class Meta:
         managed = False
-        db_table = "DP_DataProject"
+        db_table = "Collection"
 
     def __str__(self):
         return self.name
@@ -874,162 +714,6 @@ class Collections(models.Model):
         return ""
 
 
-class CollectionChecklist(models.Model):
-    checklist_id = models.AutoField(db_column="MilestoneChecklistId", primary_key=True)
-    task = models.ForeignKey(
-        "CollectionMilestoneTasks",
-        models.DO_NOTHING,
-        db_column="MilestoneTaskId",
-        blank=True,
-        null=True,
-        related_name="checklist",
-    )
-    item = models.TextField(db_column="Item", blank=True, default="")
-
-    class Meta:
-        managed = False
-        db_table = "DP_MilestoneChecklist"
-
-
-class CollectionChecklistCompleted(models.Model):
-    checklistcompleted_id = models.AutoField(
-        db_column="MilestoneChecklistCompletedId", primary_key=True
-    )
-    collection_id = models.ForeignKey(
-        Collections,
-        models.DO_NOTHING,
-        db_column="DataProjectId",
-        blank=True,
-        null=True,
-        related_name="completed_checklist",
-    )
-    task_date = models.DateTimeField(db_column="TaskDate", blank=True, null=True)
-    task_id = models.IntegerField(db_column="TaskId", blank=True, null=True)
-    checklist_id = models.IntegerField(
-        db_column="MilestoneChecklistId", blank=True, null=True
-    )
-    status = models.BooleanField(db_column="ChecklistStatus", blank=True, default="")
-    completion_date = models.DateTimeField(
-        db_column="CompletionDate", blank=True, null=True
-    )
-    completion_user = models.IntegerField(
-        db_column="CompletionUser", blank=True, null=True
-    )
-
-    class Meta:
-        managed = False
-        db_table = "DP_MilestoneChecklistCompleted"
-
-
-class CollectionMilestoneFrequency(models.Model):
-    frequency_id = models.AutoField(db_column="MilestoneTypeId", primary_key=True)
-    name = models.TextField(db_column="Name", blank=True, default="")
-
-    class Meta:
-        managed = False
-        db_table = "DP_MilestoneFrequency"
-
-
-class CollectionMilestoneTasks(models.Model):
-    task_id = models.AutoField(db_column="MilestoneTaskId", primary_key=True)
-    template = models.ForeignKey(
-        "CollectionMilestoneTemplates",
-        models.DO_NOTHING,
-        db_column="MilestoneTemplateId",
-        blank=True,
-        null=True,
-        related_name="tasks",
-    )
-    owner = models.ForeignKey(
-        "Users",
-        db_column="OwnerId",
-        on_delete=models.CASCADE,
-        related_name="collection_task_owner",
-        blank=True,
-        null=True,
-    )
-    description = models.TextField(db_column="Description", blank=True, default="")
-    start_date = models.DateTimeField(db_column="StartDate", blank=True, null=True)
-    end_date = models.DateTimeField(db_column="EndDate", blank=True, null=True)
-    modified_by = models.ForeignKey(
-        "Users",
-        db_column="LastUpdateUser",
-        on_delete=models.CASCADE,
-        related_name="collection_task_modifier",
-        blank=True,
-        null=True,
-    )
-    modified_at = models.DateTimeField(
-        db_column="LastUpdateDate", blank=True, null=True
-    )
-    collection = models.ForeignKey(
-        Collections,
-        models.DO_NOTHING,
-        db_column="DataProjectId",
-        blank=True,
-        null=True,
-        related_name="tasks",
-    )
-
-    class Meta:
-        managed = False
-        db_table = "DP_MilestoneTasks"
-
-
-class CollectionMilestoneTasksCompleted(models.Model):
-    task_id = models.AutoField(db_column="MilestoneTaskCompletedId", primary_key=True)
-    collection = models.ForeignKey(
-        Collections,
-        models.DO_NOTHING,
-        db_column="DataProjectId",
-        blank=True,
-        null=True,
-        related_name="completed_tasks",
-    )
-    completion_date = models.DateTimeField(
-        db_column="CompletionDate", blank=True, null=True
-    )
-    completion_user = models.ForeignKey(
-        "Users",
-        db_column="CompletionUser",
-        on_delete=models.CASCADE,
-        related_name="collection_task_completed_by",
-        blank=True,
-        null=True,
-    )
-    comments = models.TextField(db_column="Comments", blank=True, default="")
-    owner = models.TextField(db_column="Owner", blank=True, default="")
-    due_date = models.DateTimeField(db_column="DueDate", blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = "DP_MilestoneTasksCompleted"
-
-
-class CollectionMilestoneTemplates(models.Model):
-    template_id = models.AutoField(db_column="MilestoneTemplateId", primary_key=True)
-    name = models.TextField(db_column="Name", blank=True, default="")
-    type_id = models.ForeignKey(
-        CollectionMilestoneFrequency,
-        models.DO_NOTHING,
-        db_column="MilestoneTypeId",
-        blank=True,
-        null=True,
-        related_name="milestone_templates",
-    )
-    lastupdateuser = models.IntegerField(
-        db_column="LastUpdateUser", blank=True, null=True
-    )
-    lastupdatedate = models.DateTimeField(
-        db_column="LastUpdateDate", blank=True, null=True
-    )
-    interval = models.IntegerField(db_column="Interval", blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = "DP_MilestoneTemplates"
-
-
 class CollectionReports(models.Model):
     link_id = models.AutoField(db_column="ReportAnnotationID", primary_key=True)
     report = models.ForeignKey(
@@ -1043,7 +727,7 @@ class CollectionReports(models.Model):
     collection = models.ForeignKey(
         Collections,
         models.DO_NOTHING,
-        db_column="DataProjectId",
+        db_column="CollectionId",
         blank=True,
         null=True,
         related_name="reports",
@@ -1052,7 +736,7 @@ class CollectionReports(models.Model):
 
     class Meta:
         managed = False
-        db_table = "DP_ReportAnnotation"
+        db_table = "CollectionReport"
 
     def __str__(self):
         return self.report.friendly_name
@@ -1083,7 +767,7 @@ class CollectionTerms(models.Model):
     collection = models.ForeignKey(
         Collections,
         models.DO_NOTHING,
-        db_column="DataProjectId",
+        db_column="CollectionId",
         blank=True,
         null=True,
         related_name="terms",
@@ -1092,7 +776,7 @@ class CollectionTerms(models.Model):
 
     class Meta:
         managed = False
-        db_table = "DP_TermAnnotation"
+        db_table = "CollectionTerm"
 
     def __str__(self):
         return self.term.name
@@ -1110,63 +794,9 @@ class CollectionTerms(models.Model):
         )
 
 
-class CollectionCommentStream(models.Model):
-    stream_id = models.AutoField(
-        db_column="DataProjectConversationId", primary_key=True
-    )
-    collection = models.ForeignKey(
-        Collections,
-        models.DO_NOTHING,
-        db_column="DataProjectId",
-        related_name="comment_streams",
-    )
-
-    class Meta:
-        managed = False
-        db_table = "Dp_DataProjectConversation"
-
-
-class CollectionComments(models.Model):
-    comment_id = models.AutoField(
-        db_column="DataProjectConversationMessageId", primary_key=True
-    )
-    stream = models.ForeignKey(
-        CollectionCommentStream,
-        models.DO_NOTHING,
-        db_column="DataProjectConversationId",
-        blank=True,
-        null=True,
-        related_name="comments",
-    )
-    user = models.ForeignKey(
-        "Users",
-        models.DO_NOTHING,
-        related_name="user_collection_comments",
-        db_column="UserId",
-        blank=True,
-        null=True,
-    )
-    message = models.TextField(db_column="MessageText", blank=True, default="")
-    posted_at = models.DateTimeField(db_column="PostDateTime", blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = "Dp_DataProjectConversationMessage"
-
-    def get_absolute_delete_url(self):
-        return reverse(
-            "collection:comments_delete",
-            kwargs={"pk": self.stream.collection_id, "comment_id": self.pk},
-        )
-
-
 class RunFrequency(models.Model):
-    frequency_id = models.AutoField(
-        db_column="EstimatedRunFrequencyID", primary_key=True
-    )
-    name = models.TextField(
-        db_column="EstimatedRunFrequencyName", blank=True, default=""
-    )
+    frequency_id = models.AutoField(db_column="Id", primary_key=True)
+    name = models.TextField(db_column="Name", blank=True, default="")
 
     class Meta:
         managed = False
@@ -1177,7 +807,7 @@ class RunFrequency(models.Model):
 
 
 class FinancialImpact(models.Model):
-    impact_id = models.AutoField(db_column="FinancialImpactId", primary_key=True)
+    impact_id = models.AutoField(db_column="Id", primary_key=True)
     name = models.TextField(db_column="Name", blank=True, default="")
 
     class Meta:
@@ -1189,8 +819,8 @@ class FinancialImpact(models.Model):
 
 
 class Fragility(models.Model):
-    fragility_id = models.AutoField(db_column="FragilityID", primary_key=True)
-    name = models.TextField(db_column="FragilityName", blank=True, default="")
+    fragility_id = models.AutoField(db_column="Id", primary_key=True)
+    name = models.TextField(db_column="Name", blank=True, default="")
 
     class Meta:
         managed = False
@@ -1201,8 +831,8 @@ class Fragility(models.Model):
 
 
 class FragilityTag(models.Model):
-    tag_id = models.AutoField(db_column="FragilityTagID", primary_key=True)
-    name = models.TextField(db_column="FragilityTagName", blank=True, default="")
+    tag_id = models.AutoField(db_column="Id", primary_key=True)
+    name = models.TextField(db_column="Name", blank=True, default="")
 
     class Meta:
         managed = False
@@ -1741,7 +1371,7 @@ class RolePermissionLinks(models.Model):
     permissionlinks_id = models.AutoField(
         db_column="RolePermissionLinksId", primary_key=True
     )
-    role_id = models.ForeignKey(
+    role = models.ForeignKey(
         "UserRoles",
         models.DO_NOTHING,
         db_column="RoleId",
@@ -1749,7 +1379,7 @@ class RolePermissionLinks(models.Model):
         null=True,
         related_name="permission_links",
     )
-    permission_id = models.ForeignKey(
+    permission = models.ForeignKey(
         "RolePermissions",
         models.DO_NOTHING,
         db_column="RolePermissionsId",
@@ -1928,9 +1558,7 @@ class Shareditems(models.Model):
 
 
 class StrategicImportance(models.Model):
-    importance_id = models.AutoField(
-        db_column="StrategicImportanceId", primary_key=True
-    )
+    importance_id = models.AutoField(db_column="Id", primary_key=True)
     name = models.TextField(db_column="Name", blank=True, default="")
 
     class Meta:
@@ -2094,7 +1722,7 @@ class FavoriteFolders(models.Model):
 
 
 class StarredUsers(models.Model):
-    star_id = models.AutoField(primary_key=True)
+    star_id = models.AutoField(db_column="StarId", primary_key=True)
     rank = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(
         "Users",
@@ -2119,7 +1747,7 @@ class StarredUsers(models.Model):
 
 
 class StarredReports(models.Model):
-    star_id = models.AutoField(primary_key=True)
+    star_id = models.AutoField(db_column="StarId", primary_key=True)
     rank = models.IntegerField(blank=True, null=True)
     report = models.ForeignKey(
         "Reports",
@@ -2156,7 +1784,7 @@ class StarredReports(models.Model):
 
 
 class StarredCollections(models.Model):
-    star_id = models.AutoField(primary_key=True)
+    star_id = models.AutoField(db_column="StarId", primary_key=True)
     rank = models.IntegerField(blank=True, null=True)
     collection = models.ForeignKey(
         "Collections",
@@ -2182,7 +1810,7 @@ class StarredCollections(models.Model):
 
 
 class StarredGroups(models.Model):
-    star_id = models.AutoField(primary_key=True)
+    star_id = models.AutoField(db_column="StarId", primary_key=True)
     rank = models.IntegerField(blank=True, null=True)
     group = models.ForeignKey(
         "Groups",
@@ -2208,7 +1836,7 @@ class StarredGroups(models.Model):
 
 
 class StarredTerms(models.Model):
-    star_id = models.AutoField(primary_key=True)
+    star_id = models.AutoField(db_column="StarId", primary_key=True)
     rank = models.IntegerField(blank=True, null=True)
     term = models.ForeignKey(
         "Terms",
@@ -2234,7 +1862,7 @@ class StarredTerms(models.Model):
 
 
 class StarredSearches(models.Model):
-    star_id = models.AutoField(primary_key=True)
+    star_id = models.AutoField(db_column="StarId", primary_key=True)
     rank = models.IntegerField(blank=True, null=True)
     search = models.TextField(blank=True, default="")
     owner = models.ForeignKey(
@@ -2253,15 +1881,23 @@ class StarredSearches(models.Model):
 
 
 class StarredInitiatives(models.Model):
-    star_id = models.AutoField(primary_key=True)
-    rank = models.IntegerField(blank=True, null=True)
+    star_id = models.AutoField(db_column="StarId", primary_key=True)
+    rank = models.IntegerField(db_column="Rank", blank=True, null=True)
     initiative = models.ForeignKey(
         "Initiatives",
         on_delete=models.CASCADE,
-        db_column="initiativeid",
+        db_column="Initiativeid",
         blank=True,
         null=True,
-        related_name="starred",
+        related_name="stars",
+    )
+    folder = models.ForeignKey(
+        "FavoriteFolders",
+        on_delete=models.CASCADE,
+        db_column="Folderid",
+        blank=True,
+        null=True,
+        related_name="initiatives",
     )
     owner = models.ForeignKey(
         "Users",
@@ -2388,7 +2024,7 @@ class UserPreferences(models.Model):
     key = models.TextField(db_column="ItemType", blank=True, default="")
     value = models.IntegerField(db_column="ItemValue", blank=True, null=True)
     item_id = models.IntegerField(db_column="ItemId", blank=True, null=True)
-    user_id = models.ForeignKey(
+    user = models.ForeignKey(
         "Users",
         models.DO_NOTHING,
         db_column="UserId",
@@ -2400,6 +2036,32 @@ class UserPreferences(models.Model):
     class Meta:
         managed = False
         db_table = "UserPreferences"
+
+
+class GroupRoleLinks(models.Model):
+    rolelinks_id = models.AutoField(
+        db_column="GroupRoleLinksId", primary_key=True
+    )  # Field name made lowercase.
+    group = models.ForeignKey(
+        "Groups",
+        models.DO_NOTHING,
+        db_column="GroupId",
+        blank=True,
+        null=True,
+        related_name="role_links",
+    )
+    role = models.ForeignKey(
+        "UserRoles",
+        models.DO_NOTHING,
+        db_column="UserRolesId",
+        blank=True,
+        null=True,
+        related_name="role_groups",
+    )
+
+    class Meta:
+        managed = False
+        db_table = "GroupRoleLinks"
 
 
 class UserRolelinks(models.Model):
@@ -2430,6 +2092,9 @@ class UserRoles(models.Model):
     role_id = models.AutoField(db_column="UserRolesId", primary_key=True)
     name = models.TextField(db_column="Name", blank=True, default="")
     description = models.TextField(db_column="Description", blank=True, default="")
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         managed = False

@@ -23,9 +23,12 @@ def user(request):
     """Context processor for user information."""
     if not request.user.is_anonymous:
         return {
-            "permissions": request.user.get_permissions(),
+            # "permissions": request.user.get_permissions(),
             "user": request.user,
             "favorites": request.user.get_starred_reports(),
+            "prefs": request.user.get_preferences(),
+            # needed to override the default django perms tag.
+            "perms": request.user.get_all_permissions(),
         }
     # context processor must ALWAYS return a dict
     return {}

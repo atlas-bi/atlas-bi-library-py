@@ -28,6 +28,7 @@
       q.open('post', '/Settings/Roles/?handler=UpdatePermissions&' + url, true);
       q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      q.setRequestHeader('X-CSRFToken', csrftoken);
       q.send();
 
       q.addEventListener('readystatechange', function () {

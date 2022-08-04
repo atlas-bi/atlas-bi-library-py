@@ -118,6 +118,14 @@ Testing uses a local postgres server and redis server. The server names are `pos
     docker run --name postgresql-container -p 5432:5432 -e POSTGRES_HOST_AUTH_METHOD=trust -d postgres
     ```
 
+    or a sql server
+
+    ```bash
+    docker run --name mssql-container -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=yourStrong(>)Password" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-latest
+    ```
+
+    This will create a standing database. You can restart it without needing to recreate by running `docker container start postgresql-container` or `docker container start mssql-container`
+
 2.  Start solr
 
 See `/solr/readme.rst` for a guide.

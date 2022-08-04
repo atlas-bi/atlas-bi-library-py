@@ -65,14 +65,15 @@
     if (window.ajaxOn === true) {
       if (navigator.sendBeacon) {
         navigator.sendBeacon(
-          '/analytics?handler=Beacon',
+          '/analytics/log',
           JSON.stringify(buildAnalyticsPackage(loadTime)),
         );
       } else {
         const s = new XMLHttpRequest();
-        s.open('post', '/analytics?handler=Beacon', true);
+        s.open('post', '/analytics/log', true);
         s.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8`');
         s.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        s.setRequestHeader('X-CSRFToken', csrftoken);
         s.send(JSON.stringify(buildAnalyticsPackage(loadTime)));
       }
     }

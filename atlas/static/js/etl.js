@@ -27,6 +27,7 @@ function get_ajax(e) {
     'Content-Type',
     'application/x-www-form-urlencoded; charset=UTF-8',
   );
+  q.setRequestHeader('X-CSRFToken', csrftoken);
   q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
   q.send();
 
@@ -102,6 +103,7 @@ document.addEventListener('click', function (e) {
       e.target.getAttribute('data-url') + STATUS[e.target.checked],
       true,
     );
+    q.setRequestHeader('X-CSRFToken', csrftoken);
     q.setRequestHeader(
       'Content-Type',
       'application/x-www-form-urlencoded; charset=UTF-8',

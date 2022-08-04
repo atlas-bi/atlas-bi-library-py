@@ -32,7 +32,7 @@
 
     if (!element.classList.contains('no-loader')) {
       element.innerHTML =
-        '<div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>';
+        '<div class="ajaxLoader"><img class="ajaxLoader-img" src="/static/img/loader.gif" /></div>';
     }
 
     if (element.classList.contains('ajax-fade')) {
@@ -60,6 +60,7 @@
 
     element.q = new XMLHttpRequest();
     element.q.open('get', u, true);
+    element.q.setRequestHeader('X-CSRFToken', csrftoken);
     element.q.setRequestHeader(
       'Content-Type',
       'application/x-www-form-urlencoded; charset=UTF-8',
@@ -160,7 +161,7 @@
 
           if (!element.classList.contains('no-loader')) {
             element.innerHTML =
-              '<div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>';
+              '<div class="ajaxLoader"><img class="ajaxLoader-img" src="/static/img/loader.gif" /></div>';
           }
 
           if (p !== null && p !== '') {
@@ -174,6 +175,7 @@
           element.removeAttribute('data-ajax');
 
           const q = new XMLHttpRequest();
+          q.setRequestHeader('X-CSRFToken', csrftoken);
           q.open('get', u, true);
           q.setRequestHeader(
             'Content-Type',

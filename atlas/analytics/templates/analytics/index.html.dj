@@ -4,286 +4,153 @@
 {% load mathfilters %}
 {% load static %}
 
-{% block start_js %}
-    {% compress js inline %}
-        <script src="{% static '/js/realtime.min.js' %}"></script>
-    {% endcompress %}
-{% endblock start_js %}
+{% block js %}
+    <script src="{% static '/js/analytics.min.js' %}" defer async></script>
+{% endblock js %}
 {% block body %}
     <h1 class="title is-1">Analytics</h1>
-    <div id="active-users"></div>
-    <h2 class="title is-2">Last 7 Days - Top Ten</h2>
-    <h3 class="title is-3">Most Active Users</h3>
-    <div class="box">
-        <div class="atlas-chart block">
-            <div class="ajaxLoader">
-                <img class="ajaxLoader-img"
-                     src="{% static '/img/loader.gif' %}"
-                     alt="loader"
-                     height="25px"
-                     width="25px"/>
-            </div>
-            <script type="application/json">
-            {
-                "axis": {
-                    "0": {"title":"seconds"},
-                    "1": {"title":"visits"}
-                },
-                "type": "bar",
-                "height":"400",
-                "title": "Top Users",
-                "data": [{
-                    "title" : "Load Time (s)",
-                    "axis":"0",
-                    "type": "line",
-                    "units": "(s)",
-                    "data": [
-                        {% for user in top_users %}
-                            {
-                                "title": "{{ user.user___first_name }}",
-                                "data": "{{ user.average|div:1000|floatformat:1 }}"
-                            }{% if not forloop.last %},{% endif %}
-                        {% endfor %}
-                    ]
-                   },{
-                    "title" : "Visits",
-                    "type": "bar",
-                    "axis": "1",
-                    "data": [
-                        {% for user in top_users %}
-                            {
-                                "title": "{{ user.user___first_name }}",
-                                "data": "{{ user.count }}"
-                            }{% if not forloop.last %},{% endif %}
-                        {% endfor %}
-                        ]
-                   }]
-                }
-            </script>
+
+<div id="active-users"></div>
+
+<div class="is-flex mb-4 is-justify-content-space-between">
+    <div class="is-flex">
+        <div class="is-flex mr-5 is-flex-direction-column">
+            <h1 class="title is-2 mb-0 is-family-sans-serif"><span id="analytics-views">-</span></h1>
+            <span>Views</span>
+        </div>
+        <div class="is-flex mx-5 is-flex-direction-column">
+            <h1 class="title is-2 mb-0 is-family-sans-serif"><span id="analytics-visitors">-</span></h1>
+            <span>Visitors</span>
+        </div>
+        <div class="is-flex ml-5 is-flex-direction-column">
+            <h1 class="title is-2 mb-0 is-family-sans-serif"><span id="analytics-load-time">-</span>s</text></h1>
+            <span>Load Time</span>
         </div>
     </div>
-    <h3 class="title is-3">Most Popular Pages</h3>
-    <div class="box">
-        <div class="atlas-chart block">
-            <div class="ajaxLoader">
-                <img class="ajaxLoader-img"
-                     src="{% static '/img/loader.gif' %}"
-                     alt="loader"
-                     height="25px"
-                     width="25px"/>
+    <div class="dropdown mb-5 is-select"  data-target="views-chart" >
+        <div class="dropdown-trigger ">
+            <button class="button" aria-haspopup="true" aria-controls="views-chart-dropdown">
+            <span class="select-value">Last 24 hours</span>
+            <span class="icon is-small">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+            </span>
+            </button>
+        </div>
+        <div class="dropdown-menu" id="views-chart-dropdown"role="menu">
+            <div class="dropdown-content">
+            <a href="#" class="dropdown-item" data-range="1">
+                Today
+            </a>
+            <a class="dropdown-item is-active" data-range="2">
+                Last 24 hours
+            </a>
+            <hr class="dropdown-divider">
+            <a href="#" class="dropdown-item" data-range="3">
+                This week
+            </a>
+            <a href="#" class="dropdown-item" data-range="4">
+                Last 7 days
+            </a>
+            <hr class="dropdown-divider">
+            <a href="#" class="dropdown-item" data-range="5">
+            This month
+            </a>
+            <a href="#" class="dropdown-item" data-range="6">
+            Last 30 days
+            </a>
+            <a href="#" class="dropdown-item" data-range="7">
+            Last 90 days
+            </a>
+            <a href="#" class="dropdown-item" data-range="8">
+            This year
+            </a>
+            <hr class="dropdown-divider">
+            <a href="#" class="dropdown-item" data-range="9">
+                All time
+            </a>
+            @* <hr class="dropdown-divider">
+            <a href="#" class="dropdown-item" data-range="10">
+                Custom range
+            </a> *@
             </div>
-            <script type="application/json">
-            {
-                "axis": {
-                    "0": {"title":"seconds"},
-                    "1": {"title":"visits"}
-                },
-                "type": "bar",
-                "height":"400",
-                "title": "Top Pages",
-                "data": [{
-                    "title" : "Load Time (s)",
-                    "axis":"0",
-                    "type": "line",
-                    "units": "(s)",
-                    "data": [
-                            {% for page in top_pages %}
-                                {
-                                    "title": "{{ page.pathname }}",
-                                    "data": "{{ page.average|div:1000|floatformat:1 }}"
-                                }{% if not forloop.last %},{% endif %}
-                            {% endfor %}
-                        ]
-                   },{
-                    "title" : "Visits",
-                    "type": "bar",
-                    "axis": "1",
-                    "data": [
-                            {% for page in top_pages %}
-                                {
-                                    "title": "{{ page.pathname }}",
-                                    "data": "{{ page.count }}"
-                                }{% if not forloop.last %},{% endif %}
-                            {% endfor %}
-                        ]
-                   }]
-                }
-            </script>
         </div>
     </div>
-    <h3 class="title is-3">Access History</h3>
-    <div class="box">
-        <div class="atlas-chart block">
-            <div class="ajaxLoader">
-                <img class="ajaxLoader-img"
-                     src="{% static '/img/loader.gif' %}"
-                     alt="loader"
-                     height="25px"
-                     width="25px"/>
-            </div>
-            <script type="application/json">
-            {
-                "axis": {
-                    "0": {"title":"visits"}
-                },
-                "type": "bar",
-                "height":"400",
-                "title": "Monthly Atlas Visits",
-                "data": [{
-                    "title" : "Visits",
-                    "axis":"0",
-                    "type": "bar",
-                    "data": [
-                            {% for month in access %}
-                                {
-                                    "title": "{{ month.month }}",
-                                    "data": "{{ month.count }}"
-                            }{% if not forloop.last %},{% endif %}
-                            {% endfor %}
-                        ]
-                   }]
-                }
-            </script>
-        </div>
+</div>
+
+<div class="chart-wrapper"  style="height:400px;">
+    {% if user_id is not null %}
+        <canvas id="visits-chart" data-url="{% url 'analytics:visits' %}?user_id={{ user_id }}"  width="400" height="400"></canvas>
+    {% elif group_id is not null %}
+        <canvas id="visits-chart" data-url="{% url 'analytics:visits' %}?group_id={{ group_id }}"  width="400" height="400"></canvas>
+    {% else %}
+        <canvas id="visits-chart" data-url="{% url 'analytics:visits' %}"  width="400" height="400"></canvas>
+    {% endif %}
+</div>
+
+<div class="columns pt-5">
+    <div class="column is-one-third is-half-tablet">
+        {% if user_id is not null %}
+            <div class="bar-data-wrapper analytics" data-url="{% url 'analytics:browsers' %}?user_id={{ user_id }}" data-callback="browser"></div>
+        {% elif group_id is not null %}
+            <div class="bar-data-wrapper analytics" data-url="{% url 'analytics:browsers' %}group_id={{ group_id }}" data-callback="browser"></div>
+        {% else %}
+            <div class="bar-data-wrapper analytics" data-url="{% url 'analytics:browsers' %}" data-callback="browser"></div>
+        {% endif %}
     </div>
-    <h3 class="title is-3">Search Access History</h3>
-    <div class="box">
-        <div class="atlas-chart block">
-            <div class="ajaxLoader">
-                <img class="ajaxLoader-img"
-                     src="{% static '/img/loader.gif' %}"
-                     alt="loader"
-                     height="25px"
-                     width="25px"/>
-            </div>
-            <script type="application/json">
-            {
-                "axis": {
-                    "0": {"title":"searches"}
-                },
-                "type": "bar",
-                "height":"400",
-                "title": "Monthly Atlas Searches",
-                "data": [{
-                    "title" : "Searches",
-                    "axis":"0",
-                    "type": "bar",
-                    "data": [
-                            {% for month in search %}
-                                {
-                                    "title": "{{ month.month }}",
-                                    "data": "{{ month.count }}"
-                            }{% if not forloop.last %},{% endif %}
-                            {% endfor %}
-                        ]
-                   }]
-                }
-            </script>
-        </div>
+    <div class="column is-one-third is-half-tablet">
+        {% if user_id is not null %}
+            <div class="bar-data-wrapper analytics" data-url="{% url 'analytics:os' %}?user_id={{ user_id }}" data-callback="os"></div>
+        {% elif group_id is not null %}
+            <div class="bar-data-wrapper analytics" data-url="{% url 'analytics:os' %}?group_id={{ group_id }}" data-callback="os"></div>
+        {% else %}
+            <div class="bar-data-wrapper analytics" data-url="{% url 'analytics:os' %}" data-callback="os"></div>
+        {% endif %}
     </div>
-    <h3 class="title is-3">Report Access History</h3>
-    <div class="box">
-        <div class="atlas-chart block">
-            <div class="ajaxLoader">
-                <img class="ajaxLoader-img"
-                     src="{% static '/img/loader.gif' %}"
-                     alt="loader"
-                     height="25px"
-                     width="25px"/>
-            </div>
-            <script type="application/json">
-            {
-                "axis": {
-                    "0": {"title":"visits"}
-                },
-                "type": "bar",
-                "height":"400",
-                "title": "Monthly Atlas Report Access",
-                "data": [{
-                    "title" : "Visits",
-                    "axis":"0",
-                    "type": "bar",
-                    "data": [
-                            {% for month in report %}
-                                {
-                                    "title": "{{ month.month }}",
-                                    "data": "{{ month.count }}"
-                            }{% if not forloop.last %},{% endif %}
-                            {% endfor %}
-                        ]
-                   }]
-                }
-            </script>
-        </div>
+    <div class="column is-one-third is-half-tablet">
+        {% if user_id is not null %}
+            <div class="bar-data-wrapper analytics" data-url="{% url 'analytics:resolution' %}?user_id={{ user_id }}" ></div>
+        {% elif group_id is not null %}
+            <div class="bar-data-wrapper analytics" data-url="{% url 'analytics:resolution' %}?group_id={{ group_id }}" ></div>
+        {% else %}
+            <div class="bar-data-wrapper analytics" data-url="{% url 'analytics:resolution' %}" ></div>
+        {% endif %}
     </div>
-    <h3 class="title is-3">Term Access History</h3>
-    <div class="box">
-        <div class="atlas-chart block">
-            <div class="ajaxLoader">
-                <img class="ajaxLoader-img"
-                     src="{% static '/img/loader.gif' %}"
-                     alt="loader"
-                     height="25px"
-                     width="25px"/>
-            </div>
-            <script type="application/json">
-            {
-                "axis": {
-                    "0": {"title":"visits"}
-                },
-                "type": "bar",
-                "height":"400",
-                "title": "Monthly Atlas Term Access",
-                "data": [{
-                    "title" : "Visits",
-                    "axis":"0",
-                    "type": "bar",
-                    "data": [
-                            {% for month in term %}
-                                {
-                                    "title": "{{ month.month }}",
-                                    "data": "{{ month.count }}"
-                            }{% if not forloop.last %},{% endif %}
-                            {% endfor %}
-                        ]
-                   }]
-                }
-            </script>
-        </div>
+</div>
+
+
+<div class="columns">
+    <div class="column is-one-third is-half-tablet">
+        {% if group_id is not null %}
+            <div class="bar-data-wrapper analytics" data-url="{% url 'analytics:users' %}?group_id={{ group_id }}" ></div>
+
+        {% elif user_id is not null %}
+            <div class="bar-data-wrapper analytics" data-url="{% url 'analytics:users' %}" ></div>
+        {% endif %}
     </div>
-    <h3 class="title is-3">Collection Access History</h3>
-    <div class="box">
-        <div class="atlas-chart block">
-            <div class="ajaxLoader">
-                <img class="ajaxLoader-img"
-                     src="{% static '/img/loader.gif' %}"
-                     alt="loader"
-                     height="25px"
-                     width="25px"/>
-            </div>
-            <script type="application/json">
-            {
-                "axis": {
-                    "0": {"title":"visits"}
-                },
-                "type": "bar",
-                "height":"400",
-                "title": "Monthly Atlas Collection Access",
-                "data": [{
-                    "title" : "Visits",
-                    "axis":"0",
-                    "type": "bar",
-                    "data": [
-                            {% for month in collection %}
-                                {
-                                    "title": "{{ month.month }}",
-                                    "data": "{{ month.count }}"
-                            }{% if not forloop.last %},{% endif %}
-                            {% endfor %}
-                        ]
-                   }]
-                }
-            </script>
-        </div>
+    <div class="column is-one-third is-half-tablet">
+        {% if user_id is not null %}
+            <div class="bar-data-wrapper analytics" data-url="{% url 'analytics:load_time' %}?user_id={{ user_id }}" ></div>
+        {% elif group_id is not null %}
+            <div class="bar-data-wrapper analytics" data-url="{% url 'analytics:load_time' %}?group_id={{ group_id }}" ></div>
+        {% else %}
+            <div class="bar-data-wrapper analytics" data-url="{% url 'analytics:load_time' %}" ></div>
+        {% endif %}
     </div>
+</div>
+{% if user_id is not null %}
+    <div data-ajax="yes" class="analytics no-loader" data-page="0" data-url="{% url 'analytics:trace' %}?user_id={{ user_id }}"></div>
+{% elif group_id is not null %}
+    <div data-ajax="yes" class="analytics no-loader" data-page="0" data-url="{% url 'analytics:trace' %}?group_id={{ group_id }}"></div>
+{% else %}
+    <div data-ajax="yes" class="analytics no-loader" data-page="0" data-url="{% url 'analytics:trace' %}"></div>
+{% endif %}
+
+{% if user_id is not null %}
+    <div data-ajax="yes" class="analytics no-loader" data-page="0" data-url="{% url 'analytics:error' %}?user_id={{ user_id }}"></div>
+{% elif group_id is not null %}
+    <div data-ajax="yes" class="analytics no-loader" data-page="0" data-url="{% url 'analytics:error' %}?group_id={{ group_id }}"></div>
+{% else %}
+    <div data-ajax="yes" class="analytics no-loader" data-page="0" data-url="{% url 'analytics:error' %}"></div>
+{% endif %}
+
 {% endblock body %}

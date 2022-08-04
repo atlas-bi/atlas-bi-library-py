@@ -600,6 +600,7 @@
         q.open('post', a.saveUrl, true);
         q.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8`');
         q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        q.setRequestHeader('X-CSRFToken', csrftoken);
         q.send(JSON.stringify(data));
 
         q.addEventListener('load', function () {

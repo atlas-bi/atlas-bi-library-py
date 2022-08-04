@@ -12,8 +12,8 @@
                 </figure>
                 <p class="mt-4 mb-2">{{ settings.FOOTER.SUBTITLE }}</p>
                 <p class="has-text-grey mt-4">
-                    ©{% now "Y" %} | {{ settings.ORG_NAME }}
-                    {% if settings.VERSION %}| Release {{ settings.VERSION }}{% endif %}
+                    ©{% now "Y" %} {{ settings.ORG_NAME }}
+                    {% if settings.VERSION %} | Release {{ settings.VERSION }}{% endif %}
                 </p>
             </div>
             <div class="column"></div>

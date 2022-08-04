@@ -405,6 +405,7 @@
           'Content-Type',
           'application/x-www-form-urlencoded; charset=UTF-8',
         );
+        aj.setRequestHeader('X-CSRFToken', csrftoken);
         aj.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         aj.send();
 
@@ -448,6 +449,7 @@
         chart.dataset.url + (chart.dataset.parameters || ''),
         true,
       );
+      primaryChartAjax.setRequestHeader('X-CSRFToken', csrftoken);
       primaryChartAjax.setRequestHeader(
         'Content-Type',
         'application/x-www-form-urlencoded; charset=UTF-8',

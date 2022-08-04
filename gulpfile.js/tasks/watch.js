@@ -15,7 +15,12 @@ gulp.task(
   'start',
   gulp.series(gulp.series('build'), function (cb) {
     gulp.watch(
-      ['atlas/static/**/*.scss', 'atlas/static/**/*.sass', 'atlas/**/*.html'],
+      [
+        'atlas/static/**/*.scss',
+        'atlas/static/**/*.sass',
+        'atlas/**/*.html',
+        'atlas/**/*.html.dj',
+      ],
       gulp.series('styles'),
     );
 
@@ -120,7 +125,10 @@ gulp.task(
       gulp.parallel('js:editor', 'styles'),
     );
 
-    gulp.watch('atlas/**/*.html', gulp.series('styles'));
+    gulp.watch(
+      ['atlas/**/*.html', 'atlas/**/*.html.dj'],
+      gulp.series('styles'),
+    );
     gulp.watch(
       'atlas/static/font/fontawesome/**/*.scss',
       gulp.series('fonts', 'styles'),
@@ -143,7 +151,10 @@ gulp.task(
       ],
       gulp.parallel('scripts', 'styles'),
     );
-    gulp.watch('atlas/**/*.html', gulp.series('styles'));
+    gulp.watch(
+      ['atlas/**/*.html', 'atlas/**/*.html.dj'],
+      gulp.series('styles'),
+    );
     gulp.watch(
       'atlas/static/font/fontawesome/**/*.scss',
       gulp.series('fonts', 'styles'),

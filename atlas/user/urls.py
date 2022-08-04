@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import apps, views
+from . import apps, stars, views
 
 app_name = apps.UserConfig.name
 
@@ -8,31 +8,33 @@ urlpatterns = [
     path("", views.index, name="me"),
     path("<int:pk>", views.index, name="profile"),
     path("<int:pk>/image", views.image, name="image"),
-    path("favorites", views.favorites, name="favorites"),
+    path("stars", stars.index, name="stars"),
+    path("<int:pk>/stars", stars.index, name="stars"),
+    path("groups", views.groups, name="groups"),
+    path("<int:pk>/groups", views.groups, name="groups"),
+    path("subscriptions", views.subscriptions, name="subscriptions"),
+    path("<int:pk>/subscriptions", views.subscriptions, name="subscriptions"),
     path(
-        "favorites_create_folder",
-        views.favorites_create_folder,
-        name="favorites_create_folder",
+        "stars_create_folder",
+        stars.create_folder,
+        name="stars_create_folder",
     ),
     path(
-        "favorites_delete_folder",
-        views.favorites_delete_folder,
-        name="ffavorites_delete_folder",
+        "stars_delete_folder",
+        stars.delete_folder,
+        name="fstars_delete_folder",
     ),
     path(
-        "favorites_reorder_folder",
-        views.favorites_reorder_folder,
-        name="favorites_reorder_folder",
+        "stars_reorder_folder",
+        stars.reorder_folder,
+        name="stars_reorder_folder",
     ),
-    path("favorites_reorder", views.favorites_reorder, name="favorites_reorder"),
+    path("stars_reorder", stars.reorder, name="stars_reorder"),
     path(
-        "favorites_change_folder",
-        views.favorites_change_folder,
-        name="favorites_change_folder",
+        "stars_change_folder",
+        stars.change_folder,
+        name="stars_change_folder",
     ),
     path("roles", views.roles, name="roles"),
-    path("roles/change", views.change_role, name="change_role"),
-    path(
-        "preference/video/<int:state>", views.preference_video, name="preference_video"
-    ),
+    path("settings/disable_admin", views.disable_admin, name="disable_admin"),
 ]

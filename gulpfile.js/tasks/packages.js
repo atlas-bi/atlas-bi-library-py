@@ -9,7 +9,7 @@ gulp.task('package:dompurify', () => {
 gulp.task('package:dompurify:map', () => {
   return gulp
     .src('node_modules/dompurify/dist/purify.min.js.map')
-    .pipe(gulp.dest('atlas/static/js'));
+    .pipe(gulp.dest('atlas/static/lib/dompurify'));
 });
 
 gulp.task(

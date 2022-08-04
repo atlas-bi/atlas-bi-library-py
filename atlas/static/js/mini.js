@@ -153,6 +153,7 @@
 
       loadMiniAjax = new XMLHttpRequest();
       loadMiniAjax.open('post', '/Search?handler=' + $sa + '&s=' + value, true);
+      loadMiniAjax.setRequestHeader('X-CSRFToken', csrftoken);
       loadMiniAjax.setRequestHeader(
         'Content-Type',
         'application/x-www-form-urlencoded; charset=UTF-8',
@@ -182,6 +183,7 @@
       'Content-Type',
       'application/x-www-form-urlencoded; charset=UTF-8',
     );
+    q.setRequestHeader('X-CSRFToken', csrftoken);
     q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
     q.send();
 

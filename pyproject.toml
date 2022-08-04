@@ -42,7 +42,6 @@ documentation = "https://riverside-healthcare.github.io/Atlas-Py/"
 [tool.poetry.dependencies]
 python = "^3.8"
 django-compressor = "^4.0"
-python-memcached = "^1.59"
 django-htmlmin = "^0.11.0"
 django-redis-sessions = "^0.6.2"
 django-compression-middleware = "^0.4.1"
@@ -70,8 +69,14 @@ mssql-django = "^1.1.3"
 django-gulp = "^4.1.0"
 django-settings-export = "^1.2.1"
 tomli = "^2.0.1"
+bleach = "^5.0.1"
+pymemcache = "^3.5.2"
 
 
+
+[tool.poetry.dev-dependencies]
+djlint = "^1.9.2"
+django-debug-toolbar = "^3.5.0"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"

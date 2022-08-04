@@ -10,7 +10,7 @@ const gulp = require('gulp');
 gulp.task('css:email', function () {
   return gulp
     .src('atlas/static/scss/email_theme.scss')
-    .pipe(sass().on('error', sass.logError))
+    .pipe(sass.sync().on('error', sass.logError))
     .pipe(cssnano()) // Running this first to strip comments
     .pipe(
       purgecss({
@@ -29,7 +29,7 @@ gulp.task('css:auth', function () {
   const plugins = [postcssFocusWithin];
   return gulp
     .src('atlas/static/scss/auth.scss')
-    .pipe(sass().on('error', sass.logError))
+    .pipe(sass.sync().on('error', sass.logError))
     .pipe(
       purgecss({
         content: ['atlas/templates/registration/**/*.html'],
@@ -47,7 +47,7 @@ gulp.task('css:build', function () {
   const plugins = [postcssFocusWithin];
   return gulp
     .src('atlas/static/scss/theme.scss')
-    .pipe(sass().on('error', sass.logError))
+    .pipe(sass.sync().on('error', sass.logError))
     .pipe(
       purgecss({
         content: [
@@ -81,7 +81,7 @@ gulp.task('css:build', function () {
 gulp.task('css:rejected', function () {
   return gulp
     .src('atlas/static/scss/theme.scss')
-    .pipe(sass().on('error', sass.logError))
+    .pipe(sass.sync().on('error', sass.logError))
     .pipe(
       purgecss({
         content: [

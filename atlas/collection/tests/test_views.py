@@ -12,13 +12,7 @@ Run test for this app with::
 import pysolr
 from django.conf import settings
 from etl.tasks.search.collections import load_collections
-from index.models import (
-    CollectionComments,
-    CollectionCommentStream,
-    CollectionReports,
-    Collections,
-    CollectionTerms,
-)
+from index.models import CollectionReports, Collections, CollectionTerms
 
 from atlas.testutils import AtlasTestCase
 
@@ -45,18 +39,6 @@ class CollectionTestCase(AtlasTestCase):
         self.assertEqual(
             response.url,
             "/accounts/login/?next=/collections/%s" % collection.collection_id,
-        )
-        self.assertEqual(response.status_code, 302)
-
-    def test_login_comments(self):
-        """Check that users are sent from ``/collections/%s/comments`` to login page."""
-        collection = Collections.objects.first()
-        response = self.client.get(
-            "/collections/%s/comments" % collection.collection_id, follow=False
-        )
-        self.assertEqual(
-            response.url,
-            "/accounts/login/?next=/collections/%s/comments" % collection.collection_id,
         )
         self.assertEqual(response.status_code, 302)
 
@@ -111,17 +93,6 @@ class CollectionTestCase(AtlasTestCase):
         self.assertEqual(response.status_code, 200)
 
         self.verify_body_links(response.content)
-
-    def test_comments(self):
-        """Check that comments are available."""
-        self.login()
-        collection = Collections.objects.first()
-        assert (
-            self.client.get(
-                "/collections/%s/comments" % collection.collection_id
-            ).status_code
-            == 200
-        )
 
     def test_create_edit_collection(self):
         """Check that collections can be created/edited/delete."""
@@ -212,140 +183,6 @@ class CollectionTestCase(AtlasTestCase):
         load_collections(collection_id)
         results = solr.search(q="type:collections AND atlas_id:%s" % collection_id)
         self.assertEqual(results.hits, 0)
-
-    def test_create_comments(self):
-        """Check that we can create comments."""
-        self.login()
-        collection = Collections.objects.first()
-        data = {"message": "new comment"}
-        self.assertEqual(
-            self.client.post(
-                "/collections/%s/comments" % collection.collection_id,
-                data=data,
-                content_type="application/json",
-            ).status_code,
-            200,
-        )
-
-        # assert that the comment stream was created
-        self.assertTrue(
-            CollectionCommentStream.objects.filter(
-                collection_id=collection.collection_id
-            )
-            .filter(comments__message=data["message"])
-            .exists()
-        )
-
-        # assert that the comment was created
-        self.assertTrue(
-            CollectionComments.objects.filter(
-                stream__collection_id=collection.collection_id
-            )
-            .filter(message=data["message"])
-            .exists()
-        )
-
-        # attempt to add a second stream and verify it
-        data = {"message": "new comment two"}
-        self.assertEqual(
-            self.client.post(
-                "/collections/%s/comments" % collection.collection_id,
-                data=data,
-                content_type="application/json",
-            ).status_code,
-            200,
-        )
-        self.assertTrue(
-            CollectionComments.objects.filter(
-                stream__collection_id=collection.collection_id
-            )
-            .filter(message=data["message"])
-            .exists()
-        )
-        self.assertTrue(
-            CollectionCommentStream.objects.filter(
-                collection_id=collection.collection_id
-            )
-            .filter(comments__message=data["message"])
-            .exists()
-        )
-
-        # attempt to add another comment to the streamand verify it is there
-        stream = (
-            CollectionComments.objects.filter(
-                stream__collection_id=collection.collection_id
-            )
-            .filter(message=data["message"])
-            .first()
-        )
-        data = {"message": "stream reply", "stream": stream.stream_id}
-        self.assertEqual(
-            self.client.post(
-                "/collections/%s/comments" % collection.collection_id,
-                data=data,
-                content_type="application/json",
-            ).status_code,
-            200,
-        )
-        self.assertTrue(
-            CollectionComments.objects.filter(
-                stream__collection_id=collection.collection_id
-            )
-            .filter(message=data["message"])
-            .filter(stream_id=stream.stream_id)
-            .exists()
-        )
-        self.assertTrue(
-            CollectionCommentStream.objects.filter(
-                collection_id=collection.collection_id
-            )
-            .filter(comments__message=data["message"])
-            .filter(stream_id=stream.stream_id)
-            .exists()
-        )
-
-        # attempt to delete a comment and verify it is gone
-        comment = CollectionComments.objects.filter(
-            stream__collection_id=collection.collection_id
-        ).first()
-        self.assertTrue(
-            self.client.post(
-                "/collections/%s/comments/%s/delete"
-                % (
-                    collection.collection_id,
-                    comment.comment_id,
-                ),
-                content_type="application/json",
-            ),
-            200,
-        )
-
-        # attempt to delete a stream
-        comment = CollectionComments.objects.filter(
-            stream__collection_id=collection.collection_id
-        ).first()
-        data = {"stream": comment.stream_id}
-        self.assertTrue(
-            self.client.post(
-                "/collections/%s/comments/%s/delete"
-                % (
-                    collection.collection_id,
-                    comment.comment_id,
-                ),
-                data=data,
-                content_type="application/json",
-            ),
-            200,
-        )
-
-        # add a comment with no message
-        self.assertEqual(
-            self.client.post(
-                "/collections/%s/comments" % collection.collection_id,
-                content_type="application/json",
-            ).status_code,
-            200,
-        )
 
     def test_add_report_link(self):
         """Test adding and removing a report link."""

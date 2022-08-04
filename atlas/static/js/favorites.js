@@ -98,6 +98,7 @@
         'application/x-www-form-urlencoded; charset=UTF-8',
       );
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      q.setRequestHeader('X-CSRFToken', csrftoken);
       q.send();
       const folder = event.target.closest('.favorites-folder');
       folder.remove();
@@ -128,6 +129,7 @@
           'application/x-www-form-urlencoded; charset=UTF-8',
         );
         q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        q.setRequestHeader('X-CSRFToken', csrftoken);
         q.send();
         window.location.reload();
       }
@@ -153,6 +155,7 @@
           'application/x-www-form-urlencoded; charset=UTF-8',
         );
         q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        q.setRequestHeader('X-CSRFToken', csrftoken);
         q.send();
         document.dispatchEvent(new CustomEvent('modal-close'));
       }
@@ -179,6 +182,7 @@
         q.open('post', '/Users/Favorites?handler=ReorderFolders', true);
         q.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
         q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        q.setRequestHeader('X-CSRFToken', csrftoken);
         q.send(JSON.stringify(array));
       } else if (event.target.closest('.favorites .reorder')) {
         document.querySelectorAll('.favorite').forEach(($element) => {
@@ -195,6 +199,7 @@
         q.open('post', '/Users/Favorites?handler=ReorderFavorites', true);
         q.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
         q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        q.setRequestHeader('X-CSRFToken', csrftoken);
         q.send(JSON.stringify(array));
       }
     },
@@ -308,6 +313,7 @@
     q.open('post', '/Users/Favorites?handler=UpdateFavoriteFolder', true);
     q.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
     q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    q.setRequestHeader('X-CSRFToken', csrftoken);
     q.send(JSON.stringify(item));
   }
 

@@ -266,12 +266,13 @@
     ).forEach(($element) => {
       $element.style.opacity = '.5';
       const aj = new XMLHttpRequest();
-      aj.open('get', $element.dataset.url + parameters.replace('?', '&'), true);
+      aj.open('get', $element.dataset.url + parameters, true);
       aj.setRequestHeader(
         'Content-Type',
         'application/x-www-form-urlencoded; charset=UTF-8',
       );
       aj.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      aj.setRequestHeader('X-CSRFToken', csrftoken);
       aj.send();
 
       aj.addEventListener('load', function () {
@@ -309,6 +310,7 @@
       'application/x-www-form-urlencoded; charset=UTF-8',
     );
     primaryChartAjax.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    primaryChartAjax.setRequestHeader('X-CSRFToken', csrftoken);
     primaryChartAjax.send();
 
     primaryChartAjax.addEventListener('load', function () {
@@ -386,6 +388,7 @@
       q.open('post', i.dataset.url + '?handler=Resolved&' + url, true);
       q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      q.setRequestHeader('X-CSRFToken', csrftoken);
       q.send();
     }
   });

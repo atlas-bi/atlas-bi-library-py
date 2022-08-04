@@ -91,6 +91,7 @@
     );
     q.withCredentials = true;
     q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    q.setRequestHeader('X-CSRFToken', csrftoken);
     q.send(data);
     q.addEventListener('load', function () {
       if (q.responseText === 'error') {

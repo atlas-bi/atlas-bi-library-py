@@ -6,6 +6,7 @@
       q.open('get', '/Settings/?handler=DefaultEtl', true);
       q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      q.setRequestHeader('X-CSRFToken', csrftoken);
       q.send();
 
       q.addEventListener('readystatechange', function () {
@@ -47,6 +48,7 @@
       );
       q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      q.setRequestHeader('X-CSRFToken', csrftoken);
       q.send();
 
       q.addEventListener('readystatechange', function () {
@@ -70,6 +72,7 @@
       );
       q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      q.setRequestHeader('X-CSRFToken', csrftoken);
       q.send();
 
       q.addEventListener('readystatechange', function () {

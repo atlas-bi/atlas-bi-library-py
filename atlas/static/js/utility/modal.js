@@ -79,6 +79,7 @@
       q.open('post', '/Requests?handler=ShareFeedback&' + url, true);
       q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      q.setRequestHeader('X-CSRFToken', csrftoken);
       q.send();
       // ShowMessageBox('Thanks for the feedback.');
       textarea.value = '';
@@ -119,6 +120,7 @@
       q.open('post', '/Requests?handler=AccessRequest&' + url, true);
       q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      q.setRequestHeader('X-CSRFToken', csrftoken);
       q.send();
       // ShowMessageBox('Your request has been submitted.');
       closeAllModals();

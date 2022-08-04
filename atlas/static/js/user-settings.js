@@ -14,6 +14,7 @@
         'application/x-www-form-urlencoded; charset=UTF-8',
       );
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      q.setRequestHeader('X-CSRFToken', csrftoken);
       q.send();
     });
 })();

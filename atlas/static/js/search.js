@@ -155,6 +155,7 @@
         'Content-Type',
         'application/x-www-form-urlencoded; charset=UTF-8',
       );
+      sAjx.setRequestHeader('X-CSRFToken', csrftoken);
       sAjx.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       sAjx.send();
 

@@ -16,6 +16,7 @@
 
 <script src="{% static '/js/profile.min.js' %}" defer async></script>
 <script src="{% static '/js/editor.min.js' %}" defer async></script>
+
 <script>
     (function() {
         try {
