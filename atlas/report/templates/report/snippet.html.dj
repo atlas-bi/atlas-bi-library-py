@@ -124,7 +124,7 @@
         </div>
     </div>
     <footer class="card-footer">
-        <a class="card-footer-item star px-0" data-href="/users/favorites/?handler=Edit&type=report&id=@Model.ReportObjectId">
+        <a class="card-footer-item star px-0" data-href="{% url 'user:stars_edit' %}?type=report&id={{ report.report_id}}">
             <span class="icon-text">
                 {% if report.report_id in user.get_starred_reports %}
                     <span class="icon has-text-gold">

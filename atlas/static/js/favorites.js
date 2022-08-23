@@ -90,7 +90,7 @@
       const q = new XMLHttpRequest();
       q.open(
         'post',
-        '/users/favorites?handler=DeleteFolder&id=' + $target.dataset.folderid,
+        '/users/stars_delete_folder/' + $target.dataset.folderid,
         true,
       );
       q.setRequestHeader(
@@ -120,7 +120,7 @@
         q.open(
           'post',
           $target.getAttribute('action') +
-            '&name=' +
+            '?name=' +
             $target.querySelector('input').value,
           true,
         );
@@ -146,7 +146,7 @@
         q.open(
           'post',
           $target.getAttribute('action') +
-            '&name=' +
+            '?name=' +
             $target.querySelector('input').value,
           true,
         );
@@ -172,14 +172,14 @@
       if (event.target.closest('.favorite-folders.reorder')) {
         document.querySelectorAll('.favorites-folder').forEach(($element) => {
           const item = {};
-          item.FolderId = $element.dataset.folderid;
-          item.FolderRank = i;
+          item.folder_id = $element.dataset.folderid;
+          item.rank = i;
           i++;
           array.push(item);
         });
 
         q = new XMLHttpRequest();
-        q.open('post', '/Users/Favorites?handler=ReorderFolders', true);
+        q.open('post', '/users/stars_reorder_folder', true);
         q.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
         q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         q.setRequestHeader('X-CSRFToken', csrftoken);
@@ -187,16 +187,16 @@
       } else if (event.target.closest('.favorites .reorder')) {
         document.querySelectorAll('.favorite').forEach(($element) => {
           const item = {};
-          item.FavoriteId = $element.dataset.favoriteid;
-          item.FavoriteRank = i;
-          item.FavoriteType = $element.dataset.type;
+          item.star_id = $element.dataset.starid;
+          item.rank = i;
+          item.type = $element.dataset.type;
 
           i++;
           array.push(item);
         });
 
         q = new XMLHttpRequest();
-        q.open('post', '/Users/Favorites?handler=ReorderFavorites', true);
+        q.open('post', '/users/stars_reorder', true);
         q.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
         q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         q.setRequestHeader('X-CSRFToken', csrftoken);
@@ -306,11 +306,11 @@
   function updateFavFolder($favorite, $folder) {
     const item = {};
     $favorite.dataset.folderid = $folder.dataset.folderid;
-    item.FavoriteId = $favorite.dataset.favoriteid;
-    item.FolderId = $folder.dataset.folderid;
-    item.FavoriteType = $favorite.dataset.type;
+    item.star_id = $favorite.dataset.starid;
+    item.folder_id = $folder.dataset.folderid;
+    item.type = $favorite.dataset.type;
     const q = new XMLHttpRequest();
-    q.open('post', '/Users/Favorites?handler=UpdateFavoriteFolder', true);
+    q.open('post', '/users/stars_change_folder', true);
     q.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
     q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
     q.setRequestHeader('X-CSRFToken', csrftoken);

@@ -12,7 +12,11 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.cache import never_cache
 from index.models import (
     FavoriteFolders,
+    StarredCollections,
+    StarredInitiatives,
     StarredReports,
+    StarredTerms,
+    StarredUsers,
     UserPreferences,
     UserRoles,
     Users,
@@ -96,13 +100,118 @@ def index(request, pk=None):
 
 
 @login_required
+def edit(request):
+    """Add or remove a star."""
+    star_id = request.GET.get("id", None)
+
+    star_type = request.GET.get("type", "report")
+
+    print(star_id)
+    print(star_type)
+    if star_type == "report":
+        print("here")
+        if (
+            StarredReports.objects.filter(owner=request.user)
+            .filter(report_id=star_id)
+            .exists()
+        ):
+            print("Here")
+            StarredReports.objects.filter(owner=request.user).filter(
+                report_id=star_id
+            ).delete()
+        else:
+            report = StarredReports(owner=request.user, report_id=star_id)
+            report.save()
+
+    elif star_type == "collection":
+        if (
+            StarredCollections.objects.filter(owner=request.user)
+            .filter(collection_id=star_id)
+            .exists()
+        ):
+            StarredCollections.objects.filter(owner=request.user).filter(
+                collection_id=star_id
+            ).delete()
+        else:
+            collection = StarredCollection(owner=request.user, collection_id=star_id)
+            collection.save()
+
+    elif star_type == "initiative":
+        if (
+            StarredInitiatives.objects.filter(owner=request.user)
+            .filter(initiative_id=star_id)
+            .exists()
+        ):
+            StarredInitiatives.objects.filter(owner=request.user).filter(
+                initiative_id=star_id
+            ).delete()
+        else:
+            initiative = StarredInitiatives(owner=request.user, initiative_id=star_id)
+            initiative.save()
+
+    elif star_type == "term":
+        if (
+            StarredTerms.objects.filter(owner=request.user)
+            .filter(term_id=star_id)
+            .exists()
+        ):
+            StarredTerms.objects.filter(owner=request.user).filter(
+                term_id=star_id
+            ).delete()
+        else:
+            term = StarredTerms(owner=request.user, term_id=star_id)
+            term.save()
+
+    elif star_type == "user":
+        if (
+            StarredUsers.objects.filter(owner=request.user)
+            .filter(user_id=star_id)
+            .exists()
+        ):
+            StarredUsers.objects.filter(owner=request.user).filter(
+                user_id=star_id
+            ).delete()
+        else:
+            user = StarredUsers(owner=request.user, user_id=star_id)
+            user.save()
+
+    elif star_type == "group":
+        if (
+            StarredGroups.objects.filter(owner=request.user)
+            .filter(group_id=star_id)
+            .exists()
+        ):
+            StarredGroups.objects.filter(owner=request.user).filter(
+                group_id=star_id
+            ).delete()
+        else:
+            group = StarredGroups(owner=request.user, group_id=star_id)
+            group.save()
+
+    elif star_type == "search":
+        if (
+            StarredSearches.objects.filter(owner=request.user)
+            .filter(search_id=star_id)
+            .exists()
+        ):
+            StarredSearches.objects.filter(owner=request.user).filter(
+                search_id=star_id
+            ).delete()
+        else:
+            search = StarredSearches(owner=request.user, search_id=star_id)
+            search.save()
+
+    return JsonResponse({"success": "edited star."}, status=200)
+
+
+@login_required
 def create_folder(request):
     """Add a new folder for favorites."""
-    data = json.loads(request.body.decode("UTF-8"))
+    name = request.GET.get("name", None)
 
-    if request.method == "POST" and "folder_name" in data:
+    if name:
 
-        folder = FavoriteFolders(name=data["folder_name"], user=request.user)
+        folder = FavoriteFolders(name=name, user=request.user)
         folder.save()
 
         return JsonResponse({"folder_id": folder.folder_id}, status=200)
@@ -110,20 +219,38 @@ def create_folder(request):
     return JsonResponse({"error": "failed to created folder."}, status=500)
 
 
-def delete_folder(request):
+@login_required
+def edit_folder(request, pk):
+    """Add a new folder for favorites."""
+    name = request.GET.get("name", None)
+    folder = get_object_or_404(FavoriteFolders, pk=pk, user=request.user)
+    print(folder)
+    if name:
+
+        folder.name = name
+        folder.save()
+
+        return JsonResponse({"folder_id": folder.folder_id}, status=200)
+
+    return JsonResponse({"error": "failed to created folder."}, status=500)
+
+
+def delete_folder(request, pk: int):
     """Delete a favorites folder."""
-    data = json.loads(request.body.decode("UTF-8"))
 
-    if request.method == "POST" and "folder_id" in data:
-        # remove any report links to this folder
-        # Favorites.objects.filter(folder__folder_id=data["folder_id"]).update(
-        #     folder=None
-        # )
+    if request.method == "POST":
+        folder = FavoriteFolders.objects.get(folder_id=pk)
 
-        # remove the folder
-        FavoriteFolders.objects.get(folder_id=data["folder_id"]).delete()
+        folder.starred_reports.update(folder=None)
+        folder.starred_initiatives.update(folder=None)
+        folder.starred_collections.update(folder=None)
+        folder.starred_terms.update(folder=None)
+        folder.starred_users.update(folder=None)
+        folder.starred_groups.update(folder=None)
 
-        return JsonResponse({"folder_id": data["folder_id"]}, status=200)
+        folder.delete()
+
+        return JsonResponse({"folder_id": pk}, status=200)
     return JsonResponse({"error": "failed to delete folder."}, status=500)
 
 
@@ -135,7 +262,7 @@ def reorder_folder(request):
         for folder in data:
             FavoriteFolders.objects.filter(user=request.user).filter(
                 folder_id=folder["folder_id"]
-            ).update(rank=folder["folder_rank"])
+            ).update(rank=folder["rank"])
 
         return JsonResponse({"success": "reordered folders."}, status=200)
     return JsonResponse({"error": "failed to reorder folder."}, status=500)
@@ -143,14 +270,39 @@ def reorder_folder(request):
 
 def reorder(request):
     """Change the order of favorites."""
-    # data = json.loads(request.body.decode("UTF-8"))
+    data = json.loads(request.body.decode("UTF-8"))
 
     if request.method == "POST":
 
-        # for favorite in data:
-        #     Favorites.objects.filter(user=request.user).filter(
-        #         favorite_id=favorite["favorite_id"]
-        #     ).update(rank=favorite["favorite_rank"])
+        for favorite in data:
+            if favorite["type"] == "report":
+                StarredReports.objects.filter(owner=request.user).filter(
+                    star_id=favorite["star_id"]
+                ).update(rank=favorite["rank"])
+            elif favorite["type"] == "collection":
+                StarredCollections.objects.filter(owner=request.user).filter(
+                    star_id=favorite["star_id"]
+                ).update(rank=favorite["rank"])
+            elif favorite["type"] == "initiative":
+                StarredInitiatives.objects.filter(owner=request.user).filter(
+                    star_id=favorite["star_id"]
+                ).update(rank=favorite["rank"])
+            elif favorite["type"] == "term":
+                StarredTerms.objects.filter(owner=request.user).filter(
+                    star_id=favorite["star_id"]
+                ).update(rank=favorite["rank"])
+            elif favorite["type"] == "user":
+                StarredUsers.objects.filter(owner=request.user).filter(
+                    star_id=favorite["star_id"]
+                ).update(rank=favorite["rank"])
+            elif favorite["type"] == "group":
+                StarredGroups.objects.filter(owner=request.user).filter(
+                    star_id=favorite["star_id"]
+                ).update(rank=favorite["rank"])
+            elif favorite["type"] == "search":
+                StarredSearches.objects.filter(owner=request.user).filter(
+                    star_id=favorite["star_id"]
+                ).update(rank=favorite["rank"])
 
         return JsonResponse({"success": "reordered favorites."}, status=200)
     return JsonResponse({"error": "failed to reorder favorites."}, status=500)
@@ -158,24 +310,37 @@ def reorder(request):
 
 def change_folder(request):
     """Move a favorite between folders."""
-    # data = json.loads(request.body.decode("UTF-8"))
+    data = json.loads(request.body.decode("UTF-8"))
 
-    # Favorites.objects.filter(user=request.user).filter(
-    #     favorite_id=data["favorite_id"]
-    # ).update(folder=data["folder_id"])
+    if request.method == "POST":
+        if data["type"] == "report":
+            StarredReports.objects.filter(owner=request.user).filter(
+                star_id=data["star_id"]
+            ).update(folder_id=data["folder_id"])
+        elif data["type"] == "collection":
+            StarredCollections.objects.filter(owner=request.user).filter(
+                star_id=data["star_id"]
+            ).update(folder_id=data["folder_id"])
+        elif data["type"] == "initiative":
+            StarredInitiatives.objects.filter(owner=request.user).filter(
+                star_id=data["star_id"]
+            ).update(folder_id=data["folder_id"])
+        elif data["type"] == "term":
+            StarredTerms.objects.filter(owner=request.user).filter(
+                star_id=data["star_id"]
+            ).update(folder_id=data["folder_id"])
+        elif data["type"] == "user":
+            StarredUsers.objects.filter(owner=request.user).filter(
+                star_id=data["star_id"]
+            ).update(folder_id=data["folder_id"])
+        elif data["type"] == "group":
+            StarredGroups.objects.filter(owner=request.user).filter(
+                star_id=data["star_id"]
+            ).update(folder_id=data["folder_id"])
+        elif data["type"] == "search":
+            StarredSearches.objects.filter(owner=request.user).filter(
+                star_id=data["star_id"]
+            ).update(folder_id=data["folder_id"])
 
-    # return current folders and count
-
-    folder_counts = list(
-        FavoriteFolders.objects.filter(user=request.user)
-        .values("folder_id")
-        .annotate(count=Count("favorites"))
-    )
-
-    folder_counts.append(
-        {
-            "folder_id": "all",
-            # "count": Favorites.objects.filter(user=request.user).count(),
-        }
-    )
-    return JsonResponse(folder_counts, safe=False, status=200)
+        return JsonResponse({"success": "moved star to folder."}, status=200)
+    return JsonResponse({"error": "failed to move star to folder."}, status=500)
