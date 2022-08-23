@@ -5,7 +5,7 @@ import json
 import re
 
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
+from django.db.models import Count, F
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -24,31 +24,72 @@ from atlas.decorators import admin_required
 
 @login_required
 @never_cache
-def index(request):
+def index(request, pk=None):
     """Get users stars."""
+
+    if pk:
+        user = get_object_or_404(Users, pk=pk)
+    else:
+        user = request.user
     reports = (
-        request.user.starred_reports.select_related("report")
+        user.starred_reports.select_related("report")
         .select_related("report__docs")
         .select_related("report__type")
         .prefetch_related("report__attachments")
         .prefetch_related("report__tag_links__tag")
         .prefetch_related("report__starred")
-        # .filter(owner=request.user)
         .order_by("rank", "report__name")
     )
 
-    # reports = (
-    #     StarredReports.objects.select_related("report")
-    #     .select_related("report__docs")
-    #     .select_related("report__type")
-    #     .filter(owner=request.user)
-    #     .order_by("rank", "report__name")
-    # )
-    my_folders = FavoriteFolders.objects.filter(user=request.user)
+    collections = (
+        user.starred_collections.select_related("collection")
+        .prefetch_related("collection__starred")
+        .order_by("rank", "collection__name")
+    )
+
+    initiatives = (
+        user.starred_initiatives.select_related("initiative")
+        .prefetch_related("initiative__starred")
+        .order_by("rank", "initiative__name")
+    )
+
+    terms = (
+        user.starred_terms.select_related("term")
+        .prefetch_related("term__starred")
+        .order_by("rank", "term__name")
+    )
+
+    groups = (
+        user.starred_groups.select_related("group")
+        .prefetch_related("group__starred")
+        .order_by("rank", "group__group_name")
+    )
+
+    users = (
+        user.starred_users.select_related("user")
+        .prefetch_related("user__starred")
+        .order_by("rank", "user__full_name")
+    )
+
+    folders = FavoriteFolders.objects.filter(user=user).order_by(
+        F("rank").asc(nulls_last=True), "name"
+    )
 
     context = {
         "reports": reports,
-        "my_folders": my_folders,
+        "collections": collections,
+        "initiatives": initiatives,
+        "terms": terms,
+        "groups": groups,
+        "users": users,
+        "total": reports.count()
+        + collections.count()
+        + initiatives.count()
+        + terms.count()
+        + groups.count()
+        + users.count(),
+        "is_me": (pk is None or pk == request.user.user_id),
+        "folders": folders,
     }
 
     return render(request, "user/stars.html.dj", context)

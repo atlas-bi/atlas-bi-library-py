@@ -1771,6 +1771,17 @@ class FavoriteFolders(models.Model):
     )
     rank = models.IntegerField(db_column="FolderRank", blank=True, null=True)
 
+    @property
+    def total(self):
+        return (
+            self.starred_reports.count()
+            + self.starred_collections.count()
+            + self.starred_initiatives.count()
+            + self.starred_terms.count()
+            + self.starred_users.count()
+            + self.starred_groups.count()
+        )
+
     class Meta:
         managed = False
         db_table = "UserFavoriteFolders"
@@ -1783,6 +1794,7 @@ class StarredUsers(models.Model):
     user = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
+        db_column="Userid",
         blank=True,
         null=True,
         related_name="starred",
@@ -1791,6 +1803,14 @@ class StarredUsers(models.Model):
         "Users",
         on_delete=models.CASCADE,
         db_column="ownerid",
+        blank=True,
+        null=True,
+        related_name="starred_users",
+    )
+    folder = models.ForeignKey(
+        FavoriteFolders,
+        on_delete=models.CASCADE,
+        db_column="folderid",
         blank=True,
         null=True,
         related_name="starred_users",
@@ -1827,7 +1847,7 @@ class StarredReports(models.Model):
         db_column="folderid",
         blank=True,
         null=True,
-        related_name="favorites",
+        related_name="starred_reports",
     )
 
     class Meta:
@@ -1858,6 +1878,14 @@ class StarredCollections(models.Model):
         null=True,
         related_name="starred_collections",
     )
+    folder = models.ForeignKey(
+        FavoriteFolders,
+        on_delete=models.CASCADE,
+        db_column="folderid",
+        blank=True,
+        null=True,
+        related_name="starred_collections",
+    )
 
     class Meta:
         ordering = ["rank"]
@@ -1884,6 +1912,14 @@ class StarredGroups(models.Model):
         null=True,
         related_name="starred_groups",
     )
+    folder = models.ForeignKey(
+        FavoriteFolders,
+        on_delete=models.CASCADE,
+        db_column="folderid",
+        blank=True,
+        null=True,
+        related_name="starred_groups",
+    )
 
     class Meta:
         ordering = ["rank"]
@@ -1906,6 +1942,14 @@ class StarredTerms(models.Model):
         "Users",
         on_delete=models.CASCADE,
         db_column="ownerid",
+        blank=True,
+        null=True,
+        related_name="starred_terms",
+    )
+    folder = models.ForeignKey(
+        FavoriteFolders,
+        on_delete=models.CASCADE,
+        db_column="folderid",
         blank=True,
         null=True,
         related_name="starred_terms",
@@ -1953,7 +1997,7 @@ class StarredInitiatives(models.Model):
         db_column="Folderid",
         blank=True,
         null=True,
-        related_name="initiatives",
+        related_name="starred_initiatives",
     )
     owner = models.ForeignKey(
         "Users",
