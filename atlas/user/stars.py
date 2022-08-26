@@ -100,6 +100,7 @@ def index(request, pk=None):
 
 
 @login_required
+@never_cache
 def edit(request):
     """Add or remove a star."""
     star_id = request.GET.get("id", None)
@@ -123,6 +124,10 @@ def edit(request):
             report = StarredReports(owner=request.user, report_id=star_id)
             report.save()
 
+        return JsonResponse(
+            {"count": StarredReports.objects.filter(report_id=star_id).count()}
+        )
+
     elif star_type == "collection":
         if (
             StarredCollections.objects.filter(owner=request.user)
@@ -133,8 +138,12 @@ def edit(request):
                 collection_id=star_id
             ).delete()
         else:
-            collection = StarredCollection(owner=request.user, collection_id=star_id)
+            collection = StarredCollections(owner=request.user, collection_id=star_id)
             collection.save()
+
+        return JsonResponse(
+            {"count": StarredCollections.objects.filter(collection_id=star_id).count()}
+        )
 
     elif star_type == "initiative":
         if (
@@ -149,6 +158,10 @@ def edit(request):
             initiative = StarredInitiatives(owner=request.user, initiative_id=star_id)
             initiative.save()
 
+        return JsonResponse(
+            {"count": StarredInitiatives.objects.filter(initiative_id=star_id).count()}
+        )
+
     elif star_type == "term":
         if (
             StarredTerms.objects.filter(owner=request.user)
@@ -161,6 +174,10 @@ def edit(request):
         else:
             term = StarredTerms(owner=request.user, term_id=star_id)
             term.save()
+
+        return JsonResponse(
+            {"count": StarredTerms.objects.filter(term_id=star_id).count()}
+        )
 
     elif star_type == "user":
         if (
@@ -175,6 +192,10 @@ def edit(request):
             user = StarredUsers(owner=request.user, user_id=star_id)
             user.save()
 
+        return JsonResponse(
+            {"count": StarredUsers.objects.filter(term_id=user_id).count()}
+        )
+
     elif star_type == "group":
         if (
             StarredGroups.objects.filter(owner=request.user)
@@ -187,6 +208,10 @@ def edit(request):
         else:
             group = StarredGroups(owner=request.user, group_id=star_id)
             group.save()
+
+        return JsonResponse(
+            {"count": StarredGroups.objects.filter(group_id=user_id).count()}
+        )
 
     elif star_type == "search":
         if (
@@ -235,6 +260,7 @@ def edit_folder(request, pk):
     return JsonResponse({"error": "failed to created folder."}, status=500)
 
 
+@login_required
 def delete_folder(request, pk: int):
     """Delete a favorites folder."""
 
@@ -254,6 +280,7 @@ def delete_folder(request, pk: int):
     return JsonResponse({"error": "failed to delete folder."}, status=500)
 
 
+@login_required
 def reorder_folder(request):
     """Change the order of a users favorites."""
     data = json.loads(request.body.decode("UTF-8"))
@@ -268,6 +295,7 @@ def reorder_folder(request):
     return JsonResponse({"error": "failed to reorder folder."}, status=500)
 
 
+@login_required
 def reorder(request):
     """Change the order of favorites."""
     data = json.loads(request.body.decode("UTF-8"))
@@ -308,6 +336,7 @@ def reorder(request):
     return JsonResponse({"error": "failed to reorder favorites."}, status=500)
 
 
+@login_required
 def change_folder(request):
     """Move a favorite between folders."""
     data = json.loads(request.body.decode("UTF-8"))

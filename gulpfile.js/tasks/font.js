@@ -60,6 +60,7 @@ gulp.task('font:fontawesome', (done) => {
         'copy',
       ],
       solid: [
+        'envelope',
         'circle-plus',
         'circle-minus',
         'gears',

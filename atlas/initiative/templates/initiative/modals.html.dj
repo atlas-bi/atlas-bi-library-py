@@ -1,15 +1,13 @@
-@model Atlas_Web.Models.Initiative
-
 {# @if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true"){ #}
     <!-- feedback modal -->
-    <div class="modal" id="initiative-share-feedback-@Model.InitiativeId">
+    <div class="modal" id="initiative-share-feedback-{{ initiative.initiative_id }}">
         <div class="modal-background"></div>
         <div class="modal-content">
             <div class="box">
                 <strong class="mb-4">Share Feedback</strong>
                 <br>
                 <textarea class="textarea py-3" name="description"></textarea>
-                <button class="button share-feedback mt-4"  data-name="@Model.Name" data-url="@Context.Request.HttpContext.Request.Scheme://@Context.Request.HttpContext.Request.Host/initiatives?id=@Model.InitiativeId">Send Feedback</button>
+                <button class="button share-feedback mt-4"  data-name="{{ initiative.name }}" data-url="@Context.Request.HttpContext.Request.Scheme://@Context.Request.HttpContext.Request.Host/initiatives?id={{ initiative.initiative_id }}">Send Feedback</button>
             </div>
         </div>
     </div>
@@ -18,16 +16,16 @@
 
 {# @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true"){ #}
     <!-- share modal -->
-    <div class="modal" id="initiative-share-@Model.InitiativeId">
+    <div class="modal" id="initiative-share-{{ initiative.initiative_id }}">
         <div class="modal-background"></div>
         <div class="modal-content">
             <div class="box">
-                <strong class="mb-4">Share @Model.Name</strong>
+                <strong class="mb-4">Share {{ initiative.name }}</strong>
 
                 <form class="share" action="/mail?handler=SendMail" method="post">
                     <input type="hidden" class="mlbx-share" value="1" />
-                    <input type="hidden" class="share-name" value="@Model.Name" />
-                    <input type="hidden" class="share-url" value="@Context.Request.HttpContext.Request.Scheme://@Context.Request.HttpContext.Request.Host/initiatives?id=@Model.InitiativeId" />
+                    <input type="hidden" class="share-name" value="{{ initiative.name }}" />
+                    <input type="hidden" class="share-url" value="@Context.Request.HttpContext.Request.Scheme://@Context.Request.HttpContext.Request.Host/initiatives?id={{ initiative.initiative_id }}" />
 
                     <input type="hidden" id="convid" />
 
@@ -50,7 +48,7 @@
                     <div class="field">
                         <label class="label">Subject</label>
                         <div class="control">
-                            <input class="input share-subject" placeholder="e.g hey, check this out" value="[Share] @Model.Name" />
+                            <input class="input share-subject" placeholder="e.g hey, check this out" value="[Share] {{ initiative.name }}" />
                         </div>
                     </div>
                     <div class="field">
@@ -61,7 +59,7 @@ Hi!
 
 I would like to share this initiative with you.
 
-[@Model.Name](@Context.Request.HttpContext.Request.Scheme://@Context.Request.HttpContext.Request.Host/initiatives?id=@Model.InitiativeId)
+[{{ initiative.name }}](@Context.Request.HttpContext.Request.Scheme://@Context.Request.HttpContext.Request.Host/initiatives?id={{ initiative.initiative_id }})
 
 Check it out sometime!
 Regards!</textarea>

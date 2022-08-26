@@ -80,7 +80,7 @@ h6 {
 
 $fullhd: 1400px + (2 * $gap);
 $card-footer-padding: 0.5rem 0.75rem;
-@import '../../../node_modules/bulma-checkradio/src/sass/index';
+// @import '../../../node_modules/bulma-checkradio/src/sass/index';
 
 $navbar-height: 4.25rem;
 $navbar-item-img-max-height: auto;
@@ -101,6 +101,7 @@ $block-spacing: 1rem;
 // $size-large: $size-3;
 
 @import '../../../node_modules/bulma/bulma';
+@import '../../../node_modules/bulma/sass/layout/_all';
 
 // reset pre
 pre,

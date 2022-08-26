@@ -56,27 +56,24 @@
         </div>
     </div>
     <footer class="card-footer">
-        <a class="card-footer-item star" data-href="/users/favorites/?handler=Edit&type=initiative&id=@Model.InitiativeId">
+        <a class="card-footer-item star" data-href="{% url 'user:stars_edit' %}?type=initiative&id={{ initiative.initiative_id}}">
             <span class="icon-text">
-                {% comment %}@if (Model.StarredInitiatives.Any(x => x.Ownerid ==User.GetUserId()))
-                {
+                {% if initiative.initiative_id in user.get_starred_initiatives %}
                     <span class="icon has-text-gold">
                         <i class="fas fa-star"></i>
                     </span>
-                    <span>Starred <span class="tag is-rounded">{{ initiative.stars }}</span></span>
-                }
-                else
-                {%endcomment%}
+                    <span>Starred <span class="tag is-rounded">{{ initiative.starred.all.count }}</span></span>
+                {% else %}
                     <span class="icon ">
                         <i class="far fa-star"></i>
                     </span>
-                    <span>Star <span class="tag is-rounded star-count">{{ initiative.stars }}</span></span>
-                    <!--}-->
+                    <span>Star <span class="tag is-rounded star-count">{{ initiative.starred.all.count }}</span></span>
+                    {% endif %}
             </span>
         </a>
         <div class="card-footer-item">
              {# @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")            { #}
-                <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share" data-target="initiative-share-@Model.InitiativeId" data-name="@Model.Name" data-type="initiative">
+                <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share" data-target="initiative-share-{{ initiative.initiative_id }}" data-name="{{ initiaitve.name }}" data-type="initiative">
                     <span class="icon has-text-grey">
                         <i class="fas fa-share"></i>
                     </span>
@@ -87,5 +84,3 @@
 </div>
 
 {% include "initiative/modals.html.dj" %}
-
-<partial name="Initiatives/_Modals" />

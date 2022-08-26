@@ -556,6 +556,34 @@ class Users(AbstractUser, PermissionsMixin):
         # return all favorites
         return list(self.starred_reports.values_list("report__report_id", flat=True))
 
+    def get_starred_initiatives(self):
+        # return all favorites
+        return list(
+            self.starred_initiatives.values_list("initiative__initiative_id", flat=True)
+        )
+
+    def get_starred_collections(self):
+        # return all favorites
+        return list(
+            self.starred_collections.values_list("collection__collection_id", flat=True)
+        )
+
+    def get_starred_terms(self):
+        # return all favorites
+        return list(self.starred_terms.values_list("term__term_id", flat=True))
+
+    def get_starred_users(self):
+        # return all favorites
+        return list(self.starred_users.values_list("user__user_id", flat=True))
+
+    def get_starred_groups(self):
+        # return all favorites
+        return list(self.starred_groups.values_list("group__group_id", flat=True))
+
+    def get_starred_searches(self):
+        # return all favorites
+        return list(self.starred_searches.values_list("search__search_id", flat=True))
+
     @property
     def password(self):
         return 123
@@ -1989,7 +2017,7 @@ class StarredInitiatives(models.Model):
         db_column="Initiativeid",
         blank=True,
         null=True,
-        related_name="stars",
+        related_name="starred",
     )
     folder = models.ForeignKey(
         "FavoriteFolders",

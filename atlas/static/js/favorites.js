@@ -348,7 +348,9 @@
           $target.querySelector('.star-count') &&
           $ajax.responseText !== 'error'
         ) {
-          $target.querySelector('.star-count').textContent = $ajax.responseText;
+          $target.querySelector('.star-count').textContent = JSON.parse(
+            $ajax.responseText,
+          ).count;
         }
 
         // If we are on the fav's page, should we refresh the page, or delete the element?
