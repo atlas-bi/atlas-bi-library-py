@@ -11,7 +11,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
-from index.models import ReportComments, ReportDocs, ReportImages, Reports, Terms
+from index.models import ReportDocs, ReportImages, Reports, Terms
 from PIL import Image
 
 

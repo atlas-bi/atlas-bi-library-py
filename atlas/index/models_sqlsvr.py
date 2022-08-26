@@ -139,9 +139,6 @@ class Reports(models.Model):
     def get_absolute_url(self):
         return reverse("report:index", kwargs={"pk": self.pk})
 
-    def get_absolute_comments_url(self):
-        return reverse("report:comments", kwargs={"pk": self.pk})
-
     # def system_run_url(self, in_system):
     #     return "123.123"
 
@@ -800,9 +797,6 @@ class Collections(models.Model):
     def get_absolute_edit_url(self):
         return reverse("collection:edit", kwargs={"pk": self.pk})
 
-    def get_absolute_comments_url(self):
-        return reverse("collection:comments", kwargs={"pk": self.pk})
-
     @property
     def modified_at(self):
         if self._modified_at:
@@ -851,7 +845,7 @@ class CollectionReports(models.Model):
 
 
 class CollectionTerms(models.Model):
-    link_id = models.AutoField(db_column="TermAnnotationID", primary_key=True)
+    link_id = models.AutoField(db_column="LinkId", primary_key=True)
     term = models.ForeignKey(
         "Terms",
         models.DO_NOTHING,
@@ -1187,44 +1181,6 @@ class ReportTickets(models.Model):
 
     def __str__(self):
         return self.number
-
-
-class ReportCommentStream(models.Model):
-    stream_id = models.AutoField(db_column="ConversationID", primary_key=True)
-    report = models.ForeignKey(
-        "Reports",
-        models.DO_NOTHING,
-        db_column="ReportObjectID",
-        related_name="comment_streams",
-    )
-
-    class Meta:
-        managed = False
-        db_table = "ReportObjectConversation_doc"
-
-
-class ReportComments(models.Model):
-    comment_id = models.AutoField(db_column="MessageID", primary_key=True)
-    stream = models.ForeignKey(
-        "ReportCommentStream",
-        models.DO_NOTHING,
-        db_column="ConversationID",
-        related_name="stream_comments",
-    )
-    user_id = models.ForeignKey(
-        "Users",
-        models.DO_NOTHING,
-        related_name="user_report_comments",
-        db_column="UserID",
-        blank=True,
-        null=True,
-    )
-    message = models.TextField(db_column="MessageText")
-    posted_at = models.DateTimeField(db_column="PostDateTime")
-
-    class Meta:
-        managed = False
-        db_table = "ReportObjectConversationMessage_doc"
 
 
 class ReportFragilityTags(models.Model):
@@ -1712,9 +1668,6 @@ class Terms(models.Model):
     def get_absolute_edit_url(self):
         return reverse("term:edit", kwargs={"pk": self.pk})
 
-    def get_absolute_comments_url(self):
-        return reverse("term:comments", kwargs={"pk": self.pk})
-
     @property
     def approved_at(self):
         if self._approved_at:
@@ -1738,52 +1691,6 @@ class Terms(models.Model):
         if self._modified_at:
             return datetime.strftime(self._modified_at, "%-m/%-d/%y")
         return ""
-
-
-class TermCommentStream(models.Model):
-    stream_id = models.AutoField(db_column="TermConversationId", primary_key=True)
-    term = models.ForeignKey(
-        Terms,
-        models.DO_NOTHING,
-        db_column="TermId",
-        related_name="comment_streams",
-    )
-
-    class Meta:
-        managed = False
-        db_table = "TermConversation"
-
-
-class TermComments(models.Model):
-    comment_id = models.AutoField(
-        db_column="TermConversationMessageID", primary_key=True
-    )
-    stream = models.ForeignKey(
-        TermCommentStream,
-        models.DO_NOTHING,
-        db_column="TermConversationId",
-        related_name="comments",
-    )
-    user = models.ForeignKey(
-        "Users",
-        models.DO_NOTHING,
-        db_column="UserId",
-        blank=True,
-        null=True,
-        related_name="term_comments",
-    )
-    message = models.TextField(db_column="MessageText")
-    posted_at = models.DateTimeField(db_column="PostDateTime", auto_now=True)
-
-    class Meta:
-        managed = False
-        db_table = "TermConversationMessage"
-
-    def get_absolute_delete_url(self):
-        return reverse(
-            "term:comments_delete",
-            kwargs={"pk": self.stream.term_id, "comment_id": self.pk},
-        )
 
 
 class FavoriteFolders(models.Model):

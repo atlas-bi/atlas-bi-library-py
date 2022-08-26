@@ -18,8 +18,5 @@
                 <a href="#tasks">Milestones</a>
             </li>
         {% endif %}
-        <li>
-            <a href="#comments">Comments</a>
-        </li>
     </ul>
 </nav>
