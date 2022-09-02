@@ -10,15 +10,7 @@ Run test for this app with::
 
 """
 from django.utils import timezone
-from index.models import (
-    Collections,
-    CollectionTerms,
-    ReportDocs,
-    ReportTerms,
-    TermComments,
-    TermCommentStream,
-    Terms,
-)
+from index.models import Collections, CollectionTerms, ReportDocs, ReportTerms, Terms
 
 from atlas.testutils import AtlasTestCase
 
@@ -41,15 +33,6 @@ class TermTestCase(AtlasTestCase):
         term = Terms.objects.first()
         response = self.client.get("/terms/%s" % term.term_id, follow=False)
         self.assertEqual(response.url, "/accounts/login/?next=/terms/%s" % term.term_id)
-        self.assertEqual(response.status_code, 302)
-
-    def test_login_comments(self):
-        """Check that users are sent from ``/terms/%s/comments`` to login page."""
-        term = Terms.objects.first()
-        response = self.client.get("/terms/%s/comments" % term.term_id, follow=False)
-        self.assertEqual(
-            response.url, "/accounts/login/?next=/terms/%s/comments" % term.term_id
-        )
         self.assertEqual(response.status_code, 302)
 
     # logged in tests.
@@ -94,127 +77,6 @@ class TermTestCase(AtlasTestCase):
         assert response.status_code == 200
 
         self.verify_body_links(response.content)
-
-    def test_comments(self):
-        """Check that comments are available."""
-        self.login()
-        term = Terms.objects.first()
-        assert self.client.get("/terms/%s/comments" % term.term_id).status_code == 200
-
-    def test_create_comments(self):
-        """Check that we can create comments."""
-        self.login()
-        term = Terms.objects.first()
-        data = {"message": "new comment"}
-        self.assertEqual(
-            self.client.post(
-                "/terms/%s/comments" % term.term_id,
-                data=data,
-                content_type="application/json",
-            ).status_code,
-            200,
-        )
-
-        # assert that the comment stream was created
-        self.assertTrue(
-            TermCommentStream.objects.filter(term_id=term.term_id)
-            .filter(comments__message=data["message"])
-            .exists()
-        )
-
-        # assert that the comment was created
-        self.assertTrue(
-            TermComments.objects.filter(stream__term_id=term.term_id)
-            .filter(message=data["message"])
-            .exists()
-        )
-
-        # attempt to add a second stream and verify it
-        data = {"message": "new comment two"}
-        self.assertEqual(
-            self.client.post(
-                "/terms/%s/comments" % term.term_id,
-                data=data,
-                content_type="application/json",
-            ).status_code,
-            200,
-        )
-        self.assertTrue(
-            TermComments.objects.filter(stream__term_id=term.term_id)
-            .filter(message=data["message"])
-            .exists()
-        )
-        self.assertTrue(
-            TermCommentStream.objects.filter(term_id=term.term_id)
-            .filter(comments__message=data["message"])
-            .exists()
-        )
-
-        # attempt to add another comment to the streamand verify it is there
-        stream = (
-            TermComments.objects.filter(stream__term_id=term.term_id)
-            .filter(message=data["message"])
-            .first()
-        )
-        data = {"message": "stream reply", "stream": stream.stream_id}
-        self.assertEqual(
-            self.client.post(
-                "/terms/%s/comments" % term.term_id,
-                data=data,
-                content_type="application/json",
-            ).status_code,
-            200,
-        )
-        self.assertTrue(
-            TermComments.objects.filter(stream__term_id=term.term_id)
-            .filter(message=data["message"])
-            .filter(stream_id=stream.stream_id)
-            .exists()
-        )
-        self.assertTrue(
-            TermCommentStream.objects.filter(term_id=term.term_id)
-            .filter(comments__message=data["message"])
-            .filter(stream_id=stream.stream_id)
-            .exists()
-        )
-
-        # attempt to delete a comment and verify it is gone
-        comment = TermComments.objects.filter(stream__term_id=term.term_id).first()
-        self.assertTrue(
-            self.client.post(
-                "/terms/%s/comments/%s/delete"
-                % (
-                    term.term_id,
-                    comment.comment_id,
-                ),
-                content_type="application/json",
-            ),
-            302,
-        )
-
-        # attempt to delete a stream
-        comment = TermComments.objects.filter(stream__term_id=term.term_id).first()
-        data = {"stream": comment.stream_id}
-        self.assertTrue(
-            self.client.post(
-                "/terms/%s/comments/%s/delete"
-                % (
-                    term.term_id,
-                    comment.comment_id,
-                ),
-                data=data,
-                content_type="application/json",
-            ),
-            302,
-        )
-
-        # add a comment with no message
-        self.assertEqual(
-            self.client.post(
-                "/terms/%s/comments" % term.term_id, content_type="application/json"
-            ).status_code,
-            200,
-        )
 
     def test_create_term(self):
         """Check that we can create and edit terms."""
@@ -344,17 +206,6 @@ class TermTestCase(AtlasTestCase):
 
         last_url = response.redirect_chain[-1][0]
         term_id = last_url[last_url.rindex("/") + 1 :]  # noqa: E203
-
-        # add a comment
-        data = {"message": "new comment"}
-        self.assertEqual(
-            self.client.post(
-                "/terms/%s/comments" % term_id,
-                data=data,
-                content_type="application/json",
-            ).status_code,
-            200,
-        )
 
         # add a report link
         report_doc = ReportDocs.objects.first()

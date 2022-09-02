@@ -1,10 +1,12 @@
 {% load static %}
 
-<nav class="navbar is-transparent atlas-navbar has-shadow">
+<nav class="navbar is-transparent atlas-navbar has-shadow is-sticky is-align-items-center">
     <div class="container">
         <div class="navbar-brand">
             <a class="navbar-item" href="{% url 'index:index' %}">
-                <img src="{% static 'img/atlas-logo.png' %}" width="162" height="50" />
+                <img src="{% static 'img/thinking-face-text-266x80.png' %}"
+                     width="133"
+                     height="40"/>
             </a>
             <a role="button"
                class="navbar-burger"
@@ -19,91 +21,98 @@
         <div class="navbar-start is-flex is-flex-grow-1 is-align-items-center px-3 pt-5">{% include 'search.html.dj' %}</div>
         <div class="navbar-menu is-flex-grow-0" id="atlas-main-nav">
             <div class="navbar-end">
-                <a class="navbar-item" href="#mail">
-                    <span class="icon is-medium is-relative">
-                        <i class="far fa-lg fa-envelope"></i>
-                        <span title="mail count" class="badge" id="nav_unread_message_count">0</span>
-                    </span>
-                    <span class="hide-desktop">Mail</span>
-                </a>
-                {% if 1 in permissions or 18 in permissions or 33 in permissions or 34 in permissions %}
+                {% if "Edit User Permissions" in perms or "Edit Role Permissions" in perms or "View Site Analytics" in perms or "Create Parameters" in perms or "Delete Parameters" in perms %}
                     <div class="navbar-item has-dropdown is-hoverable is-boxed">
                         <div class="navbar-link is-arrowless">
                             <span class="icon is-medium">
                                 <i class="fas fa-lg fa-wrench"></i>
                             </span>
-                            <span class="hide-desktop">Administrative</span>
+                            <span class="icon is-small">
+                                <i class="fa-solid fa-caret-down"></i>
+                            </span>
                         </div>
                         <div class="navbar-dropdown">
-                            <hr class=" hide-desktop dropdown-divider">
-                            <!--
-                                {% if 18 in permissions or 1 in permissions %}<a href="/accesscontrol">Access Control</a>{% endif %}
-                                {% if 33 in permissions or 34 in permissions %}<a href="/parameters">Parameters</a>{% endif %}
-                            -->
-                            {% if 36 in permissions %}
+                            <hr class="hide-desktop dropdown-divider">
+
+                            {% if "Create Parameters" in perms or "Delete Parameters" in perms or "Edit Role Permissions" in perms or "Edit User Permissions" in perms %}
+                                <a class="navbar-item" href="/settings">Settings</a>
+                            {% endif %}
+
+                            {% if "View Site Analytics" in perms %}
                                 <a class="navbar-item" href="{% url 'analytics:index' %}">Analytics</a>
                             {% endif %}
-                            {% if 36 in permissions %}
-                                <!-- permission should be added for etl -->
+
+                            {# <a class="navbar-item" href="/tasks">Tasks</a> #}
+
+                            {% if "View Site Analytics" in perms %}
+                                {# <hr class="dropdown-divider"> #}
+                                {# <a class="navbar-item" href="/profile">Report Activity</a> #}
+                            {% endif %}
+
+                            {% if "Manage ETL" in perms %}
                                 <a class="navbar-item" href="{% url 'etl:index' %}">ETL</a>
                             {% endif %}
-                            <hr class=" hide-desktop dropdown-divider">
-                            <!--
-<a href="/tasks">Tasks</a>
--->
                         </div>
                     </div>
                 {% endif %}
-                <div class="navbar-item has-dropdown is-hoverable is-boxed">
-                    <div class="navbar-link is-arrowless">
-                        <span class="icon is-medium">
-                            <i class="fas fa-lg fa-list-ul"></i>
-                        </span>
-                        <span class="hide-desktop">Sections</span>
-                    </div>
-                    <div class="navbar-dropdown">
-                        <hr class=" hide-desktop dropdown-divider">
-                        <a class="navbar-item"
-                           href="{% url 'initiative:list' %}"
-                           title="initiatives">Initiatives</a>
-                        <a class="navbar-item"
-                           href="{% url 'collection:list' %}"
-                           title="collections">Collections</a>
-                        <a class="navbar-item" href="{% url 'term:list' %}" title="terms">Terms</a>
-                        <hr class=" hide-desktop dropdown-divider">
-                    </div>
+
+            <div class="navbar-item has-dropdown is-hoverable is-boxed">
+                <div class="navbar-link is-arrowless">
+                    <span class="icon is-medium">
+                        <i class="fas fa-lg fa-list-ul"></i>
+                    </span>
+                    <span class="icon is-small">
+                        <i class="fa-solid fa-caret-down"></i>
+                    </span>
                 </div>
-                <a class="navbar-item" href="{% url 'user:me' %}">
+                <div class="navbar-dropdown">
+                    <hr class=" hide-desktop dropdown-divider">
+                    <!-- missing permission check -->
+                    <a class="navbar-item"
+                       href="{% url 'initiative:list' %}"
+                       title="initiatives">Initiatives</a>
+                    <!-- missing permission check -->
+                    <a class="navbar-item"
+                       href="{% url 'collection:list' %}"
+                       title="collections">Collections</a>
+                    <!-- missing permission check -->
+                    <a class="navbar-item" href="{% url 'term:list' %}" title="terms">Terms</a>
+                    <hr class=" hide-desktop dropdown-divider">
+                    <!-- bad url -->
+                    <a class="navbar-item" href="/about_analytics">About Analytics</a>
+                </div>
+            </div>
+            <div class="navbar-item has-dropdown is-hoverable is-boxed">
+                <div class="navbar-link is-arrowless">
                     <span class="icon is-medium">
                         <i class="fas fa-lg fa-user"></i>
                     </span>
-                    <span class="hide-desktop">Profile</span>
-                </a>
-                {% if 44 in permissions %}
-                    <div class="navbar-item has-dropdown is-hoverable is-boxed">
-                        <div class="navbar-link is-arrowless">
-                            {% if user.active_role %}
-                                {{ user.active_role.name }}
-                            {% else %}
-                                change role
-                            {% endif %}
+                    <span class="icon is-small">
+                        <i class="fa-solid fa-caret-down"></i>
+                    </span>
+                </div>
+                <div class="navbar-dropdown">
+                    <a class="navbar-item" href="/users">Your profile</a>
+                    <a class="navbar-item" href="/users#stars">Your stars</a>
+                    <hr class="dropdown-divider">
+                    <a class="navbar-item" href="/users/settings">Settings</a>
+                </div>
+            </div>
+            {% if user.is_superuser %}
+                <div class="navbar-item">
+                    <div class="field toggle">
+                        <input type="hidden"
+                               id="enable-administrator"
+                               value="{% if "AdminDisabled" not in prefs %}Y{% endif %}">
+                        <input id="switch-enable-administrator" type="checkbox" name="switch-enable-administrator" class="switch is-rounded is-info"
+                            {% if "AdminDisabled" not in prefs %} checked="checked" {% endif %}>
+                            <label class="py-0" for="switch-enable-administrator">
+                                <strong>Admin</strong>
+                            </label>
                         </div>
-                        <div class="navbar-dropdown" id="role-change"></div>
-                        <script>
-                            /* var q = new XMLHttpRequest();
-                            q.open('get', '/user/roles', true);
-                            q.setRequestHeader('X-CSRFToken', csrftoken);
-                            q.send();
-                            q.onload = function() {
-                                var data = JSON.parse(q.responseText);
-                                var el =  document.getElementById('role-change');
-                                for (x in data){
-                                    el.innerHTML += "<a href='/users/roles/change&id="+data[x].role_id + "&url="+window.location.href.replace(window.location.origin,'') + "'>"+data[x].name+"</a>"
-                                }
-                            }*/
-                        </script>
                     </div>
                 {% endif %}
+
                 <!-- epic navigation -->
                 {% if is_epic %}
                     <a class="nav-link" onclick="history.back()">
@@ -119,9 +128,9 @@
                 {% endif %}
             </div>
         </nav>
-        <section class="level mt-5">
+        <section class="section py-0">
             <div class="container">
-                <nav class="breadcrumb">
+                <nav class="breadcrumb site-breadcrumbs">
                 </nav>
             </div>
         </section>

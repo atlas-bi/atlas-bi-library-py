@@ -1,27 +1,7 @@
-/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-@import "../include/color.scss";
 .mlbx-rdr {
-  -ms-user-select: text;
   border-bottom-right-radius: inherit;
-  color: $color-text-med-grey;
+  color: #4e4e4e;
   flex: 0 0 55%;
-  font-weight: 600;
   height: 100%;
   letter-spacing: 0.4px;
   max-width: 55%;
@@ -35,8 +15,6 @@
 }
 
 .mlbx-rdrHead-controls {
-  -moz-transition: all 0.5s;
-  -webkit-transition: all 0.5s;
   bottom: -13px;
   cursor: default;
   left: 0;
@@ -64,7 +42,7 @@
 .mlbx-rdrHead-controls button,
 .mlbx-rdrHead-controls button:hover,
 .mlbx-rdrHead-controls button:active {
-  color: $color-text-dark-grey !important;
+  color: #969696 !important;
   line-height: 20px;
   padding: 0;
   padding-left: 7px;
@@ -102,7 +80,6 @@
 .mailbox-reader-body,
 .mailbox-reader-body-inner {
   font-size: 14px;
-  font-weight: 600;
   letter-spacing: 0.4px;
   padding: 8px 25px 25px;
 }
@@ -143,36 +120,33 @@
 }
 
 .mlbx-rdrHead .mailbox-sender .mailbox-senderTime {
-  color: $color-text-dark-grey;
+  color: #969696;
   float: right;
   font-size: 12px;
-  font-weight: 600;
 }
 
 .mlbx-rdrHead .mailbox-subject,
 .mlbx-rdrHead .mailbox-to {
   font-size: 14px;
-  font-weight: 600;
   letter-spacing: 0.4px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .mlbx-rdrHead .mailbox-to .mailbox-to-user {
-  color: $color-text-dark-grey;
+  color: gray;
   cursor: default;
   display: inline;
 }
 
 .mlbx-rdrHead .mailbox-to .mailbox-to-user.group {
-  color: $color-text-orange-dark;
+  color: #8e4d00;
 }
 
 .mlbx-rdrHead .mailbox-new-message-sender,
 .mlbx-rdrHead .mailbox-new-message-recipient,
 .mlbx-rdrHead .mailbox-new-message-subject,
 .mlbx-rdrHead .mailbox-new-message-message {
-  font-weight: 600;
   letter-spacing: 0.4px;
   margin: 0;
 }
@@ -196,7 +170,7 @@
 .mailbox-reader-body .message-reply div,
 .mlbx-newMsg .message-reply,
 .mlbx-newMsg .message-reply div {
-  color: $color-text-purple !important;
+  color: #4e4cd0 !important;
 }
 
 .mailbox-reader-body .message-reply .message-reply,
@@ -208,7 +182,7 @@
 .mailbox-reader-body .message-reply .message-reply div,
 .mlbx-newMsg .message-reply .message-reply,
 .mlbx-newMsg .message-reply .message-reply div {
-  color: $color-text-teal !important;
+  color: #00a6c6 !important;
 }
 
 .mailbox-reader-body .message-reply .message-reply .message-reply,
@@ -220,5 +194,5 @@
 .mailbox-reader-body .message-reply .message-reply .message-reply div,
 .mlbx-newMsg .message-reply .message-reply .message-reply,
 .mlbx-newMsg .message-reply .message-reply .message-reply div {
-  color: $color-text-bright-green !important;
+  color: #13b810 !important;
 }

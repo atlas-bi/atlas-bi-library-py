@@ -23,7 +23,7 @@
     <section class="tab-cnt">
         <div class="tab-dta active" id="favorites">
             <h3 class="pageSection-title">My Favorites</h3>
-            <div data-ajax="yes" data-url="{% url 'user:favorites' %}"></div>
+            <div data-ajax="yes" data-url="{% url 'user:stars' %}"></div>
         </div>
         <!--
 <div class="tab-dta" id="mail">

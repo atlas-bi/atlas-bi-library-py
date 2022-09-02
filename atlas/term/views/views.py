@@ -9,14 +9,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
 from django.views.generic import DeleteView, DetailView, ListView, View
-from index.models import (
-    CollectionTerms,
-    Reports,
-    ReportTerms,
-    TermComments,
-    TermCommentStream,
-    Terms,
-)
+from index.models import CollectionTerms, Reports, ReportTerms, Terms
 
 decorators = [never_cache, login_required]
 
@@ -30,9 +23,6 @@ class TermDelete(LoginRequiredMixin, DeleteView):
 
     def post(self, *args, **kwargs):
         pk = self.kwargs["pk"]
-
-        TermComments.objects.filter(stream_id__term_id=pk).delete()
-        TermCommentStream.objects.filter(term_id=pk).delete()
         ReportTerms.objects.filter(term__term_id=pk).delete()
         CollectionTerms.objects.filter(term__term_id=pk).delete()
 

@@ -8,20 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import DeleteView, DetailView, ListView, View
-from index.models import (
-    CollectionAttachments,
-    CollectionChecklist,
-    CollectionChecklistCompleted,
-    CollectionComments,
-    CollectionCommentStream,
-    CollectionMilestoneTasks,
-    CollectionMilestoneTasksCompleted,
-    CollectionReports,
-    Collections,
-    CollectionTerms,
-    Reports,
-    Terms,
-)
+from index.models import CollectionReports, Collections, CollectionTerms, Reports, Terms
 
 
 class CollectionList(LoginRequiredMixin, ListView):
@@ -92,20 +79,8 @@ class CollectionDelete(LoginRequiredMixin, DeleteView):
     def post(self, *args, **kwargs):
         pk = self.kwargs["pk"]
 
-        CollectionComments.objects.filter(stream_id__collection_id=pk).delete()
-        CollectionCommentStream.objects.filter(collection_id=pk).delete()
-
         CollectionTerms.objects.filter(collection_id=pk).delete()
         CollectionReports.objects.filter(collection_id=pk).delete()
-
-        CollectionMilestoneTasksCompleted.objects.filter(collection_id=pk).delete()
-
-        CollectionChecklist.objects.filter(task__collection_id=pk).delete()
-        CollectionMilestoneTasks.objects.filter(collection_id=pk).delete()
-
-        CollectionChecklistCompleted.objects.filter(collection_id=pk).delete()
-
-        CollectionAttachments.objects.filter(collection_id=pk).delete()
 
         return super().post(*args, **kwargs)
 
