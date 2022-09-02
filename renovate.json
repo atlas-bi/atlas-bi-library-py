@@ -13,6 +13,7 @@
   "baseBranches": ["dev"],
   "assigneesSampleSize": 2,
   "bumpVersion": "patch",
+  "baseBranches": ["dev"],
   "commitMessagePrefix": "chore(deps)",
   "labels": ["maintenance", "renovate"],
   "packageRules": [
