@@ -19,103 +19,103 @@ from atlas.decorators import admin_required
 @login_required
 def index(request):
     """Analytics homepage."""
-    top_user = (
-        Analytics.objects.filter(access_date__gte=(timezone.now() - timedelta(days=7)))
-        .values("user___first_name")
-        .annotate(
-            count=Count("user"), average=Avg(Cast("load_time", PositiveIntegerField()))
-        )
-        .order_by("-count")
-    )[:10]
+    # top_user = (
+    #     Analytics.objects.filter(access_date__gte=(timezone.now() - timedelta(days=7)))
+    #     .values("user___first_name")
+    #     .annotate(
+    #         count=Count("user"), average=Avg(Cast("load_time", PositiveIntegerField()))
+    #     )
+    #     .order_by("-count")
+    # )[:10]
 
-    top_pages = (
-        Analytics.objects.filter(access_date__gte=(timezone.now() - timedelta(days=7)))
-        .values("pathname")
-        .annotate(
-            count=Count("user"), average=Avg(Cast("load_time", PositiveIntegerField()))
-        )
-        .order_by("-count")
-    )[:10]
+    # top_pages = (
+    #     Analytics.objects.filter(access_date__gte=(timezone.now() - timedelta(days=7)))
+    #     .values("pathname")
+    #     .annotate(
+    #         count=Count("user"), average=Avg(Cast("load_time", PositiveIntegerField()))
+    #     )
+    #     .order_by("-count")
+    # )[:10]
 
-    access = (
-        Analytics.objects.order_by("access_date")
-        .filter(
-            access_date__isnull=False,
-            access_date__lte=(timezone.now().replace(day=1) - timedelta(days=1)),
-        )
-        .annotate(month=Trunc("access_date", "month"))
-        .values("month")
-        .annotate(count=Count("analytics_id"))
-        .order_by("month")
-    )
+    # access = (
+    #     Analytics.objects.order_by("access_date")
+    #     .filter(
+    #         access_date__isnull=False,
+    #         access_date__lte=(timezone.now().replace(day=1) - timedelta(days=1)),
+    #     )
+    #     .annotate(month=Trunc("access_date", "month"))
+    #     .values("month")
+    #     .annotate(count=Count("analytics_id"))
+    #     .order_by("month")
+    # )
 
-    search = (
-        Analytics.objects.order_by("access_date")
-        .filter(
-            access_date__isnull=False,
-            access_date__lte=timezone.now().replace(day=1) - timedelta(days=1),
-            pathname="/search",
-        )
-        .annotate(month=Trunc("access_date", "month"))
-        .values("month")
-        .annotate(count=Count("analytics_id"))
-        .order_by("month")
-    )
+    # search = (
+    #     Analytics.objects.order_by("access_date")
+    #     .filter(
+    #         access_date__isnull=False,
+    #         access_date__lte=timezone.now().replace(day=1) - timedelta(days=1),
+    #         pathname="/search",
+    #     )
+    #     .annotate(month=Trunc("access_date", "month"))
+    #     .values("month")
+    #     .annotate(count=Count("analytics_id"))
+    #     .order_by("month")
+    # )
 
-    report = (
-        Analytics.objects.order_by("access_date")
-        .filter(
-            access_date__isnull=False,
-            access_date__lte=timezone.now().replace(day=1) - timedelta(days=1),
-            pathname="/reports",
-        )
-        .annotate(month=Trunc("access_date", "month"))
-        .values("month")
-        .annotate(count=Count("analytics_id"))
-        .order_by("month")
-    )
+    # report = (
+    #     Analytics.objects.order_by("access_date")
+    #     .filter(
+    #         access_date__isnull=False,
+    #         access_date__lte=timezone.now().replace(day=1) - timedelta(days=1),
+    #         pathname="/reports",
+    #     )
+    #     .annotate(month=Trunc("access_date", "month"))
+    #     .values("month")
+    #     .annotate(count=Count("analytics_id"))
+    #     .order_by("month")
+    # )
 
-    term = (
-        Analytics.objects.order_by("access_date")
-        .filter(
-            access_date__isnull=False,
-            access_date__lte=timezone.now().replace(day=1) - timedelta(days=1),
-            pathname="/terms",
-        )
-        .annotate(month=Trunc("access_date", "month"))
-        .values("month")
-        .annotate(count=Count("analytics_id"))
-        .order_by("month")
-    )
+    # term = (
+    #     Analytics.objects.order_by("access_date")
+    #     .filter(
+    #         access_date__isnull=False,
+    #         access_date__lte=timezone.now().replace(day=1) - timedelta(days=1),
+    #         pathname="/terms",
+    #     )
+    #     .annotate(month=Trunc("access_date", "month"))
+    #     .values("month")
+    #     .annotate(count=Count("analytics_id"))
+    #     .order_by("month")
+    # )
 
-    collection = (
-        Analytics.objects.order_by("access_date")
-        .filter(
-            access_date__isnull=False,
-            access_date__lte=timezone.now().replace(day=1) - timedelta(days=1),
-            pathname="/collections",
-        )
-        .annotate(month=Trunc("access_date", "month"))
-        .values("month")
-        .annotate(count=Count("analytics_id"))
-        .order_by("month")
-    )
+    # collection = (
+    #     Analytics.objects.order_by("access_date")
+    #     .filter(
+    #         access_date__isnull=False,
+    #         access_date__lte=timezone.now().replace(day=1) - timedelta(days=1),
+    #         pathname="/collections",
+    #     )
+    #     .annotate(month=Trunc("access_date", "month"))
+    #     .values("month")
+    #     .annotate(count=Count("analytics_id"))
+    #     .order_by("month")
+    # )
 
-    context = {
-        "top_users": top_user,
-        "top_pages": top_pages,
-        "access": access,
-        "search": search,
-        "report": report,
-        "term": term,
-        "collection": collection,
-        "title": "Analytics",
-    }
+    # context = {
+    #     "top_users": top_user,
+    #     "top_pages": top_pages,
+    #     "access": access,
+    #     "search": search,
+    #     "report": report,
+    #     "term": term,
+    #     "collection": collection,
+    #     "title": "Analytics",
+    # }
 
     return render(
         request,
         "analytics/index.html.dj",
-        context,
+        # context,
     )
 
 
@@ -147,16 +147,8 @@ def log(request):
         return HttpResponse("ok")
 
     analytic = Analytics(
-        username=request.user.full_name,
-        app_code_name=log_data.get("appCodeName", ""),
-        app_name=log_data.get("appName", ""),
-        app_version=log_data.get("appVersion", ""),
-        cookie_enabled=log_data.get("cookieEnabled", ""),
         language=log_data.get("language", ""),
-        oscpu=log_data.get("oscpu", ""),
-        platform=log_data.get("platform", ""),
         useragent=log_data.get("userAgent", ""),
-        host=log_data.get("host", ""),
         hostname=log_data.get("hostname", ""),
         href=log_data.get("href", ""),
         protocol=log_data.get("protocol", ""),
@@ -166,7 +158,6 @@ def log(request):
         screen_height=log_data.get("screenHeight", ""),
         screen_width=log_data.get("screenWidth", ""),
         origin=log_data.get("origin", ""),
-        title=log_data.get("title", ""),
         load_time=log_data.get("loadTime", ""),
         access_date=log_time,
         referrer=log_data.get("referrer", ""),
@@ -181,4 +172,15 @@ def log(request):
 
     analytic.save()
 
+    return HttpResponse("ok")
+
+
+@login_required
+def error(request):
+    return HttpResponse("ok")
+
+
+@login_required
+@csrf_exempt
+def trace(request):
     return HttpResponse("ok")

@@ -60,7 +60,7 @@ def admin_required(
     superuser, displaying message if provided.
     """
     actual_decorator = user_passes_test(
-        lambda u: u.is_active and u.is_admin and u.is_authenticated,
+        lambda u: u.is_active and u.is_superuser and u.is_authenticated,
         login_url=login_url,
         redirect_field_name=redirect_field_name,
         message=message,

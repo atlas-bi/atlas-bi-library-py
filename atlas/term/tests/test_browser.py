@@ -90,36 +90,6 @@ class IndexTestCase(AtlasBrowserStackTestCase):
             self.selenium.find_element_by_css_selector("a.nav-link.delete").click()
         )
 
-    def test_term_comments(self):
-        """Test adding/removing comments."""
-        self.login()
-        self.selenium.get(self.url("/terms/1"))
-
-        comment_input = self.selenium.find_element_by_css_selector(
-            "form.comments-form span.input-span"
-        )
-        self.selenium.execute_script("window.scrollTo(0,document.body.scrollHeight)")
-        comment_input.send_keys("new comment")
-
-        comment_submit = self.selenium.find_element_by_css_selector(
-            "form.comments-form div button.input-submit"
-        )
-        self.selenium.execute_script("window.scrollTo(0,document.body.scrollHeight)")
-        comment_submit.send_keys("new comment").click()
-
-        url = self.selenium.current_url
-        # delete comment > login as admin first
-        self.login("admin@admin.admin")
-        self.selenium.get(url)
-        comment_delete = self.selenium.find_element_by_css_selector(
-            "form.comments-form.delete button.input-submit"
-        )
-        self.selenium.execute_script("window.scrollTo(0,document.body.scrollHeight)")
-        comment_delete.send_keys("new comment").click()
-
-        # verify no logs
-        # self.assertEqual(self.log_count(), 0)
-
     def test_old_term_links(self):
         """Check old term links."""
         self.login()

@@ -7,7 +7,7 @@
     {% block start_css %}
     {% endblock start_css %}
 {% endcompress %}
-<body>
+<body class="is-flex is-flex-direction-column has-background-white">
     {% include "site_message.html.dj" %}
     {% include "nav.html.dj" %}
     {% csrf_token %}
@@ -18,10 +18,11 @@
             .value;
         </script>
     {% endcompress %}
-    <section class="level">
-        <div class="container">
+  <section class="is-flex-grow-1 mt-4">
+        <div class="container is-relative mb-5">
             <div class="columns">
-                <div class="column is-narrow">
+                <div class="column is-narrow side-links" style="z-index: 2;">
+
                     <!--
 <nav class="sideNav">
 -->
@@ -31,7 +32,7 @@
 </nav>
 -->
                 </div>
-                <div class="column">
+                <div class="column body-mainCtn">
                     {% block body %}
                     {% endblock body %}
                 </div>
@@ -46,13 +47,6 @@
             </div>
         </div>
     </section>
-    <!-- modals -->
-    <section class="modal">
-        {% block modals %}
-            {% include "modals.html.dj" %}
-        {% endblock modals %}
-    </section>
-    <!-- footer -->
     {% include "footer.html.dj" %}
     {% include "tail.html.dj" %}
     {% block js %}

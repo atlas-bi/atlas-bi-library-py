@@ -1,15 +1,15 @@
 // postcss.config.js
-module.exports = cfg => {
-  stats: {warnings:false}
-  const
-    dev = cfg.env === 'development',
+module.exports = (cfg) => {
+  stats: {
+    warnings: false;
+  }
+  const dev = cfg.env === 'development',
     scss = cfg.file.extname === '.scss',
     purgecss = require('@fullhuman/postcss-purgecss');
 
   return {
-
     map: dev ? { inline: false } : false,
-    parser:  scss ? 'postcss-scss' : false,
+    parser: scss ? 'postcss-scss' : false,
 
     plugins: [
       require('@csstools/postcss-sass')(),
@@ -21,11 +21,10 @@ module.exports = cfg => {
         content: ['./**/*.html.dj'],
         safelist: {
           deep: [/breadcrumb/],
-        }
+        },
       }),
       require('autoprefixer')(),
-      require('cssnano')()
-    ]
-
+      require('cssnano')(),
+    ],
   };
 };

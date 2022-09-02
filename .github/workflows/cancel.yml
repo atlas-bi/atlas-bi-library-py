@@ -6,17 +6,14 @@ name: cancel
 on:
   push:
     branches:
-      # - "**"
-      - "blah"
-    tags-ignore:
-      - "*.*.*"
+    - '!master'
 
 jobs:
   cancel:
     runs-on: ubuntu-latest
     steps:
-      - name: "Cancel Previous Runs"
-        uses: styfle/cancel-workflow-action@0.10.0
-        with:
-          access_token: ${{ github.token }}
-          workflow_id: codeql.yml, quality.yml
+    - name: Cancel Previous Runs
+      uses: styfle/cancel-workflow-action@0.9.1
+      with:
+        access_token: ${{ github.token }}
+        workflow_id: codeql.yml, quality.yml

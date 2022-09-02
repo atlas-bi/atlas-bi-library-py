@@ -1,21 +1,8 @@
-{% load static %}
+{% load markdown %}
 
-<!-- site message -->
 {% if site_message and site_message != "" %}
-    <div class="site-message">
-        <img src="{% static '/img/wave.png' %}"
-             class="site-messageImg"
-             alt="wave"
-             title="wave"
-             width="40px"
-             height="40px"/>
-        <p class="site-messageText">
-            {{ site_message }}
-        </p>
-        <button class="site-messageClose">
-            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 352 512">
-                <path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"/>
-            </svg>
-        </button>
-    </div>
+    <div class="notification is-light is-info has-text-centered my-0">{{ site_message|markdown }}</div>
+{% endif %}
+{% if settings.SITE_MESSAGE %}
+    <div class="notification is-light is-link has-text-centered my-0">{{ settings.SITE_MESSAGE|markdown }}</div>
 {% endif %}

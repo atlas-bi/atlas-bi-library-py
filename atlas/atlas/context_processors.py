@@ -10,6 +10,7 @@ def settings(request):
         "ORG_NAME",
         "LOGIN_TITLE",
         "DEMO",
+        "FOOTER_SUBTITLE",
     ]:  # Write here the settings you want to expose to the templates.
         if hasattr(django_settings, attr):
             settings_in_templates[attr] = getattr(django_settings, attr)
@@ -22,9 +23,12 @@ def user(request):
     """Context processor for user information."""
     if not request.user.is_anonymous:
         return {
-            "permissions": request.user.get_permissions(),
+            # "permissions": request.user.get_permissions(),
             "user": request.user,
             "favorites": request.user.get_starred_reports(),
+            "prefs": request.user.get_preferences(),
+            # needed to override the default django perms tag.
+            "perms": request.user.get_all_permissions(),
         }
     # context processor must ALWAYS return a dict
     return {}

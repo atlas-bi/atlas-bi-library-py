@@ -302,7 +302,7 @@ class Users(AbstractUser):
 
     @property
     def is_admin(self):
-        return self.role_links.filter(role_id=1).exists()
+        return self.role_links.filter(name="Administrator").exists()
 
     def get_absolute_url(self):
         return reverse("user:profile", kwargs={"pk": self.pk})
@@ -555,41 +555,6 @@ class CollectionAttachments(models.Model):
     category = models.TextField()
     name = models.TextField(blank=True, default="")
     size = models.IntegerField(blank=True, null=True)
-
-
-class InitiativeContacts(models.Model):
-    contact_id = models.AutoField(primary_key=True)
-    name = models.TextField(blank=True, default="")
-    email = models.TextField(blank=True, default="")
-    phone = models.CharField(max_length=55, blank=True, default="")
-    company = models.TextField(blank=True, default="")
-
-    def __str__(self):
-        return self.name
-
-
-class InitiativeContactLinks(models.Model):
-    link_id = models.AutoField(primary_key=True)
-    initiative = models.ForeignKey(
-        "Initiatives",
-        blank=True,
-        null=True,
-        on_delete=models.CASCADE,
-        related_name="contact_links",
-    )
-    contact = models.ForeignKey(
-        InitiativeContacts,
-        blank=True,
-        null=True,
-        on_delete=models.CASCADE,
-        related_name="initiative_links",
-    )
-
-    def __str__(self):
-        return "{} @{}".format(
-            self.contact.name,
-            self.contact.company,
-        )
 
 
 class Initiatives(models.Model):

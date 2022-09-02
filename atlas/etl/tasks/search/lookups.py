@@ -5,12 +5,9 @@ from django.conf import settings
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from index.models import (
-    CollectionMilestoneFrequency,
-    CollectionMilestoneTemplates,
     FinancialImpact,
     Fragility,
     FragilityTag,
-    InitiativeContacts,
     MaintenanceLogStatus,
     MaintenanceSchedule,
     OrganizationalValue,
@@ -102,46 +99,6 @@ def deleted_maintenance_log_status(sender, instance, **kwargs):
 def updated_maintenance_log_status(sender, instance, **kwargs):
     """When maintenance_log_status is updated, add it to search."""
     load_lookup.delay("maintenance_log_status", instance.status_id, str(instance))
-
-
-@receiver(pre_delete, sender=InitiativeContacts)
-def deleted_initiative_contacts(sender, instance, **kwargs):
-    """When initiative_contacts is delete, remove it from search."""
-    delete_lookup.delay("initiative_contacts", instance.contact_id)
-
-
-@receiver(post_save, sender=InitiativeContacts)
-def updated_initiative_contacts(sender, instance, **kwargs):
-    """When initiative_contacts is updated, add it to search."""
-    load_lookup.delay("initiative_contacts", instance.contact_id, str(instance))
-
-
-@receiver(pre_delete, sender=CollectionMilestoneFrequency)
-def deleted_collection_milestone_frequency(sender, instance, **kwargs):
-    """When collection_milestone_frequency is delete, remove it from search."""
-    delete_lookup.delay("collection_milestone_frequency", instance.frequency_id)
-
-
-@receiver(post_save, sender=CollectionMilestoneFrequency)
-def updated_collection_milestone_frequency(sender, instance, **kwargs):
-    """When collection_milestone_frequency is updated, add it to search."""
-    load_lookup.delay(
-        "collection_milestone_frequency", instance.frequency_id, str(instance)
-    )
-
-
-@receiver(pre_delete, sender=CollectionMilestoneTemplates)
-def deleted_collection_milestone_templates(sender, instance, **kwargs):
-    """When collection_milestone_templates is delete, remove it from search."""
-    delete_lookup.delay("collection_milestone_templates", instance.template_id)
-
-
-@receiver(post_save, sender=CollectionMilestoneTemplates)
-def updated_collection_milestone_templates(sender, instance, **kwargs):
-    """When collection_milestone_templates is updated, add it to search."""
-    load_lookup.delay(
-        "collection_milestone_templates", instance.template_id, str(instance)
-    )
 
 
 @receiver(pre_delete, sender=UserRoles)
