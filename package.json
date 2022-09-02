@@ -20,12 +20,12 @@
     "test:prettier": "prettier --check --config .prettierrc \"**/*.{ts,css,less,scss,js,json,md,yaml}\""
   },
   "dependencies": {
-    "@babel/cli": "7.18.9",
-    "@babel/core": "7.18.9",
-    "@babel/preset-env": "7.18.9",
-    "@fortawesome/fontawesome-free": "^6.1.2",
+    "@babel/cli": "7.18.10",
+    "@babel/core": "7.18.13",
+    "@babel/preset-env": "7.18.10",
+    "@fortawesome/fontawesome-free": "6.1.2",
     "bulma": "0.9.4",
-    "fontawesome-subset": "^4.2.0",
+    "fontawesome-subset": "4.2.0",
     "gulp": "4.0.2",
     "handlebars": "4.7.7"
   },
