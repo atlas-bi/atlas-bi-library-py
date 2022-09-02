@@ -12,6 +12,7 @@
   "ignoreDeps": ["@fortawesome/fontawesome-free", "chart.js"],
   "assigneesSampleSize": 2,
   "bumpVersion": "patch",
+  "baseBranches": ["dev"],
   "commitMessagePrefix": "chore(deps)",
   "labels": [
     "maintenance", 
