@@ -1,23 +1,3 @@
-/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-@import "../include/color.scss";
-@import "../include/font.scss";
-
 .mail-notification-container {
   height: auto;
   position: fixed;
@@ -28,15 +8,11 @@
 }
 
 .mail-notification-outer {
-  -moz-box-shadow: 0 0 30px 10px #d1d1d1;
-  -moz-transition: all 0.5s;
-  -webkit-box-shadow: 0 0 30px 10px #d1d1d1;
-  -webkit-transition: all 0.5s;
   background-color: #fff;
   border: 1px solid #d0d0d0;
   border-radius: 6px;
   box-shadow: 0 0 30px 10px #d1d1d1;
-  font-family: $font-san-serif;
+  font-family: sf, 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
   font-size: 14px;
   margin: 35px;
   margin-right: -475px;
@@ -79,7 +55,6 @@
 
 .mail-notification-body-subject {
   font-size: 14px;
-  font-weight: 600;
   letter-spacing: 0.4px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -88,7 +63,6 @@
 
 .mail-notification-body-message {
   font-size: 14px;
-  font-weight: 600;
   letter-spacing: 0.4px;
   overflow: hidden;
   text-overflow: ellipsis;

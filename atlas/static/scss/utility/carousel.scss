@@ -1,30 +1,104 @@
-/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+$color-active: $grey-dark;
+$carousel-height: 400px;
+$carousel-transition: 0.1s;
+$carousel-dot-size: 15px;
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+.carousel {
+  height: $carousel-height;
+  text-align: center;
+  width: 100%;
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+  .carousel-itm {
+    animation-duration: $carousel-transition;
+    animation-name: carousel-fade;
+    display: none;
+    height: 100%;
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+    &:first-of-type {
+      display: block;
+    }
 
-@import "../include/color.scss";
+    .image {
+      min-height: 100%;
+    }
 
-@-webkit-keyframes carousel-fade {
-  from {
-    opacity: 0.4;
+    img {
+      bottom: 0;
+      height: auto;
+      margin: auto;
+      max-height: 100%;
+      max-width: 100%;
+      position: absolute;
+      top: 0;
+      width: auto;
+    }
+
+    source,
+    img {
+      left: 0;
+      margin-left: auto;
+      margin-right: auto;
+      position: absolute;
+      right: 0;
+    }
   }
 
-  to {
-    opacity: 1;
+  .carousel-prev {
+    border-bottom-left-radius: inherit;
+    border-top-left-radius: inherit;
+    left: 0;
+  }
+
+  .carousel-next {
+    border-bottom-right-radius: inherit;
+    border-top-right-radius: inherit;
+    right: 0;
+  }
+
+  .carousel-next,
+  .carousel-prev {
+    align-items: center;
+    background-color: $grey;
+    bottom: 0;
+    color: $white;
+    display: flex;
+    justify-content: center;
+    opacity: 0.9;
+    position: absolute;
+    top: 0;
+    transition: background-color $carousel-transition ease;
+    width: 50px;
+
+    &:focus,
+    &:hover {
+      background-color: $color-active;
+    }
+  }
+
+  .carousel-ind {
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+
+    .carousel-dot {
+      background-color: $grey;
+      border-radius: 50%;
+      cursor: pointer;
+      display: inline-block;
+      height: $carousel-dot-size;
+      margin: 0 2px;
+      transition: background-color $carousel-transition ease;
+      width: $carousel-dot-size;
+
+      &:hover,
+      &:active {
+        background-color: $color-active;
+      }
+    }
+  }
+
+  .active {
+    background-color: $color-active;
   }
 }
 
@@ -35,80 +109,5 @@
 
   to {
     opacity: 1;
-  }
-}
-
-.crsl {
-  height: 400px;
-  margin: auto;
-  margin-bottom: 50px;
-  position: relative;
-  text-align: center;
-  width: 100%;
-  .crsl-itm {
-    animation-duration: 0.1s;
-    animation-name: carousel-fade;
-    display: none;
-    height: 100%;
-    padding-left: 50px;
-    padding-right: 50px;
-    &:first-of-type {
-      display: block;
-    }
-    img {
-      bottom: 0;
-      height: auto;
-      left: 50px;
-      margin: auto;
-      max-height: 100%;
-      max-width: calc(100% - 100px);
-      position: absolute;
-      right: 50px;
-      top: 0;
-      width: auto;
-    }
-  }
-  .crsl-next,
-  .crsl-prev {
-    align-items: center;
-    background-color: #bbb;
-    bottom: 0;
-    display: flex;
-    justify-content: center;
-    position: absolute;
-    top: 0;
-    transition: background-color 0.1s ease;
-    width: 50px;
-  }
-  .crsl-prev {
-    color: $color-text-white;
-    left: 0;
-  }
-  .crsl-next {
-    color: $color-text-white;
-    right: 0;
-  }
-  .crsl-ind {
-    padding-top: 12px;
-    text-align: center;
-    .crsl-dot {
-      background-color: #bbb;
-      border-radius: 50%;
-      cursor: pointer;
-      display: inline-block;
-      height: 15px;
-      margin: 0 2px;
-      transition: background-color 0.1s ease;
-      width: 15px;
-    }
-  }
-  .crsl-next:focus,
-  .crsl-next:hover,
-  .crsl-prev:focus,
-  .crsl-prev:hover,
-  .active,
-  .crsl-dot:hover,
-  .crsl-dot:active {
-    background-color: #717171 !important;
   }
 }

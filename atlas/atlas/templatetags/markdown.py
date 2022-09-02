@@ -1,5 +1,8 @@
 """Custom template tag to render markdown."""
+import bleach
 from django import template
+from django.conf import settings as django_settings
+from django.utils.safestring import mark_safe
 from markdown_it import MarkdownIt
 from mdit_py_plugins.anchors import anchors_plugin
 from mdit_py_plugins.footnote import footnote_plugin
@@ -33,4 +36,6 @@ def markdown(value):
         .use(texmath_plugin)
     )
 
-    return my_markdown.render(value)
+    return mark_safe(
+        bleach.clean(my_markdown.render(value), tags=django_settings.SAFE_HTML_TAGS)
+    )

@@ -35,6 +35,8 @@ urlpatterns = [
     path("search/", include("search.urls")),
     path("collections/", include("collection.urls")),
     path("etl/", include("etl.urls")),
+    path("profile/", include("sketch.urls")),
+    path("settings/", include("settings.urls")),
 ]
 
 

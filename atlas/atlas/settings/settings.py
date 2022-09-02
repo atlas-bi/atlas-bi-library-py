@@ -11,9 +11,15 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
 from pathlib import Path
+from typing import Optional
 
 import saml2
 import saml2.saml
+
+try:
+    import tomllib
+except ImportError:
+    import tomli as tomllib  # type: ignore
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -88,6 +94,7 @@ SECRET_KEY = os.environ.get(
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
+DEMO = False
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -110,7 +117,10 @@ SESSION_REDIS = {
     "retry_on_timeout": False,
 }
 
+GULP_DEVELOP_COMMAND = "gulp watch"
+GULP_PRODUCTION_COMMAND = "gulp build"
 INSTALLED_APPS = [
+    "django_gulp",
     # "django.contrib.admin",
     # django stuff
     "django.contrib.auth",
@@ -171,13 +181,15 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "atlas.context_processors.settings",
+                # "atlas.context_processors.settings",
                 "atlas.context_processors.user",
+                "django_settings_export.settings_export",
             ],
             "libraries": {
                 "markdown": "atlas.templatetags.markdown",
                 "dates": "atlas.templatetags.dates",
                 "helpers": "atlas.templatetags.helpers",
+                "atlas_static": "atlas.templatetags.static",
             },
             "debug": DEBUG,
         },
@@ -224,10 +236,14 @@ AUTH_PASSWORD_VALIDATORS = [
 
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.memcached.MemcachedCache",
+        "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
         "LOCATION": "127.0.0.1:11211",
     }
 }
+CACHE_MIDDLEWARE_ALIAS = "default"
+CACHE_MIDDLEWARE_SECONDS = 20
+CACHE_MIDDLEWARE_KEY_PREFIX = ""
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
@@ -336,8 +352,163 @@ LOGGING = {
 }
 
 
+def find_project_root(src: Path) -> Path:
+    """Attempt to get the project root."""
+    for directory in [src, *src.resolve().parents]:
+
+        if (directory / "pyproject.toml").is_file():
+            return directory
+
+    # pylint: disable=W0631
+    return directory
+
+
+def find_pyproject(root: Path) -> Optional[Path]:
+    """Search upstream for a pyproject.toml file."""
+
+    pyproject = root / "pyproject.toml"
+
+    if pyproject.is_file():
+        return pyproject
+
+    return None
+
+
+pyproject_file = find_pyproject(find_project_root(Path(__file__)))
+
+if pyproject_file:
+    content = tomllib.load(pyproject_file.open("rb"))
+    try:
+        VERSION = content["tool"]["poetry"]["version"]  # type: ignore
+    except KeyError:
+        VERSION = ""
+        logger.info("No pyproject.toml found.")
+
+
+FOOTER = {
+    "SUBTITLE": "Atlas was created by the Riverside Healthcare Analytics team.",
+    "LINKS": {
+        "Status": {
+            "Epic": "https://bigbrother.riversidehealthcare.net/status/epic",
+            "Atlas": "https://bigbrother.riversidehealthcare.net/status/atlas",
+        }
+    },
+}
+SITE_MESSAGE = "Welcom to Atlas"
+LOGO = "img/thinking-face-text-266x80.png"
 # import custom overrides
 try:
     from .settings_cust import *
 except ImportError:
     pass
+
+SETTINGS_EXPORT = [
+    "ORG_NAME",
+    "LOGIN_TITLE",
+    "DEMO",
+    "FOOTER",
+    "VERSION",
+    "SITE_MESSAGE",
+]
+
+SAFE_HTML_TAGS = [
+    "a",
+    "abbr",
+    "acronym",
+    "address",
+    "area",
+    "article",
+    "aside",
+    "audio",
+    "b",
+    "big",
+    "blockquote",
+    "br",
+    "button",
+    "canvas",
+    "caption",
+    "center",
+    "cite",
+    "code",
+    "col",
+    "colgroup",
+    "command",
+    "datagrid",
+    "datalist",
+    "dd",
+    "del",
+    "details",
+    "dfn",
+    "dialog",
+    "dir",
+    "div",
+    "dl",
+    "dt",
+    "em",
+    "event-source",
+    "fieldset",
+    "figcaption",
+    "figure",
+    "footer",
+    "font",
+    "form",
+    "header",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "i",
+    "img",
+    "input",
+    "ins",
+    "keygen",
+    "kbd",
+    "label",
+    "legend",
+    "li",
+    "m",
+    "map",
+    "menu",
+    "meter",
+    "multicol",
+    "nav",
+    "nextid",
+    "ol",
+    "output",
+    "optgroup",
+    "option",
+    "p",
+    "pre",
+    "progress",
+    "q",
+    "s",
+    "samp",
+    "section",
+    "select",
+    "small",
+    "sound",
+    "source",
+    "spacer",
+    "span",
+    "strike",
+    "strong",
+    "sub",
+    "sup",
+    "table",
+    "tbody",
+    "td",
+    "textarea",
+    "time",
+    "tfoot",
+    "th",
+    "thead",
+    "tr",
+    "tt",
+    "u",
+    "ul",
+    "var",
+    "video",
+]

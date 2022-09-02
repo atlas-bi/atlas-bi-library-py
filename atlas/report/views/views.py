@@ -11,7 +11,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
-from index.models import ReportComments, ReportDocs, ReportImages, Reports, Terms
+from index.models import ReportDocs, ReportImages, Reports, Terms
 from PIL import Image
 
 
@@ -31,9 +31,8 @@ def index(request, pk):
         .select_related("type")
         .prefetch_related("queries")
         .prefetch_related("imgs")
-        .prefetch_related("docs__logs")
-        .prefetch_related("docs__logs__log")
-        .prefetch_related("docs__logs__log__maintainer")
+        .prefetch_related("docs__maintenance_logs")
+        .prefetch_related("docs__maintenance_logs__maintainer")
         .prefetch_related("docs__fragility_tags")
         .prefetch_related("docs__fragility_tags__fragility_tag")
         #   .prefetch_related("groups")
@@ -205,17 +204,16 @@ def maint_status(request, pk):
 
 @login_required
 def image(request, report_id, pk=None):
-
-    image_format = "webp"
+    image_format = request.GET.get("format", "webp")
 
     # Browsers (IE11) that do not support webp
-    if "HTTP_USER_AGENT" in request.META:
-        user_agent = request.META["HTTP_USER_AGENT"].lower()
-        if "trident" in user_agent or "msie" in user_agent:
-            image_format = "jpeg"
+    # if "HTTP_USER_AGENT" in request.META:
+    #     user_agent = request.META["HTTP_USER_AGENT"].lower()
+    #     if "trident" in user_agent or "msie" in user_agent:
+    #         image_format = "jpeg"
 
     size = request.GET.get("size", "")
-
+    print(size)
     if pk:
         img = get_object_or_404(ReportImages, report_id=report_id, image_id=pk)
     else:
@@ -282,6 +280,6 @@ def image(request, report_id, pk=None):
         return response
 
     response = HttpResponse(img.image_data, content_type="application/octet-stream")
-    response["Content-Disposition"] = f'attachment; filename="{pk}_{wsize}x{hsize}.png"'
+    response["Content-Disposition"] = f'attachment; filename="{pk}_{size}.png"'
 
     return response

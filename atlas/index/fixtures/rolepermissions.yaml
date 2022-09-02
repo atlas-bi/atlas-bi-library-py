@@ -75,10 +75,6 @@
   fields:
     name: Delete Milestone Template
 - model: index.rolepermissions
-  pk: 20
-  fields:
-    name: Delete Comments
-- model: index.rolepermissions
   pk: 21
   fields:
     name: Create Collection

@@ -2,7 +2,6 @@ from django.urls import path
 
 from . import apps
 from .views import views
-from .views.comments import Comments, comments_delete
 
 app_name = apps.CollectionConfig.name
 
@@ -13,13 +12,6 @@ urlpatterns = [
     path("new", views.CollectionNew.as_view(), name="new"),
     path("<int:pk>/edit", views.CollectionDetails.as_view(), name="edit"),
     path("<int:pk>/delete", views.CollectionDelete.as_view(), name="delete"),
-    # comments
-    path("<int:pk>/comments", Comments.as_view(), name="comments"),
-    path(
-        "<int:pk>/comments/<int:comment_id>/delete",
-        comments_delete,
-        name="comment_delete",
-    ),
     # linked reports
     path(
         "<int:collection_id>/edit/reports/<int:pk>",

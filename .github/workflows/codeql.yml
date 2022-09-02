@@ -1,15 +1,8 @@
+
 name: codeQL
 
 on:
-  push:
-    branches:
-      # - "**"
-      - "blah"
-    tags-ignore:
-      - "*.*.*"
   pull_request:
-  schedule:
-    - cron: '16 7 * * 4'
 
 jobs:
   analyze:
@@ -18,23 +11,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ['javascript', 'python']
+        language: [javascript, python]
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v1
+      uses: github/codeql-action/init@v2
       with:
         languages: ${{ matrix.language }}
         config-file: ./.github/codeql/codeql-config.yml
         setup-python-dependencies: false
 
-    # don't need to install and check all python
-    # dependencies...
-    #- name: Autobuild
-    #  uses: github/codeql-action/autobuild@v1
-
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
+      uses: github/codeql-action/analyze@v2

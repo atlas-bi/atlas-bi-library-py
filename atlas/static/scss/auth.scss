@@ -1,185 +1,105 @@
-@import "./include/color.scss";
-@import "./include/font.scss";
+/* stylelint-disable no-invalid-position-at-import-rule */
+@import '../../../node_modules/@fontsource/inter/scss/mixins';
 
-body {
-  font-family: $font-serif;
+@include fontFace(
+  $fontName: Inter,
+  $weight: 400,
+  $display: swap,
+  $unicodeMap: latin,
+  $fontDir: '/static/font/inter/files/'
+);
+
+@include fontFace(
+  $fontName: Inter,
+  $weight: 500,
+  $display: swap,
+  $unicodeMap: latin,
+  $fontDir: '/static/font/inter/files/'
+);
+
+@include fontFace(
+  $fontName: Inter,
+  $weight: 600,
+  $display: swap,
+  $unicodeMap: latin,
+  $fontDir: '/static/font/inter/files/'
+);
+
+@include fontFace(
+  $fontName: Inter,
+  $weight: 700,
+  $display: swap,
+  $unicodeMap: latin,
+  $fontDir: '/static/font/inter/files/'
+);
+
+@import '../../../node_modules/@fontsource/rasa/scss/mixins';
+
+@include fontFace(
+  $fontName: Rasa,
+  $weight: 600,
+  $display: swap,
+  $unicodeMap: latin,
+  $fontDir: '/static/font/rasa/files/'
+);
+
+@import '../../../node_modules/@fontsource/source-code-pro/scss/mixins';
+
+@include fontFace(
+  $fontName: 'Source Code Pro',
+  $weight: 400,
+  $display: swap,
+  $unicodeMap: latin,
+  $fontDir: '/static/font/source-code-pro/files/'
+);
+
+@import '../font/fontawesome/stylesheet';
+
+$family-monospace: 'Source Code Pro', monospace;
+$family-sans-serif: 'Inter', blinkmacsystemfont, -apple-system, 'Segoe UI',
+  'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+  'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+$title-family: 'Rasa', 'Georgia', 'Times New Roman', serif;
+$weight-normal: 500;
+$weight-light: 400;
+$weight-semibold: 600;
+$weight-bold: 700;
+$dimensions: 16 24 32 48 64 96 128 256;
+$body-size: 14px;
+
+// reset
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: $weight-bold;
 }
+@import '../../../node_modules/bulma/sass/utilities/initial-variables';
 
-.login {
-  margin: 0 auto;
-  width: 460px;
-  position: relative;
-}
+$fullhd: 1400px + (2 * $gap);
+$card-footer-padding: 0.5rem 0.75rem;
+@import '../../../node_modules/bulma-checkradio/src/sass/index';
 
-.login-ttl {
-  text-align: center;
-  opacity: 0.9;
-  margin-top: 0;
-  margin-bottom: 30px;
-  font-weight: 400;
-}
+$navbar-height: 4.25rem;
+$navbar-item-img-max-height: auto;
+$navbar-item-hover-background-color: transparent;
+$navbar-dropdown-item-hover-background-color: transparent;
+$size-1: 2.5rem;
+$size-2: 2rem;
+$size-3: 1.5rem;
+$size-4: 1.25rem;
+$size-5: 1rem;
+$size-6: 0.75rem;
+$size-7: 0.75rem;
+$sizes: $size-1 $size-2 $size-3 $size-4 $size-5 $size-6 $size-7;
+$block-spacing: 1rem;
 
-.login-subTtl {
-  color: $color-text-dark-grey;
-  white-space: pre-line;
-}
+// $size-normal: $size-5;
+// $size-medium: $size-4;
+// $size-large: $size-3;
 
-.login-cntr {
-  margin: 120px auto 0;
-  padding: 42px 42px 36px;
-  border: 1px solid #eaeced;
-  overflow: hidden;
-  border-radius: 5px;
-  position: relative;
-  -webkit-animation: fadein 0.5s;
-  animation: fadein 0.5s;
-}
+@import '../../../node_modules/bulma/bulma';
 
-.login-inputTtl {
-  margin: 10px 0;
-  color: $color-text-light-grey;
-}
-
-.login-input {
-  height: 44px;
-  width: 100%;
-  padding: 0 10px;
-  background: #fff;
-  -o-text-overflow: ellipsis;
-  text-overflow: ellipsis;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  border-radius: 4px;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-  color: $color-text-light-grey;
-  font-size: 1em;
-  font-family: sf, Helvetica, Arial, sans-serif;
-  font-weight: 400;
-  direction: ltr;
-  border: 1px solid $color-text-blue;
-  -webkit-transition: border 0.4s ease-out;
-  -o-transition: border 0.4s ease-out;
-  transition: border 0.4s ease-out;
-}
-
-.login-input:focus {
-  outline: 0;
-  border: 1px solid $color-text-blue;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-  background-color: $color-background-white;
-}
-
-.login-btn {
-  width: 100%;
-  min-height: 44px;
-  border: 0;
-  display: block;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-  border-radius: 4px;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  cursor: pointer;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  -o-appearance: none;
-  appearance: none;
-  -webkit-tap-highlight-color: transparent;
-  color: $color-text-white;
-  font-size: 17px;
-  text-align: center;
-  font-weight: 700;
-  font-family: $font-san-serif;
-  text-shadow: none;
-  text-decoration: none;
-  -webkit-transition: background-color 0.4s ease-out;
-  -o-transition: background-color 0.4s ease-out;
-  transition: background-color 0.4s ease-out;
-  -webkit-font-smoothing: antialiased;
-  background-color: $color-text-blue;
-  padding: 11px;
-  margin-top: 30px;
-  margin-bottom: 10px;
-  letter-spacing: 1px;
-}
-
-.login-btn:hover {
-  background-color: $color-text-blue;
-  outline: 0;
-}
-
-.login-copy {
-  text-align: center;
-  color: $color-text-light-grey;
-  font-size: 85%;
-  margin-top: 10px;
-  font-family: $font-san-serif;
-}
-
-.login-error {
-  border-color: #c72e2e;
-  background-color: #fff7f7;
-  margin: 0;
-  padding: 13px 13px 13px 44px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -khtml-border-radius: 5px;
-  border-radius: 5px;
-  border-width: 1px;
-  border-style: solid;
-  text-align: left;
-  font-size: 1em;
-  position: relative;
-}
-
-.login-errorIcn {
-  width: 20px;
-  fill: #c72e2e;
-  position: absolute;
-  left: 13px;
-}
-
-@keyframes fadein {
-  from {
-    opacity: 0;
-    zoom: 0.9;
-    -webkit-transform: scale(0.9);
-    transform: scale(0.9);
-    margin-top: 80px;
-    -webkit-transform-origin: 50% 0%;
-    transform-origin: 50% 0%;
-    -ms-transform-origin: 50% 0%;
-  }
-
-  to {
-    opacity: 1;
-    zoom: 1;
-    -webkit-transform: scale(1);
-    transform: scale(1);
-    margin-top: 120px;
-  }
-}
-
-@-webkit-keyframes fadein {
-  from {
-    opacity: 0;
-    zoom: 0.9;
-    -webkit-transform: scale(0.9);
-    transform: scale(0.9);
-    margin-top: 80px;
-    -webkit-transform-origin: 50% 0%;
-    transform-origin: 50% 0%;
-    -ms-transform-origin: 50% 0%;
-  }
-
-  to {
-    opacity: 1;
-    zoom: 1;
-    -webkit-transform: scale(1);
-    transform: scale(1);
-    margin-top: 120px;
-  }
-}
+@import './base';

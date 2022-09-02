@@ -14,39 +14,38 @@
 */
 
 (function () {
-Function.prototype.debounce = function (delay) {
-  var outter = this,
-    timer;
+  Function.prototype.debounce = function (delay) {
+    var outter = this,
+      timer;
 
-  return function () {
-    var inner = this,
-      args = [].slice.apply(arguments);
+    return function () {
+      var inner = this,
+        args = [].slice.apply(arguments);
 
-    clearTimeout(timer);
-    timer = setTimeout(function () {
-      outter.apply(inner, args);
-    }, delay);
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        outter.apply(inner, args);
+      }, delay);
+    };
   };
-};
 
   var d = document,
-      w = window;
-      var searchResultsContainer = document.getElementById("search-results");
-      // grp = d.getElementsByClassName("sr-grp")[0],
-      // m = d.getElementsByClassName("body-mainCtn")[0],
-      // hst = d.getElementsByClassName("sr-hst")[0],
-      // i = grp.querySelector(".sr-grp input"),
-      // cls = d.getElementById("sr-cls"),
-      // scls = d.getElementById("nav-search");
+    w = window;
+  var searchResultsContainer = document.getElementById('search-results');
+  // grp = d.getElementsByClassName("sr-grp")[0],
+  // m = d.getElementsByClassName("body-mainCtn")[0],
+  // hst = d.getElementsByClassName("sr-hst")[0],
+  // i = grp.querySelector(".sr-grp input"),
+  // cls = d.getElementById("sr-cls"),
+  // scls = d.getElementById("nav-search");
   /**
    * scroll to top when clicking search button
    */
-   // document.addEventListener('click', function(e){
-   //  if(e.target.closest('#nav-search')){
-   //    document.documentElement.scrollTop = document.body.scrollTop = 0;
-   //  }
-   // });
-
+  // document.addEventListener('click', function(e){
+  //  if(e.target.closest('#nav-search')){
+  //    document.documentElement.scrollTop = document.body.scrollTop = 0;
+  //  }
+  // });
 
   // load search template
   // ====================
@@ -90,8 +89,6 @@ Function.prototype.debounce = function (delay) {
   //   return a + b;
   // });
 
-
-
   // Handlebars.registerHelper("get_page", function (b) {
   //   if(b !== 0){
   //     return Math.ceil(b/10);
@@ -100,7 +97,6 @@ Function.prototype.debounce = function (delay) {
   //     return 1;
   //   }
   // });
-
 
   // Handlebars.registerHelper("get_pages", function (results, start) {
   //   // current page
@@ -122,7 +118,6 @@ Function.prototype.debounce = function (delay) {
   //   return page_list;
   //   // get three pages on each side, or up to 6 if we are at start/end of results.
   // });
-
 
   // Handlebars.registerHelper("filter_type", function (my_filters, my_facet, my_filter, options) {
   //   return my_filters[my_facet] && my_filters[my_facet].indexOf(my_filter) != -1 ? "checked" : "";
@@ -214,14 +209,12 @@ Function.prototype.debounce = function (delay) {
   //   return  Object.entries(my_facets).map(function(o) { return o[1]; }).length > 0 ? Object.entries(my_facets).map(function(o) { return o[1]; }).reduce(function(a, b){return a+b;}) > 0 : true;
   // });
 
-
   /**
    * Build search results from json result.
    *
    * @param {JSON} my_json Json to convert to search results html.
    */
   function build_results(my_json) {
-
     // d.querySelector(".body-mainCtn").style.visibility = "visible";
     // d.querySelector(".body-mainCtn").style.removeProperty("overflow");
 
@@ -240,97 +233,85 @@ Function.prototype.debounce = function (delay) {
 
     // m.innerHTML = my_div.innerHTML;
 
-
-    var formattedResults = my_json["docs"].map(function(result){
-      console.log(result)
+    var formattedResults = my_json['docs'].map(function (result) {
+      console.log(result);
       // Create elements
-      var link = document.createElement("a");
-      var media = document.createElement("div");
-      var img = document.createElement("div");
-      var content = document.createElement("div");
-      var title = document.createElement("strong");
-      var excerpt = document.createElement("p");
-      var tags = document.createElement("span");
-      var type = document.createElement("span");
+      var link = document.createElement('a');
+      var media = document.createElement('div');
+      var img = document.createElement('div');
+      var content = document.createElement('div');
+      var title = document.createElement('strong');
+      var excerpt = document.createElement('p');
+      var tags = document.createElement('span');
+      var type = document.createElement('span');
 
-      media.classList.add("media")
+      media.classList.add('media');
 
-      img.classList.add("media-left")
-      content.classList.add("media-content")
+      img.classList.add('media-left');
+      content.classList.add('media-content');
 
       link.href = result.id;
-      link.classList.add(
-        "panel-block",
-        "p-3",
-        "is-block"
-      );
+      link.classList.add('panel-block', 'p-3', 'is-block');
 
-      excerpt.classList.add("search-snippet");
-      desc = result.hasOwnProperty("description") ? result.description[0] : ""
-      console.log(typeof desc)
-      excerpt.innerHTML = desc.substr(0,160) + "…";
+      excerpt.classList.add('search-snippet');
+      desc = result.hasOwnProperty('description') ? result.description[0] : '';
+      console.log(typeof desc);
+      excerpt.innerHTML = desc.substr(0, 160) + '…';
 
-      title.classList.add("is-flex", "is-justify-content-space-between");
+      title.classList.add('is-flex', 'is-justify-content-space-between');
       title.innerText = result.name;
 
       type.innerText = result.type;
-      type.classList.add(
-        "tag",
-        "is-info",
-        "is-light",
-        "ml-3"
+      type.classList.add('tag', 'is-info', 'is-light', 'ml-3');
 
-      );
-
-      if(result.certification){
-
+      if (result.certification) {
         // this is dupped in the django tag. should fix sometime
         var cert_class = {
-          "Analytics Certified": "is-success",
-          "Analytics Reviewed": "is-info",
-          "Epic Released": "is-warning",
-          "Legacy": "is-warning",
-          "High Risk": "is-danger",
-        }
+          'Analytics Certified': 'is-success',
+          'Analytics Reviewed': 'is-info',
+          'Epic Released': 'is-warning',
+          Legacy: 'is-warning',
+          'High Risk': 'is-danger',
+        };
 
-        var cert = document.createElement("span");
+        var cert = document.createElement('span');
         cert.innerText = result.certification;
         cert.classList.add(
-          "tag",
+          'tag',
           cert_class[result.certification[0]],
-              "is-light"
-
+          'is-light',
         );
-        tags.appendChild(cert)
+        tags.appendChild(cert);
       }
 
       // Put all the elements together
-      img.innerHTML = `
-                <figure class="image is-64x64"><img data-src="` + result.id + `/image?size=64x64"
+      img.innerHTML =
+        `
+                <figure class="image is-64x64"><img data-src="` +
+        result.id +
+        `/image?size=64x64"
                          src="/static/img/loader.gif"
                          alt="report image"/>
-                </figure>`
+                </figure>`;
 
-
-      tags.appendChild(type)
+      tags.appendChild(type);
       title.appendChild(tags);
-      content.appendChild(title)
-      content.appendChild(excerpt)
+      content.appendChild(title);
+      content.appendChild(excerpt);
       media.appendChild(img);
 
       media.appendChild(content);
 
-
       link.appendChild(media);
 
       return link;
-   });
+    });
 
-  formattedResults.map(function(el){
-    searchResultsContainer.insertAdjacentElement("beforeend", el)
-  });
+    formattedResults.map(function (el) {
+      searchResultsContainer.insertAdjacentElement('beforeend', el);
+    });
 
-  document.dispatchEvent(new CustomEvent("lazy"))
+    document.dispatchEvent(new CustomEvent('lazy'));
   }
   var hAjx = null;
   // d
@@ -353,14 +334,14 @@ Function.prototype.debounce = function (delay) {
   /**
    * changing pages
    */
-   // d.addEventListener('click',function(e){
-   //  if(e.target.closest('.page-link')) {
-   //    search(e.target.closest('.page-link').value);
-   //  }
-   // });
- /**
-  * When a search filter is applied.
-  */
+  // d.addEventListener('click',function(e){
+  //  if(e.target.closest('.page-link')) {
+  //    search(e.target.closest('.page-link').value);
+  //  }
+  // });
+  /**
+   * When a search filter is applied.
+   */
   // d.addEventListener(
   //   "click",
   //   function (e) {
@@ -410,12 +391,10 @@ Function.prototype.debounce = function (delay) {
    *
    */
 
-  function instant_search(page){
+  function instant_search(page) {
     var t0 = performance.now();
 
-
-  searchResultsContainer.textContent = "";
-
+    searchResultsContainer.textContent = '';
 
     // remove_side_nav();
 
@@ -430,7 +409,7 @@ Function.prototype.debounce = function (delay) {
     // );
 
     // vars
-    var search_url = "/search/instant_search/";
+    var search_url = '/search/instant_search/';
 
     // build search url
     // get any checked filters and add to search query.
@@ -440,13 +419,15 @@ Function.prototype.debounce = function (delay) {
     var search_text = d.getElementById('search').value;
 
     // search_url += type + "/" + search_text;
-    search_url += "query/" + search_text;
+    search_url += 'query/' + search_text;
     // mirror search url to advanced filters box
-    d.getElementById('search').closest('form').querySelector('.control a.button').setAttribute('href', search_url);
+    d.getElementById('search')
+      .closest('form')
+      .querySelector('.control a.button')
+      .setAttribute('href', search_url);
 
     // 2. get filters
     // var filters = d.querySelectorAll('.search-filter[group]:not([group="type"])[group-value] input:checked');
-
 
     // for (var x = 0; x<filters.length; x++){
     //     var el = filters[x].parentElement;
@@ -474,13 +455,12 @@ Function.prototype.debounce = function (delay) {
     //   w.location.origin + "/search/" + encodeURI(this.value)
     // );
 
-
     if (hAjx !== null) {
       hAjx.abort();
     }
     hAjx = new XMLHttpRequest();
-    hAjx.open("post", search_url, true);
-    hAjx.setRequestHeader("X-CSRFToken", csrftoken);
+    hAjx.open('post', search_url, true);
+    hAjx.setRequestHeader('X-CSRFToken', csrftoken);
     hAjx.send();
 
     hAjx.onreadystatechange = function (e) {
@@ -488,7 +468,7 @@ Function.prototype.debounce = function (delay) {
         build_results(JSON.parse(this.responseText));
 
         console.log(
-          "search took " + (performance.now() - t0) + " milliseconds."
+          'search took ' + (performance.now() - t0) + ' milliseconds.',
         );
       }
     };
