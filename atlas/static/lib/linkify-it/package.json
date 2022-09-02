@@ -1,6 +1,6 @@
 {
   "name": "linkify-it",
-  "version": "3.0.19",
+  "version": "3.0.20",
   "description": "Links recognition library with FULL unicode support",
   "keywords": [
     "linkify",
@@ -42,7 +42,7 @@
     "pug-cli": "1.0.0-alpha6",
     "shelljs": "0.8.5",
     "shx": "0.3.4",
-    "stylus": "0.58.1",
+    "stylus": "0.59.0",
     "tlds": "1.231.0"
   }
 }
