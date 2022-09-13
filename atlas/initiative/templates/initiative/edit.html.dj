@@ -61,7 +61,7 @@
         <div class="field is-grouped">
             <div class="control is-relative is-expanded">
                 <input class="input input-mini" placeholder="type to search.."  value="{{ initiative.exec_owner|default:"" }}" search-area="user_lookup" />
-                <input type="hidden" asp-for="exec_owner_id" value='{{ initiative.exec_owner_id|default:"" }}'/>
+                <input type="hidden" name="exec_owner_id" value='{{ initiative.exec_owner_id|default:"" }}'/>
                 <div class="mini">
                     <div class="mini-waiting">
                         <span class="icon">

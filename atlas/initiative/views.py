@@ -4,10 +4,16 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import DeleteView, DetailView, ListView, UpdateView, View
+from django.views.generic import (
+    DeleteView,
+    DetailView,
+    ListView,
+    TemplateView,
+    UpdateView,
+)
 from index.models import Collections, Initiatives
 
-from atlas.decorators import NeverCacheMixin
+from atlas.decorators import NeverCacheMixin, PermissionsCheckMixin
 
 
 class InitiativeList(LoginRequiredMixin, ListView):
@@ -30,23 +36,28 @@ class InitiativeDetails(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # context["favorite"] = (
-        #     "favorite"
-        #     if self.request.user.has_favorite("initiative", self.kwargs["pk"])
-        #     else ""
-        # )
-        context["title"] = self.object.name
+
+        context["title"] = self.object
 
         return context
 
 
-class InitiativeEdit(NeverCacheMixin, LoginRequiredMixin, UpdateView):
+class InitiativeEdit(
+    NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, UpdateView
+):
+    required_permissions = ("Edit Initiative",)
     template_name = "initiative/edit.html.dj"
     context_object_name = "initiative"
     queryset = Initiatives.objects
     fields = ["description"]
 
-    def post(self, request, **kwargs):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = f"Editing {self.object}"
+
+        return context
+
+    def post(self, request, *args, **kwargs):
         initiative = Initiatives.objects.get(initiative_id=self.kwargs["pk"])
 
         initiative.name = request.POST.get("name", "")
@@ -70,10 +81,12 @@ class InitiativeEdit(NeverCacheMixin, LoginRequiredMixin, UpdateView):
         return redirect(initiative.get_absolute_url())
 
 
-class InitiativeNew(LoginRequiredMixin, View):
+class InitiativeNew(LoginRequiredMixin, PermissionsCheckMixin, TemplateView):
+    required_permissions = ("Create Initiative",)
     template_name = "initiative/new.html.dj"
+    extra_context = {"title": "New Initiative"}
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         initiative = Initiatives(
             name=request.POST.get("name", ""),
             description=request.POST.get("description", ""),
@@ -81,6 +94,7 @@ class InitiativeNew(LoginRequiredMixin, View):
             exec_owner_id=request.POST.get("exec_owner_id"),
             financial_impact_id=request.POST.get("financial_impact_id"),
             strategic_importance_id=request.POST.get("strategic_importance_id"),
+            hidden=request.POST.get("hidden", "N"),
             modified_by=request.user,
         )
 
@@ -93,16 +107,14 @@ class InitiativeNew(LoginRequiredMixin, View):
 
         return redirect(initiative.get_absolute_url())
 
-    def get(self, request):
-        return render(request, self.template_name)
 
-
-class InitiativeDelete(LoginRequiredMixin, DeleteView):
+class InitiativeDelete(LoginRequiredMixin, PermissionsCheckMixin, DeleteView):
+    required_permissions = ("Delete Initiative",)
     model = Initiatives
     success_url = reverse_lazy("initiative:list")
 
     def get(self, *args, **kwargs):
-        return self.post(*args, **kwargs)
+        return redirect("initiative:list")
 
     def post(self, *args, **kwargs):
         """Delete a initiative.

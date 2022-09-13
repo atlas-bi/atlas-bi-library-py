@@ -26,15 +26,6 @@
         </li>
     {# } #}
 
-{#     @if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true")    { #}
-        <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share Feedback" data-target="initiative-share-feedback-{{ initiative.initiative_id }}" data-name="@Model.Initiative.Name">
-                <span class="icon has-text-grey is-large ">
-                    <i class="far fa-lg fa-thumbs-up"></i>
-                </span>
-            </a>
-        </li>
-    {# } #}
     {% if "Create Initiative" in perms %}
         <li>
             <a class="is-block has-tooltip-arrow has-tooltip-right" href="{% url 'initiative:new' %}" data-tooltip="Create New Initiative">
@@ -57,11 +48,14 @@
     {% endif %}
     {% if "Delete Initiative" in perms %}
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Delete this Initaitive" href="{{ initiative.get_absolute_delete_url }}"  onclick="return confirm('Are you sure you want to remove this?');">
-                <span class="icon has-text-grey is-large ">
-                    <i class="fas fa-lg fa-trash"></i>
-                </span>
-            </a>
+            <form method="POST" action="{{ initiative.get_absolute_delete_url }}">
+                {% csrf_token %}
+                <button class="is-ghost is-block has-tooltip-arrow has-tooltip-right p-0" data-tooltip="Delete this Initaitive" href="{{ initiative.get_absolute_delete_url }}"  onclick="return confirm('Are you sure you want to remove this?');" type="submit">
+                    <span class="icon has-text-grey is-large ">
+                        <i class="fas fa-lg fa-trash"></i>
+                    </span>
+                </button>
+            </form>
         </li>
     {% endif %}
 </ul>

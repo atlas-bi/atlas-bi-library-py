@@ -134,6 +134,7 @@ INSTALLED_APPS = [
     "mathfilters",
     "django_celery_results",
     "django_celery_beat",
+    "fullurl",
     # Atlas specific
     "index.apps.IndexConfig",
     "mail.apps.MailConfig",

@@ -82,7 +82,7 @@
     {% endcompress %}
 
     {% if title %}
-        <title>{{ title }} - Atlas</title>
+        <title>{{ title }} | Atlas</title>
     {% else %}
         <title>Atlas BI Library</title>
     {% endif %}

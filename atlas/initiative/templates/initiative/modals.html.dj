@@ -1,18 +1,4 @@
-{# @if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true"){ #}
-    <!-- feedback modal -->
-    <div class="modal" id="initiative-share-feedback-{{ initiative.initiative_id }}">
-        <div class="modal-background"></div>
-        <div class="modal-content">
-            <div class="box">
-                <strong class="mb-4">Share Feedback</strong>
-                <br>
-                <textarea class="textarea py-3" name="description"></textarea>
-                <button class="button share-feedback mt-4"  data-name="{{ initiative.name }}" data-url="@Context.Request.HttpContext.Request.Scheme://@Context.Request.HttpContext.Request.Host/initiatives?id={{ initiative.initiative_id }}">Send Feedback</button>
-            </div>
-        </div>
-    </div>
-{# } #}
-
+{% load fullurl %}
 
 {# @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true"){ #}
     <!-- share modal -->
@@ -34,7 +20,7 @@
                         <div class="mini-tags field is-grouped is-grouped-multiline share-to" required name="to"></div>
                         <div class="field">
                             <div class="control is-relative is-expanded">
-                                <input class="input input-mini multiselect mini-close-fast" placeholder="search for someone.." search-area="UserSearch" />
+                                <input class="input input-mini multiselect mini-close-fast" placeholder="search for someone.." search-area="user_lookup" />
                                 <div class="mini">
                                     <div class="mini-waiting">
                                         <span class="icon">
@@ -59,7 +45,7 @@ Hi!
 
 I would like to share this initiative with you.
 
-[{{ initiative.name }}](@Context.Request.HttpContext.Request.Scheme://@Context.Request.HttpContext.Request.Host/initiatives?id={{ initiative.initiative_id }})
+[{{ initiative.name }}]({% fullurl 'initiative:item' pk=initiative.initiative_id %})
 
 Check it out sometime!
 Regards!</textarea>

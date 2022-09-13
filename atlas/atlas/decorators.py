@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.views import redirect_to_login
-from django.shortcuts import resolve_url
+from django.shortcuts import redirect, resolve_url
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 
@@ -76,3 +76,13 @@ class NeverCacheMixin(object):
     @method_decorator(never_cache)
     def dispatch(self, *args, **kwargs):
         return super(NeverCacheMixin, self).dispatch(*args, **kwargs)
+
+
+class PermissionsCheckMixin:
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.has_perms(self.required_permissions):
+            return redirect(
+                request.META.get("HTTP_REFERER", "/")
+                + "?error=You are not authorized to use that page."
+            )
+        return super(PermissionsCheckMixin, self).dispatch(request, *args, **kwargs)

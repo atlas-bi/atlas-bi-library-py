@@ -71,6 +71,7 @@ django-settings-export = "^1.2.1"
 tomli = "^2.0.1"
 bleach = "^5.0.1"
 pymemcache = "^3.5.2"
+django-fullurl = "^1.3"
 
 
 
