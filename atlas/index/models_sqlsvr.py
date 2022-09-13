@@ -539,6 +539,10 @@ class Users(AbstractUser, PermissionsMixin):
         return set(perms) < set(self.get_all_permissions())
         pass
 
+    def get_roles(self):
+        """Get users roles."""
+        return list(self.role_links.values_list("role__name"))
+
     # def has_module_perms(self, obj=None):
     #     pass
 

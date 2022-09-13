@@ -7,6 +7,8 @@ from django.contrib import messages
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.views import redirect_to_login
 from django.shortcuts import resolve_url
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
 
 DEFAULT_MESSAGE = "Unauthorized action."
 
@@ -68,3 +70,9 @@ def admin_required(
     if view_func:
         return actual_decorator(view_func)
     return actual_decorator
+
+
+class NeverCacheMixin(object):
+    @method_decorator(never_cache)
+    def dispatch(self, *args, **kwargs):
+        return super(NeverCacheMixin, self).dispatch(*args, **kwargs)

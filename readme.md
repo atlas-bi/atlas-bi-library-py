@@ -32,11 +32,21 @@ Take a look at the [github project](https://github.com/atlas-bi/atlas-bi-library
 
 This version of the app is built using python + django.
 
+### Required Tools
+
 -   [Precommit](https://pre-commit.com) `pre-commit install`
 -   [Poetry](https://python-poetry.org)
 -   [Pyenv](https://github.com/pyenv/pyenv) `pyenv local 3.6.2 3.7.0 3.8.0 3.9.0`
 -   [NodeJS](https://nodejs.dev)
--   Developing on windows is difficult, but can be done. [Git sdk64](https://github.com/git-for-windows/git-sdk-64) works well for installing and running these tools.
+
+### Install Dependencies
+
+```bash
+npm install
+poetry install
+```
+
+### Database Connection
 
 There are a few settings files to run the app. The required settings have already been set in the existing files. Org specific settings can be added in `*_cust.py` files. They will be ignored in commits.
 
@@ -52,60 +62,37 @@ The names should be:
 As an example, if you want to use an existing Atlas sql server database, you can add a database config like this:
 
 ```python
-# stop multiple queries for db version
-from sql_server.pyodbc.base import DatabaseWrapper
-DatabaseWrapper.sql_server_version = 2017
-
 DATABSES = "default": {
-    "ENGINE": "sql_server.pyodbc",
-    "NAME": "atlas",
-    "HOST": "server_name",
+    "ENGINE": "mssql",
+    "NAME": "atlas_dev",
+    "HOST": "127.0.0.1",
     "USER": "datagov",
     "PASSWORD": "12345",
+    "COLLATION": "SQL_Latin1_General_CP1_CI_AS",
     "OPTIONS": {
         "driver": "ODBC Driver 17 for SQL Server",
-        "extra_params": "MARS_Connection=Yes",
     },
     "schemas": ["app", "dbo"],
-},
+}
 # note, sql server will only allow connections if app is the default schema for the user.
 ```
 
-## Running the app
-
-Redis, Solr and a database should be up. See `solr/readme.md` for a guide to starting up a demo solr instance for development.
-
-In terminal 1, start webapp:
+## Running the Website
 
 ```bash
 cd atlas && poetry run python manage.py runserver
 ```
 
-In terminal 2, start celery (for ETL\'s):
+## Running Celery for ETL Development
 
 ```bash
 DJANGO_SETTINGS_MODULE='atlas.settings.dev' poetry run celery -A atlas worker -l DEBUG
 ```
 
-In terminal 3, start celery beat (for scheduled ETL\'s):
+In a separate terminal, start celery beat for scheduled jobs.
 
 ```bash
 DJANGO_SETTINGS_MODULE='atlas.settings.dev' poetry run celery -A atlas beat -l DEBUG --scheduler django_celery_beat.schedulers:DatabaseScheduler
-```
-
-In terminal 4, start static file watcher
-
-```bash
-npm run watch
-```
-
-## Building Static Content
-
-```bash
-npm run build
-
-# or live
-npm run watch
 ```
 
 ## Running tests
@@ -152,30 +139,3 @@ See `/solr/readme.rst` for a guide.
     # or with tox
     tox -e clean,browsertest,cov -r
     ```
-
-## Database
-
-Integrates with db-first sqlserver, or managed postres db.
-
-## Caching
-
-Using python-memcached
-
-to create cache:
-
-```bash
-python manage.py createcachetable
-```
-
-## Release Process
-
-create a new tag
-
-```bash
-git tag x.x.x
-git push origin --tags
-```
-
-This will trigger a workflow to build a release.
-
-Edit release to trigger build of .deb installer.

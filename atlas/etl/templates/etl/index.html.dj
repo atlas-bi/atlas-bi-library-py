@@ -2,15 +2,16 @@
 
 {% load compress %}
 {% load static %}
-
+{% comment %}
 {% compress css file etl %}
     {% block start_css %}
         <link rel="stylesheet"
               href="{% static '/css/etl.css' %}"
               type="text/css"
               charset="utf-8"/>
-    {% endblock start_css %}
+    {% endblock start_css %} #}
 {% endcompress %}
+{% endcomment %}
 {% block body %}
     <section class="section">
         <div class="container">

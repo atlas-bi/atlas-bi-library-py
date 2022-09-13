@@ -4,8 +4,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import DeleteView, DetailView, ListView, View
+from django.views.generic import DeleteView, DetailView, ListView, UpdateView, View
 from index.models import Collections, Initiatives
+
+from atlas.decorators import NeverCacheMixin
 
 
 class InitiativeList(LoginRequiredMixin, ListView):
@@ -37,6 +39,13 @@ class InitiativeDetails(LoginRequiredMixin, DetailView):
 
         return context
 
+
+class InitiativeEdit(NeverCacheMixin, LoginRequiredMixin, UpdateView):
+    template_name = "initiative/edit.html.dj"
+    context_object_name = "initiative"
+    queryset = Initiatives.objects
+    fields = ["description"]
+
     def post(self, request, **kwargs):
         initiative = Initiatives.objects.get(initiative_id=self.kwargs["pk"])
 
@@ -47,6 +56,7 @@ class InitiativeDetails(LoginRequiredMixin, DetailView):
         initiative.financial_impact_id = request.POST.get("financial_impact_id")
         initiative.strategic_importance_id = request.POST.get("strategic_importance_id")
         initiative.modified_by = request.user
+        initiative.hidden = request.POST.get("hidden", "N")
         initiative.save()
 
         # remove old links

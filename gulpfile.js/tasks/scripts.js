@@ -9,30 +9,36 @@ const json = require('@rollup/plugin-json');
 
 const swc = require('gulp-swc');
 
-const rollupConfig = {
-  output: { format: 'iife', name: 'module' },
-  plugins: [
-    nodeResolve({ browser: true, preferBuiltins: false }),
-    commonjs({ sourceMap: false }),
-    babel({
-      babelHelpers: 'bundled',
-    }),
-    json(),
-  ],
-};
-
 const swcOptions = {
   minify: true,
   module: {
     type: 'commonjs',
   },
+
   jsc: {
     target: 'es5',
+    loose: true,
     minify: {
       mangle: true,
       compress: true,
     },
+    parser: {
+      dynamicImport: true,
+    },
   },
+};
+
+const rollupConfig = {
+  output: { format: 'iife', name: 'module' },
+  plugins: [
+    nodeResolve({ browser: true, preferBuiltins: false }),
+    commonjs({ sourceMap: false }),
+    // babel({
+    //   babelHelpers: 'bundled',
+    // }),
+    swc(swcOptions),
+    json(),
+  ],
 };
 
 const swcOptionsNoModule = {
@@ -210,10 +216,10 @@ gulp.task('js:editor', function () {
         'atlas/static/js/utility/checkbox.js',
         'atlas/static/js/report-editor.js',
       ])
-      // .pipe(rollup(rollupConfig))
+      .pipe(rollup(rollupConfig))
       .pipe(concat('editor.min.js'))
       // .pipe(uglify(uglifyConfig))
-      .pipe(swc(swcOptions))
+      // .pipe(swc(swcOptions))
       .pipe(gulp.dest('atlas/static/js/'))
   );
 });

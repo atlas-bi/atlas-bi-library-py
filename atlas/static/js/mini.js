@@ -40,15 +40,15 @@
   }
 
   function updateId(taglist) {
-    const $hiddenInputs = taglist.querySelectorAll(
-      'input[type="hidden"][name]:not(.drag)',
-    );
-    for (let x = 0; x < $hiddenInputs.length; x++) {
-      $hiddenInputs[x].setAttribute(
-        'name',
-        $hiddenInputs[x].getAttribute('name').replace(/\[\d*?]/, '[' + x + ']'),
-      );
-    }
+    // const $hiddenInputs = taglist.querySelectorAll(
+    //   'input[type="hidden"][name]:not(.drag)',
+    // );
+    // for (let x = 0; x < $hiddenInputs.length; x++) {
+    //   $hiddenInputs[x].setAttribute(
+    //     'name',
+    //     $hiddenInputs[x].getAttribute('name').replace(/\[\d*?]/, '[' + x + ']'),
+    //   );
+    // }
   }
 
   function load($mini, $data, $hidden, $input) {
@@ -100,7 +100,7 @@
 
             del.addEventListener('click', function () {
               control.remove();
-              updateId(taglist);
+              //updateId(taglist);
             });
 
             if (taglist.classList.contains('reorder')) {
@@ -116,7 +116,7 @@
             if (taglist !== undefined) {
               taglist.append(control);
               // Update index for c#
-              updateId(taglist);
+              //updateId(taglist);
             }
 
             $input.value = '';
@@ -152,7 +152,7 @@
       }
 
       loadMiniAjax = new XMLHttpRequest();
-      loadMiniAjax.open('post', '/Search?handler=' + $sa + '&s=' + value, true);
+      loadMiniAjax.open('post', '/search/' + $sa + '?s=' + value, true);
       loadMiniAjax.setRequestHeader('X-CSRFToken', csrftoken);
       loadMiniAjax.setRequestHeader(
         'Content-Type',
@@ -178,7 +178,7 @@
 
   function preloadMini($input, $mini, $searchArea, $hidden) {
     const q = new XMLHttpRequest();
-    q.open('post', '/Search?handler=ValueList&s=' + $searchArea, true);
+    q.open('post', '/search/lookup/' + $searchArea, true);
     q.setRequestHeader(
       'Content-Type',
       'application/x-www-form-urlencoded; charset=UTF-8',
@@ -218,7 +218,7 @@
           const $control = $tag.closest('.control');
           const $taglist = $tag.closest('.mini-tags');
           $control.remove();
-          updateId($taglist);
+          //updateId($taglist);
         });
       },
     );
@@ -396,9 +396,9 @@
       document.querySelectorAll('.mini-tags.reorder:not(.loaded)') || []
     ).forEach(($tag) => {
       $tag.classList.add('loaded');
-      $tag.addEventListener('reorder', function () {
-        updateId($tag);
-      });
+      // $tag.addEventListener('reorder', function () {
+      //   updateId($tag);
+      // });
     });
   }
 

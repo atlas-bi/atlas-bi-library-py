@@ -54,6 +54,12 @@
                 <td>Last Updated</td>
                 <td>{{ initiative.modified_at }}</td>
             </tr>
+            {% if initiative.hidden == "Y" %}
+                <tr>
+                    <td>Hidden from Search?</td>
+                    <td>Yes</td>
+                </tr>
+            {% endif %}
         </tbody>
     </table>
 </div>

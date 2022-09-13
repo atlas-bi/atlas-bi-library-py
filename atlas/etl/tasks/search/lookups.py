@@ -200,17 +200,6 @@ def reset_lookups():
     docs.extend(
         [
             {
-                "id": "initiative_contacts_" + str(value.contact_id),
-                "item_type": "initiative_contacts",
-                "item_name": value.name,
-                "atlas_id": value.contact_id,
-            }
-            for value in InitiativeContacts.objects.all()
-        ]
-    )
-    docs.extend(
-        [
-            {
                 "id": "maintenance_log_status_" + str(value.status_id),
                 "item_type": "maintenance_log_status",
                 "item_name": value.name,
@@ -239,28 +228,6 @@ def reset_lookups():
                 "atlas_id": value.value_id,
             }
             for value in OrganizationalValue.objects.all()
-        ]
-    )
-    docs.extend(
-        [
-            {
-                "id": "collection_milestone_frequency_" + str(value.frequency_id),
-                "item_type": "collection_milestone_frequency",
-                "item_name": value.name,
-                "atlas_id": value.frequency_id,
-            }
-            for value in CollectionMilestoneFrequency.objects.all()
-        ]
-    )
-    docs.extend(
-        [
-            {
-                "id": "collection_milestone_templates_" + str(value.template_id),
-                "item_type": "collection_milestone_templates",
-                "item_name": value.name,
-                "atlas_id": value.template_id,
-            }
-            for value in CollectionMilestoneTemplates.objects.all()
         ]
     )
     docs.extend(
