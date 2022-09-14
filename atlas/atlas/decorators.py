@@ -72,17 +72,23 @@ def admin_required(
     return actual_decorator
 
 
-class NeverCacheMixin(object):
+class NeverCacheMixin:
+    """Use for class views where we don't want any caching."""
+
     @method_decorator(never_cache)
     def dispatch(self, *args, **kwargs):
+        """Wrap function with decorator."""
         return super(NeverCacheMixin, self).dispatch(*args, **kwargs)
 
 
 class PermissionsCheckMixin:
+    """Verify user permissions on class views."""
+
     def dispatch(self, request, *args, **kwargs):
+        """Wrap function with decorator."""
         if not self.request.user.has_perms(self.required_permissions):
             return redirect(
                 request.META.get("HTTP_REFERER", "/")
-                + "?error=You are not authorized to use that page."
+                + "?error=You do not have permission to access that page."
             )
         return super(PermissionsCheckMixin, self).dispatch(request, *args, **kwargs)

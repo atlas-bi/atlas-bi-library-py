@@ -3,19 +3,14 @@
 {% load static %}
 
 {% block body %}
-
     <h2 class="title is-2">Hi, {{ user.first_name }}!</h2>
     {% include "index/links.html.dj" %}
     <section class="tab-cnt">
         <div class="tab-dta active" id="stars">
-            <div data-ajax="yes"
-                 data-url="{% url 'user:stars' %}"
-                ></div>
+            <div data-ajax="yes" data-url="{% url 'user:stars' %}"></div>
         </div>
         <div class="tab-dta" id="subscriptions">
-            <div data-ajax="yes"
-                 data-url="{% url 'user:subscriptions' %}"
-                ></div>
+            <div data-ajax="yes" data-url="{% url 'user:subscriptions' %}"></div>
         </div>
         {% comment %} @{
                 ViewBag.ProfileType = "user";
@@ -29,13 +24,12 @@
         } {% endcomment %}
         <div class="tab-dta" id="run-list">
             <div data-ajax="yes"
-                 data-url="/profile"
+                 data-url="{% url 'sketch:index' %}"
                  data-parameters="handler=RunList&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters">
             </div>
         </div>
         <div class="tab-dta" id="groups">
-            <div data-ajax="yes"
-                 data-url="{% url 'user:groups' %}"></div>
+            <div data-ajax="yes" data-url="{% url 'user:groups' %}"></div>
         </div>
     </section>
 {% endblock body %}

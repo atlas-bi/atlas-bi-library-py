@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
+import logging
 import os
 from pathlib import Path
 from typing import Optional
@@ -383,7 +384,7 @@ if pyproject_file:
         VERSION = content["tool"]["poetry"]["version"]  # type: ignore
     except KeyError:
         VERSION = ""
-        logger.info("No pyproject.toml found.")
+        logging.info("No pyproject.toml found.")
 
 
 FOOTER = {

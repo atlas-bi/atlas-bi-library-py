@@ -25,10 +25,7 @@
         {% endfor %}
         <div class="crsl-ind">
             {% for img in report.imgs.all %}
-                <span class="crsl-dot
-                             {% if forloop.counter0 == 0 %}
-                                 active
-                             {% endif %} "
+                <span class="crsl-dot {% if forloop.counter0 == 0 %} active{% endif %} "
                       slide="{{ forloop.counter0 }}"></span>
             {% endfor %}
         </div>

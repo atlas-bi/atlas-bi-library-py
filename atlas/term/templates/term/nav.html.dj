@@ -1,14 +1,17 @@
 <ul>
     <li>
-        <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-target="term-profile-{{ term.term_id }}" data-tooltip="Open Profile">
+        <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+           data-target="term-profile-{{ term.term_id }}"
+           data-tooltip="Open Profile">
             <span class="icon has-text-grey is-large ">
                 <i class="fas fa-lg fa-chart-bar"></i>
             </span>
         </a>
     </li>
-
     <li>
-        <a class="is-block has-tooltip-arrow has-tooltip-right star" data-tooltip="Star this term" data-href="{% url 'user:stars_edit' %}?type=term&id={{ term.term_id }}">
+        <a class="is-block has-tooltip-arrow has-tooltip-right star"
+           data-tooltip="Star this term"
+           data-href="{% url 'user:stars_edit' %}?type=term&id={{ term.term_id }}">
             {% if term.term_id in user.get_starred_terms %}
                 <span class="icon is-large has-text-gold ">
                     <i class="fas fa-lg fa-star is-relative">
@@ -24,54 +27,54 @@
             {% endif %}
         </a>
     </li>
-
     {# @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")   { #}
-        <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share" data-target="term-share-{{ term.term_id }}" data-name="{{ term }}" data-type="term">
-                <span class="icon has-text-grey is-large ">
-                    <i class="fas fa-lg fa-share"></i>
-                </span>
-            </a>
-        </li>
-    {# } #}
-
-    {# @if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true")    { #}
-        <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share Feedback" data-target="term-share-feedback-{{ term.term_id }}" data-name="{{ term }}">
-                <span class="icon has-text-grey is-large ">
-                    <i class="far fa-lg fa-thumbs-up"></i>
-                </span>
-            </a>
-        </li>
+    <li>
+        <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+           data-tooltip="Share"
+           data-target="term-share-{{ term.term_id }}"
+           data-name="{{ term }}"
+           data-type="term">
+            <span class="icon has-text-grey is-large ">
+                <i class="fas fa-lg fa-share"></i>
+            </span>
+        </a>
+    </li>
     {# } #}
     {% if "Create New Terms" in perms %}
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right" href="{% url 'term:new' %}" data-tooltip="Create New Term">
+            <a class="is-block has-tooltip-arrow has-tooltip-right"
+               href="{% url 'term:new' %}"
+               data-tooltip="Create New Term">
                 <span class="icon has-text-grey is-large ">
                     <i class="fas fa-lg fa-plus"></i>
                 </span>
             </a>
         </li>
     {% endif %}
-
     {% if "Edit Approved Terms" in perms and term.approved == "Y" or "Edit Unapproved Terms" in perms and term.approved != "Y" %}
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right" href="{{ term.get_absolute_edit_url }}" data-tooltip="Open Atlas Editor">
+            <a class="is-block has-tooltip-arrow has-tooltip-right"
+               href="{{ term.get_absolute_edit_url }}"
+               data-tooltip="Open Atlas Editor">
                 <span class="icon has-text-grey is-large ">
                     <i class="fas fa-lg fa-pen-to-square"></i>
                 </span>
             </a>
         </li>
     {% endif %}
-
     {% if "Delete Approved Terms" in perms and term.approved == "Y" or "Delete Unapproved Terms" in perms and term.approved != "Y" %}
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Delete this Term" href="{{ term.get_absolute_delete_url }}" onclick="return confirm('Are you sure you want to remove this?');">
-                <span class="icon has-text-grey is-large ">
-                    <i class="fas fa-lg fa-trash"></i>
-                </span>
-            </a>
+            <form method="post" action="{{ term.get_absolute_delete_url }}">
+                {% csrf_token %}
+                <button class="is-ghost is-block has-tooltip-arrow has-tooltip-right p-0"
+                        data-tooltip="Delete this Term"
+                        href="{{ term.get_absolute_delete_url }}"
+                        onclick="return confirm('Are you sure you want to remove this?');">
+                    <span class="icon has-text-grey is-large ">
+                        <i class="fas fa-lg fa-trash"></i>
+                    </span>
+                </button>
+            </form>
         </li>
     {% endif %}
 </ul>
-

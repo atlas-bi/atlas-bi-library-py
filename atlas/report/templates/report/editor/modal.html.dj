@@ -48,7 +48,13 @@
             </div>
         </div>
     </div>
+
     {% compress js inline %}
-        <script>document.getElementById('editModal').addEventListener('mdl-close', function(){location.reload()});</script>
+        <script>
+            document.getElementById('editModal').addEventListener('mdl-close', function() {
+                location.reload()
+            });
+        </script>
     {% endcompress %}
+
 </div>

@@ -1,9 +1,9 @@
 {% extends "layout.html.dj" %}
 
 {% load compress %}
+
 {% load static %}
 {% load helpers %}
-
 
 {% block body %}
     <div class="columns mb-0">
@@ -79,7 +79,6 @@
             {% if report.docs.logs.all %}
                 {% include 'report/sections/maintenance_logs.html.dj' %}
             {% endif %}
-
         </div>
     </div>
     {% if 12 in permissions %}
@@ -114,18 +113,22 @@
         </div>
     </div>
 {% endblock body %}
+
 {% block js %}
+
     {% compress js file flowchart %}
         <script src="{% static '/lib/flowchart/raphael.min.js' %}"></script>
         <script src="{% static '/lib/flowchart/flowchart.min.js' %}"></script>
         <script src="{% static '/lib/flowchart/custom.js' %}"></script>
     {% endcompress %}
-    <script>hljs.highlightAll();
+
+    <script>
+        hljs.highlightAll();
     </script>
     {% if 12 in permissions %}
+
         {% compress js file editor %}
-            <script src="{% static '/lib/codemirror/codemirror.js' %}">
-            </script>
+            <script src="{% static '/lib/codemirror/codemirror.js' %}"></script>
             <script src="{% static '/lib/codemirror/autorefresh.js' %}">
             </script>
             <script src="{% static '/lib/codemirror/overlay.js' %}">
@@ -147,12 +150,15 @@
             <script src="{% static '/js/utility/checkbox.js' %}">
             </script>
         {% endcompress %}
+
         {% compress js file report_editor %}
             <script src="{% static '/js/reportEditor.js' %}" async>
             </script>
         {% endcompress %}
+
     {% endif %}
 {% endblock js %}
+
 {% block start_js_inline %}
     <script src="{% static '/js/reportProfile.js' %}">
     </script>

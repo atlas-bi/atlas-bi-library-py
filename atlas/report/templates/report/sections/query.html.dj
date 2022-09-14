@@ -33,32 +33,32 @@
 </div>
 }
 } -->
-<script>
-          if(document.readyState === 'complete') {
+    <script>
+        if (document.readyState === 'complete') {
             document.dispatchEvent(new CustomEvent("code-highlight"));
             document.dispatchEvent(new CustomEvent('ss-load'));
-          }
-
-            var copyQuery = function (e, id) {
-                var code = document.getElementById(id).innerText;
+        }
+        
+        var copyQuery = function(e, id) {
+            var code = document.getElementById(id).innerText;
             var txt = document.createElement('textarea');
             txt.value = code;
             txt.setAttribute('readonly', '');
             txt.style = {
-              position: 'absolute',
-              left: '-9999px'
+                position: 'absolute',
+                left: '-9999px'
             };
             document.body.appendChild(txt);
             txt.select();
             document.execCommand('copy');
             document.body.removeChild(txt);
-          };
-
-          window.addEventListener('load',function(){
+        };
+        
+        window.addEventListener('load', function() {
             document.dispatchEvent(new CustomEvent('ss-load'));
             document.dispatchEvent(new CustomEvent("code-highlight"));
-          });
-</script>
+        });
+    </script>
 {% else %}
-<text>Open in chrome to view query.</text>
+    <text>Open in chrome to view query.</text>
 {% endif %}

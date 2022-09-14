@@ -78,6 +78,10 @@ django-fullurl = "^1.3"
 [tool.poetry.dev-dependencies]
 djlint = "^1.9.2"
 django-debug-toolbar = "^3.5.0"
+tox = "^3.26.0"
+django-doctor = "^2.6.0"
+isort = "^5.10.1"
+black = "^22.8.0"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
@@ -114,7 +118,7 @@ sections="FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
 
 
 [tool.pylint.master]
-ignore="migrations,settings,analytics,mail,index,report,models*.py,apps.py,__init__.py,apps.py,urls.py"
+ignore="migrations,settings,analytics,mail,index,report,sketch,models*.py,apps.py,__init__.py,apps.py,urls.py"
 
 [tool.pylint.messages_control]
 disable = "R0903, E0401, C0415, F0401"
@@ -132,9 +136,13 @@ include-naming-hint="no"
 directories = ["atlas"]
 
 [tool.djlint]
-blank_line_after_tag = "extends,load, endcompress"
-blank_line_before_tag = "extends, load, compress"
+blank_line_after_tag = "extends,load, endcompress, endblock"
+blank_line_before_tag = "extends, load, compress, block"
 profile = "django"
 format_css = true
 format_js = true
+extend_exclude = 'atlas/templates/handlebars/search.html'
 
+[tool.djlint.per-file-ignores]
+"atlas/analytics/templates/analytics/index.html.dj" = "H021"
+"atlas/etl/templates/etl/index.html.dj" = "D018"

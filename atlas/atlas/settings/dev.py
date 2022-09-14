@@ -1,5 +1,5 @@
-from .settings import *
-from .settings import BASE_DIR, INSTALLED_APPS
+from .base import *
+from .base import BASE_DIR, INSTALLED_APPS
 
 DEBUG = True
 

@@ -6,7 +6,8 @@
             <a class="navbar-item" href="{% url 'index:index' %}">
                 <img src="{% static 'img/thinking-face-text-266x80.png' %}"
                      width="133"
-                     height="40"/>
+                     height="40"
+                     alt="atlas logo"/>
             </a>
             <a role="button"
                class="navbar-burger"
@@ -32,87 +33,83 @@
                             </span>
                         </div>
                         <div class="navbar-dropdown">
-                            <hr class="hide-desktop dropdown-divider">
-
+                            <hr class="hide-desktop dropdown-divider" />
                             {% if "Create Parameters" in perms or "Delete Parameters" in perms or "Edit Role Permissions" in perms or "Edit User Permissions" in perms %}
-                                <a class="navbar-item" href="/settings">Settings</a>
+                                <a class="navbar-item" href="{% url 'settings:index' %}">Settings</a>
                             {% endif %}
-
                             {% if "View Site Analytics" in perms %}
                                 <a class="navbar-item" href="{% url 'analytics:index' %}">Analytics</a>
                             {% endif %}
-
                             {# <a class="navbar-item" href="/tasks">Tasks</a> #}
-
                             {% if "View Site Analytics" in perms %}
                                 {# <hr class="dropdown-divider"> #}
                                 {# <a class="navbar-item" href="/profile">Report Activity</a> #}
                             {% endif %}
-
                             {% if "Manage ETL" in perms %}
                                 <a class="navbar-item" href="{% url 'etl:index' %}">ETL</a>
                             {% endif %}
                         </div>
                     </div>
                 {% endif %}
-
-            <div class="navbar-item has-dropdown is-hoverable is-boxed">
-                <div class="navbar-link is-arrowless">
-                    <span class="icon is-medium">
-                        <i class="fas fa-lg fa-list-ul"></i>
-                    </span>
-                    <span class="icon is-small">
-                        <i class="fa-solid fa-caret-down"></i>
-                    </span>
+                <div class="navbar-item has-dropdown is-hoverable is-boxed">
+                    <div class="navbar-link is-arrowless">
+                        <span class="icon is-medium">
+                            <i class="fas fa-lg fa-list-ul"></i>
+                        </span>
+                        <span class="icon is-small">
+                            <i class="fa-solid fa-caret-down"></i>
+                        </span>
+                    </div>
+                    <div class="navbar-dropdown">
+                        <hr class=" hide-desktop dropdown-divider" />
+                        <!-- missing permission check -->
+                        <a class="navbar-item"
+                           href="{% url 'initiative:list' %}"
+                           title="initiatives">Initiatives</a>
+                        <!-- missing permission check -->
+                        <a class="navbar-item"
+                           href="{% url 'collection:list' %}"
+                           title="collections">Collections</a>
+                        <!-- missing permission check -->
+                        <a class="navbar-item" href="{% url 'term:list' %}" title="terms">Terms</a>
+                        <hr class=" hide-desktop dropdown-divider" />
+                        <!-- bad url -->
+                        <a class="navbar-item" href="/about_analytics">About Analytics</a>
+                    </div>
                 </div>
-                <div class="navbar-dropdown">
-                    <hr class=" hide-desktop dropdown-divider">
-                    <!-- missing permission check -->
-                    <a class="navbar-item"
-                       href="{% url 'initiative:list' %}"
-                       title="initiatives">Initiatives</a>
-                    <!-- missing permission check -->
-                    <a class="navbar-item"
-                       href="{% url 'collection:list' %}"
-                       title="collections">Collections</a>
-                    <!-- missing permission check -->
-                    <a class="navbar-item" href="{% url 'term:list' %}" title="terms">Terms</a>
-                    <hr class=" hide-desktop dropdown-divider">
-                    <!-- bad url -->
-                    <a class="navbar-item" href="/about_analytics">About Analytics</a>
+                <div class="navbar-item has-dropdown is-hoverable is-boxed">
+                    <div class="navbar-link is-arrowless">
+                        <span class="icon is-medium">
+                            <i class="fas fa-lg fa-user"></i>
+                        </span>
+                        <span class="icon is-small">
+                            <i class="fa-solid fa-caret-down"></i>
+                        </span>
+                    </div>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" href="/users">Your profile</a>
+                        <a class="navbar-item" href="/users#stars">Your stars</a>
+                        <hr class="dropdown-divider" />
+                        <a class="navbar-item" href="/users/settings">Settings</a>
+                    </div>
                 </div>
-            </div>
-            <div class="navbar-item has-dropdown is-hoverable is-boxed">
-                <div class="navbar-link is-arrowless">
-                    <span class="icon is-medium">
-                        <i class="fas fa-lg fa-user"></i>
-                    </span>
-                    <span class="icon is-small">
-                        <i class="fa-solid fa-caret-down"></i>
-                    </span>
-                </div>
-                <div class="navbar-dropdown">
-                    <a class="navbar-item" href="/users">Your profile</a>
-                    <a class="navbar-item" href="/users#stars">Your stars</a>
-                    <hr class="dropdown-divider">
-                    <a class="navbar-item" href="/users/settings">Settings</a>
-                </div>
-            </div>
-            {% if user.is_superuser %}
-                <div class="navbar-item">
-                    <div class="field toggle">
-                        <input type="hidden"
-                               id="enable-administrator"
-                               value="{% if "AdminDisabled" not in prefs %}Y{% endif %}">
-                        <input id="switch-enable-administrator" type="checkbox" name="switch-enable-administrator" class="switch is-rounded is-info"
-                            {% if "AdminDisabled" not in prefs %} checked="checked" {% endif %}>
+                {% if user.is_superuser %}
+                    <div class="navbar-item">
+                        <div class="field toggle">
+                            <input type="hidden"
+                                   id="enable-administrator"
+                                   value="{% if "AdminDisabled" not in prefs %}Y{% endif %}"/>
+                            <input id="switch-enable-administrator"
+                                   type="checkbox"
+                                   name="switch-enable-administrator"
+                                   class="switch is-rounded is-info"
+                                   {% if "AdminDisabled" not in prefs %} checked="checked"{% endif %}/>
                             <label class="py-0" for="switch-enable-administrator">
                                 <strong>Admin</strong>
                             </label>
                         </div>
                     </div>
                 {% endif %}
-
                 <!-- epic navigation -->
                 {% if is_epic %}
                     <a class="nav-link" onclick="history.back()">

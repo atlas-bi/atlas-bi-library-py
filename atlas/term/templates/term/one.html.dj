@@ -1,100 +1,115 @@
 {% extends "term/all.html.dj" %}
 
 {% load static %}
+
 {% load compress %}
 {% load markdown %}
 
 {% block side_links %}
-{% include "term/nav.html.dj" %}
-                    {% endblock side_links %}
+    {% include "term/nav.html.dj" %}
+{% endblock side_links %}
 
 {% block body %}
-
-
-<h1 class="title is-1 is-flex is-justify-content-space-between">
-    <span>{{ term }}</span>
-    {% if term.approved == "Y" %}
-        <span class="tag is-success">Approved</span>
-    {% endif %}
-</h1>
-
-{% include "term/links.html.dj" %}
-
-<div class="content">
-    <h2 id="details" class="title is-2">Description</h2>
-
-    {% if term.summary %}
-        <h3 class="title is-3">Summary</h3>
-        <div class="markdown">
-            {{ term.summary|markdown }}
-        </div>
-    {% endif %}
-
-    {% if term.technical_definition %}
-        <h3 class="title is-3">Technical Definition</h3>
-        <div class="markdown">
-            {{ term.technical_definition|markdown }}
-        </div>
-    {% endif %}
-
-
-    {% if related_reports %}
-        <h2 id="reports" class="title is-2">Linked Reports</h2>
-
-        <div class="columns is-multiline">
-            {% for report in related_reports %}
-                <div class="column is-half ">
-                     <div class="column is-half ">{% include "report/snippet.html.dj" %}</div>
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-</div>
-
-<h2 id="meta" class="title is-2">Details</h2>
-
-<div class="table-container mt-4">
-    <table class="table is-narrow" aria-label="details">
-        <tbody>
-            {% if term.approved == "Y" %}
+    <h1 class="title is-1 is-flex is-justify-content-space-between">
+        <span>{{ term }}</span>
+        {% if term.approved == "Y" %}<span class="tag is-success">Approved</span>{% endif %}
+    </h1>
+    <nav class="breadcrumb">
+        <ul>
+            {% if term.summary or term.technical_definition %}
+                <li>
+                    <a href="#details">Details</a>
+                </li>
+            {% endif %}
+            {% if related_reports %}
+                <li>
+                    <a href="#reports">Linked Reports</a>
+                </li>
+            {% endif %}
+            {% if term.collections.exists %}
+                <li>
+                    <a href="#collections">Linked Collections</a>
+                </li>
+            {% endif %}
+            <li>
+                <a href="#meta">Metadata</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="content">
+        <h2 id="details" class="title is-2">Description</h2>
+        {% if term.summary %}
+            <h3 class="title is-3">Summary</h3>
+            <div class="markdown">{{ term.summary|markdown }}</div>
+        {% endif %}
+        {% if term.technical_definition %}
+            <h3 class="title is-3">Technical Definition</h3>
+            <div class="markdown">{{ term.technical_definition|markdown }}</div>
+        {% endif %}
+        {% if related_reports %}
+            <h2 id="reports" class="title is-2">Linked Reports</h2>
+            <div class="columns is-multiline">
+                {% for report in related_reports %}
+                    <div class="column is-half ">{% include "report/snippet.html.dj" %}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if term.collections.exists %}
+            <h2 id="reports" class="title is-2">Linked Collections</h2>
+            <div class="columns is-multiline">
+                {% for collection_link in term.collections.all %}
+                    <div class="column is-half ">
+                        <div class="column is-half ">
+                            {% include "collection/snippet.html.dj" with collection=collection_link.collection %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    <h2 id="meta" class="title is-2">Details</h2>
+    <div class="table-container mt-4">
+        <table class="table is-narrow" aria-label="details">
+            <tbody>
+                {% if term.approved == "Y" %}
+                    <tr>
+                        <td>Approval Date</td>
+                        <td>{{ term.approved_at }}</td>
+                    </tr>
+                    <tr>
+                        <td>Approved By</td>
+                        <td>
+                            {% if "View Other User" in perms %}
+                                {# @if (User.HasPermission("View Other User") && @Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")                        { #}
+                                <a href="{{ term.approved_by.get_absolute_url }}">{{ term.approved_by }}</a>
+                            {% else %}
+                                {{ term.approved_by }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td>Has Been Approved</td>
+                        <td>No</td>
+                    </tr>
+                {% endif %}
                 <tr>
-                    <td>Approval Date</td>
-                    <td>{{ term.approved_at }}</td>
-                </tr>
-                <tr>
-                    <td>Approved By</td>
+                    <td>Last Updated By</td>
                     <td>
-                        {# @if (User.HasPermission("View Other User") && @Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")                        { #}
-                            <a href="{{ term.approved_by.get_absolute_url }}">{{ term.approved_by.full_name }}</a>
-                        {# {% else %} #}
-                            {# {{ term.approved_by.full_name }} #}
-                        {# {% endif %} #}
-
+                        {% if "View Other User" in perms %}
+                            {# @if (User.HasPermission("View Other User") && @Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")                    { #}
+                            <a href="{{ term.modified_by.get_absolute_url }}">{{ term.modified_by }}</a>
+                        {% else %}
+                            {{ term.modified_by }}
+                        {% endif %}
                     </td>
                 </tr>
-            {% else %}
                 <tr>
-                    <td>Has Been Approved</td>
-                    <td>No</td>
+                    <td>Last Updated</td>
+                    <td>{{ term.modified_at }}</td>
                 </tr>
-            {% endif %}
-            <tr>
-                <td>Last Updated By</td>
-                <td>
-                    {# @if (User.HasPermission("View Other User") && @Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")                    { #}
-                        <a href="{{ term.modified_by.get_absolute_url }}">{{ term.modified_by.full_name }}</a>
-                    {# {% else %} #}
-                        {# {{ term.modified_by.full_name }} #}
-                    {# {% endif %} #}
-                </td>
-            </tr>
-            <tr>
-                <td>Last Updated</td>
-                <td>{{ term.modified_at }}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-
+            </tbody>
+        </table>
+    </div>
+    {% include "term/modals.html.dj" %}
 {% endblock body %}

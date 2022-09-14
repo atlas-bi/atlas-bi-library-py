@@ -2,24 +2,20 @@
 {% load static %}
 {% load markdown %}
 
-
-
 <div class="card">
     <div class="card-header">
         <div class="card-header-title is-justify-content-space-between py-2">
-            <a class="has-text-dark" href="/Terms?id={{ term.term_id }}">{{ term }}
+            <a class="has-text-dark" href="{{ term.get_absolute_url }}">{{ term }}
                 {% if term.approved == "Y" %}
                     <div class="fa-layers ml-2 fa-lg">
                         <span class="icon has-text-info "><i class="fas fa-certificate"></i></span>
                         <span class="icon has-text-white fa-transform"><i class="fas fa-check shrink-5"></i></span>
                     </div>
                 {% endif %}
-                </a>
+            </a>
             <span class="tags">
                 <span class="tag">term</span>
-                {% if term.approved == "Y" %}
-                    <span class="tag is-success">Approved</span>
-                {% endif %}
+                {% if term.approved == "Y" %}<span class="tag is-success">Approved</span>{% endif %}
                 {% comment %}
                 @if(!string.IsNullOrEmpty(ViewBag.SearchMatch))
                 {
@@ -36,14 +32,21 @@
             <div class="media-left">
                 <figure class="image is-128x128">
                     <picture>
-                        <source srcset="{% static 'img/report_placeholder_128x128.webp' %}" type="image/webp" loading="lazy">
-                        <img src="{% static 'img/report_placeholder_128x128.png' %}" alt="placeholder image" loading="lazy">
+                        <source srcset="{% static 'img/report_placeholder_128x128.webp' %}"
+                                type="image/webp"
+                                loading="lazy"/>
+                        <img src="{% static 'img/report_placeholder_128x128.png' %}"
+                             alt="placeholder image"
+                             width="128"
+                             height="128"
+                             loading="lazy"/>
                     </picture>
                 </figure>
             </div>
             <!-- extra wrap if to fix IE11 bug https://github.com/philipwalton/flexbugs#flexbug-3 -->
             <div class="is-flex is-flex-direction-column is-flex-grow-1">
-                <a class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96  has-text-dark" href="{{ term.get_absolute_url }}">
+                <a class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96  has-text-dark"
+                   href="{{ term.get_absolute_url }}">
                     <p>
                         {% if term|snippet %}
                             {{ term|snippet|markdown }}
@@ -57,7 +60,8 @@
         </div>
     </div>
     <footer class="card-footer">
-        <a class="card-footer-item star" data-href="{% url 'user:stars_edit' %}?type=term&id={{ term.term_id }}">
+        <a class="card-footer-item star"
+           data-href="{% url 'user:stars_edit' %}?type=term&id={{ term.term_id }}">
             <span class="icon-text">
                 {% if term.term_id in user.get_starred_terms %}
                     <span class="icon has-text-gold">
@@ -73,21 +77,25 @@
             </span>
         </a>
         <div class="card-footer-item">
-            <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-target="term-profile-{{ term.term_id }}" data-tooltip="Open Profile">
+            <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+               data-target="term-profile-{{ term.term_id }}"
+               data-tooltip="Open Profile">
                 <span class="icon has-text-grey">
                     <i class="fas fa-chart-bar"></i>
                 </span>
             </a>
-
             {# @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")            { #}
-                <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share" data-target="term-share-{{ term.term_id }}" data-name="{{ term }}" data-type="term">
-                    <span class="icon has-text-grey">
-                        <i class="fas fa-share"></i>
-                    </span>
-                </a>
+            <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+               data-tooltip="Share"
+               data-target="term-share-{{ term.term_id }}"
+               data-name="{{ term }}"
+               data-type="term">
+                <span class="icon has-text-grey">
+                    <i class="fas fa-share"></i>
+                </span>
+            </a>
             {# } #}
         </div>
     </footer>
 </div>
 {% include "term/modals.html.dj" %}
-

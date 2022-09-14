@@ -17,7 +17,7 @@
                 <div class="control has-icons-left mr-5">
                     <input class="input favorites-filter"
                            type="email"
-                           placeholder="type to filter...">
+                           placeholder="type to filter..."/>
                     <span class="icon is-small is-left">
                         <i class="fas fa-magnifying-glass"></i>
                     </span>
@@ -89,62 +89,67 @@
             <div class="columns">
                 <div class="column is-one-quarter is-sticky is-align-self-flex-start">
                     <div class="is-relative favorite-folders {% if is_me %}reorder{% endif %}">
-                    <div class="box active favorites-show-all is-clickable is-relative"
-                         data-folderid="0">
-                        <div class="icon-text">
-                            <span class="icon mr-5 is-relative">
-                                <i class="fas fa-folder-open fa-lg"></i>
-                                <span class="tag fav-count is-primary is-rounded">{{ total }}</span>
-                            </span>
-                            <span>All</span>
-                        </div>
-                        {% if is_me %}
-                        <div class="favorite-folder-controls button is-light is-rounded is-warning has-text-dark is-active">
-                            <span class="icon js-modal-trigger" data-target="favorite-folder-new"><i class="fas fa-plus"></i></span>
-                        </div>
-                        <script>
-                            (function() {
-                                document.querySelector('body').insertAdjacentHTML('beforeend', '<div class="modal" id="favorite-folder-new"> \
-                                                                <div class="modal-background"></div> \
-                                                                <div class="modal-content"> \
-                                                                    <div class="box"> \
-                                                                        <strong class="mb-5">New Folder</strong> \
-                                                                        <form method="post" action="{% url 'user:stars_create_folder' %}" class="favorite-folder-new">  \
-                                                                            <div class="field"> \
-                                                                                <div class="control"> \
-                                                                                    <input class="input" name="favorite-folder-name"/> \
-                                                                                </div> \
-                                                                            </div> \
-                                                                                <button class="button pt-3">Save</button> \
-                                                                        </form> \
-                                                                    </div> \
-                                                                </div> \
-                                                                <button class="modal-close is-large" aria-label="close"></button> \
-                                                            </div>')
-                            })()
-                        </script>
-                        {% endif %}
-                    </div>
-                    {% for folder in folders %}
-                        <div class="box favorites-folder is-clickable {% if is_me %}drg{% endif %} is-relative" data-folderid="{{ folder.folder_id }}" folder-rank="{{ folder.rank }}">
-                            <div class="is-flex is-flex-direction-row is-justify-content-space-between">
-                                <div class="icon-text">
-                                    <span class="icon mr-5 is-relative">
-                                        <i class="fas fa-folder fa-lg"></i>
-                                        <span class="tag fav-count is-primary is-rounded">{{ folder.total }}</span>
-                                    </span>
-                                    <span class="favorite-folder-name">{{ folder.name}}</span>
-                                </div>
-
-
+                        <div class="box active favorites-show-all is-clickable is-relative"
+                             data-folderid="0">
+                            <div class="icon-text">
+                                <span class="icon mr-5 is-relative">
+                                    <i class="fas fa-folder-open fa-lg"></i>
+                                    <span class="tag fav-count is-primary is-rounded">{{ total }}</span>
+                                </span>
+                                <span>All</span>
                             </div>
                             {% if is_me %}
                                 <div class="favorite-folder-controls button is-light is-rounded is-warning has-text-dark is-active">
-                                    <span class="icon js-modal-trigger" data-target="favorite-folder-{{ folder.folder_id}}"><i class="fas fa-pen-to-square"></i></span>
-                                    <span class="icon favorite-folder-delete" data-folderid="{{ folder.folder_id}}"><i class="fas fa-trash"></i></span>
-                                    <span class="icon drg-hdl"><i class="fas fa-up-down-left-right"></i></span>
+                                    <span class="icon js-modal-trigger" data-target="favorite-folder-new"><i class="fas fa-plus"></i></span>
                                 </div>
                                 <script>
+                                    (function() {
+                                            /* beautify ignore:start */
+                                document.querySelector('body').insertAdjacentHTML('beforeend', '<div class="modal" id="favorite-folder-new"> \
+                                    <div class="modal-background"></div> \
+                                    <div class="modal-content"> \
+                                        <div class="box"> \
+                                            <strong class="mb-5">New Folder</strong> \
+                                            <form method="post" action="{% url 'user:stars_create_folder' %}" class="favorite-folder-new">  \
+                                                <div class="field"> \
+                                                    <div class="control"> \
+                                                        <input class="input" name="favorite-folder-name"/> \
+                                                    </div> \
+                                                </div> \
+                                                    <button class="button pt-3">Save</button> \
+                                            </form> \
+                                        </div> \
+                                    </div> \
+                                    <button class="modal-close is-large" aria-label="close"></button> \
+                                </div>')
+                            })()
+                                    /* beautify ignore:end */
+                                </script>
+                            {% endif %}
+                        </div>
+                        {% for folder in folders %}
+                            <div class="box favorites-folder is-clickable {% if is_me %}drg{% endif %} is-relative"
+                                 data-folderid="{{ folder.folder_id }}"
+                                 folder-rank="{{ folder.rank }}">
+                                <div class="is-flex is-flex-direction-row is-justify-content-space-between">
+                                    <div class="icon-text">
+                                        <span class="icon mr-5 is-relative">
+                                            <i class="fas fa-folder fa-lg"></i>
+                                            <span class="tag fav-count is-primary is-rounded">{{ folder.total }}</span>
+                                        </span>
+                                        <span class="favorite-folder-name">{{ folder.name }}</span>
+                                    </div>
+                                </div>
+                                {% if is_me %}
+                                    <div class="favorite-folder-controls button is-light is-rounded is-warning has-text-dark is-active">
+                                        <span class="icon js-modal-trigger"
+                                              data-target="favorite-folder-{{ folder.folder_id }}"><i class="fas fa-pen-to-square"></i></span>
+                                        <span class="icon favorite-folder-delete"
+                                              data-folderid="{{ folder.folder_id }}"><i class="fas fa-trash"></i></span>
+                                        <span class="icon drg-hdl"><i class="fas fa-up-down-left-right"></i></span>
+                                    </div>
+                                    <script>
+                                        /* beautify ignore:start */
                                     (function() {
                                         document.querySelector('body').insertAdjacentHTML('beforeend', '<div class="modal" id="favorite-folder-{{ folder.folder_id}}"> \
                                             <div class="modal-background"></div> \
@@ -164,102 +169,118 @@
                                             <button class="modal-close is-large" aria-label="close"></button> \
                                         </div>')
                                     })()
-                                </script>
-                            {% endif %}
-                        </div>
-
-                    {% endfor %}
+                                        /* beautify ignore:end */
+                                    </script>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
-            <div class="column favorites">
-                <div class="columns is-multiline reorder">
-                    {% for star in reports %}
-                        <div class="column is-full favorite report {% if is_me %}drg{% endif %} is-relative"
-                             data-rank="{{ star.rank }}"
-                             data-folderid="{{ star.folder_id }}"
-                             data-starid="{{ star.star_id }}"
-                             data-type="report">
-                             {% if is_me %}
-
-                            <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl"
-                                    type="button">
-                                <span class="icon">
-                                    <i class="fas fa-up-down-left-right"></i>
-                                </span>
-                            </button>
-                            {% endif %}
-                            {% include "report/snippet.html.dj" with report=star.report %}
-
-                        </div>
-                    {% endfor %}
-
-                    {% for star in collections %}
-                        <div class="column is-full favorite collection {% if is_me %}drg{% endif %} is-relative" data-rank="{{ star.rank }}" data-folderid="{{ star.folder_id }}" data-starid="{{ star.star_id }}" data-type="collection">
-                            {% if is_me %}
-                                <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl" type="button">
-                                    <span class="icon">
-                                        <i class="fas fa-up-down-left-right"></i>
-                                    </span>
-                                </button>
-                            {% endif %}
-                            {% include "collection/snippet.html.dj" with collection=star.collection %}
-                        </div>
-                    {% endfor %}
-
-                    {% for star in initiatives %}
-                        <div class="column is-full favorite initiative {% if is_me %}drg{% endif %} is-relative" data-rank="{{ star.rank }}" data-folderid="{{ star.folder_id }}" data-starid="{{ star.star_id }}" data-type="initiative">
-                            {% if is_me %}
-                                <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl" type="button">
-                                    <span class="icon">
-                                        <i class="fas fa-up-down-left-right"></i>
-                                    </span>
-                                </button>
-                            {% endif %}
-                            {% include "initiative/snippet.html.dj" with initiative=star.initiative %}
-                        </div>
-
-                    {% endfor %}
-
-                    {% for star in terms %}
-                        <div class="column is-full favorite term {% if is_me %}drg{% endif %} is-relative" data-rank="{{ star.rank }}" data-folderid="{{ star.folder_id }}" data-starid="{{ star.star_id }}" data-type="term">
-                            {% if is_me %}
-                                <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl" type="button">
-                                    <span class="icon">
-                                        <i class="fas fa-up-down-left-right"></i>
-                                    </span>
-                                </button>
-                            {% endif %}
-                            {% include "term/snippet.html.dj" with term=star.term %}
-                        </div>
-
-                    {% endfor %}
-
-                    {% for star in users %}
-                        <div class="column is-full favorite user {% if is_me %}drg{% endif %} is-relative" data-rank="{{ star.rank }}" data-folderid="{{ star.folder_id }}" data-starid="{{ star.star_id }}" data-type="user">
-                            {% if is_me %}
-                                <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl" type="button">
-                                    <span class="icon">
-                                        <i class="fas fa-up-down-left-right"></i>
-                                    </span>
-                                </button>
-                            {% endif %}
-                            {% include "user/snippet.html.dj" with user=star.user %}
-                        </div>
-                    {% endfor %}
-
-                    {% for star in groups %}
-                        <div class="column is-full favorite group {% if is_me %}drg{% endif %} is-relative" data-rank="{{ star.rank }}" data-folderid="{{ star.folder_id }}" data-starid="{{ star.star_id }}" data-type="group">
-                            {% if is_me %}
-                                <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl" type="button">
-                                    <span class="icon">
-                                        <i class="fas fa-up-down-left-right"></i>
-                                    </span>
-                                </button>
-                            {% endif %}
-                            {% include "group/snippet.html.dj" with group=star.group %}
-                        </div>
-                    {% endfor %}
-                    {% comment %}
+                <div class="column favorites">
+                    <div class="columns is-multiline reorder">
+                        {% for star in reports %}
+                            <div class="column is-full favorite report {% if is_me %}drg{% endif %} is-relative"
+                                 data-rank="{{ star.rank }}"
+                                 data-folderid="{{ star.folder_id }}"
+                                 data-starid="{{ star.star_id }}"
+                                 data-type="report">
+                                {% if is_me %}
+                                    <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl"
+                                            type="button">
+                                        <span class="icon">
+                                            <i class="fas fa-up-down-left-right"></i>
+                                        </span>
+                                    </button>
+                                {% endif %}
+                                {% include "report/snippet.html.dj" with report=star.report %}
+                            </div>
+                        {% endfor %}
+                        {% for star in collections %}
+                            <div class="column is-full favorite collection {% if is_me %}drg{% endif %} is-relative"
+                                 data-rank="{{ star.rank }}"
+                                 data-folderid="{{ star.folder_id }}"
+                                 data-starid="{{ star.star_id }}"
+                                 data-type="collection">
+                                {% if is_me %}
+                                    <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl"
+                                            type="button">
+                                        <span class="icon">
+                                            <i class="fas fa-up-down-left-right"></i>
+                                        </span>
+                                    </button>
+                                {% endif %}
+                                {% include "collection/snippet.html.dj" with collection=star.collection %}
+                            </div>
+                        {% endfor %}
+                        {% for star in initiatives %}
+                            <div class="column is-full favorite initiative {% if is_me %}drg{% endif %} is-relative"
+                                 data-rank="{{ star.rank }}"
+                                 data-folderid="{{ star.folder_id }}"
+                                 data-starid="{{ star.star_id }}"
+                                 data-type="initiative">
+                                {% if is_me %}
+                                    <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl"
+                                            type="button">
+                                        <span class="icon">
+                                            <i class="fas fa-up-down-left-right"></i>
+                                        </span>
+                                    </button>
+                                {% endif %}
+                                {% include "initiative/snippet.html.dj" with initiative=star.initiative %}
+                            </div>
+                        {% endfor %}
+                        {% for star in terms %}
+                            <div class="column is-full favorite term {% if is_me %}drg{% endif %} is-relative"
+                                 data-rank="{{ star.rank }}"
+                                 data-folderid="{{ star.folder_id }}"
+                                 data-starid="{{ star.star_id }}"
+                                 data-type="term">
+                                {% if is_me %}
+                                    <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl"
+                                            type="button">
+                                        <span class="icon">
+                                            <i class="fas fa-up-down-left-right"></i>
+                                        </span>
+                                    </button>
+                                {% endif %}
+                                {% include "term/snippet.html.dj" with term=star.term %}
+                            </div>
+                        {% endfor %}
+                        {% for star in users %}
+                            <div class="column is-full favorite user {% if is_me %}drg{% endif %} is-relative"
+                                 data-rank="{{ star.rank }}"
+                                 data-folderid="{{ star.folder_id }}"
+                                 data-starid="{{ star.star_id }}"
+                                 data-type="user">
+                                {% if is_me %}
+                                    <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl"
+                                            type="button">
+                                        <span class="icon">
+                                            <i class="fas fa-up-down-left-right"></i>
+                                        </span>
+                                    </button>
+                                {% endif %}
+                                {% include "user/snippet.html.dj" with user=star.user %}
+                            </div>
+                        {% endfor %}
+                        {% for star in groups %}
+                            <div class="column is-full favorite group {% if is_me %}drg{% endif %} is-relative"
+                                 data-rank="{{ star.rank }}"
+                                 data-folderid="{{ star.folder_id }}"
+                                 data-starid="{{ star.star_id }}"
+                                 data-type="group">
+                                {% if is_me %}
+                                    <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl"
+                                            type="button">
+                                        <span class="icon">
+                                            <i class="fas fa-up-down-left-right"></i>
+                                        </span>
+                                    </button>
+                                {% endif %}
+                                {% include "group/snippet.html.dj" with group=star.group %}
+                            </div>
+                        {% endfor %}
+                        {% comment %}
                     {% for star in searches %}
                         <div class="column is-full favorite search {% if is_me %}drg{% endif %} is-relative" data-rank="{{ star.rank }}" data-folderid="{{ star.folder_id }}" data-starid="{{ star.star_id }}" data-type="search">
                             {% if is_me %}
@@ -272,9 +293,10 @@
                             <partial name="Search/_Snippet" model="t" />
                         </div>
                     {% endfor %}
-                    {% endcomment %}
-                </div>
-                <script>
+                        {% endcomment %}
+                    </div>
+                    <script>
+                        /* beautify ignore:start */
                     (function() {
 
                         // set the order correctly
@@ -286,10 +308,11 @@
                             favs[i].parentElement.appendChild(favs[i]);
                         }
                     })()
-                </script>
+                        /* beautify ignore:end */
+                    </script>
+                </div>
             </div>
-        </div>
-        {% comment %}
+            {% comment %}
     } else if (Model.RunReports != null && Model.RunReports.Count > 0) {
         <h3 class="title is-3" id="reports">You don't have any favorites! Here's some reports you've used.</h3>
         <div class="columns is-multiline">
@@ -302,7 +325,7 @@
         </div>
     } else {
         <p>You don't have any favorites! Search to get started.</p>
-        }{% endcomment %}
-    {% endif %}
-{% endwith %}
+            }{% endcomment %}
+        {% endif %}
+    {% endwith %}
 </div>

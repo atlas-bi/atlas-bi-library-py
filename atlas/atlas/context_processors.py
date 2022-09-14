@@ -25,10 +25,10 @@ def user(request):
         return {
             # "permissions": request.user.get_permissions(),
             "user": request.user,
-            "favorites": request.user.get_starred_reports(),
-            "prefs": request.user.get_preferences(),
+            "favorites": request.user.get_starred_reports,
+            "prefs": request.user.get_preferences,
             # needed to override the default django perms tag.
-            "perms": request.user.get_all_permissions(),
+            "perms": request.user.get_all_permissions,
         }
     # context processor must ALWAYS return a dict
     return {}

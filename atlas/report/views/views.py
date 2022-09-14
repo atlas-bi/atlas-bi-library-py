@@ -213,7 +213,7 @@ def image(request, report_id, pk=None):
     #         image_format = "jpeg"
 
     size = request.GET.get("size", "")
-    print(size)
+
     if pk:
         img = get_object_or_404(ReportImages, report_id=report_id, image_id=pk)
     else:
@@ -248,6 +248,8 @@ def image(request, report_id, pk=None):
         out = out.crop((0, 0, width, height))
 
         buf = io.BytesIO()
+        if image_format == "jpeg":
+            out = out.convert("RGB")
         out.save(buf, format=image_format)
 
         response = HttpResponse(buf.getvalue(), content_type="application/octet-stream")
@@ -269,6 +271,8 @@ def image(request, report_id, pk=None):
         out = im.resize((wsize, hsize))
 
         buf = io.BytesIO()
+        if image_format == "jpeg":
+            out = out.convert("RGB")
         out.save(buf, format=image_format)
 
         response = HttpResponse(buf.getvalue(), content_type="application/octet-stream")

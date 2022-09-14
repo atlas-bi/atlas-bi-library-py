@@ -17,6 +17,7 @@ from datetime import datetime
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.db import models
 from django.urls import reverse
+from django.utils.functional import cached_property
 
 
 class ReportGroupMemberships(models.Model):
@@ -123,7 +124,7 @@ class Reports(models.Model):
     def __str__(self):
         return self.title or self.name
 
-    @property
+    @cached_property
     def is_certified(self):
         return self.tag_links.filter(
             tag__name__in=["Analytics Certified", "Analytics Reviewed"]
@@ -488,7 +489,7 @@ class Users(AbstractUser, PermissionsMixin):
     def __str__(self):
         return self.full_name
 
-    @property
+    @cached_property
     def is_superuser(self):
         # either an admin, or in a group that is an admin.
         return (
@@ -529,58 +530,64 @@ class Users(AbstractUser, PermissionsMixin):
             .values_list("permission_links__permission__name", flat=True)
         )
 
+    @cached_property
     def get_all_permissions(self, obj=None):
         return self.get_user_permissions().union(self.get_group_permissions())
 
     def has_perm(self, perm, obj=None):
-        return perm in self.get_all_permissions()
+        return perm in self.get_all_permissions
 
     def has_perms(self, perms, obj=None):
-        return set(perms) < set(self.get_all_permissions())
+        return set(perms) < set(self.get_all_permissions)
         pass
 
     def get_roles(self):
         """Get users roles."""
         return list(self.role_links.values_list("role__name"))
 
-    # def has_module_perms(self, obj=None):
-    #     pass
-
     def get_absolute_url(self):
         return reverse("user:profile", kwargs={"pk": self.pk})
 
+    @cached_property
     def get_preferences(self):
         # return users preferences as queriable object
         return dict(self.user_preferences.values_list("key", "value"))
 
+    @cached_property
     def get_starred_reports(self):
         # return all favorites
         return list(self.starred_reports.values_list("report__report_id", flat=True))
 
+    @cached_property
     def get_starred_initiatives(self):
         # return all favorites
         return list(
             self.starred_initiatives.values_list("initiative__initiative_id", flat=True)
         )
 
+    @cached_property
     def get_starred_collections(self):
         # return all favorites
         return list(
             self.starred_collections.values_list("collection__collection_id", flat=True)
         )
 
+    @cached_property
     def get_starred_terms(self):
         # return all favorites
         return list(self.starred_terms.values_list("term__term_id", flat=True))
 
+    @cached_property
     def get_starred_users(self):
         # return all favorites
         return list(self.starred_users.values_list("user__user_id", flat=True))
 
+    @cached_property
     def get_starred_groups(self):
         # return all favorites
         return list(self.starred_groups.values_list("group__group_id", flat=True))
 
+    @cached_property
     def get_starred_searches(self):
         # return all favorites
         return list(self.starred_searches.values_list("search__search_id", flat=True))

@@ -1,9 +1,11 @@
 """Atlas Initiative views."""
 # pylint: disable=C0116,C0115,W0613,W0212,R0201
 
+from typing import List
+
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
+from django.shortcuts import redirect, reverse
+from django.urls import resolve
 from django.views.generic import (
     DeleteView,
     DetailView,
@@ -17,12 +19,18 @@ from atlas.decorators import NeverCacheMixin, PermissionsCheckMixin
 
 
 class InitiativeList(LoginRequiredMixin, ListView):
-    queryset = Initiatives.objects.all().order_by("-_modified_at")
+    queryset = (
+        Initiatives.objects.prefetch_related("collections")
+        .prefetch_related("starred")
+        .all()
+        .order_by("-_modified_at")
+    )
     context_object_name = "initiatives"
     template_name = "initiative/all.html.dj"
     extra_context = {"title": "Initiatives"}
 
     def get(self, request, **kwargs):
+        # maintain compatibility with .net urls: initiative?id=1
         if request.GET.get("id"):
             return redirect("initiative:item", pk=request.GET.get("id"))
 
@@ -32,7 +40,13 @@ class InitiativeList(LoginRequiredMixin, ListView):
 class InitiativeDetails(LoginRequiredMixin, DetailView):
     template_name = "initiative/one.html.dj"
     context_object_name = "initiative"
-    queryset = Initiatives.objects
+    queryset = Initiatives.objects.select_related(
+        "ops_owner",
+        "exec_owner",
+        "modified_by",
+        "financial_impact",
+        "strategic_importance",
+    ).prefetch_related("collections", "collections__starred")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -48,8 +62,14 @@ class InitiativeEdit(
     required_permissions = ("Edit Initiative",)
     template_name = "initiative/edit.html.dj"
     context_object_name = "initiative"
-    queryset = Initiatives.objects
-    fields = ["description"]
+    queryset = Initiatives.objects.select_related(
+        "ops_owner",
+        "exec_owner",
+        "modified_by",
+        "financial_impact",
+        "strategic_importance",
+    ).prefetch_related("collections", "collections__starred")
+    fields: List[str] = []
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -78,7 +98,7 @@ class InitiativeEdit(
             collection_id__in=request.POST.getlist("linked_data_collections")
         ).update(initiative=initiative)
 
-        return redirect(initiative.get_absolute_url())
+        return redirect(initiative.get_absolute_url() + "?success=Changes saved.")
 
 
 class InitiativeNew(LoginRequiredMixin, PermissionsCheckMixin, TemplateView):
@@ -105,16 +125,22 @@ class InitiativeNew(LoginRequiredMixin, PermissionsCheckMixin, TemplateView):
             collection_id__in=request.POST.getlist("linked_data_collections")
         ).update(initiative=initiative)
 
-        return redirect(initiative.get_absolute_url())
+        return redirect(initiative.get_absolute_url() + "?success=Changes saved.")
 
 
 class InitiativeDelete(LoginRequiredMixin, PermissionsCheckMixin, DeleteView):
     required_permissions = ("Delete Initiative",)
     model = Initiatives
-    success_url = reverse_lazy("initiative:list")
+    template_name = "initiative/new.html.dj"
+
+    def get_success_url(self):
+        return reverse("initiative:list") + "?success=Initiative successfully deleted."
 
     def get(self, *args, **kwargs):
-        return redirect("initiative:list")
+        return redirect(
+            resolve("initiative:list")
+            + "?error=You are not authorized to access that page."
+        )
 
     def post(self, *args, **kwargs):
         """Delete a initiative.

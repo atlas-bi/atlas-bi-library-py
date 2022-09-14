@@ -2,7 +2,7 @@
 
 import os
 
-from .settings import *
+from .base import *
 
 
 class DisableMigrations:

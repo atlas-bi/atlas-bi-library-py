@@ -1,15 +1,12 @@
 """Atlas User views."""
 
 import io
-import json
 import re
 
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
-from django.views.decorators.cache import never_cache
 from index.models import (
     FavoriteFolders,
     StarredReports,
@@ -48,10 +45,10 @@ def roles(request):
 @login_required
 def disable_admin(request):
     """Change user role."""
-    next = request.GET.get("url", "/")
+    next_url = request.GET.get("url", "/")
 
-    if not url_has_allowed_host_and_scheme(next, request.get_host()):
-        next = "/"
+    if not url_has_allowed_host_and_scheme(next_url, request.get_host()):
+        next_url = "/"
 
     if UserPreferences.objects.filter(key="AdminDisabled", user=request.user).exists():
         UserPreferences.objects.filter(key="AdminDisabled", user=request.user).delete()
@@ -59,7 +56,7 @@ def disable_admin(request):
         pref = UserPreferences(key="AdminDisabled", user=request.user)
         pref.save()
 
-    return redirect(next)
+    return redirect(next_url)
 
 
 @login_required
@@ -103,7 +100,7 @@ def groups(request):
 
 
 def image(request, pk):
-
+    """Get user image."""
     user = get_object_or_404(Users, pk=pk)
     image_format = "webp"
 

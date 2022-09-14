@@ -1,6 +1,8 @@
 <ul>
     <li>
-        <a class="is-block has-tooltip-arrow has-tooltip-right star" data-tooltip="Star this initiative" data-href="{% url 'user:stars_edit' %}?type=initiative&id={{ initiative.initiative_id}}">
+        <a class="is-block has-tooltip-arrow has-tooltip-right star"
+           data-tooltip="Star this initiative"
+           data-href="{% url 'user:stars_edit' %}?type=initiative&id={{ initiative.initiative_id }}">
             {% if initiative.initiative_id in user.get_starred_initiatives %}
                 <span class="icon is-large has-text-gold ">
                     <i class="fas fa-lg fa-star is-relative">
@@ -17,29 +19,34 @@
         </a>
     </li>
     {# @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")    { #}
-        <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share" data-target="initiative-share-{{ initiative.initiative_id }}" data-name="{{ initiative }}" data-type="initiative">
-                <span class="icon has-text-grey is-large ">
-                    <i class="fas fa-lg fa-share"></i>
-                </span>
-            </a>
-        </li>
+    <li>
+        <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+           data-tooltip="Share"
+           data-target="initiative-share-{{ initiative.initiative_id }}"
+           data-name="{{ initiative }}"
+           data-type="initiative">
+            <span class="icon has-text-grey is-large ">
+                <i class="fas fa-lg fa-share"></i>
+            </span>
+        </a>
+    </li>
     {# } #}
-
     {% if "Create Initiative" in perms %}
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right" href="{% url 'initiative:new' %}" data-tooltip="Create New Initiative">
+            <a class="is-block has-tooltip-arrow has-tooltip-right"
+               href="{% url 'initiative:new' %}"
+               data-tooltip="Create New Initiative">
                 <span class="icon has-text-grey is-large ">
                     <i class="fas fa-lg fa-plus"></i>
                 </span>
             </a>
         </li>
-
     {% endif %}
-
     {% if "Edit Initiative" in perms %}
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right" href="{{ initiative.get_absolute_edit_url }}" data-tooltip="Open Atlas Editor">
+            <a class="is-block has-tooltip-arrow has-tooltip-right"
+               href="{{ initiative.get_absolute_edit_url }}"
+               data-tooltip="Open Atlas Editor">
                 <span class="icon has-text-grey is-large ">
                     <i class="fas fa-lg fa-pen-to-square"></i>
                 </span>
@@ -48,9 +55,13 @@
     {% endif %}
     {% if "Delete Initiative" in perms %}
         <li>
-            <form method="POST" action="{{ initiative.get_absolute_delete_url }}">
+            <form method="post" action="{{ initiative.get_absolute_delete_url }}">
                 {% csrf_token %}
-                <button class="is-ghost is-block has-tooltip-arrow has-tooltip-right p-0" data-tooltip="Delete this Initaitive" href="{{ initiative.get_absolute_delete_url }}"  onclick="return confirm('Are you sure you want to remove this?');" type="submit">
+                <button class="is-ghost is-block has-tooltip-arrow has-tooltip-right p-0"
+                        data-tooltip="Delete this Initaitive"
+                        href="{{ initiative.get_absolute_delete_url }}"
+                        onclick="return confirm('Are you sure you want to remove this?');"
+                        type="submit">
                     <span class="icon has-text-grey is-large ">
                         <i class="fas fa-lg fa-trash"></i>
                     </span>

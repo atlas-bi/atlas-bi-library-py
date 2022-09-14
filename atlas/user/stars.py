@@ -1,36 +1,29 @@
 """Atlas User views."""
 
-import io
 import json
-import re
 
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count, F
-from django.http import Http404, HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
-from django.utils.http import url_has_allowed_host_and_scheme
+from django.db.models import F
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, render
 from django.views.decorators.cache import never_cache
 from index.models import (
     FavoriteFolders,
     StarredCollections,
+    StarredGroups,
     StarredInitiatives,
     StarredReports,
+    StarredSearches,
     StarredTerms,
     StarredUsers,
-    UserPreferences,
-    UserRoles,
     Users,
 )
-from PIL import Image, ImageDraw, ImageFont
-
-from atlas.decorators import admin_required
 
 
 @login_required
 @never_cache
 def index(request, pk=None):
     """Get users stars."""
-
     if pk:
         user = get_object_or_404(Users, pk=pk)
     else:
@@ -107,16 +100,12 @@ def edit(request):
 
     star_type = request.GET.get("type", "report")
 
-    print(star_id)
-    print(star_type)
     if star_type == "report":
-        print("here")
         if (
             StarredReports.objects.filter(owner=request.user)
             .filter(report_id=star_id)
             .exists()
         ):
-            print("Here")
             StarredReports.objects.filter(owner=request.user).filter(
                 report_id=star_id
             ).delete()
@@ -193,7 +182,7 @@ def edit(request):
             user.save()
 
         return JsonResponse(
-            {"count": StarredUsers.objects.filter(term_id=user_id).count()}
+            {"count": StarredUsers.objects.filter(user_id=star_id).count()}
         )
 
     elif star_type == "group":
@@ -210,7 +199,7 @@ def edit(request):
             group.save()
 
         return JsonResponse(
-            {"count": StarredGroups.objects.filter(group_id=user_id).count()}
+            {"count": StarredGroups.objects.filter(group_id=star_id).count()}
         )
 
     elif star_type == "search":
@@ -249,9 +238,7 @@ def edit_folder(request, pk):
     """Add a new folder for favorites."""
     name = request.GET.get("name", None)
     folder = get_object_or_404(FavoriteFolders, pk=pk, user=request.user)
-    print(folder)
     if name:
-
         folder.name = name
         folder.save()
 
@@ -263,7 +250,6 @@ def edit_folder(request, pk):
 @login_required
 def delete_folder(request, pk: int):
     """Delete a favorites folder."""
-
     if request.method == "POST":
         folder = FavoriteFolders.objects.get(folder_id=pk)
 

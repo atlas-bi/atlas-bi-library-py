@@ -2,95 +2,100 @@
 {% load static %}
 {% load atlas_static %}
 
-<!DOCTYPE html>
-<html lang="EN-US">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="robots" content="noindex, nofollow">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex, nofollow" />
 
-    {% compress css file theme %}
-        <link rel="stylesheet"
-              href="{% static 'css/site.min.css' %}"
-              type="text/css"
-              charset="utf-8"/>
-    {% endcompress %}
+{% compress css file theme %}
+    <link rel="stylesheet"
+          href="{% static 'css/site.min.css' %}"
+          type="text/css"
+          charset="utf-8"/>
+{% endcompress %}
 
-    <!-- load custom css -->
+<!-- load custom css -->
+<link rel="preload"
+      href="{% static_hashed '/font/inter/files/inter-latin-400-normal.woff2' %}"
+      as="font"
+      type="font/woff2"/>
+<link rel="preload"
+      href="{% static_hashed '/font/inter/files/inter-latin-700-normal.woff2' %}"
+      as="font"
+      type="font/woff2"/>
+<link rel="preload"
+      href="{% static_hashed '/font/inter/files/inter-latin-500-normal.woff2' %}"
+      as="font"
+      type="font/woff2"/>
+<link rel="preload"
+      href="{% static_hashed '/font/inter/files/inter-latin-600-normal.woff2' %}"
+      as="font"
+      type="font/woff2"/>
+<link rel="preload"
+      href="{% static_hashed '/font/fontawesome/webfonts/fa-solid-900.woff2' %}"
+      as="font"
+      type="font/woff2"/>
+<link rel="preload"
+      href="{% static_hashed '/font/fontawesome/webfonts/fa-regular-400.woff2' %}"
+      as="font"
+      type="font/woff2"/>
+
+{% compress js file purify %}
     <link rel="preload"
-          href="{% static_hashed '/font/inter/files/inter-latin-400-normal.woff2' %}"
-          as="font"
-          type="font/woff2"/>
+          href="{% static '/lib/dompurify/purify.min.js' %}"
+          as="script"/>
+{% endcompress %}
+
+{% compress js file main %}
+    <link rel="preload" href="{% static '/js/essential.js' %}" as="script" />
     <link rel="preload"
-          href="{% static_hashed '/font/inter/files/inter-latin-700-normal.woff2' %}"
-          as="font"
-          type="font/woff2"/>
-    <link rel="preload"
-          href="{% static_hashed '/font/inter/files/inter-latin-500-normal.woff2' %}"
-          as="font"
-          type="font/woff2"/>
-    <link rel="preload"
-          href="{% static_hashed '/font/inter/files/inter-latin-600-normal.woff2' %}"
-          as="font"
-          type="font/woff2"/>
-    <link rel="preload"
-          href="{% static_hashed '/font/fontawesome/webfonts/fa-solid-900.woff2' %}"
-          as="font"
-          type="font/woff2"/>
-    <link rel="preload"
-          href="{% static_hashed '/font/fontawesome/webfonts/fa-regular-400.woff2' %}"
-          as="font"
-          type="font/woff2"/>
+          href="{% static '/lib/scrollbars/simple-scrollbar.js' %}"
+          as="script"/>
+{% endcompress %}
 
-    {% compress js file purify %}
-        <link rel="preload"
-              href="{% static '/lib/dompurify/purify.min.js' %}"
-              as="script"/>
-    {% endcompress %}
+<link rel="preload" href="{% static '/js/polyfill.min.js' %}" as="script" />
+<link rel="preload" href="{% static '/js/shared.min.js' %}" as="script" />
+<link rel="preload" href="{% static '/js/alive.min.js' %}" as="script" />
+<link rel="preload" href="{% static '/js/search.min.js' %}" as="script" />
+<link rel="preload" href="{% static '/js/utility.min.js' %}" as="script" />
+<link rel="preload" href="{% static '/js/editor.min.js' %}" as="script" />
+<link rel="preload" href="{% static '/js/profile.min.js' %}" as="script" />
 
-    {% compress js file main %}
-        <link rel="preload" href="{% static '/js/essential.js' %}" as="script" />
-        <link rel="preload"
-              href="{% static '/lib/scrollbars/simple-scrollbar.js' %}"
-              as="script"/>
-    {% endcompress %}
+{% compress js file purify %}
+    <script src="{% static '/lib/dompurify/purify.min.js' %}"></script>
+{% endcompress %}
 
-    <link rel="preload" href="{% static '/js/polyfill.min.js' %}" as="script" />
-    <link rel="preload" href="{% static '/js/shared.min.js' %}" as="script" />
-    <link rel="preload" href="{% static '/js/alive.min.js' %}" as="script" />
-    <link rel="preload" href="{% static '/js/search.min.js' %}" as="script" />
-    <link rel="preload" href="{% static '/js/utility.min.js' %}" as="script" />
-    <link rel="preload" href="{% static '/js/editor.min.js' %}" as="script" />
-    <link rel="preload" href="{% static '/js/profile.min.js' %}" as="script" />
+<script src="{% static '/js/polyfill.min.js' %}"></script>
 
-    {% compress js file purify %}
-        <script src="{% static '/lib/dompurify/purify.min.js' %}"></script>
-    {% endcompress %}
+{% block start_css %}
+{% endblock start_css %}
 
-    <script src="{% static '/js/polyfill.min.js' %}"></script>
-    {% block start_css %}
-    {% endblock start_css %}
+{% compress js file %}
 
-    {% compress js file %}
-        {% block start_js %}
-        {% endblock start_js %}
-    {% endcompress %}
+    {% block start_js %}
+    {% endblock start_js %}
 
-    {% compress js inline %}
-        {% block start_js_inline %}
-        {% endblock start_js_inline %}
-    {% endcompress %}
+{% endcompress %}
 
-    {% if title %}
-        <title>{{ title }} | Atlas</title>
-    {% else %}
-        <title>Atlas BI Library</title>
-    {% endif %}
-    <script>
-        __jsnlog_configure = function (JL) {
+{% compress js inline %}
+
+    {% block start_js_inline %}
+    {% endblock start_js_inline %}
+
+{% endcompress %}
+
+{% if title %}
+    <title>{{ title }} | Atlas</title>
+{% else %}
+    <title>Atlas BI Library</title>
+{% endif %}
+<script>
+    __jsnlog_configure = function(JL) {
         JL.setOptions({
-            "defaultAjaxUrl":"/analytics/trace"
+            "defaultAjaxUrl": "/analytics/trace"
         })
-        };
-        try { __jsnlog_configure(JL); } catch(e) {};
-    </script>
+    };
+    try {
+        __jsnlog_configure(JL);
+    } catch (e) {};
+</script>

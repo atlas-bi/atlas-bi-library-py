@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 import dj_database_url
 import django_heroku
 
-from .settings import *
+from .base import *
 
 AUTHENTICATION_BACKENDS = ("atlas.no_pass_auth.Backend",)
 

@@ -31,11 +31,7 @@
                     {% if report.modified_by or report.created_by %}
                         <span class="text-light">
                             &nbsp;&middot;&nbsp;
-                            <a href="{% if report.modified_by %}
-                                         {{ report.modified_by.get_absolute_url }}
-                                     {% else %}
-                                         {{ report.created_by.get_absolute_url }}
-                                     {% endif %} ">
+                            <a href="{% if report.modified_by %} {{ report.modified_by.get_absolute_url }} {% else %} {{ report.created_by.get_absolute_url }} {% endif %} ">
                                 {{ report.modified_by|default:report.created_by }}
                             </a>
                         </span>
@@ -50,11 +46,7 @@
                         {% if report.docs.modified_by or report.docs.created_by %}
                             <span class="text-light">
                                 &nbsp;&middot;&nbsp;
-                                <a href="{% if report.docs.modified_by %}
-                                             {{ report.docs.modified_by.get_absolute_url }}
-                                         {% else %}
-                                             {{ report.docs.created_by.get_absolute_url }}
-                                         {% endif %} ">
+                                <a href="{% if report.docs.modified_by %} {{ report.docs.modified_by.get_absolute_url }} {% else %} {{ report.docs.created_by.get_absolute_url }} {% endif %} ">
                                     {{ report.docs.modified_by|default:report.docs.created_by }}
                                 </a>
                             </span>

@@ -1,16 +1,13 @@
 {% extends "layout.html.dj" %}
 
-{% load markdown %}
-{% load compress %}
-{% load static %}
-
 {% block body %}
     <h1 class="title is-1">{{ title }}</h1>
-
     {% if "Create Initiative" in perms %}
         <div class="field has-addons">
             <p class="control">
-                <a href="{% url 'initiative:new' %}" class="button" title="new initiatve"><span class="icon"><i class="fas fa-plus"></i></span><span>Create an Initiative</span></a>
+                <a href="{% url 'initiative:new' %}"
+                   class="button"
+                   title="new initiatve"><span class="icon"><i class="fas fa-plus"></i></span><span>Create an Initiative</span></a>
             </p>
         </div>
     {% endif %}
