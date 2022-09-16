@@ -1,15 +1,19 @@
 {% load helpers %}
 {% load static %}
 {% load markdown %}
+{% load url_tags %}
 
 <div class="card">
     <div class="card-header">
         <div class="card-header-title py-2 is-justify-content-space-between">
             <span class="is-flex is-align-items-center">
-                {% if report.attachments.any %}
+                {% run_url report as run_report_url %}
+                {% edit_url report as edit_report_url %}
+                {% manage_url report as manage_report_url %}
+                {% if report.attachments.exists %}
                     <a aria-label="run"
                        class="is-flex mr-2 has-tooltip-arrow has-tooltip-right js-modal-trigger"
-                       data-target="report-run-@Model.ReportObjectId"
+                       data-target="report-run-{{ report.report_id}}"
                        data-tooltip="Run Report"
                        data-runurl="@Model.RunReportUrl(Context,Configuration, (await Authorization.AuthorizeAsync(User,Model, "
                        ReportRunPolicy
@@ -18,15 +22,12 @@
                             <i class="far fa-2_3x fa-circle-play"></i>
                         </span>
                     </a>
-                {% elif  False %}
-                    {# else if (!string.IsNullOrEmpty(Model.RunReportUrl(Context,Configuration, (await Authorization.AuthorizeAsync(User,Model, "ReportRunPolicy")).Succeeded))) #}
+                {% elif run_report_url %}
                     <a aria-label="run"
                        class="is-flex mr-2 has-tooltip-arrow has-tooltip-right"
                        target="_blank"
                        data-tooltip="Run Report"
-                       href="@Model.RunReportUrl(Context,Configuration, (await Authorization.AuthorizeAsync(User,Model, "
-                       ReportRunPolicy
-                       .Succeeded>
+                       href="{{ run_report_url }}">
                         <span class="icon is-large has-text-success">
                             <i class="far fa-2_3x fa-circle-play"></i>
                         </span>
@@ -40,8 +41,7 @@
                                 <i class="far fa-2_3x fa-circle-play"></i>
                             </span>
                         </a>
-                    {% elif False %}
-                        {# else if (!string.IsNullOrEmpty(Model.EditReportUrl(Context,Configuration))) #}
+                    {% elif edit_report_url %}
                         <a aria-label="run"
                            class="is-flex mr-2 is-disabled has-tooltip-arrow has-tooltip-right"
                            data-tooltip="Open in report library.">
@@ -89,7 +89,7 @@
     <div class="card-content pt-3 pb-2">
         <div class="media">
             <div class="media-left js-modal-trigger"
-                 data-target="report-image-@Model.ReportObjectId">
+                 data-target="report-image-{{ report.report_id}}">
                 <figure class="image is-128x128">
                     <picture>
                         {% if report.imgs.exists %}
@@ -115,14 +115,14 @@
                     </picture>
                 </figure>
             </div>
-            <div class="modal" id="report-image-@Model.ReportObjectId">
+            <div class="modal" id="report-image-{{ report.report_id}}">
                 <div class="modal-background"></div>
                 <div class="modal-content modal-image">
                     <p class="image">
                         {% comment %}
                         <picture>
-                            <source srcset="/data/img?handler=Thumb&id=@Model.ReportObjectId&size=1200x1200&type=webp 800w, /data/img?handler=Thumb&id=@Model.ReportObjectId&size=2000x2000&type=webp 1200w" type="image/webp" loading="lazy" sizes="100vw">
-                            <img src="/data/img?handler=Thumb&id=@Model.ReportObjectId&size=1200x2000" alt="report image" loading="lazy">
+                            <source srcset="/data/img?handler=Thumb&id={{ report.report_id}}&size=1200x1200&type=webp 800w, /data/img?handler=Thumb&id={{ report.report_id}}&size=2000x2000&type=webp 1200w" type="image/webp" loading="lazy" sizes="100vw">
+                            <img src="/data/img?handler=Thumb&id={{ report.report_id}}&size=1200x2000" alt="report image" loading="lazy">
                         </picture>
                         {% endcomment %}
                     </p>
@@ -131,7 +131,7 @@
             </div>
             <div class="is-flex is-flex-direction-column is-flex-grow-1">
                 <a class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96  has-text-dark"
-                   href="/Reports?id=@Model.ReportObjectId">
+                   href="/Reports?id={{ report.report_id}}">
                     <p>
                         {% if report|snippet %}
                             {{ report|snippet|markdown }}
@@ -175,11 +175,10 @@
             </a>
             {# } #}
         {% endif %}
-        {% if "Open In Editor" in perms %}
-            {# @if (!string.IsNullOrEmpty(@Model.ManageReportUrl(Context,Configuration)) && User.HasPermission("Open In Editor")) #}
+        {% if "Open In Editor" in perms and manage_report_url %}
             <a class="card-footer-item px-0"
                target="_blank"
-               href="@Model.ManageReportUrl(Context,Configuration)">
+               href="{{ manage_report_url }}">
                 <span class="icon-text">
                     <span class="icon">
                         <i class="fas fa-gears"></i>
@@ -190,7 +189,7 @@
         {% endif %}
         <div class="card-footer-item px-0">
             <a class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2"
-               data-target="report-profile-@Model.ReportObjectId"
+               data-target="report-profile-{{ report.report_id}}"
                data-tooltip="Open Report Profile">
                 <span class="icon has-text-grey ">
                     <i class="fas fa-chart-bar"></i>
@@ -200,7 +199,7 @@
             {# { #}
             <a class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2"
                data-tooltip="Share"
-               data-target="report-share-@Model.ReportObjectId">
+               data-target="report-share-{{ report.report_id}}">
                 <span class="icon has-text-grey">
                     <i class="fas fa-share"></i>
                 </span>
@@ -212,7 +211,7 @@
             {# { #}
             <a class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2"
                data-tooltip="Request Access"
-               data-target="request-access-@Model.ReportObjectId">
+               data-target="request-access-{{ report.report_id}}">
                 <span class="icon has-text-grey">
                     <i class="fas fa-universal-access"></i>
                 </span>

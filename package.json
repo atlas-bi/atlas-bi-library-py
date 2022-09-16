@@ -9,7 +9,9 @@
   },
   "private": true,
   "scripts": {
-    "install": "gulp build",
+    "start": "cd atlas; poetry run python manage.py runserver",
+    "start:celery": "cd atlas; DJANGO_SETTINGS_MODULE='atlas.settings.dev' poetry run celery -A atlas worker -l DEBUG",
+    "start:beat": "cd atlas; DJANGO_SETTINGS_MODULE='atlas.settings.dev' poetry run celery -A atlas beat -l DEBUG --scheduler django_celery_beat.schedulers:DatabaseScheduler",
     "build": "gulp build",
     "watch": "gulp watch",
     "commit": "git add . && pre-commit run ;  npm run pre-commit && git add . && cz --no-verify",

@@ -5,22 +5,27 @@ from pathlib import Path
 # def snippet(request,pk):
 #     return "hello"
 import regex as re
+from django.contrib.auth.mixins import LoginRequiredMixin
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
-from index.models import ReportDocs, ReportImages, Reports, Terms
+from index.models import ReportDocs, ReportImages, Reports, Terms,ReportQueries, Collections
 from PIL import Image
+from django.views.generic import (
+    DeleteView,
+    DetailView,
+    ListView,
+    TemplateView,
+    UpdateView,
+)
 
-
-@login_required
-def index(request, pk):
-
-    report_id = pk
-
-    report = (
+class ReportDetails(LoginRequiredMixin, DetailView):
+    template_name = "report/one.html.dj"
+    context_object_name = "report"
+    queryset = (
         Reports.objects.select_related("docs")
         .select_related("created_by")
         .select_related("modified_by")
@@ -35,99 +40,100 @@ def index(request, pk):
         .prefetch_related("docs__maintenance_logs__maintainer")
         .prefetch_related("docs__fragility_tags")
         .prefetch_related("docs__fragility_tags__fragility_tag")
+        .prefetch_related("tag_links__tag")
         #   .prefetch_related("groups")
         #   .prefetch_related("groups__group")
         .prefetch_related("collections")
-        .get(report_id=report_id)
     )
 
-    parents = (
-        Reports.objects.filter(parent__child=report_id)
-        .exclude(type_id=12)
-        .filter(visible="Y")
-        .exclude(docs__hidden="Y")
-        .prefetch_related("imgs")
-        .order_by("name")
-        .all()
-    )
+    def get_context_data(self, **kwargs):
+        """Add additional items to the context."""
+        context = super().get_context_data(**kwargs)
 
-    children = (
-        Reports.objects.filter(child__parent=report_id)
-        .exclude(system_identifier="IDK")
-        .filter(visible="Y")
-        .exclude(docs__hidden="Y")
-        .prefetch_related("imgs")
-        .order_by("name")
-        .all()
-    )
-    # not listing grandchildren yet.
+        report_id = self.kwargs["pk"]
 
-    # favorite = "yes" if request.user.has_favorite("report", report_id) else "no"
+        context["parents"] = (
+            Reports.objects.filter(parent__child=report_id)
+            .exclude(type_id=12)
+            .filter(visible="Y")
+            .exclude(docs__hidden="Y")
+            .prefetch_related("imgs")
+            .order_by("name")
+            .all()
+        )
 
-    terms = Terms.objects.filter(
-        report_docs__report_doc__report__report_id=report_id
-    ).all()
+        context["children"] = (
+            Reports.objects.filter(child__parent=report_id)
+            .exclude(system_identifier="IDK")
+            .filter(visible="Y")
+            .exclude(docs__hidden="Y")
+            .prefetch_related("imgs")
+            .order_by("name")
+            .all()
+        )
+        # not listing grandchildren yet.
 
-    # var report_terms = await (from r in _context.ReportObjectDocTerms
-    #                           where r.ReportObjectId == id
-    #                           select new
-    #                           {
-    #                               Name = r.Term.Name,
-    #                               Id = r.TermId,
-    #                               Summary = r.Term.Summary,
-    #                               Definition = r.Term.TechnicalDefinition,
-    #                           }).ToListAsync();
+        # favorite = "yes" if request.user.has_favorite("report", report_id) else "no"
+        context["component_queries"]= ReportQueries.objects.filter(query_id=-1)
+        context["collections"]=Collections.objects.filter(collection_id=-1)
+        context["terms"] = Terms.objects.filter(
+            report_docs__report_doc__report__report_id=report_id
+        ).all()
 
-    # var child_report_terms = await ( // child terms
-    #                     from c in _context.ReportObjectHierarchies
-    #                     where c.ParentReportObjectId == id
-    #                     join r in _context.ReportObjectDocTerms on c.ChildReportObjectId equals r.ReportObjectId
-    #                     select new
-    #                     {
-    #                         Name = r.Term.Name,
-    #                         Id = r.TermId,
-    #                         Summary = r.Term.Summary,
-    #                         Definition = r.Term.TechnicalDefinition,
-    #                     }).ToListAsync();
+        # var report_terms = await (from r in _context.ReportObjectDocTerms
+        #                           where r.ReportObjectId == id
+        #                           select new
+        #                           {
+        #                               Name = r.Term.Name,
+        #                               Id = r.TermId,
+        #                               Summary = r.Term.Summary,
+        #                               Definition = r.Term.TechnicalDefinition,
+        #                           }).ToListAsync();
 
-    # var grandchild_report_terms = await (from c in _context.ReportObjectHierarchies
-    #                                      where c.ParentReportObjectId == id
-    #                                      join gc in _context.ReportObjectHierarchies on c.ChildReportObjectId equals gc.ParentReportObjectId
-    #                                      join r in _context.ReportObjectDocTerms on gc.ChildReportObjectId equals r.ReportObjectId
-    #                                      select new
-    #                                      {
-    #                                          Name = r.Term.Name,
-    #                                          Id = r.TermId,
-    #                                          Summary = r.Term.Summary,
-    #                                          Definition = r.Term.TechnicalDefinition,
-    #                                      }).ToListAsync();
+        # var child_report_terms = await ( // child terms
+        #                     from c in _context.ReportObjectHierarchies
+        #                     where c.ParentReportObjectId == id
+        #                     join r in _context.ReportObjectDocTerms on c.ChildReportObjectId equals r.ReportObjectId
+        #                     select new
+        #                     {
+        #                         Name = r.Term.Name,
+        #                         Id = r.TermId,
+        #                         Summary = r.Term.Summary,
+        #                         Definition = r.Term.TechnicalDefinition,
+        #                     }).ToListAsync();
 
-    # var great_grandchild_report_terms = await (from c in _context.ReportObjectHierarchies
-    #                                            where c.ParentReportObjectId == id
-    #                                            join gc in _context.ReportObjectHierarchies on c.ChildReportObjectId equals gc.ParentReportObjectId
-    #                                            join ggc in _context.ReportObjectHierarchies on gc.ChildReportObjectId equals ggc.ParentReportObjectId
-    #                                            join r in _context.ReportObjectDocTerms on ggc.ChildReportObjectId equals r.ReportObjectId
-    #                                            select new
-    #                                            {
-    #                                                Name = r.Term.Name,
-    #                                                Id = r.TermId,
-    #                                                Summary = r.Term.Summary,
-    #                                                Definition = r.Term.TechnicalDefinition,
-    #                                            }).ToListAsync();
+        # var grandchild_report_terms = await (from c in _context.ReportObjectHierarchies
+        #                                      where c.ParentReportObjectId == id
+        #                                      join gc in _context.ReportObjectHierarchies on c.ChildReportObjectId equals gc.ParentReportObjectId
+        #                                      join r in _context.ReportObjectDocTerms on gc.ChildReportObjectId equals r.ReportObjectId
+        #                                      select new
+        #                                      {
+        #                                          Name = r.Term.Name,
+        #                                          Id = r.TermId,
+        #                                          Summary = r.Term.Summary,
+        #                                          Definition = r.Term.TechnicalDefinition,
+        #                                      }).ToListAsync();
 
-    return render(
-        request,
-        "report/one.html.dj",
-        {
-            "report_id": report_id,
-            "report": report,
-            "parents": parents,
-            "children": children,
-            # "favorite": favorite,
-            "terms": terms,
-        },
-    )
+        # var great_grandchild_report_terms = await (from c in _context.ReportObjectHierarchies
+        #                                            where c.ParentReportObjectId == id
+        #                                            join gc in _context.ReportObjectHierarchies on c.ChildReportObjectId equals gc.ParentReportObjectId
+        #                                            join ggc in _context.ReportObjectHierarchies on gc.ChildReportObjectId equals ggc.ParentReportObjectId
+        #                                            join r in _context.ReportObjectDocTerms on ggc.ChildReportObjectId equals r.ReportObjectId
+        #                                            select new
+        #                                            {
+        #                                                Name = r.Term.Name,
+        #                                                Id = r.TermId,
+        #                                                Summary = r.Term.Summary,
+        #                                                Definition = r.Term.TechnicalDefinition,
+        #                                            }).ToListAsync();
 
+        context["title"] = self.object
+        return context
+
+
+@login_required
+def edit(request, pk):
+    print('edit')
 
 @login_required
 def profile(request, pk):
@@ -240,12 +246,14 @@ def image(request, report_id, pk=None):
         # first resize close to size, then crop
 
         max_ratio = max((width / float(im.size[0])), (height / float(im.size[1])))
+        out = im
+        if max_ratio < 1:
 
-        hsize = int(float(im.size[1]) * float(max_ratio))
-        wsize = int(float(im.size[0]) * float(max_ratio))
+            hsize = int(float(im.size[1]) * float(max_ratio))
+            wsize = int(float(im.size[0]) * float(max_ratio))
 
-        out = im.resize((wsize, hsize))
-        out = out.crop((0, 0, width, height))
+            out = im.resize((wsize, hsize))
+            # out = out.crop((0, 0, width, height))
 
         buf = io.BytesIO()
         if image_format == "jpeg":
@@ -264,11 +272,12 @@ def image(request, report_id, pk=None):
         width = int(size.split("x")[0])
 
         max_ratio = width / float(im.size[0])
+        out = im
+        if max_ratio < 1:
+            hsize = int(float(im.size[1]) * float(max_ratio))
+            wsize = int(float(im.size[0]) * float(max_ratio))
 
-        hsize = int(float(im.size[1]) * float(max_ratio))
-        wsize = int(float(im.size[0]) * float(max_ratio))
-
-        out = im.resize((wsize, hsize))
+            out = im.resize((wsize, hsize))
 
         buf = io.BytesIO()
         if image_format == "jpeg":

@@ -1,6 +1,6 @@
 <nav class="breadcrumb">
     <ul>
-        {% if report.imgs.all %}
+        {% if report.imgs.exists %}
             <li>
                 <a href="#images">Images</a>
             </li>
@@ -10,7 +10,7 @@
                 <a href="#description">Description</a>
             </li>
         {% endif %}
-        {% if terms %}
+        {% if terms %}{# and terms enabled #}
             <li>
                 <a href="#terms">Terms</a>
             </li>
@@ -18,17 +18,17 @@
         <li>
             <a href="#details">Details</a>
         </li>
-        {% if report.queries.all %}
+        {% if report.queries.exists or component_queries %}
             <li>
                 <a href="#query">Query</a>
             </li>
         {% endif %}
-        {% if parents or children or groups %}
+        {% if parents or children or groups or collections %}
             <li>
                 <a href="#relationships">Relationships</a>
             </li>
         {% endif %}
-        {% if report.docs.logs %}
+        {% if report.docs.logs.exists %}
             <li>
                 <a href="#maintenance">Maintenance</a>
             </li>

@@ -146,3 +146,5 @@ extend_exclude = 'atlas/templates/handlebars/search.html'
 [tool.djlint.per-file-ignores]
 "atlas/analytics/templates/analytics/index.html.dj" = "H021"
 "atlas/etl/templates/etl/index.html.dj" = "D018"
+"atlas/report/templates/report/editor/modal.html.dj" = "H023"
+

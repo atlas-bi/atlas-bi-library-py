@@ -1,7 +1,8 @@
 {% load markdown %}
 
-<h2 class="title is-2">Terms</h2>
+<h2 id="terms" class="title is-2">Terms</h2>
 <div class="columns is-multiline">
     {% for term in terms %}
         <div class="column is-half ">{% include "term/snippet.html.dj" %}</div>
     {% endfor %}
+</div>

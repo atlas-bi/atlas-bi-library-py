@@ -80,19 +80,19 @@ DATABSES = "default": {
 ## Running the Website
 
 ```bash
-cd atlas && poetry run python manage.py runserver
+npm start
 ```
 
 ## Running Celery for ETL Development
 
 ```bash
-DJANGO_SETTINGS_MODULE='atlas.settings.dev' poetry run celery -A atlas worker -l DEBUG
+npm run start:celery
 ```
 
 In a separate terminal, start celery beat for scheduled jobs.
 
 ```bash
-DJANGO_SETTINGS_MODULE='atlas.settings.dev' poetry run celery -A atlas beat -l DEBUG --scheduler django_celery_beat.schedulers:DatabaseScheduler
+npm run start:beat
 ```
 
 ## Running tests

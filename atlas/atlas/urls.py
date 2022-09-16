@@ -37,6 +37,7 @@ urlpatterns = [
     path("etl/", include("etl.urls")),
     path("profile/", include("sketch.urls")),
     path("settings/", include("settings.urls")),
+    path("groups/", include("group.urls")),
 ]
 
 

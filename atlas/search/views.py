@@ -8,7 +8,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.cache import never_cache
 from index.models import Collections
 
@@ -227,6 +227,12 @@ def user_lookup(request, role=None):
         {"ObjectId": item.get("atlas_id"), "Name": item.get("name")} for item in results
     ]
     return JsonResponse(output, safe=False)
+
+@never_cache
+@login_required
+def director_lookup(request):
+    """Director lookup."""
+    return redirect(user_lookup,role="Director")
 
 
 @never_cache

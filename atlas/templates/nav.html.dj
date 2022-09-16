@@ -111,25 +111,26 @@
                     </div>
                 {% endif %}
                 <!-- epic navigation -->
-                {% if is_epic %}
-                    <a class="nav-link" onclick="history.back()">
-                        <span class="icon is-medium">
-                            <i class="fas fa-lg fa-chevron-left"></i>
-                        </span>
-                    </a>
-                    <a class="nav-link" onclick="history.forward()">
-                        <span class="icon is-medium">
-                            <i class="fas fa-lg fa-chevron-right"></i>
-                        </span>
-                    </a>
+                {% if is_hyperspace %}
+                    <a class="navbar-item" onclick="history.back()">
+                            <span class="icon is-medium">
+                                <i class="fas fa-chevron-left"></i>
+                            </span>
+                        </a>
+                        <a class="navbar-item" onclick="history.forward()">
+                            <span class="icon is-medium">
+                                <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
                 {% endif %}
             </div>
-        </nav>
+
+    </div>
+</div>
+</nav>
         <section class="section py-0">
             <div class="container">
                 <nav class="breadcrumb site-breadcrumbs">
                 </nav>
             </div>
         </section>
-    </div>
-</div>

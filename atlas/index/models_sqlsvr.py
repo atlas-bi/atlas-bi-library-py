@@ -32,7 +32,7 @@ class ReportGroupMemberships(models.Model):
         "Reports",
         models.DO_NOTHING,
         db_column="ReportId",
-        related_name="group_memeberships",
+        related_name="group_memberships",
     )
     etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
 
@@ -133,13 +133,21 @@ class Reports(models.Model):
     def has_docs(self):
         return hasattr(self, "docs")
 
+    @cached_property
+    def get_group_ids(self):
+        return self.group_memberships.all().values_list("group__group_id", flat=True)
     @property
     def friendly_name(self):
         return self.title or self.name
 
     def get_absolute_url(self):
-        return reverse("report:index", kwargs={"pk": self.pk})
+        return reverse("report:item", kwargs={"pk": self.pk})
 
+    def get_absolute__maint_status_url(self):
+        return reverse("report:maint_status", kwargs={"pk": self.pk})
+
+    def get_absolute_edit_url(self):
+        return reverse("report:edit", kwargs={"pk": self.pk})
     # def system_run_url(self, in_system):
     #     return "123.123"
 
@@ -202,33 +210,33 @@ class Reports(models.Model):
 
         return url
 
-    def system_manage_url(self, in_system, domain):
-        """Build system manage url."""
-        if self.type_id.name == "SSRS Report" and not in_system:
-            return "https://{}.{}/Reports/manage/catalogitem/properties{}".format(
-                self.system_server,
-                domain,
-                self.system_path,
-            )
-        return None
-
     @property
     def modified_at(self):
         if self._modified_at:
             return datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
-        # print((
-        #     (self.docs.description or "") + " " +
-        #     (self.detailed_description or "") + " " +
-        #     (self.description or "")
-        # ).strip()[:160] + "...")
-        # return (
-        #     (self.docs.description or "") + " " +
-        #     (self.detailed_description or "") + " " +
-        #     (self.description or "")
-        # ).strip()[:160] + "..."
 
+class ReportParameters(models.Model):
+    parameter_id = models.AutoField(
+        db_column="ReportObjectParameterId", primary_key=True
+    )  # Field name made lowercase.
+    report = models.ForeignKey(
+        Reports,
+        models.DO_NOTHING,
+        db_column="ReportObjectId",
+        related_name="parameters",
+    )
+    name = models.TextField(
+        db_column="ParameterName", blank=True, null=True
+    )  # Field name made lowercase.
+    value = models.TextField(
+        db_column="ParameterValue", blank=True, null=True
+    )  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = "ReportObjectParameters"
 
 class ReportAttachments(models.Model):
     attachment_id = models.AutoField(
@@ -273,7 +281,7 @@ class Tags(models.Model):
     name = models.CharField(db_column="Name", max_length=450, blank=True, null=True)
     description = models.TextField(db_column="Description", blank=True, null=True)
     priority = models.IntegerField(db_column="Priority", blank=True, null=True)
-    showinheader = models.TextField(db_column="ShowInHeader", blank=True, null=True)
+    show_in_header = models.TextField(db_column="ShowInHeader", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -368,7 +376,15 @@ class ReportQueries(models.Model):
     )
     query = models.TextField(db_column="Query", blank=True, default="")
     etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
-
+    sourceserver = models.TextField(
+        db_column="SourceServer", blank=True, null=True
+    )  # Field name made lowercase.
+    language = models.TextField(
+        db_column="Language", blank=True, null=True
+    )  # Field name made lowercase.
+    name = models.TextField(
+        db_column="Name", blank=True, null=True
+    )  # Field name made lowercase.
     class Meta:
         managed = False
         db_table = "ReportObjectQuery"
@@ -445,7 +461,9 @@ class ReportTypes(models.Model):
     short_name = models.TextField(db_column="ShortName", blank=True, default="")
     code = models.TextField(db_column="DefaultEpicMasterFile", blank=True, default="")
     etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
-
+    visible = models.CharField(
+        db_column="Visible", max_length=1, blank=True, null=True
+    )  # F
     class Meta:
         managed = False
         db_table = "ReportObjectType"
@@ -529,6 +547,10 @@ class Users(AbstractUser, PermissionsMixin):
             .exclude(name__in=["Administrator", "User"])
             .values_list("permission_links__permission__name", flat=True)
         )
+
+    @cached_property
+    def get_group_ids(self):
+        return self.group_links.all().values_list("group__group_id", flat=True)
 
     @cached_property
     def get_all_permissions(self, obj=None):
@@ -617,6 +639,9 @@ class Groups(models.Model):
 
     def __str__(self):
         return self.group_name
+
+    def get_absolute_url(self):
+        return reverse("group:details", kwargs={"pk": self.pk})
 
 
 class UserGroupMemberships(models.Model):
@@ -1255,6 +1280,7 @@ class ReportImages(models.Model):
         return reverse(
             "report:image", kwargs={"pk": self.pk, "report_id": self.report.report_id}
         )
+
 
 
 class Reportobjectruntime(models.Model):
