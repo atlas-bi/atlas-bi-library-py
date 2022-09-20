@@ -17,12 +17,12 @@
             {% if report.etl_date %}
                 <tr>
                     <td>Last ETL Load Date</td>
-                    <td>{{ report.etl_date|relative }}</td>
+                    <td data-tooltip="{{ report.etl_date }}">{{ report.etl_date|relative }}</td>
                 </tr>
             {% endif %}
             <tr>
                 <td>Report Last Modified</td>
-                <td>
+                <td data-tooltip="{{ report.modified_at }}">
                     {{ report.modified_at|relative }}
                     {% if report.modified_by or report.created_by %}
                         &nbsp;&middot;&nbsp;
@@ -40,7 +40,7 @@
             {% if report.docs.modified_at %}
                 <tr>
                     <td>Documentation Last Modified</td>
-                    <td>
+                    <td data-tooltip="{{ report.docs.modified_at }}">
                         {{ report.docs.modified_at|relative }}
                         {% if report.docs.modified_by or report.docs.created_by %}
                             &nbsp;&middot;&nbsp;
@@ -156,17 +156,13 @@
                     </td>
                 </tr>
             {% endif %}
-            {% if report.type.name == "SSRS Report" %}
+            {% if report.type.name == "SSRS Report" and report.docs.enabled_for_hyperspace == "Y" %}
                 <tr>
                     <td>
                         Enabled for Hyperspace
                     </td>
                     <td>
-                        {% if report.docs.enabled_for_hyperspace == "Y" %}
-                            Yes
-                        {% else %}
-                            No
-                        {% endif %}
+                        Yes
                     </td>
                 </tr>
             {% endif %}

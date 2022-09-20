@@ -1,5 +1,6 @@
 """Custom template tag to render markdown."""
 import bleach
+import re
 from django import template
 from django.conf import settings as django_settings
 from django.utils.safestring import mark_safe
@@ -39,3 +40,9 @@ def markdown(value):
     return mark_safe(
         bleach.clean(my_markdown.render(value), tags=django_settings.SAFE_HTML_TAGS)
     )
+
+
+@register.filter(name="unwrap")
+def unwrap(html):
+    """Remove outer <p></p> tag from html."""
+    return re.sub(r"^<p>|</p>$", "", html)

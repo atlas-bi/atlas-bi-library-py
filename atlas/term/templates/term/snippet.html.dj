@@ -49,7 +49,7 @@
                    href="{{ term.get_absolute_url }}">
                     <p>
                         {% if term|snippet %}
-                            {{ term|snippet|markdown }}
+                            {{ term|snippet|markdown|unwrap }}
                             <span class="has-text-link">read more</span>
                         {% else %}
                             <span class="has-text-link">Open to view details.</span>

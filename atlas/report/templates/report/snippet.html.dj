@@ -134,7 +134,7 @@
                    href="/Reports?id={{ report.report_id}}">
                     <p>
                         {% if report|snippet %}
-                            {{ report|snippet|markdown }}
+                            {{ report|snippet|markdown|unwrap }}
                             <span class="has-text-link">read more</span>
                         {% else %}
                             <span class="has-text-link">Open to view details.</span>

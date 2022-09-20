@@ -28,7 +28,7 @@
                 <a href="#relationships">Relationships</a>
             </li>
         {% endif %}
-        {% if report.docs.logs.exists %}
+        {% if report.docs.maintenance_logs.exists %}
             <li>
                 <a href="#maintenance">Maintenance</a>
             </li>

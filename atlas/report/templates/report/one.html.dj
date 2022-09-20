@@ -34,7 +34,7 @@
         {% include "report/sections/images.html.dj" %}
     {% endif %}
 
-    {% if report.description or report.detailed_description or report.docs.developer_description or report.docs.assumptions or report.system_description %}
+    {% if report.description or report.detailed_description or report.docs.description or report.docs.assumptions or report.system_description %}
         {% include 'report/sections/description.html.dj' %}
     {% endif %}
 
@@ -52,7 +52,7 @@
         {% include 'report/sections/relationships.html.dj' %}
     {% endif %}
 
-    {% if report.docs.logs.exists %}
+    {% if report.docs.maintenance_logs.exists %}
         {% include 'report/sections/maintenance_logs.html.dj' %}
     {% endif %}
 

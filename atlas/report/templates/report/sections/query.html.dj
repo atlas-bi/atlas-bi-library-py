@@ -8,7 +8,7 @@
     </p>
 
     <div class="panel-block is-collapsible is-block py-0" id="query-data">
-        {% for query in report.queries %}
+        {% for query in report.queries.all %}
             <div class="is-flex is-justify-content-space-between m-3 mb-0 mt-5">
                 <h3 class="title is-3 mb-0">Query {{ forloop.counter }} | {{ query.name }}</h3>
                 <button class="button" onclick="copyQuery(event,{{ query.query_id }})">

@@ -2,7 +2,7 @@
 import contextlib
 import copy
 import functools
-
+import re
 import pysolr
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -138,7 +138,6 @@ def build_search_string(search_string, search_type=None):
         "[",
         "]",
         "^",
-        '"',
         "~",
         "*",
         "?",
@@ -149,6 +148,22 @@ def build_search_string(search_string, search_type=None):
     if search_string is None:
         return "*"
 
+    # clean search string
+    for char in reserved_characters:
+        search_string = search_string.replace(char, "\\%s" % char)
+
+    def special_to_lower(match):
+        return match.group(0).lower()
+
+    search_string = re.sub(r"\b(OR|AND|NOT)\b", special_to_lower, search_string)
+
+    # get exact matches
+    # for literal in re.finditer(r"(\")(.+?)(\")",search_string):
+
+    # clean up remaining quotes
+    search_string = re.sub(r"\"", "\\\\\"", search_string)
+
+    # change search terms to fuzzy.. allow changing up to 1/2 the word
     def build_fuzzy(sub_str):
         """Add fuzzy option."""
         if len(sub_str) > 1:
@@ -159,12 +174,6 @@ def build_search_string(search_string, search_type=None):
             return sub_str + "*~"
 
         return sub_str
-
-    # clean search string
-    for char in reserved_characters:
-        search_string = search_string.replace(char, "\\%s" % char)
-
-    # change search terms to fuzzy.. allow changing up to 1/2 the word
     search_string_fuzzy = " ".join(
         build_fuzzy(item) for item in search_string.split(" ")
     )

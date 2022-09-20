@@ -41,8 +41,8 @@ class ReportDetails(LoginRequiredMixin, DetailView):
         .prefetch_related("docs__fragility_tags")
         .prefetch_related("docs__fragility_tags__fragility_tag")
         .prefetch_related("tag_links__tag")
-        #   .prefetch_related("groups")
-        #   .prefetch_related("groups__group")
+          .prefetch_related("groups")
+          .prefetch_related("groups__group")
         .prefetch_related("collections")
     )
 

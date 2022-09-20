@@ -13,28 +13,29 @@
         </p>
         <div class="panel-block is-collapsible is-block" id="related-groups">
             <div class="table-responsive">
-            <table class="table sort">
-                <thead>
-                    <tr>
-                        <th>Group Name</th>
-                        <th>Type</th>
-                        <th>Source</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for group in report.groups.all %}
+                <table class="table sort">
+                    <thead>
                         <tr>
-                            <td>
-                                <a href="{{ group.get_absolute_url }}">{{ group.group }}</a>
-                            </td>
-                            <td>{{ group.group.group_type }}</td>
-                            <td>{{ group.group.group_source }}</td>
+                            <th>Group Name</th>
+                            <th>Type</th>
+                            <th>Source</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for group in report.groups.all %}
+                            <tr>
+                                <td>
+                                    <a href="{{ group.get_absolute_url }}">{{ group.group }}</a>
+                                </td>
+                                <td>{{ group.group.group_type }}</td>
+                                <td>{{ group.group.group_source }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+    </nav>
 {% endif %}
 {% if children %}
     <h3 class="title is-3">Reports included in this report.</h3>

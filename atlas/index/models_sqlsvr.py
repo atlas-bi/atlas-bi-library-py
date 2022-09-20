@@ -26,13 +26,13 @@ class ReportGroupMemberships(models.Model):
         "Groups",
         models.DO_NOTHING,
         db_column="GroupId",
-        related_name="report_memberships",
+        related_name="reports",
     )
     report = models.ForeignKey(
         "Reports",
         models.DO_NOTHING,
         db_column="ReportId",
-        related_name="group_memberships",
+        related_name="groups",
     )
     etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
 
@@ -116,6 +116,7 @@ class Reports(models.Model):
     )
     system_path = models.TextField(db_column="ReportServerPath", blank=True, default="")
     etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
+    availability = models.TextField(db_column="Availability", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -213,7 +214,7 @@ class Reports(models.Model):
     @property
     def modified_at(self):
         if self._modified_at:
-            return datetime.strftime(self._modified_at, "%m/%d/%y")
+            return self._modified_at #datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
 
@@ -779,7 +780,7 @@ class Initiatives(models.Model):
     @property
     def modified_at(self):
         if self._modified_at:
-            return datetime.strftime(self._modified_at, "%m/%d/%y")
+            return self._modified_at #datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
 
@@ -836,7 +837,7 @@ class Collections(models.Model):
     @property
     def modified_at(self):
         if self._modified_at:
-            return datetime.strftime(self._modified_at, "%m/%d/%y")
+            return self._modified_at # datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
 
@@ -1434,15 +1435,41 @@ class ReportDocs(models.Model):
     @property
     def modified_at(self):
         if self._modified_at:
-            return datetime.strftime(self._modified_at, "%m/%d/%y")
+            return self._modified_at # datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
     @property
     def created_at(self):
         if self._created_at:
-            return datetime.strftime(self._created_at, "%m/%d/%y")
+            return self._created_at # datetime.strftime(self._created_at, "%m/%d/%y")
         return ""
 
+
+class ReportTickets(models.Model):
+    request_id = models.AutoField(
+        db_column="ServiceRequestId", primary_key=True
+    )  # Field name made lowercase.
+    number = models.TextField(
+        db_column="TicketNumber", blank=True, null=True
+    )  # Field name made lowercase.
+    description = models.TextField(
+        db_column="Description", blank=True, null=True
+    )  # Field name made lowercase.
+    report = models.ForeignKey(
+        "Reports",
+        on_delete=models.CASCADE,
+        db_column="ReportObjectId",
+        blank=True,
+        null=True,
+        related_name="tickets",
+    )
+    url = models.TextField(
+        db_column="TicketUrl", blank=True, null=True
+    )  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = "ReportServiceRequests"
 
 class RolePermissionLinks(models.Model):
     permissionlinks_id = models.AutoField(
