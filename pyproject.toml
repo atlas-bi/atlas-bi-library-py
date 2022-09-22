@@ -147,4 +147,7 @@ extend_exclude = 'atlas/templates/handlebars/search.html'
 "atlas/analytics/templates/analytics/index.html.dj" = "H021"
 "atlas/etl/templates/etl/index.html.dj" = "D018"
 "atlas/report/templates/report/editor/modal.html.dj" = "H023"
+"atlas/templates/handlebars/search.html" = "D018"
+"atlas/templates/handlebars/search_pagination.html" = "H021"
+
 

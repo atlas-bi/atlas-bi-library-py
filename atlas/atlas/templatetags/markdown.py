@@ -1,6 +1,7 @@
 """Custom template tag to render markdown."""
-import bleach
 import re
+
+import bleach
 from django import template
 from django.conf import settings as django_settings
 from django.utils.safestring import mark_safe

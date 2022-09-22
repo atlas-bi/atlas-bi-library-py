@@ -3,12 +3,13 @@ import contextlib
 import copy
 import functools
 import re
+
 import pysolr
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.views.decorators.cache import never_cache
 from index.models import Collections
 
@@ -161,7 +162,7 @@ def build_search_string(search_string, search_type=None):
     # for literal in re.finditer(r"(\")(.+?)(\")",search_string):
 
     # clean up remaining quotes
-    search_string = re.sub(r"\"", "\\\\\"", search_string)
+    search_string = re.sub(r"\"", '\\\\"', search_string)
 
     # change search terms to fuzzy.. allow changing up to 1/2 the word
     def build_fuzzy(sub_str):
@@ -174,6 +175,7 @@ def build_search_string(search_string, search_type=None):
             return sub_str + "*~"
 
         return sub_str
+
     search_string_fuzzy = " ".join(
         build_fuzzy(item) for item in search_string.split(" ")
     )
@@ -237,11 +239,12 @@ def user_lookup(request, role=None):
     ]
     return JsonResponse(output, safe=False)
 
+
 @never_cache
 @login_required
 def director_lookup(request):
     """Director lookup."""
-    return redirect(user_lookup,role="Director")
+    return redirect(user_lookup, role="Director")
 
 
 @never_cache

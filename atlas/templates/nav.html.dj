@@ -40,10 +40,10 @@
                             {% if "View Site Analytics" in perms %}
                                 <a class="navbar-item" href="{% url 'analytics:index' %}">Analytics</a>
                             {% endif %}
-                            {# <a class="navbar-item" href="/tasks">Tasks</a> #}
+                            <a class="navbar-item" href="{% url 'task:index' %}">Tasks</a>
                             {% if "View Site Analytics" in perms %}
-                                {# <hr class="dropdown-divider"> #}
-                                {# <a class="navbar-item" href="/profile">Report Activity</a> #}
+                                <hr class="dropdown-divider">
+                                <a class="navbar-item" href="{% url 'sketch:index' %}">Report Activity</a>
                             {% endif %}
                             {% if "Manage ETL" in perms %}
                                 <a class="navbar-item" href="{% url 'etl:index' %}">ETL</a>
@@ -72,7 +72,7 @@
                            title="collections">Collections</a>
                         <!-- missing permission check -->
                         <a class="navbar-item" href="{% url 'term:list' %}" title="terms">Terms</a>
-                        <hr class=" hide-desktop dropdown-divider" />
+                        <hr class="dropdown-divider" />
                         <!-- bad url -->
                         <a class="navbar-item" href="/about_analytics">About Analytics</a>
                     </div>

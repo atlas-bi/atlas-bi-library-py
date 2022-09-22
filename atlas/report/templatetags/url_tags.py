@@ -1,13 +1,17 @@
 """Custom template tag to render markdown."""
 from django import template
 from django.utils.http import urlencode
+
 register = template.Library()
-from index.models import Reports
 import re
+
+from index.models import Reports
+
+
 def run_authorization(report, request):
     # Only catch - Crystal Report (3) & Reporting Workbench (17)
     if report.type_id not in [3, 17]:
-        return True;
+        return True
 
     user_groups = request.user.get_group_ids
     report_groups = report.get_group_ids
@@ -31,7 +35,7 @@ def run_url(context, report):
     :param value: list of permissions
     :returns: true/false if they have a 41
     """
-    if not run_authorization(report,context.request):
+    if not run_authorization(report, context.request):
         return False
 
     if report.orphan == "Y":
@@ -40,22 +44,25 @@ def run_url(context, report):
     if report.name is None:
         return False
 
-    nice_name = re.sub(r"[|=]", " ",report.name)
+    nice_name = re.sub(r"[|=]", " ", report.name)
 
-    enabled_for_hyperspace = bool(report.docs.enabled_for_hyperspace if report.has_docs() else False)
+    enabled_for_hyperspace = bool(
+        report.docs.enabled_for_hyperspace if report.has_docs() else False
+    )
 
     if (
-        (
-            report.system_run_url
-            or (
-                report.type.name not in ["SSRS Report", "SSRS File", "Source Radar Dashboard Component"]
-                and context["is_hyperspace"]
-            )
+        report.system_run_url
+        or (
+            report.type.name
+            not in ["SSRS Report", "SSRS File", "Source Radar Dashboard Component"]
+            and context["is_hyperspace"]
         )
-        and report.type.name not in ["Epic-Crystal Report", "Crystal Report"]
-    ):
+    ) and report.type.name not in ["Epic-Crystal Report", "Crystal Report"]:
 
-        if (report.system_identifier == "HRX" and report.type.name != "SlicerDicer Session"):
+        if (
+            report.system_identifier == "HRX"
+            and report.type.name != "SlicerDicer Session"
+        ):
             return f"EpicAct:AC_RW_STATUS,RUNPARAMS:{report.system_template_id}|{report.system_id}"
 
         elif report.system_identifier == "HGR":
@@ -64,7 +71,10 @@ def run_url(context, report):
         elif report.system_identifier == "IDM":
             return f"EpicAct:WM_DASHBOARD_LAUNCHER,runparams:{report.system_id}"
 
-        elif report.type.name in ["SSRS Report", "SSRS File"] and context["is_hyperspace"]:
+        elif (
+            report.type.name in ["SSRS Report", "SSRS File"]
+            and context["is_hyperspace"]
+        ):
 
             if enabled_for_hyperspace:
                 return f"EpicAct:AC_RW_WEB_BROWSER,LaunchOptions:2,runparams:{report.system_run_url}&EPIC=1|FormCaption={nice_name}|ActivityName={nice_name}"
@@ -101,13 +111,25 @@ def edit_url(context, report):
     if report.system_path and context["is_hyperspace"] is False:
         return f"reportbuilder:Action=Edit&ItemPath={report.system_path}&Endpoint=https%3A%2F%2F{report.system_server}.{domain}%3A443%2FReportServer"
 
-    elif report.system_identifier == "HGR" and report.system_id and context["is_hyperspace"]:
+    elif (
+        report.system_identifier == "HGR"
+        and report.system_id
+        and context["is_hyperspace"]
+    ):
         return f"EpicAct:AC_NEW_REPORT_ADMIN,INFONAME:HGRRECORDID,INFOVALUE:{report.system_id}"
 
-    elif report.system_identifier == "IDM" and report.system_id and context["is_hyperspace"]:
+    elif (
+        report.system_identifier == "IDM"
+        and report.system_id
+        and context["is_hyperspace"]
+    ):
         return f"EpicAct:WM_DASHBOARD_EDITOR,INFONAME:IDMRECORDID,INFOVALUE:{report.system_id}"
 
-    elif report.system_identifier == "IDB" and report.system_id and context["is_hyperspace"]:
+    elif (
+        report.system_identifier == "IDB"
+        and report.system_id
+        and context["is_hyperspace"]
+    ):
         return f"EpicAct:WM_COMPONENT_EDITOR,INFONAME:IDBRECORDID,INFOVALUE:{report.system_id}"
 
     elif (
@@ -126,7 +148,8 @@ def edit_url(context, report):
     ):
         return f"EpicAct:WM_METRIC_EDITOR,INFONAME:IDNRECORDID,INFOVALUE:{report.system_id}"
 
-    return False;
+    return False
+
 
 @register.simple_tag(takes_context=True)
 def manage_url(context, report):
@@ -135,7 +158,10 @@ def manage_url(context, report):
     :param value: list of permissions
     :returns: true/false if they have a 41
     """
-    if report.type.name in ["SSRS Report", "SSRS File", "SSRS Report Link"] and context["is_hyperspace"] is False:
+    if (
+        report.type.name in ["SSRS Report", "SSRS File", "SSRS Report Link"]
+        and context["is_hyperspace"] is False
+    ):
         return "https://{}.{}/Reports/manage/catalogitem/properties{}".format(
             report.system_server,
             context["domain"],

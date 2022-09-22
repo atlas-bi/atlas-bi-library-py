@@ -137,6 +137,7 @@ class Reports(models.Model):
     @cached_property
     def get_group_ids(self):
         return self.group_memberships.all().values_list("group__group_id", flat=True)
+
     @property
     def friendly_name(self):
         return self.title or self.name
@@ -149,6 +150,7 @@ class Reports(models.Model):
 
     def get_absolute_edit_url(self):
         return reverse("report:edit", kwargs={"pk": self.pk})
+
     # def system_run_url(self, in_system):
     #     return "123.123"
 
@@ -214,7 +216,7 @@ class Reports(models.Model):
     @property
     def modified_at(self):
         if self._modified_at:
-            return self._modified_at #datetime.strftime(self._modified_at, "%m/%d/%y")
+            return self._modified_at  # datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
 
@@ -238,6 +240,7 @@ class ReportParameters(models.Model):
     class Meta:
         managed = False
         db_table = "ReportObjectParameters"
+
 
 class ReportAttachments(models.Model):
     attachment_id = models.AutoField(
@@ -386,6 +389,7 @@ class ReportQueries(models.Model):
     name = models.TextField(
         db_column="Name", blank=True, null=True
     )  # Field name made lowercase.
+
     class Meta:
         managed = False
         db_table = "ReportObjectQuery"
@@ -465,6 +469,7 @@ class ReportTypes(models.Model):
     visible = models.CharField(
         db_column="Visible", max_length=1, blank=True, null=True
     )  # F
+
     class Meta:
         managed = False
         db_table = "ReportObjectType"
@@ -780,7 +785,7 @@ class Initiatives(models.Model):
     @property
     def modified_at(self):
         if self._modified_at:
-            return self._modified_at #datetime.strftime(self._modified_at, "%m/%d/%y")
+            return self._modified_at  # datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
 
@@ -837,7 +842,7 @@ class Collections(models.Model):
     @property
     def modified_at(self):
         if self._modified_at:
-            return self._modified_at # datetime.strftime(self._modified_at, "%m/%d/%y")
+            return self._modified_at  # datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
 
@@ -1283,7 +1288,6 @@ class ReportImages(models.Model):
         )
 
 
-
 class Reportobjectruntime(models.Model):
     id = models.AutoField(db_column="Id", primary_key=True)
     runuserid = models.IntegerField(db_column="RunUserId", blank=True, null=True)
@@ -1435,13 +1439,13 @@ class ReportDocs(models.Model):
     @property
     def modified_at(self):
         if self._modified_at:
-            return self._modified_at # datetime.strftime(self._modified_at, "%m/%d/%y")
+            return self._modified_at  # datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
     @property
     def created_at(self):
         if self._created_at:
-            return self._created_at # datetime.strftime(self._created_at, "%m/%d/%y")
+            return self._created_at  # datetime.strftime(self._created_at, "%m/%d/%y")
         return ""
 
 
@@ -1470,6 +1474,7 @@ class ReportTickets(models.Model):
     class Meta:
         managed = False
         db_table = "ReportServiceRequests"
+
 
 class RolePermissionLinks(models.Model):
     permissionlinks_id = models.AutoField(

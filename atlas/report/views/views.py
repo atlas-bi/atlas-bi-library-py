@@ -1,19 +1,15 @@
 import io
 from pathlib import Path
+from typing import List
 
-# @login_required
-# def snippet(request,pk):
-#     return "hello"
 import regex as re
-from django.contrib.auth.mixins import LoginRequiredMixin
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
-from index.models import ReportDocs, ReportImages, Reports, Terms,ReportQueries, Collections
-from PIL import Image
 from django.views.generic import (
     DeleteView,
     DetailView,
@@ -21,6 +17,18 @@ from django.views.generic import (
     TemplateView,
     UpdateView,
 )
+from index.models import (
+    Collections,
+    ReportDocs,
+    ReportImages,
+    ReportQueries,
+    Reports,
+    Terms,
+)
+from PIL import Image
+
+from atlas.decorators import NeverCacheMixin, PermissionsCheckMixin
+
 
 class ReportDetails(LoginRequiredMixin, DetailView):
     template_name = "report/one.html.dj"
@@ -41,8 +49,8 @@ class ReportDetails(LoginRequiredMixin, DetailView):
         .prefetch_related("docs__fragility_tags")
         .prefetch_related("docs__fragility_tags__fragility_tag")
         .prefetch_related("tag_links__tag")
-          .prefetch_related("groups")
-          .prefetch_related("groups__group")
+        .prefetch_related("groups")
+        .prefetch_related("groups__group")
         .prefetch_related("collections")
     )
 
@@ -74,8 +82,8 @@ class ReportDetails(LoginRequiredMixin, DetailView):
         # not listing grandchildren yet.
 
         # favorite = "yes" if request.user.has_favorite("report", report_id) else "no"
-        context["component_queries"]= ReportQueries.objects.filter(query_id=-1)
-        context["collections"]=Collections.objects.filter(collection_id=-1)
+        context["component_queries"] = ReportQueries.objects.filter(query_id=-1)
+        context["collections"] = Collections.objects.filter(collection_id=-1)
         context["terms"] = Terms.objects.filter(
             report_docs__report_doc__report__report_id=report_id
         ).all()
@@ -131,9 +139,44 @@ class ReportDetails(LoginRequiredMixin, DetailView):
         return context
 
 
-@login_required
-def edit(request, pk):
-    print('edit')
+class ReportEdit(
+    NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, UpdateView
+):
+    required_permissions = ("Edit Report Documentation",)
+    template_name = "report/edit.html.dj"
+    context_object_name = "report"
+    queryset = (
+        Reports.objects.select_related("docs")
+        .select_related("created_by")
+        .select_related("modified_by")
+        .select_related("docs__modified_by")
+        .select_related("docs__created_by")
+        .select_related("docs__requester")
+        .select_related("docs__ops_owner")
+        .select_related("type")
+        .prefetch_related("queries")
+        .prefetch_related("imgs")
+        .prefetch_related("docs__maintenance_logs")
+        .prefetch_related("docs__maintenance_logs__maintainer")
+        .prefetch_related("docs__fragility_tags")
+        .prefetch_related("docs__fragility_tags__fragility_tag")
+        .prefetch_related("tag_links__tag")
+        .prefetch_related("groups")
+        .prefetch_related("groups__group")
+        .prefetch_related("collections")
+    )
+    fields: List[str] = []
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = f"Editing {self.object}"
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        report = Reports.objects.get(report_id=self.kwargs["pk"])
+        return redirect(report.get_absolute_url() + "?success=Changes saved.")
+
 
 @login_required
 def profile(request, pk):

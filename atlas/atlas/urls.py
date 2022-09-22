@@ -38,6 +38,7 @@ urlpatterns = [
     path("profile/", include("sketch.urls")),
     path("settings/", include("settings.urls")),
     path("groups/", include("group.urls")),
+    path("tasks/", include("task.urls")),
 ]
 
 

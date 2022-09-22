@@ -387,7 +387,7 @@ if pyproject_file:
         logging.info("No pyproject.toml found.")
 
 
-DOMAIN="example.com"
+DOMAIN = "example.com"
 FOOTER = {
     "SUBTITLE": "Atlas was created by the Riverside Healthcare Analytics team.",
     "LINKS": {
