@@ -6,7 +6,7 @@ asttokens==2.0.8
 atomicwrites==1.4.1; python_version >= "3.6" and python_full_version < "3.0.0" and sys_platform == "win32" or sys_platform == "win32" and python_version >= "3.6" and python_full_version >= "3.4.0"
 attrs==22.1.0; python_version >= "3.6" and python_full_version < "3.0.0" and python_version < "4.0" or python_version >= "3.6" and python_version < "4.0" and python_full_version >= "3.5.0"
 backports.entry-points-selectable==1.1.1; python_full_version >= "3.6.1" and python_version >= "2.7"
-bcrypt==3.2.2; python_version >= "3.6"
+bcrypt==4.0.0; python_version >= "3.6"
 beautifulsoup4==4.11.1; python_full_version > "3.0.0"
 billiard==4.0.2; python_version >= "3.6"
 black==22.8.0; python_version >= "3.6"
