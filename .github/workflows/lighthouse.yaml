@@ -51,6 +51,7 @@ jobs:
           PGPASSWORD: 12345
           REDIS_HOST: localhost
           REDIS_PORT: 6379
+          DJANGO_SETTINGS_MODULE: atlas.settings.test
       - name: run Lighthouse CI
         run: |
           npm install -g @lhci/cli@0.9.x
@@ -63,3 +64,4 @@ jobs:
           REDIS_PORT: 6379
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           LHCI_TOKEN: ${{ secrets.LHCI_TOKEN }}
+          DJANGO_SETTINGS_MODULE: atlas.settings.test

@@ -25,8 +25,8 @@ module.exports = {
       },
     },
     collect: {
-      startServerCommand: 'npm start',
-      url: ['http://localhost:8000'],
+      startServerCommand: 'npm run start:test',
+      url: ['http://localhost:8009'],
       maxAutodiscoverUrls: 10,
       settings: {
         hostname: '127.0.0.1',
