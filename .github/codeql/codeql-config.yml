@@ -1,7 +1,0 @@
-name: "CodeQL Config"
-
-paths-ignore:
-  - '.venv'
-  - 'docs'
-  - 'lib'
-  - 'tests'

@@ -28,7 +28,7 @@ docker run --name postgresql-container -p 5432:5432 -e POSTGRES_HOST_AUTH_METHOD
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "atlas",
+        "NAME": os.environ.get("POSTGRES_DB", "atlas"),
         "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
         "USER": "postgres",
         "PASSWORD": os.environ.get("PGPASSWORD", ""),
