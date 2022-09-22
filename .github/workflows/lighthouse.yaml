@@ -43,6 +43,7 @@ jobs:
           poetry install
       - name: setup db
         run: |
+          cd atlas
           poetry run python manage.py migrate
         env:
           POSTGRES_HOST: localhost
@@ -50,10 +51,6 @@ jobs:
           PGPASSWORD: 12345
           REDIS_HOST: localhost
           REDIS_PORT: 6379
-          FLASK_ENV: test
-          FLASK_DEBUG: false
-          FLASK_APP: web
-          FLASK_RUN_PORT: 4998
       - name: run Lighthouse CI
         run: |
           npm install -g @lhci/cli@0.9.x
