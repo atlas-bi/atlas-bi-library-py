@@ -106,7 +106,7 @@ python-memcached==1.59
 pytz==2021.3; python_version >= "3.6" and python_version < "4"
 pyyaml==5.4.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.6.0")
 rcssmin==1.1.1
-redis==3.5.3; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+redis==4.3.4; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 regex==2021.11.10
 relative-to-now==0.0.8; python_version >= "3.6"
 requests==2.28.1; python_version >= "3.6" and python_full_version < "3.0.0" and python_version < "4" or python_version >= "3.6" and python_version < "4" and python_full_version >= "3.6.0"
