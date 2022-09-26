@@ -1,12 +1,12 @@
-
 <nav id="query" class="panel">
-    <p class="panel-heading is-flex is-justify-content-space-between" data-action="collapse" data-target="query-data">
+    <p class="panel-heading is-flex is-justify-content-space-between"
+       data-action="collapse"
+       data-target="query-data">
         <span>Queries</span>
         <span class="icon">
-          <i class="fas fa-chevron-down"></i>
+            <i class="fas fa-chevron-down"></i>
         </span>
     </p>
-
     <div class="panel-block is-collapsible is-block py-0" id="query-data">
         {% for query in report.queries.all %}
             <div class="is-flex is-justify-content-space-between m-3 mb-0 mt-5">
@@ -19,17 +19,21 @@
                 </button>
             </div>
             <div class="query-box m-3">
-                <div class="query-box-inner light ss-preview" id='query-{{ query.query_id }}' ss-container>
+                <div class="query-box-inner light ss-preview"
+                     id="query-{{ query.query_id }}"
+                     ss-container="ss-container">
                     <pre><code class="language-@t.Language" id="{{ query.query_id }}">{{ query }}</code></pre>
                 </div>
             </div>
         {% endfor %}
-
         {% for query in component_queries %}
             {# metric queries #}
             <div class="is-flex is-justify-content-space-between m-3 mb-0 mt-4">
-                <h3 class="title is-3 mb-0"><a href="{{ query.report.get_absolute_url }}">{{ query.name}} ({{ query.report.system_identifier }} {{ query.report.system_id }})</a></h3>
-                <button class="button m-3 mb-0" onclick="copyQuery(event,query-{{ query.query_id }})">
+                <h3 class="title is-3 mb-0">
+                    <a title="open this report" href="{{ query.report.get_absolute_url }}">{{ query.name }} ({{ query.report.system_identifier }} {{ query.report.system_id }})</a>
+                </h3>
+                <button class="button m-3 mb-0"
+                        onclick="copyQuery(event,query-{{ query.query_id }})">
                     <span class="icon">
                         <i class="far fa-copy"></i>
                     </span>
@@ -38,34 +42,35 @@
             </div>
             <p>{{ query.report.description }}</p>
             <div class="query-box m-3">
-                <div class="query-box-inner light ss-preview" id='query-{{ query.report_id }}' ss-container>
+                <div class="query-box-inner light ss-preview"
+                     id="query-{{ query.report_id }}"
+                     ss-container="ss-container">
                     <pre><code class="language-sql" id="{{ query.report_id }}">{{ query }}</code></pre>
                 </div>
             </div>
         {% endfor %}
-
         <script>
-            if(document.readyState === 'complete') {
-            document.dispatchEvent(new CustomEvent("code-highlight"));
-            document.dispatchEvent(new CustomEvent('ss-load'));
+            if (document.readyState === 'complete') {
+                document.dispatchEvent(new CustomEvent("code-highlight"));
+                document.dispatchEvent(new CustomEvent('ss-load'));
             }
-            var copyQuery = function (e, id) {
+            var copyQuery = function(e, id) {
                 var code = document.getElementById(id).innerText;
-            var txt = document.createElement('textarea');
-            txt.value = code;
-            txt.setAttribute('readonly', '');
-            txt.style = {
-                position: 'absolute',
-                left: '-9999px'
+                var txt = document.createElement('textarea');
+                txt.value = code;
+                txt.setAttribute('readonly', '');
+                txt.style = {
+                    position: 'absolute',
+                    left: '-9999px'
+                };
+                document.body.appendChild(txt);
+                txt.select();
+                document.execCommand('copy');
+                document.body.removeChild(txt);
             };
-            document.body.appendChild(txt);
-            txt.select();
-            document.execCommand('copy');
-            document.body.removeChild(txt);
-            };
-            window.addEventListener('load',function(){
-            document.dispatchEvent(new CustomEvent('ss-load'));
-            document.dispatchEvent(new CustomEvent("code-highlight"));
+            window.addEventListener('load', function() {
+                document.dispatchEvent(new CustomEvent('ss-load'));
+                document.dispatchEvent(new CustomEvent("code-highlight"));
             });
         </script>
     </div>

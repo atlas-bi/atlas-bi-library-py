@@ -27,13 +27,13 @@
                     {% if report.modified_by or report.created_by %}
                         &nbsp;&middot;&nbsp;
                         {% if "View Other User" in perms %}
-                            <a href="{% if report.modified_by %}{{ report.modified_by.get_absolute_url }}{% else %}{{ report.created_by.get_absolute_url }}{% endif %}">
+                            <a title="open user profile"
+                               href="{% if report.modified_by %}{{ report.modified_by.get_absolute_url }}{% else %}{{ report.created_by.get_absolute_url }}{% endif %}">
                                 {{ report.modified_by|default:report.created_by }}
                             </a>
                         {% else %}
                             {{ report.modified_by|default:report.created_by }}
                         {% endif %}
-
                     {% endif %}
                 </td>
             </tr>
@@ -45,7 +45,8 @@
                         {% if report.docs.modified_by or report.docs.created_by %}
                             &nbsp;&middot;&nbsp;
                             {% if "View Other User" in perms %}
-                                <a href="{% if report.docs.modified_by %} {{ report.docs.modified_by.get_absolute_url }} {% else %} {{ report.docs.created_by.get_absolute_url }} {% endif %} ">
+                                <a title="open user profile"
+                                   href="{% if report.docs.modified_by %} {{ report.docs.modified_by.get_absolute_url }} {% else %} {{ report.docs.created_by.get_absolute_url }} {% endif %} ">
                                     {{ report.docs.modified_by|default:report.docs.created_by }}
                                 </a>
                             {% else %}
@@ -60,7 +61,8 @@
                     <td>Report Author</td>
                     <td>
                         {% if "View Other User" in perms %}
-                            <a href="{{ report.created_by.get_absolute_url }}">{{ report.created_by }}</a>
+                            <a title="open user profile"
+                               href="{{ report.created_by.get_absolute_url }}">{{ report.created_by }}</a>
                         {% else %}
                             {{ report.created_by }}
                         {% endif %}
@@ -72,7 +74,8 @@
                     <td>Report Requester</td>
                     <td>
                         {% if "View Other User" in perms %}
-                            <a href="{{ report.docs.requester.get_absolute_url }}">{{ report.docs.requester }}</a>
+                            <a title="open user profile"
+                               href="{{ report.docs.requester.get_absolute_url }}">{{ report.docs.requester }}</a>
                         {% else %}
                             {{ report.docs.requester }}
                         {% endif %}
@@ -84,7 +87,8 @@
                     <td>Operational Owner</td>
                     <td>
                         {% if "View Other User" in perms %}
-                            <a href="{{ report.docs.ops_owner.get_absolute_url }}">{{ report.docs.ops_owner }}</a>
+                            <a title="open user profile"
+                               href="{{ report.docs.ops_owner.get_absolute_url }}">{{ report.docs.ops_owner }}</a>
                         {% else %}
                             {{ report.docs.ops_owner }}
                         {% endif %}
@@ -107,14 +111,14 @@
                     {% endif %}
                 </td>
             </tr>
-
-            {% if report.docs.collection_url %}
+            {% if report.docs.external_url %}
                 <tr>
                     <td>GitLab Project Link</td>
                     <td>
-                        <a target="_blank"
+                        <a title="external link"
+                           target="_blank"
                            rel="noopener"
-                           href="{{ report.docs.collection_url }}">View Source</a>
+                           href="{{ report.docs.external_url }}">View Source</a>
                     </td>
                 </tr>
             {% endif %}
@@ -122,7 +126,7 @@
                 <tr>
                     <td>Epic Identifier</td>
                     <td>
-                        {% if report.system_viewer_url %}<a href="{{ report.system_viewer_url }}">{% endif %}
+                        {% if report.system_viewer_url %}<a title="open record viewer" href="{{ report.system_viewer_url }}">{% endif %}
                         <span id="epic-ini">{{ report.system_identifier }}&nbsp;</span>
                         {% if report.system_id %}
                             <span id="epic-id" data-epic-hgr="{{ system_template_id }}">
@@ -140,7 +144,9 @@
             </tr>
             {% if report.orphan == "Y" %}
                 <tr>
-                    <td>Orphan?</td>
+                    <td>
+                        Orphan?
+                    </td>
                     <td>
                         Yes
                     </td>
@@ -244,12 +250,12 @@
             {% endif %}
             {% if report.system_tags.exists %}
                 <tr>
-                    <td>Report Tags</td>
+                    <td>
+                        Report Tags
+                    </td>
                     <td>
                         <div class="tags">
-                            {% for tag_link in report.system_tags %}
-                                 <span class="tag">{{ tag_link.tag }}</span>
-                            {% endfor %}
+                            {% for tag_link in report.system_tags %}<span class="tag">{{ tag_link.tag }}</span>{% endfor %}
                         </div>
                     </td>
                 </tr>
@@ -257,22 +263,22 @@
         </tbody>
     </table>
 </div>
-
-{% if report.tickets.exists %}
+{% if report.docs.tickets.exists %}
     <nav id="maintenance" class="panel">
         <div class="panel-heading">
             Service Requests
         </div>
-        {% for ticket in report.tickets.all %}
+        {% for ticket in report.docs.tickets.all %}
             <div class="panel-block">
                 {% if ticket.url %}
-                    <a target="_blank" rel="noopener" href="@ticket.TicketUrl">{{ ticket.number }}</a>
+                    <a title="external link"
+                       target="_blank"
+                       rel="noopener"
+                       href="{{ ticket.url }}">{{ ticket.number }}</a>
                 {% else %}
                     {{ ticket.number }}
                 {% endif %}
-                {% if ticket.description %}
-                    <span class="text-muted">&nbsp;·&nbsp;{{ ticket.description }}</span>
-                {% endif %}
+                {% if ticket.description %}<span class="text-muted">&nbsp;·&nbsp;{{ ticket.description }}</span>{% endif %}
             </div>
         {% endfor %}
     </nav>

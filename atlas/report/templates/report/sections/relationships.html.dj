@@ -2,13 +2,14 @@
 {% load static %}
 
 <h2 id="relationships" class="title is-2">Relationships</h2>
-
 {% if "View Groups" in perms and report.groups.exists %}
     <nav id="groups" class="panel">
-        <p class="panel-heading is-flex is-justify-content-space-between" data-action="collapse" data-target="related-groups">
+        <p class="panel-heading is-flex is-justify-content-space-between"
+           data-action="collapse"
+           data-target="related-groups">
             <span>Report Groups</span>
             <span class="icon">
-              <i class="fas fa-chevron-down"></i>
+                <i class="fas fa-chevron-down"></i>
             </span>
         </p>
         <div class="panel-block is-collapsible is-block" id="related-groups">
@@ -25,7 +26,7 @@
                         {% for group in report.groups.all %}
                             <tr>
                                 <td>
-                                    <a href="{{ group.get_absolute_url }}">{{ group.group }}</a>
+                                    <a title="open this group" href="{{ group.get_absolute_url }}">{{ group.group }}</a>
                                 </td>
                                 <td>{{ group.group.group_type }}</td>
                                 <td>{{ group.group.group_source }}</td>

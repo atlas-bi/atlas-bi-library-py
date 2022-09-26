@@ -14,11 +14,11 @@
     <nav class="breadcrumb">
         <ul>
             <li>
-                <a href="#details">Details</a>
+                <a title="details" href="#details">Details</a>
             </li>
             {% if initiative.collections.all %}
                 <li>
-                    <a href="#collections">Linked Collections</a>
+                    <a title="collections" href="#collections">Linked Collections</a>
                 </li>
             {% endif %}
         </ul>
@@ -37,7 +37,8 @@
                         <td>
                             {% if "View Other User" in perms %}
                                 {# and profile enabled #}
-                                <a href="{{ initiative.ops_owner.get_absolute_url }}">{{ initiative.ops_owner }}</a>
+                                <a title="open user profile"
+                                   href="{{ initiative.ops_owner.get_absolute_url }}">{{ initiative.ops_owner }}</a>
                             {% else %}
                                 {{ initiative.ops_owner }}
                             {% endif %}
@@ -50,7 +51,8 @@
                         <td>
                             {% if "View Other User" in perms %}
                                 {# and profile enabled #}
-                                <a href="{{ initiative.exec_owner.get_absolute_url }}">{{ initiative.exec_owner }}</a>
+                                <a title="open user profile"
+                                   href="{{ initiative.exec_owner.get_absolute_url }}">{{ initiative.exec_owner }}</a>
                             {% else %}
                                 {{ initiative.exec_owner }}
                             {% endif %}
@@ -74,7 +76,8 @@
                     <td>
                         {% if "View Other User" in perms %}
                             {# and profile enabled #}
-                            <a href="{{ initiative.modified_by.get_absolute_url }}">{{ initiative.modified_by }}</a>
+                            <a title="open user profile"
+                               href="{{ initiative.modified_by.get_absolute_url }}">{{ initiative.modified_by }}</a>
                         {% else %}
                             {{ initiative.modified_by }}
                         {% endif %}

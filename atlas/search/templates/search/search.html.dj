@@ -5,7 +5,7 @@
 {% block body %}
 
     {% compress js file drag %}
-        <script src="{% static '/js/solr.js' %}" async></script>
+        <script src="{% static '/js/solr.js' %}" async="async"></script>
     {% endcompress %}
 
     <div class="sr-results"></div>

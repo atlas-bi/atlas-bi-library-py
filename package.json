@@ -16,10 +16,11 @@
     "build": "gulp build",
     "watch": "gulp watch",
     "commit": "git add . && pre-commit run ;  npm run pre-commit && git add . && cz --no-verify",
-    "format": "prettier --config .prettierrc \"**/*.{ts,css,less,scss,js,json,md,yaml}\" --write",
+    "format": "poetry run tox -e reformat;prettier --config .prettierrc \"**/*.{ts,css,less,scss,js,json,md,yaml}\" --write",
     "test": "npm run test:eslint; npm run test:prettier",
     "test:eslint": "eslint \"./atlas/**/*.js\" --color",
     "pre-commit": "lint-staged",
+    "lint": "poetry run tox -e lint;htmlhint \"**/*.{html,html.dj}\"",
     "test:prettier": "prettier --check --config .prettierrc \"**/*.{ts,css,less,scss,js,json,md,yaml}\""
   },
   "dependencies": {
@@ -76,6 +77,7 @@
     "gulp-sass": "5.1.0",
     "gulp-swc": "1.2.3",
     "gulp-uglify": "3.0.2",
+    "htmlhint": "^1.1.4",
     "jsnlog": "2.30.0",
     "lint-staged": "13.0.3",
     "markdown-it": "13.0.1",

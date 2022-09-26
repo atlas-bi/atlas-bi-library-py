@@ -1,20 +1,29 @@
 {% load url_tags %}
+
 <ul>
     {# @{string RunReportUrl = Model.Report.RunReportUrl(Context, Configuration, (await Authorization.AuthorizeAsync(Context.User,Model.Report, "ReportRunPolicy")).Succeeded);    } #}
     {% if report.attachments.exists %}
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"  data-target="report-run-{{ report.report_id }}" data-tooltip="Run Report" data-runurl="@RunReportUrl">
+            <a title="run report"
+               href="#"
+               class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+               data-target="report-run-{{ report.report_id }}"
+               data-tooltip="Run Report"
+               data-runurl="@RunReportUrl">
                 <span class="icon is-large has-text-success">
                     <i class="far fa-2_3x fa-circle-play"></i>
                 </span>
             </a>
         </li>
     {% endif %}
-
     {% run_url report as run_report_url %}
     {% if run_report_url %}
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right" target="_blank" data-tooltip="Run Report" href="{{ run_report_url }}">
+            <a title="run report"
+               class="is-block has-tooltip-arrow has-tooltip-right"
+               target="_blank"
+               data-tooltip="Run Report"
+               href="{{ run_report_url }}">
                 <span class="icon is-large has-text-success">
                     <i class="far fa-2_3x fa-circle-play"></i>
                 </span>
@@ -23,7 +32,10 @@
     {% else %}
         {% if report.system_identifier == "IDB" %}
             <li>
-                <a class="is-disabled is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Open a related dashboard that uses this.">
+                <a title="run report"
+                   href="#"
+                   class="is-disabled is-block has-tooltip-arrow has-tooltip-right"
+                   data-tooltip="Open a related dashboard that uses this.">
                     <span class="icon is-large has-text-grey-light">
                         <i class="far fa-2_3x fa-circle-play"></i>
                     </span>
@@ -31,7 +43,10 @@
             </li>
         {% elif report.system_editor_url %}
             <li>
-                <a class="is-disabled is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Open in report library.">
+                <a title="run report"
+                   href="#"
+                   class="is-disabled is-block has-tooltip-arrow has-tooltip-right"
+                   data-tooltip="Open in report library.">
                     <span class="icon is-large has-text-grey-light">
                         <i class="far fa-2_3x fa-circle-play"></i>
                     </span>
@@ -39,7 +54,10 @@
             </li>
         {% elif report.system_identifier %}
             <li>
-                <a class="is-disabled is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Run from the Hyperspace report library.">
+                <a title="run report"
+                   href="#"
+                   class="is-disabled is-block has-tooltip-arrow has-tooltip-right"
+                   data-tooltip="Run from the Hyperspace report library.">
                     <span class="icon is-large has-text-grey-light">
                         <i class="far fa-2_3x fa-circle-play"></i>
                     </span>
@@ -47,17 +65,23 @@
             </li>
         {% endif %}
     {% endif %}
-
     <li>
-        <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-target="report-profile-{{ report.report_id }}" data-tooltip="Open Report Profile">
+        <a title="open report profile"
+           href="#"
+           class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+           data-target="report-profile-{{ report.report_id }}"
+           data-tooltip="Open Report Profile">
             <span class="icon has-text-grey is-large ">
                 <i class="fas fa-lg fa-chart-bar"></i>
             </span>
         </a>
     </li>
-
     <li>
-        <a class="is-block has-tooltip-arrow has-tooltip-right star" data-tooltip="Star this report" data-href="{% url 'user:stars_edit' %}?type=report&id={{ report.report_id }}">
+        <a title="star this report"
+           href="#"
+           class="is-block has-tooltip-arrow has-tooltip-right star"
+           data-tooltip="Star this report"
+           data-href="{% url 'user:stars_edit' %}?type=report&id={{ report.report_id }}">
             {% if report.report_id in user.get_starred_reports %}
                 <span class="icon is-large has-text-gold ">
                     <i class="fas fa-lg fa-star is-relative">
@@ -73,52 +97,68 @@
             {% endif %}
         </a>
     </li>
-
     {% if "Edit Report Documentation" in perms %}
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right" id="open-editor" href="{{ report.get_absolute_edit_url }}" data-tooltip="Open Atlas Editor">
+            <a title="open editor"
+               class="is-block has-tooltip-arrow has-tooltip-right"
+               id="open-editor"
+               href="{{ report.get_absolute_edit_url }}"
+               data-tooltip="Open Atlas Editor">
                 <span class="icon has-text-grey is-large ">
                     <i class="fas fa-lg fa-pen-to-square"></i>
                 </span>
             </a>
         </li>
     {% endif %}
-
     {# @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")   { #}
-        <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share"  data-target="report-share-{{ report.report_id }}">
-                <span class="icon has-text-grey is-large ">
-                    <i class="fas fa-lg fa-share"></i>
-                </span>
-            </a>
-        </li>
+    <li>
+        <a title="share this report"
+           href="#"
+           class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+           data-tooltip="Share"
+           data-target="report-share-{{ report.report_id }}">
+            <span class="icon has-text-grey is-large ">
+                <i class="fas fa-lg fa-share"></i>
+            </span>
+        </a>
+    </li>
     {# } #}
-
     {# @if (@Configuration["features:enable_request_access"] == null || @Configuration["features:enable_request_access"].ToString().ToLower() == "true")    { #}
-        <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Request Access" data-target="request-access-{{ report.report_id }}">
-                <span class="icon has-text-grey is-large ">
-                    <i class="fas fa-lg fa-universal-access"></i>
-                </span>
-            </a>
-        </li>
+    <li>
+        <a title="request access"
+           href="#"
+           class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+           data-tooltip="Request Access"
+           data-target="request-access-{{ report.report_id }}">
+            <span class="icon has-text-grey is-large ">
+                <i class="fas fa-lg fa-universal-access"></i>
+            </span>
+        </a>
+    </li>
     {# } #}
-
     {% edit_url report as edit_report_url %}
     {% if "Open In Editor" in perms and edit_report_url %}
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Open Report Editor" target="_blank" href="{{ edit_report_url }}">
+            <a title="open report editor"
+               class="is-block has-tooltip-arrow has-tooltip-right"
+               data-tooltip="Open Report Editor"
+               target="_blank"
+               href="{{ edit_report_url }}">
                 <span class="icon has-text-grey is-large ">
                     <i class="fas fa-lg fa-arrow-up-right-from-square"></i>
                 </span>
             </a>
         </li>
     {% endif %}
-
     {% manage_url report as manage_report_url %}
     {% if "Open In Editor" in perms and manage_report_url %}
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Manage Report" rel="noopener" target="_blank" href="{{ manage_report_url }}">
+            <a title="manage report"
+               class="is-block has-tooltip-arrow has-tooltip-right"
+               data-tooltip="Manage Report"
+               rel="noopener"
+               target="_blank"
+               href="{{ manage_report_url }}">
                 <span class="icon has-text-grey is-large ">
                     <i class="fas fa-lg fa-gears"></i>
                 </span>

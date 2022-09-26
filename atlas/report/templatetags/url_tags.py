@@ -1,15 +1,14 @@
 """Custom template tag to render markdown."""
-from django import template
-from django.utils.http import urlencode
-
-register = template.Library()
 import re
 
+from django import template
 from index.models import Reports
+
+register = template.Library()
 
 
 def run_authorization(report, request):
-    # Only catch - Crystal Report (3) & Reporting Workbench (17)
+    """User authorization for Crystal Report (3) & Reporting Workbench (17) reports."""
     if report.type_id not in [3, 17]:
         return True
 
@@ -21,11 +20,12 @@ def run_authorization(report, request):
         return True
 
     # check hrg
-    for parent_report in Reports.objects.filter(parent__child=report.report_id).all():
-        if set(parent_report.get_group_ids) < set(user_groups):
-            return True
-
-    return False
+    return any(
+        set(parent_report.get_group_ids) < set(user_groups)
+        for parent_report in Reports.objects.filter(
+            parent__child=report.report_id
+        ).all()
+    )
 
 
 @register.simple_tag(takes_context=True)

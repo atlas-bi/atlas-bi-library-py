@@ -6,10 +6,11 @@
       function (img) {
         if (isInViewport(img)) {
           // Set image to nothing to clear, then load new
-          const attrib = img.dataset.srcset;
+          const attrib = img.getAttribute('data-srcset');
           img.setAttribute('srcset', '');
           img.removeAttribute('srcset');
           img.setAttribute('srcset', attrib);
+          img.removeAttribute('data-srcset');
         }
       },
     );
@@ -69,6 +70,15 @@
     }, 0);
   });
   d.addEventListener('modal-open', function () {
+    load();
+  });
+  d.addEventListener('tab-opened', function () {
+    load();
+  });
+  d.addEventListener('step-tab-opened', function () {
+    load();
+  });
+  d.addEventListener('panel-tab-opened', function () {
     load();
   });
   d.addEventListener(

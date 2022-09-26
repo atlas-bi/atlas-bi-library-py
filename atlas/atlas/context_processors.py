@@ -32,9 +32,11 @@ def user(request):
             # if we are in hyperspace. cookie is set in js.
             "is_hyperspace": bool(request.COOKIES.get("EPIC", False)),
             # network domain used to build ssrs urls
-            "domain": getattr(django_settings, "DOMAIN")
-            if hasattr(django_settings, "DOMAIN")
-            else "example.com",
+            "domain": getattr(
+                django_settings,
+                "DOMAIN",
+                "example.com",
+            ),
         }
     # context processor must ALWAYS return a dict
     return {}

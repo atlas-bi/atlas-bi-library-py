@@ -70,10 +70,12 @@
 
         a.addEventListener('click', function (event) {
           if (!$input.classList.contains('multiselect')) {
+            event.preventDefault();
             $input.value = event.target.textContent;
             $hidden.value = event.target.getAttribute('value');
             closeAllMinis();
           } else if ($input.classList.contains('multiselect')) {
+            event.preventDefault();
             const taglist = $input
               .closest('.field')
               .parentNode.querySelector('.mini-tags');
@@ -98,7 +100,8 @@
             const del = document.createElement('a');
             del.classList.add('tag', 'is-delete');
 
-            del.addEventListener('click', function () {
+            del.addEventListener('click', function (del_event) {
+              del_event.preventDefault();
               control.remove();
               //updateId(taglist);
             });
@@ -353,7 +356,8 @@
         }
 
         if ($clear) {
-          $clear.addEventListener('click', function () {
+          $clear.addEventListener('click', function (clear_event) {
+            clear_event.preventDefault();
             $hidden.value = '';
             $input.value = '';
             $input.classList.remove('is-danger');
@@ -396,9 +400,11 @@
       document.querySelectorAll('.mini-tags.reorder:not(.loaded)') || []
     ).forEach(($tag) => {
       $tag.classList.add('loaded');
-      // $tag.addEventListener('reorder', function () {
-      //   updateId($tag);
-      // });
+      $tag.addEventListener('reorder', function () {
+        // call load to add back missing events
+        loadMinis();
+        //   updateId($tag);
+      });
     });
   }
 

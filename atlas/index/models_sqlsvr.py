@@ -136,7 +136,7 @@ class Reports(models.Model):
 
     @cached_property
     def get_group_ids(self):
-        return self.group_memberships.all().values_list("group__group_id", flat=True)
+        return self.groups.all().values_list("group__group_id", flat=True)
 
     @property
     def friendly_name(self):
@@ -1142,7 +1142,7 @@ class MaintenanceLogs(models.Model):
         related_name="report_maintenance_logs",
     )
     maintained_at = models.DateTimeField(
-        db_column="MaintenanceDate", blank=True, null=True
+        db_column="MaintenanceDate", blank=True, auto_now=True
     )
     comments = models.TextField(db_column="Comment", blank=True, default="")
     status = models.ForeignKey(
@@ -1203,31 +1203,9 @@ class OrganizationalValue(models.Model):
         return self.name
 
 
-class ReportTickets(models.Model):
-    ticket_id = models.AutoField(db_column="ManageEngineTicketsId", primary_key=True)
-    number = models.IntegerField(db_column="TicketNumber", blank=True, null=True)
-    description = models.TextField(db_column="Description", blank=True, default="")
-    report_id = models.OneToOneField(
-        "ReportDocs",
-        models.DO_NOTHING,
-        db_column="ReportObjectId",
-        blank=True,
-        default="",
-        related_name="tickets",
-    )
-    ticketurl = models.TextField(db_column="TicketUrl", blank=True, default="")
-
-    class Meta:
-        managed = False
-        db_table = "ReportManageEngineTickets"
-
-    def __str__(self):
-        return self.number
-
-
 class ReportFragilityTags(models.Model):
     link_id = models.AutoField(db_column="LinkId", primary_key=True)
-    report = models.ForeignKey(
+    report_doc = models.ForeignKey(
         "ReportDocs",
         models.DO_NOTHING,
         db_column="ReportObjectID",
@@ -1243,7 +1221,7 @@ class ReportFragilityTags(models.Model):
     class Meta:
         managed = False
         db_table = "ReportObjectDocFragilityTags"
-        unique_together = (("report", "fragility_tag"),)
+        unique_together = (("report_doc", "fragility_tag"),)
 
 
 class ReportTerms(models.Model):
@@ -1274,9 +1252,9 @@ class ReportImages(models.Model):
         on_delete=models.CASCADE,
         related_name="imgs",
     )
-    image_rank = models.IntegerField(db_column="ImageOrdinal")
-    image_data = models.BinaryField(db_column="ImageData")
-    image_source = models.TextField(db_column="ImageSource", blank=True, default="")
+    rank = models.IntegerField(db_column="ImageOrdinal")
+    data = models.BinaryField(db_column="ImageData")
+    source = models.TextField(db_column="ImageSource", blank=True, default="")
 
     class Meta:
         managed = False
@@ -1352,7 +1330,7 @@ class ReportDocs(models.Model):
         blank=True,
         null=True,
     )
-    collection_url = models.TextField(
+    external_url = models.TextField(
         db_column="GitLabProjectURL", blank=True, default=""
     )
     description = models.TextField(
@@ -1450,7 +1428,7 @@ class ReportDocs(models.Model):
 
 
 class ReportTickets(models.Model):
-    request_id = models.AutoField(
+    ticket_id = models.AutoField(
         db_column="ServiceRequestId", primary_key=True
     )  # Field name made lowercase.
     number = models.TextField(
@@ -1459,8 +1437,8 @@ class ReportTickets(models.Model):
     description = models.TextField(
         db_column="Description", blank=True, null=True
     )  # Field name made lowercase.
-    report = models.ForeignKey(
-        "Reports",
+    report_doc = models.ForeignKey(
+        "ReportDocs",
         on_delete=models.CASCADE,
         db_column="ReportObjectId",
         blank=True,
@@ -1474,6 +1452,9 @@ class ReportTickets(models.Model):
     class Meta:
         managed = False
         db_table = "ReportServiceRequests"
+
+    def __str__(self):
+        return self.number
 
 
 class RolePermissionLinks(models.Model):

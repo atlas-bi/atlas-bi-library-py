@@ -1,19 +1,68 @@
 {% load fullurl %}
+
 {# @if (@Configuration["features:enable_request_access"] == null || @Configuration["features:enable_request_access"].ToString().ToLower() == "true"){ #}
-    <!-- request access modal -->
-    <div class="modal"  id="request-access-{{ report.report_id }}">
-        <div class="modal-background"></div>
-        <div class="modal-content">
-            <div class="box">
-                <strong>Request Report Access</strong>
-                <small>{{ report }}</small>
-                <br>
-                <div class="field pt-5">
-                    <label class="label">Find your Director</label>
-                    <div class="field is-grouped">
+<!-- request access modal -->
+<div class="modal"  id="request-access-{{ report.report_id }}">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <div class="box">
+            <strong>Request Report Access</strong>
+            <small>{{ report }}</small>
+            <br />
+            <div class="field pt-5">
+                <label class="label">Find your Director</label>
+                <div class="field is-grouped">
+                    <div class="control is-relative is-expanded">
+                        <input class="input input-mini"
+                               placeholder="type to search.."
+                               search-area="director_lookup"/>
+                        <input type="hidden" class="director-name" />
+                        <div class="mini">
+                            <div class="mini-waiting">
+                                <span class="icon">
+                                    <i class="fas fa-circle-notch fa-spin"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <a title="clear" href="#" class="button mini-clear">
+                            <span class="icon">
+                                <i class="fas fa-xmark"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <button class="button request-access pt-3"  report-name="{{ report }}">Request Access</button>
+        </div>
+    </div>
+</div>
+{# } #}
+{# @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true"){ #}
+<!-- share modal -->
+<div class="modal" id="report-share-{{ report.report_id }}">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <div class="box">
+            <strong class="mb-4">Share {{ report }}</strong>
+            <form class="share" action="{% url 'mail:send' %}" method="post">
+                <input type="hidden" class="mlbx-share" value="1" />
+                <input type="hidden" class="share-name" value="{{ report }}" />
+                <input type="hidden"
+                       class="share-url"
+                       value="{% fullurl 'report:item' pk=report.report_id %}"/>
+                <input type="hidden" id="convid" />
+                <div class="field mt-4">
+                    <label class="label">To:</label>
+                    <div class="mini-tags field is-grouped is-grouped-multiline share-to"
+                         required="required"
+                         name="to"></div>
+                    <div class="field">
                         <div class="control is-relative is-expanded">
-                            <input class="input input-mini" placeholder="type to search.." search-area="director_lookup" />
-                            <input type="hidden" class="director-name" />
+                            <input class="input input-mini multiselect mini-close-fast"
+                                   placeholder="search for someone.."
+                                   search-area="user_lookup"/>
                             <div class="mini">
                                 <div class="mini-waiting">
                                     <span class="icon">
@@ -22,63 +71,20 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="control">
-                            <a class="button mini-clear">
-                                <span class="icon">
-                                    <i class="fas fa-xmark"></i>
-                                </span>
-                            </a>
-                        </div>
                     </div>
                 </div>
-
-                <button class="button request-access pt-3"  report-name="{{ report }}">Request Access</button>
-            </div>
-        </div>
-    </div>
-{# } #}
-
-{# @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true"){ #}
-    <!-- share modal -->
-    <div class="modal" id="report-share-{{ report.report_id }}">
-        <div class="modal-background"></div>
-        <div class="modal-content">
-            <div class="box">
-                <strong class="mb-4">Share {{ report }}</strong>
-
-                <form class="share" action="{% url 'mail:send' %}" method="post">
-                    <input type="hidden" class="mlbx-share" value="1" />
-                    <input type="hidden" class="share-name" value="{{ report }}" />
-                    <input type="hidden" class="share-url" value="{% fullurl 'report:item' pk=report.report_id %}" />
-
-                    <input type="hidden" id="convid" />
-
-                    <div class="field mt-4">
-                        <label class="label">To:</label>
-                        <div class="mini-tags field is-grouped is-grouped-multiline share-to" required name="to"></div>
-                        <div class="field">
-                            <div class="control is-relative is-expanded">
-                                <input class="input input-mini multiselect mini-close-fast" placeholder="search for someone.." search-area="user_lookup" />
-                                <div class="mini">
-                                    <div class="mini-waiting">
-                                        <span class="icon">
-                                            <i class="fas fa-circle-notch fa-spin"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <div class="field">
+                    <label class="label">Subject</label>
+                    <div class="control">
+                        <input class="input share-subject"
+                               placeholder="e.g hey, check this out"
+                               value="[Share] {{ report }}"/>
                     </div>
-                    <div class="field">
-                        <label class="label">Subject</label>
-                        <div class="control">
-                            <input class="input share-subject" placeholder="e.g hey, check this out" value="[Share] {{ report }}" />
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Message</label>
-                        <div class="editor" data-inputName="share-message">
-                            <textarea class="textarea">
+                </div>
+                <div class="field">
+                    <label class="label">Message</label>
+                    <div class="editor" data-inputName="share-message">
+                        <textarea class="textarea">
 Hi!
 
 I would like to share this report with you.
@@ -87,19 +93,17 @@ I would like to share this report with you.
 
 Check it out sometime!
 Regards!</textarea>
-                        </div>
                     </div>
-                    <button class="button pt-3">Send</button>
-                </form>
-            </div>
+                </div>
+                <button class="button pt-3">Send</button>
+            </form>
         </div>
     </div>
+</div>
 {# } #}
-
 <div class="modal" id="report-profile-{{ report.report_id }}">
     <div class="modal-background"></div>
     <div class="box modal-card modal-large">
-
         <section class="modal-card-body">
             <h3 class="title is-3">Profile</h3>
             {% comment %}
@@ -113,24 +117,22 @@ Regards!</textarea>
     </div>
     <button class="modal-close is-large" aria-label="close"></button>
 </div>
-
 <!-- attachment run modal -->
-
 {% if report.attachments.exists %}
     <div class="modal" id="report-run-{{ report.report_id }}">
         <div class="modal-background"></div>
         <div class="modal-card box">
             <div class="modal-card-body content">
                 <strong class="my-4">Run This Report</strong>
-
                 <p>
                     This is a Crystal Report. Here are the recent run outputs.
-
                     <ul>
                         @foreach (var r in Model.ReportObjectAttachments.OrderByDescending(x => x.CreationDate).ToList())
                         {
-                            var url = Context.IsHyperspace() ? "EpicAct:AC_RW_WEB_BROWSER,LaunchOptions:2,runparams:" + Context.Request.Scheme + "://" + Context.Request.Host.Value+"/Data/File?handler=CrystalRun&id="+r.ReportObjectAttachmentId+"|FormCaption="+r.Name+"|ActivityName="+Model.Name : "/Data/File?handler=CrystalRun&id="+r.ReportObjectAttachmentId;
-                        <li><a href="@url" target="_blank">@r.Name</a><span> ·  @r.CreationDate</span></li>
+                        var url = Context.IsHyperspace() ? "EpicAct:AC_RW_WEB_BROWSER,LaunchOptions:2,runparams:" + Context.Request.Scheme + "://" + Context.Request.Host.Value+"/Data/File?handler=CrystalRun&id="+r.ReportObjectAttachmentId+"|FormCaption="+r.Name+"|ActivityName="+Model.Name : "/Data/File?handler=CrystalRun&id="+r.ReportObjectAttachmentId;
+                        <li>
+                            <a title="open file" href="@url" target="_blank">@r.Name</a><span>·  @r.CreationDate</span>
+                        </li>
                         }
                     </ul>
                 </p>
@@ -152,6 +154,7 @@ Regards!</textarea>
                 </p>
             </div>
         </div>
-        <button class="modal-close is-large" aria-label="close"></button>
+        <button class="modal-close is-large" aria-label="close">
+        </button>
     </div>
 {% endif %}

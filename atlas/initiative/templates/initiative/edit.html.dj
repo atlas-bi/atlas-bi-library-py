@@ -7,196 +7,198 @@
         {% csrf_token %}
         <h1 class="title is-1">{{ title }}</h1>
         <p class="buttons is-flex is-justify-content-space-between">
-            <a class="button p-5" href="{{ initiative.get_absolute_url }}">
+            <a title="go back"
+               class="button p-5"
+               href="{{ initiative.get_absolute_url }}">
                 <span class="icon">
                     <i class="fas fa-lg fa-left-long"></i>
                 </span>
                 <span><strong>Cancel</strong>
-                <br />
-            Go Back</span>
-        </a>
-        <button class="button p-5" type="submit">
-            <span><strong>Save</strong>
-            <br />
-        and Continue</span>
-        <span class="icon ">
-            <i class="fas fa-lg fa-right-long"></i>
-        </span>
-    </button>
-</p>
-<div class="field">
-    <label class="label">Name</label>
-    <div class="control">
-        <input class="input"
-               placeholder="e.g Data Sorting"
-               name="name"
-               required
-               value="{{ initiative.name }}"/>
-    </div>
-</div>
-<div class="field">
-    <label class="label">Description</label>
-    <div class="editor"
-         data-inputName="description"
-         data-inputId="description">
-        <textarea class="textarea">{{ initiative.description|default:""|safe }}</textarea>
-    </div>
-</div>
-<div class="field">
-    <label class="label">Operations Owner</label>
-    <div class="field is-grouped">
-        <div class="control is-relative is-expanded">
-            <input class="input input-mini"
-                   placeholder="type to search.."
-                   value="{{ initiative.ops_owner|default:"" }}"
-                   search-area="user_lookup"/>
-            <input type="hidden"
-                   name="ops_owner_id"
-                   value='{{ initiative.ops_owner_id|default:"" }}'/>
-            <div class="mini">
-                <div class="mini-waiting">
-                    <span class="icon">
-                        <i class="fas fa-circle-notch fa-spin"></i>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="control">
-            <a class="button mini-clear">
-                <span class="icon">
-                    <i class="fas fa-xmark"></i>
-                </span>
+                    <br />
+                Go Back</span>
             </a>
-        </div>
-    </div>
-</div>
-<div class="field">
-    <label class="label">Executive Owner</label>
-    <div class="field is-grouped">
-        <div class="control is-relative is-expanded">
-            <input class="input input-mini"
-                   placeholder="type to search.."
-                   value="{{ initiative.exec_owner|default:"" }}"
-                   search-area="user_lookup"/>
-            <input type="hidden"
-                   name="exec_owner_id"
-                   value='{{ initiative.exec_owner_id|default:"" }}'/>
-            <div class="mini">
-                <div class="mini-waiting">
-                    <span class="icon">
-                        <i class="fas fa-circle-notch fa-spin"></i>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="control">
-            <a class="button mini-clear">
-                <span class="icon">
-                    <i class="fas fa-xmark"></i>
+            <button class="button p-5" type="submit">
+                <span><strong>Save</strong>
+                    <br />
+                and Continue</span>
+                <span class="icon ">
+                    <i class="fas fa-lg fa-right-long"></i>
                 </span>
-            </a>
-        </div>
-    </div>
-</div>
-<div class="field">
-    <label class="label">Financial Impact</label>
-    <div class="field is-grouped">
-        <div class="control is-relative is-expanded">
-            <input readonly
-                   class="input input-mini"
-                   placeholder="click to select.."
-                   value="{{ initiative.financial_impact|default:"" }}"
-                   lookup-area="financial_impact"/>
-            <input type="hidden"
-                   name="financial_impact_id"
-                   value='{{ initiative.financial_impact_id|default:"" }}'/>
-            <div class="mini">
-                <div class="mini-waiting">
-                    <span class="icon">
-                        <i class="fas fa-circle-notch fa-spin"></i>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="control">
-            <a class="button mini-clear">
-                <span class="icon">
-                    <i class="fas fa-xmark"></i>
-                </span>
-            </a>
-        </div>
-    </div>
-</div>
-<div class="field">
-    <label class="label">Strategic Importance</label>
-    <div class="field is-grouped">
-        <div class="control is-relative is-expanded">
-            <input readonly
-                   class="input input-mini"
-                   placeholder="click to select.."
-                   value="{{ initiative.strategic_importance|default:"" }}"
-                   lookup-area="strategic_importance"/>
-            <input type="hidden"
-                   name="strategic_importance_id"
-                   value='{{ initiative.strategic_importance_id|default:"" }}'/>
-            <div class="mini">
-                <div class="mini-waiting">
-                    <span class="icon">
-                        <i class="fas fa-circle-notch fa-spin"></i>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="control">
-            <a class="button mini-clear">
-                <span class="icon">
-                    <i class="fas fa-xmark"></i>
-                </span>
-            </a>
-        </div>
-    </div>
-</div>
-<div class="field toggle">
-    <input type="hidden"
-           name="hidden"
-           value="{{ initiative.hidden|default:"N" }}"/>
-    <input id="switch-hidden"
-           type="checkbox"
-           name="switch-hidden"
-           class="switch is-rounded is-info"
-           {% if initiative.hidden == "Y" %} checked="checked"{% endif %}/>
-    <label for="switch-hidden">Hide Initiative?</label>
-</div>
-<div class="field">
-    <label class="label">Linked Collections</label>
-    <div class="mini-tags field is-grouped is-grouped-multiline">
-        {% for collection in initiative.collections.all %}
+            </button>
+        </p>
+        <div class="field">
+            <label class="label">Name</label>
             <div class="control">
-                <div class="tags has-addons">
-                    <span class="tag is-link">{{ collection }}</span>
-                    <input type="hidden"
-                           name="linked_data_collections"
-                           value="{{ collection.collection_id }}"/>
-                    <a class="tag is-delete"></a>
-                </div>
+                <input class="input"
+                       placeholder="e.g Data Sorting"
+                       name="name"
+                       required="required"
+                       value="{{ initiative.name }}"/>
             </div>
-        {% endfor %}
-    </div>
-    <div class="field">
-        <div class="control is-relative is-expanded">
-            <input class="input input-mini multiselect"
-                   placeholder="search for collections.."
-                   search-area="collection_lookup"
-                   data-name="linked_data_collections"/>
-            <div class="mini">
-                <div class="mini-waiting">
-                    <span class="icon">
-                        <i class="fas fa-circle-notch fa-spin"></i>
-                    </span>
+        </div>
+        <div class="field">
+            <label class="label">Description</label>
+            <div class="editor"
+                 data-inputName="description"
+                 data-inputId="description">
+                <textarea class="textarea">{{ initiative.description|default:""|safe }}</textarea>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Operations Owner</label>
+            <div class="field is-grouped">
+                <div class="control is-relative is-expanded">
+                    <input class="input input-mini"
+                           placeholder="type to search.."
+                           value="{{ initiative.ops_owner|default:"" }}"
+                           search-area="user_lookup"/>
+                    <input type="hidden"
+                           name="ops_owner_id"
+                           value="{{ initiative.ops_owner_id|default:"" }}"/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="control">
+                    <a href="#" title="clear" class="button mini-clear">
+                        <span class="icon">
+                            <i class="fas fa-xmark"></i>
+                        </span>
+                    </a>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-</form>
+        <div class="field">
+            <label class="label">Executive Owner</label>
+            <div class="field is-grouped">
+                <div class="control is-relative is-expanded">
+                    <input class="input input-mini"
+                           placeholder="type to search.."
+                           value="{{ initiative.exec_owner|default:"" }}"
+                           search-area="user_lookup"/>
+                    <input type="hidden"
+                           name="exec_owner_id"
+                           value="{{ initiative.exec_owner_id|default:"" }}"/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="control">
+                    <a href="#" title="clear" class="button mini-clear">
+                        <span class="icon">
+                            <i class="fas fa-xmark"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Financial Impact</label>
+            <div class="field is-grouped">
+                <div class="control is-relative is-expanded">
+                    <input readonly
+                           class="input input-mini"
+                           placeholder="click to select.."
+                           value="{{ initiative.financial_impact|default:"" }}"
+                           lookup-area="financial_impact"/>
+                    <input type="hidden"
+                           name="financial_impact_id"
+                           value="{{ initiative.financial_impact_id|default:"" }}"/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="control">
+                    <a title="clear" href="#" class="button mini-clear">
+                        <span class="icon">
+                            <i class="fas fa-xmark"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Strategic Importance</label>
+            <div class="field is-grouped">
+                <div class="control is-relative is-expanded">
+                    <input readonly
+                           class="input input-mini"
+                           placeholder="click to select.."
+                           value="{{ initiative.strategic_importance|default:"" }}"
+                           lookup-area="strategic_importance"/>
+                    <input type="hidden"
+                           name="strategic_importance_id"
+                           value="{{ initiative.strategic_importance_id|default:"" }}"/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="control">
+                    <a href="#" title="clear" class="button mini-clear">
+                        <span class="icon">
+                            <i class="fas fa-xmark"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="field toggle">
+            <input type="hidden"
+                   name="hidden"
+                   value="{{ initiative.hidden|default:"N" }}"/>
+            <input id="switch-hidden"
+                   type="checkbox"
+                   name="switch-hidden"
+                   class="switch is-rounded is-info"
+                   {% if initiative.hidden == "Y" %} checked="checked"{% endif %}/>
+            <label for="switch-hidden">Hide Initiative?</label>
+        </div>
+        <div class="field">
+            <label class="label">Linked Collections</label>
+            <div class="mini-tags field is-grouped is-grouped-multiline">
+                {% for collection in initiative.collections.all %}
+                    <div class="control">
+                        <div class="tags has-addons">
+                            <span class="tag is-link">{{ collection }}</span>
+                            <input type="hidden"
+                                   name="linked_data_collections"
+                                   value="{{ collection.collection_id }}"/>
+                            <a title="delete" href="#" class="tag is-delete"></a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="field">
+                <div class="control is-relative is-expanded">
+                    <input class="input input-mini multiselect"
+                           placeholder="search for collections.."
+                           search-area="collection_lookup"
+                           data-name="linked_data_collections"/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 {% endblock body %}

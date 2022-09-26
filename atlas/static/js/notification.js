@@ -1,12 +1,19 @@
 (function () {
-  function addNotification(message) {
+  function addNotification(message, type) {
     const d = document;
     const notificationWrapper = d.querySelectorAll(
       '.fixed-notification-wrapper',
     )[0];
 
     const notification = document.createElement('div');
-    notification.classList.add('notification', 'is-info', 'py-2');
+    notification.classList.add('notification', 'py-2');
+    if (type == 'error') {
+      notification.classList.add('is-danger');
+    } else if (type == 'warning') {
+      notification.classList.add('is-warning');
+    } else {
+      notification.classList.add('is-info');
+    }
     const button = document.createElement('button');
     button.classList.add('delete');
 
@@ -31,7 +38,7 @@
         Boolean(event.detail) &&
         Boolean(event.detail.value)
       ) {
-        addNotification(event.detail.value);
+        addNotification(event.detail.value, event.detail.type);
       }
     },
     false,

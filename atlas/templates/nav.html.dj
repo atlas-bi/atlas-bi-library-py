@@ -3,17 +3,20 @@
 <nav class="navbar is-transparent atlas-navbar has-shadow is-sticky is-align-items-center">
     <div class="container">
         <div class="navbar-brand">
-            <a class="navbar-item" href="{% url 'index:index' %}">
+            <a title="home" class="navbar-item" href="{% url 'index:index' %}">
                 <img src="{% static 'img/thinking-face-text-266x80.png' %}"
                      width="133"
                      height="40"
-                     alt="atlas logo"/>
+                     alt="atlas logo"
+                     title="atlas logo"/>
             </a>
             <a role="button"
                class="navbar-burger"
                aria-label="menu"
                aria-expanded="false"
-               data-target="atlas-main-nav">
+               data-target="atlas-main-nav"
+               title="menu"
+               href="#">
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
@@ -35,18 +38,24 @@
                         <div class="navbar-dropdown">
                             <hr class="hide-desktop dropdown-divider" />
                             {% if "Create Parameters" in perms or "Delete Parameters" in perms or "Edit Role Permissions" in perms or "Edit User Permissions" in perms %}
-                                <a class="navbar-item" href="{% url 'settings:index' %}">Settings</a>
+                                <a title="settings"
+                                   class="navbar-item"
+                                   href="{% url 'settings:index' %}">Settings</a>
                             {% endif %}
                             {% if "View Site Analytics" in perms %}
-                                <a class="navbar-item" href="{% url 'analytics:index' %}">Analytics</a>
+                                <a title="analytics"
+                                   class="navbar-item"
+                                   href="{% url 'analytics:index' %}">Analytics</a>
                             {% endif %}
-                            <a class="navbar-item" href="{% url 'task:index' %}">Tasks</a>
+                            <a title="tasks" class="navbar-item" href="{% url 'task:index' %}">Tasks</a>
                             {% if "View Site Analytics" in perms %}
-                                <hr class="dropdown-divider">
-                                <a class="navbar-item" href="{% url 'sketch:index' %}">Report Activity</a>
+                                <hr class="dropdown-divider"/>
+                                <a title="report activity"
+                                   class="navbar-item"
+                                   href="{% url 'sketch:index' %}">Report Activity</a>
                             {% endif %}
                             {% if "Manage ETL" in perms %}
-                                <a class="navbar-item" href="{% url 'etl:index' %}">ETL</a>
+                                <a title="etl" class="navbar-item" href="{% url 'etl:index' %}">ETL</a>
                             {% endif %}
                         </div>
                     </div>
@@ -74,7 +83,7 @@
                         <a class="navbar-item" href="{% url 'term:list' %}" title="terms">Terms</a>
                         <hr class="dropdown-divider" />
                         <!-- bad url -->
-                        <a class="navbar-item" href="/about_analytics">About Analytics</a>
+                        <a title="about analytics" class="navbar-item" href="/about_analytics">About Analytics</a>
                     </div>
                 </div>
                 <div class="navbar-item has-dropdown is-hoverable is-boxed">
@@ -87,10 +96,16 @@
                         </span>
                     </div>
                     <div class="navbar-dropdown">
-                        <a class="navbar-item" href="/users">Your profile</a>
-                        <a class="navbar-item" href="/users#stars">Your stars</a>
+                        <a title="your profile"
+                           class="navbar-item"
+                           href="{{ request.user.get_absolute_url }}">Your profile</a>
+                        <a title="your stars"
+                           class="navbar-item"
+                           href="{{ request.user.get_absolute_url }}#stars">Your stars</a>
                         <hr class="dropdown-divider" />
-                        <a class="navbar-item" href="/users/settings">Settings</a>
+                        <a title="your settings"
+                           class="navbar-item"
+                           href="{{ request.user.get_absolute_url }}/settings">Settings</a>
                     </div>
                 </div>
                 {% if user.is_superuser %}
@@ -112,25 +127,27 @@
                 {% endif %}
                 <!-- epic navigation -->
                 {% if is_hyperspace %}
-                    <a class="navbar-item" onclick="history.back()">
-                            <span class="icon is-medium">
-                                <i class="fas fa-chevron-left"></i>
-                            </span>
-                        </a>
-                        <a class="navbar-item" onclick="history.forward()">
-                            <span class="icon is-medium">
-                                <i class="fas fa-chevron-right"></i>
-                            </span>
-                        </a>
+                    <a title="back" href="#"class="navbar-item" onclick="history.back()">
+                        <span class="icon is-medium">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                    </a>
+                    <a title="forward"
+                       href="#"
+                       class="navbar-item"
+                       onclick="history.forward()">
+                        <span class="icon is-medium">
+                            <i class="fas fa-chevron-right"></i>
+                        </span>
+                    </a>
                 {% endif %}
             </div>
-
+        </div>
     </div>
-</div>
 </nav>
-        <section class="section py-0">
-            <div class="container">
-                <nav class="breadcrumb site-breadcrumbs">
-                </nav>
-            </div>
-        </section>
+<section class="section py-0">
+    <div class="container">
+        <nav class="breadcrumb site-breadcrumbs">
+        </nav>
+    </div>
+</section>

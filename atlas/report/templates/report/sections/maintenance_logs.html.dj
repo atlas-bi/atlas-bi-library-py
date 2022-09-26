@@ -1,24 +1,23 @@
 {% load dates %}
 {% load markdown %}
 
-
 <nav id="maintenance" class="panel">
-    <div class="panel-heading">
-        Maintenance Logs
-    </div>
+    <div class="panel-heading">Maintenance Logs</div>
     {% for log in report.docs.maintenance_logs.all %}
         <div class="panel-block">
             {% if "View Other User" in perms %}
-                <a href="{{ log.maintainer.get_absolute_url }}">{{ log.maintainer }}</a>
+                <a title="open user profile"
+                   href="{{ log.maintainer.get_absolute_url }}">{{ log.maintainer }}</a>
             {% else %}
                 {{ log.maintainer }}
             {% endif %}
-
             <span data-tooltip="{{ log.maintained_at }}">&nbsp;·&nbsp;{{ log.maintained_at|relative }}</span>
-            <span>{% if log.status %}&nbsp;{{ log.status }}&nbsp;{% endif %}</span>
+            <span>
+                {% if log.status %}&nbsp;{{ log.status }}&nbsp;{% endif %}
+            </span>
             <span class="is-flex-shrink-1">
-            {% if log.comments %}{{ log.comments|markdown }}{% endif %}
-        </span>
+                {% if log.comments %}{{ log.comments|markdown }}{% endif %}
+            </span>
         </div>
     {% endfor %}
 </nav>

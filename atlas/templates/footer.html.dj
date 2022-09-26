@@ -23,7 +23,7 @@
                             <ul>
                                 {% for child,link in links.items %}
                                     <li>
-                                        <a href="{{ link }}" target="_blank">{{ child }}</a>
+                                        <a title="open link" href="{{ link }}" target="_blank">{{ child }}</a>
                                     </li>
                                 {% endfor %}
                             </ul>

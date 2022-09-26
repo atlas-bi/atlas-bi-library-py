@@ -14,7 +14,7 @@
             </span>
         </h2>
         <div class="tab">
-            <a class="tab-lnk active" href="#favorites">Favorites</a>
+            <a title="favorites" class="tab-lnk active" href="#favorites">Favorites</a>
             <!--
 <a class="tab-lnk" href="#mail">Mail</a>
         -->

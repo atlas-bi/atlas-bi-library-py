@@ -1,6 +1,7 @@
 <ul>
     <li>
-        <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+        <a title="open report profile"
+           class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
            data-target="collection-profile-{{ collection.collection_id }}"
            data-tooltip="Open Report Profile">
             <span class="icon has-text-grey is-large ">
@@ -9,7 +10,8 @@
         </a>
     </li>
     <li>
-        <a class="has-tooltip-arrow has-tooltip-right star"
+        <a title="start this report"
+           class="has-tooltip-arrow has-tooltip-right star"
            data-tooltip="Star this report"
            data-href="{% url 'user:stars_edit' %}?type=collection&id={{ collection.collection_id }}">
             {% if collection.collection_id in user.get_starred_collections %}
@@ -29,7 +31,8 @@
     </li>
     {# @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")    { #}
     <li>
-        <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+        <a title="share this report"
+           class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
            data-tooltip="Share"
            data-target="collection-share-{{ collection.collection_id }}"
            data-name="{{ collection }}"
@@ -42,7 +45,8 @@
     {# } #}
     {% if "Create Collection" in perms %}
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right"
+            <a title="create a new collection"
+               class="is-block has-tooltip-arrow has-tooltip-right"
                href="{% url 'collection:new' %}"
                data-tooltip="Create New Collections">
                 <span class="icon has-text-grey is-large ">
@@ -53,7 +57,8 @@
     {% endif %}
     {% if "Edit Collection" in perms %}
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right"
+            <a title="open editor"
+               class="is-block has-tooltip-arrow has-tooltip-right"
                href="{{ collection.get_absolute_edit_url }}"
                data-tooltip="Open Atlas Editor">
                 <span class="icon has-text-grey is-large ">

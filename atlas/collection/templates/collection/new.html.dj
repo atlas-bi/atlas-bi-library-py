@@ -9,82 +9,85 @@
         {% csrf_token %}
         <h1 class="title is-1">{{ title }}</h1>
         <p class="buttons is-flex is-justify-content-space-between">
-            <a class="button p-5" href="{% url 'collection:list' %}">
+            <a title="go back" class="button p-5" href="{% url 'collection:list' %}">
                 <span class="icon">
                     <i class="fas fa-lg fa-left-long"></i>
                 </span>
                 <span><strong>Cancel</strong>
-                <br />
-            Go Back</span>
-        </a>
-        <button class="button p-5" type="submit">
-            <span><strong>Save</strong>
-            <br />
-        and Continue</span>
-        <span class="icon ">
-            <i class="fas fa-lg fa-right-long"></i>
-        </span>
-    </button>
-</p>
-<div class="field">
-    <label class="label">Name</label>
-    <div class="control">
-        <input class="input" placeholder="e.g Data Sorting" name="name" required/>
-    </div>
-</div>
-<div class="field">
-    <label class="label">Search Summary</label>
-    <div class="editor"
-         data-inputName="search_summary"
-         data-inputId="search_summary">
-        <textarea></textarea>
-    </div>
-</div>
-<div class="field">
-    <label class="label">Description</label>
-    <div class="editor"
-         data-inputName="description"
-         data-inputId="description">
-        <textarea></textarea>
-    </div>
-</div>
-<div class="field">
-    <label class="label">Linked Terms</label>
-    <div class="mini-tags field is-grouped is-grouped-multiline"></div>
-    <div class="field">
-        <div class="control is-relative is-expanded">
-            <input class="input input-mini multiselect"
-                   placeholder="search for terms.."
-                   search-area="term_lookup"
-                   data-name="linked_terms"/>
-            <div class="mini">
-                <div class="mini-waiting">
-                    <span class="icon">
-                        <i class="fas fa-circle-notch fa-spin"></i>
-                    </span>
+                    <br />
+                Go Back</span>
+            </a>
+            <button class="button p-5" type="submit">
+                <span><strong>Save</strong>
+                    <br />
+                and Continue</span>
+                <span class="icon ">
+                    <i class="fas fa-lg fa-right-long"></i>
+                </span>
+            </button>
+        </p>
+        <div class="field">
+            <label class="label">Name</label>
+            <div class="control">
+                <input class="input"
+                       placeholder="e.g Data Sorting"
+                       name="name"
+                       required="required"/>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Search Summary</label>
+            <div class="editor"
+                 data-inputName="search_summary"
+                 data-inputId="search_summary">
+                <textarea></textarea>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Description</label>
+            <div class="editor"
+                 data-inputName="description"
+                 data-inputId="description">
+                <textarea></textarea>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Linked Terms</label>
+            <div class="mini-tags field is-grouped is-grouped-multiline"></div>
+            <div class="field">
+                <div class="control is-relative is-expanded">
+                    <input class="input input-mini multiselect"
+                           placeholder="search for terms.."
+                           search-area="term_lookup"
+                           data-name="linked_terms"/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<div class="field">
-    <label class="label">Linked Reports</label>
-    <div class="mini-tags field is-grouped is-grouped-multiline"></div>
-    <div class="field">
-        <div class="control is-relative is-expanded">
-            <input class="input input-mini multiselect"
-                   placeholder="search for reports.."
-                   search-area="report_lookup"
-                   data-name="linked_reports"/>
-            <div class="mini">
-                <div class="mini-waiting">
-                    <span class="icon">
-                        <i class="fas fa-circle-notch fa-spin"></i>
-                    </span>
+        <div class="field">
+            <label class="label">Linked Reports</label>
+            <div class="mini-tags field is-grouped is-grouped-multiline"></div>
+            <div class="field">
+                <div class="control is-relative is-expanded">
+                    <input class="input input-mini multiselect"
+                           placeholder="search for reports.."
+                           search-area="report_lookup"
+                           data-name="linked_reports"/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-</form>
+    </form>
 {% endblock body %}

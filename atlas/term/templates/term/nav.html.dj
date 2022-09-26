@@ -1,6 +1,8 @@
 <ul>
     <li>
-        <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+        <a title="open profile"
+           href="#"
+           class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
            data-target="term-profile-{{ term.term_id }}"
            data-tooltip="Open Profile">
             <span class="icon has-text-grey is-large ">
@@ -9,7 +11,9 @@
         </a>
     </li>
     <li>
-        <a class="is-block has-tooltip-arrow has-tooltip-right star"
+        <a title="start this term"
+           href="#"
+           class="is-block has-tooltip-arrow has-tooltip-right star"
            data-tooltip="Star this term"
            data-href="{% url 'user:stars_edit' %}?type=term&id={{ term.term_id }}">
             {% if term.term_id in user.get_starred_terms %}
@@ -29,7 +33,9 @@
     </li>
     {# @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")   { #}
     <li>
-        <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+        <a title="share this term"
+           href="#"
+           class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
            data-tooltip="Share"
            data-target="term-share-{{ term.term_id }}"
            data-name="{{ term }}"
@@ -42,7 +48,8 @@
     {# } #}
     {% if "Create New Terms" in perms %}
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right"
+            <a title="create a new term"
+               class="is-block has-tooltip-arrow has-tooltip-right"
                href="{% url 'term:new' %}"
                data-tooltip="Create New Term">
                 <span class="icon has-text-grey is-large ">
@@ -53,7 +60,8 @@
     {% endif %}
     {% if "Edit Approved Terms" in perms and term.approved == "Y" or "Edit Unapproved Terms" in perms and term.approved != "Y" %}
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right"
+            <a title="edit term"
+               class="is-block has-tooltip-arrow has-tooltip-right"
                href="{{ term.get_absolute_edit_url }}"
                data-tooltip="Open Atlas Editor">
                 <span class="icon has-text-grey is-large ">

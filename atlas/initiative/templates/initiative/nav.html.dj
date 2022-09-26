@@ -1,6 +1,8 @@
 <ul>
     <li>
-        <a class="is-block has-tooltip-arrow has-tooltip-right star"
+        <a href="#"
+           title="star this initiative"
+           class="is-block has-tooltip-arrow has-tooltip-right star"
            data-tooltip="Star this initiative"
            data-href="{% url 'user:stars_edit' %}?type=initiative&id={{ initiative.initiative_id }}">
             {% if initiative.initiative_id in user.get_starred_initiatives %}
@@ -20,7 +22,9 @@
     </li>
     {# @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")    { #}
     <li>
-        <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+        <a title="share"
+           href="#"
+           class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
            data-tooltip="Share"
            data-target="initiative-share-{{ initiative.initiative_id }}"
            data-name="{{ initiative }}"
@@ -33,7 +37,8 @@
     {# } #}
     {% if "Create Initiative" in perms %}
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right"
+            <a title="create an initiative"
+               class="is-block has-tooltip-arrow has-tooltip-right"
                href="{% url 'initiative:new' %}"
                data-tooltip="Create New Initiative">
                 <span class="icon has-text-grey is-large ">
@@ -44,7 +49,8 @@
     {% endif %}
     {% if "Edit Initiative" in perms %}
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right"
+            <a title="open editor"
+               class="is-block has-tooltip-arrow has-tooltip-right"
                href="{{ initiative.get_absolute_edit_url }}"
                data-tooltip="Open Atlas Editor">
                 <span class="icon has-text-grey is-large ">

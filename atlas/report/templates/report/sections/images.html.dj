@@ -2,75 +2,76 @@
 {% load helpers %}
 
 <h2 id="images" class="title is-2">Images</h2>
-
 {% if report.imgs.all|length == 1 %}
-
-    <div class="js-modal-trigger text-center box mb-4 p-0 report-image" data-target="report-image-{{ report.imgs.first.image_id }}">
+    <div class="js-modal-trigger text-center box mb-4 p-0 report-image"
+         data-target="report-image-{{ report.imgs.first.image_id }}">
         <figure class="image">
             <picture>
-                <source srcset="{{ report.imgs.first.get_absolute_url }}?size=1200x400&type=webp 800w,
-                                {{ report.imgs.first.get_absolute_url }}?size=2000x400&type=webp 1200w"
+                <source srcset="{{ report.imgs.first.get_absolute_url }}?size=1200x400&type=webp 800w, {{ report.imgs.first.get_absolute_url }}?size=2000x400&type=webp 1200w"
                         type="image/webp"
-
-                        sizes="100vw">
-                <img src="{{ report.imgs.first.get_absolute_url }}?size=1200x400" alt="report image" >
+                        sizes="100vw"/>
+                <img src="{{ report.imgs.first.get_absolute_url }}?size=1200x400"
+                     alt="report image"
+                     title="report image"/>
             </picture>
         </figure>
     </div>
     <div class="modal" id="report-image-{{ report.imgs.first.image_id }}">
-      <div class="modal-background"></div>
-      <div class="modal-content modal-image">
-        <p class="image">
-          <picture>
-                <source srcset="{{ report.imgs.first.get_absolute_url }}?size=1200x1200&type=webp 800w,
-                                {{ report.imgs.first.get_absolute_url }}?size=2000x2000&type=webp 1200w"
-                        type="image/webp"
-
-                        sizes="100vw">
-                <img src="{{ report.imgs.first.get_absolute_url }}?size=1200x2000" alt="report image" >
-            </picture>
-        </p>
-      </div>
-      <button class="modal-close is-large" aria-label="close"></button>
+        <div class="modal-background"></div>
+        <div class="modal-content modal-image">
+            <p class="image">
+                <picture>
+                    <source srcset="{{ report.imgs.first.get_absolute_url }}?size=1200x1200&type=webp 800w, {{ report.imgs.first.get_absolute_url }}?size=2000x2000&type=webp 1200w"
+                            type="image/webp"
+                            sizes="100vw"/>
+                    <img title="report image"
+                         src="{{ report.imgs.first.get_absolute_url }}?size=1200x2000"
+                         alt="report image"/>
+                </picture>
+            </p>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
     </div>
-
 {% else %}
     <div class="carousel box is-relative mb-4 p-0">
         {% for img in report.imgs.all %}
-            <div class="carousel-itm js-modal-trigger" data-target="report-image-{{ img.image_id }}">
+            <div class="carousel-itm js-modal-trigger"
+                 data-target="report-image-{{ img.image_id }}">
                 <figure class="image">
                     <picture>
-                        <source srcset="{{ img.get_absolute_url }}?size=1200x400&type=webp 800w, {{ img.get_absolute_url }}?size=2000x400&type=webp 1200w" type="image/webp" sizes="100vw">
-                        <img src="{{ img.get_absolute_url }}?size=1200x400" alt="report image">
+                        <source srcset="{{ img.get_absolute_url }}?size=1200x400&type=webp 800w, {{ img.get_absolute_url }}?size=2000x400&type=webp 1200w"
+                                type="image/webp"
+                                sizes="100vw"/>
+                        <img title="report image"
+                             src="{{ img.get_absolute_url }}?size=1200x400"
+                             alt="report image"/>
                     </picture>
                 </figure>
             </div>
             <div class="modal" id="report-image-{{ img.image_id }}">
-              <div class="modal-background"></div>
-              <div class="modal-content modal-image">
-                <p class="image">
-                  <picture>
-                        <source srcset="{{ img.get_absolute_url }}?size=1200x1200&type=webp 800w,
-                                        {{ img.get_absolute_url }}?size=2000x2000&type=webp 1200w"
-                                type="image/webp"
-
-                                sizes="100vw">
-                        <img src="{{ img.get_absolute_url }}?size=1200x2000" alt="report image" >
-                    </picture>
-                </p>
-              </div>
-              <button class="modal-close is-large" aria-label="close"></button>
+                <div class="modal-background"></div>
+                <div class="modal-content modal-image">
+                    <p class="image">
+                        <picture>
+                            <source srcset="{{ img.get_absolute_url }}?size=1200x1200&type=webp 800w, {{ img.get_absolute_url }}?size=2000x2000&type=webp 1200w"
+                                    type="image/webp"
+                                    sizes="100vw"/>
+                            <img title="report image"
+                                 src="{{ img.get_absolute_url }}?size=1200x2000"
+                                 alt="report image"/>
+                        </picture>
+                    </p>
+                </div>
+                <button class="modal-close is-large" aria-label="close"></button>
             </div>
         {% endfor %}
         <div class="carousel-ind">
-            {% for img in report.imgs.all %}
-                <span  class="carousel-dot" slide="{{ forloop.counter0 }}"></span>
-            {% endfor %}
+            {% for img in report.imgs.all %}<span class="carousel-dot" slide="{{ forloop.counter0 }}"></span>{% endfor %}
         </div>
-        <a class="carousel-prev">
+        <a title="previous" href="#" class="carousel-prev">
             <i class="fas fa-chevron-left fa-lg"></i>
         </a>
-        <a class="carousel-next">
+        <a title="next" href="#" class="carousel-next">
             <i class="fas fa-chevron-right fa-lg"></i>
         </a>
     </div>

@@ -6,9 +6,9 @@
         <input class="input"
                type="text"
                placeholder="search"
-               value='{{ search_string }}'
+               value="{{ search_string }}"
                maxlength="80"
-               required/>
+               required="required"/>
     </div>
     <!--<div id="search-suggestions"></div>-->
 </form>

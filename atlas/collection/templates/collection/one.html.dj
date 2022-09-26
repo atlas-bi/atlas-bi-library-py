@@ -14,16 +14,16 @@
     <nav class="breadcrumb">
         <ul>
             <li>
-                <a href="#details">Details</a>
+                <a title="details" href="#details">Details</a>
             </li>
             {% if collection.reports.exists %}
                 <li>
-                    <a href="#reports">Linked Reports</a>
+                    <a title="linked reports" href="#reports">Linked Reports</a>
                 </li>
             {% endif %}
             {% if collection.terms.exists %}
                 <li>
-                    <a href="#terms">Linked Terms</a>
+                    <a title="linked terms" href="#terms">Linked Terms</a>
                 </li>
             {% endif %}
         </ul>
@@ -69,7 +69,8 @@
                     <td>Last Updated By</td>
                     <td>
                         {% if "View Other User" in perms %}
-                            <a href="{{ collection.modified_by.get_absolute_url }}">{{ collection.modified_by }}</a>
+                            <a title="open user"
+                               href="{{ collection.modified_by.get_absolute_url }}">{{ collection.modified_by }}</a>
                         {% else %}
                             {{ collection.modified_by }}
                         {% endif %}

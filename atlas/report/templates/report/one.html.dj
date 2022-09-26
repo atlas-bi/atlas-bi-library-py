@@ -14,48 +14,39 @@
         {{ report|strip }}
         {% for tag_link in report.tag_links.all %}
             {% if tag_link.show_in_header == "Y" or tag_link.tag.show_in_header == "Y" %}
-                <span class="has-tooltip-arrow has-tooltip-multiline has-tooltip-bottom" data-tooltip="{{ tag_link.tag.description}}">
+                <span class="has-tooltip-arrow has-tooltip-multiline has-tooltip-bottom"
+                      data-tooltip="{{ tag_link.tag.description }}">
                     <span class="pageNav {{ tag_link.tag.name|slugify }} is-nobreak">{{ tag_link.tag.name }}</span>
                 </span>
             {% endif %}
         {% endfor %}
     </h1>
-
     {% if "Edit Report Documentation" in perms %}
         <!-- maintenance status alert -->
         <div data-ajax="yes"
              class="no-loader"
              data-url="{{ report.get_absolute_maint_status_url }}"></div>
     {% endif %}
-
-    {% include 'report/links.html.dj' %}
-
+    {% include "report/links.html.dj" %}
     {% if report.imgs.exists %}
         {% include "report/sections/images.html.dj" %}
     {% endif %}
-
     {% if report.description or report.detailed_description or report.docs.description or report.docs.assumptions or report.system_description %}
-        {% include 'report/sections/description.html.dj' %}
+        {% include "report/sections/description.html.dj" %}
     {% endif %}
-
-    {% if terms %}{# and terms enabled #}
-        {% include 'report/sections/terms.html.dj' %}
+    {% if terms %}
+        {# and terms enabled #}
+        {% include "report/sections/terms.html.dj" %}
     {% endif %}
-
-    {% include 'report/sections/details.html.dj' %}
-
+    {% include "report/sections/details.html.dj" %}
     {% if report.queries.exists or component_queries %}
-        {% include 'report/sections/query.html.dj' %}
+        {% include "report/sections/query.html.dj" %}
     {% endif %}
-
     {% if parents or children or groups or collections %}
-        {% include 'report/sections/relationships.html.dj' %}
+        {% include "report/sections/relationships.html.dj" %}
     {% endif %}
-
     {% if report.docs.maintenance_logs.exists %}
-        {% include 'report/sections/maintenance_logs.html.dj' %}
+        {% include "report/sections/maintenance_logs.html.dj" %}
     {% endif %}
-
     {% include "report/modals.html.dj" %}
-
 {% endblock body %}

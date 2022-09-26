@@ -11,6 +11,7 @@
     {% endblock start_css %} #}
 {% endcompress %}
 
+
 {% endcomment %}
 
 {% block body %}
@@ -54,7 +55,7 @@
                                           data-freq="10"></span>
                                 </td>
                                 <td>
-                                    <a href="/etl/search/{{ type }}/run">Run Now</a>
+                                    <a title="run now" href="/etl/search/{{ type }}/run">Run Now</a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -98,5 +99,5 @@
 {% endblock body %}
 
 {% block js %}
-    <script type="text/javascript" src="{% static '/js/etl.js' %}" defer></script>
+    <script type="text/javascript" src="{% static '/js/etl.js' %}" defer="defer"></script>
 {% endblock js %}

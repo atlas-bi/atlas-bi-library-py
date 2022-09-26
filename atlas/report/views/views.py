@@ -1,3 +1,4 @@
+"""Django views for Atlas Reports."""
 import io
 from pathlib import Path
 from typing import List
@@ -6,23 +7,22 @@ import regex as re
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import Http404, HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.db.models import Prefetch
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
-from django.views.decorators.cache import never_cache
-from django.views.generic import (
-    DeleteView,
-    DetailView,
-    ListView,
-    TemplateView,
-    UpdateView,
-)
+from django.views.generic import DetailView, UpdateView
 from index.models import (
+    CollectionReports,
     Collections,
+    MaintenanceLogs,
     ReportDocs,
+    ReportFragilityTags,
     ReportImages,
     ReportQueries,
     Reports,
+    ReportTerms,
+    ReportTickets,
     Terms,
 )
 from PIL import Image
@@ -33,6 +33,7 @@ from atlas.decorators import NeverCacheMixin, PermissionsCheckMixin
 class ReportDetails(LoginRequiredMixin, DetailView):
     template_name = "report/one.html.dj"
     context_object_name = "report"
+
     queryset = (
         Reports.objects.select_related("docs")
         .select_related("created_by")
@@ -43,15 +44,21 @@ class ReportDetails(LoginRequiredMixin, DetailView):
         .select_related("docs__ops_owner")
         .select_related("type")
         .prefetch_related("queries")
-        .prefetch_related("imgs")
+        .prefetch_related(Prefetch("imgs", ReportImages.objects.order_by("rank")))
         .prefetch_related("docs__maintenance_logs")
         .prefetch_related("docs__maintenance_logs__maintainer")
         .prefetch_related("docs__fragility_tags")
+        .prefetch_related("docs__fragility")
+        .prefetch_related("docs__frequency")
+        .prefetch_related("docs__maintenance_schedule")
         .prefetch_related("docs__fragility_tags__fragility_tag")
+        .prefetch_related("docs__tickets")
         .prefetch_related("tag_links__tag")
         .prefetch_related("groups")
         .prefetch_related("groups__group")
-        .prefetch_related("collections")
+        .prefetch_related(
+            Prefetch("collections", CollectionReports.objects.order_by("rank"))
+        )
     )
 
     def get_context_data(self, **kwargs):
@@ -144,43 +151,127 @@ class ReportEdit(
 ):
     required_permissions = ("Edit Report Documentation",)
     template_name = "report/edit.html.dj"
-    context_object_name = "report"
+    context_object_name = "report_doc"
     queryset = (
-        Reports.objects.select_related("docs")
-        .select_related("created_by")
-        .select_related("modified_by")
-        .select_related("docs__modified_by")
-        .select_related("docs__created_by")
-        .select_related("docs__requester")
-        .select_related("docs__ops_owner")
-        .select_related("type")
-        .prefetch_related("queries")
-        .prefetch_related("imgs")
-        .prefetch_related("docs__maintenance_logs")
-        .prefetch_related("docs__maintenance_logs__maintainer")
-        .prefetch_related("docs__fragility_tags")
-        .prefetch_related("docs__fragility_tags__fragility_tag")
-        .prefetch_related("tag_links__tag")
-        .prefetch_related("groups")
-        .prefetch_related("groups__group")
-        .prefetch_related("collections")
+        ReportDocs.objects.select_related("requester")
+        .select_related("ops_owner")
+        .select_related("frequency")
+        .select_related("maintenance_schedule")
+        .select_related("fragility")
+        .prefetch_related(
+            Prefetch("report__imgs", ReportImages.objects.order_by("rank"))
+        )
+        .prefetch_related("maintenance_logs")
+        .prefetch_related("maintenance_logs__maintainer")
+        .prefetch_related("fragility_tags")
+        .prefetch_related("fragility_tags__fragility_tag")
+        .prefetch_related("tickets")
+        .prefetch_related(
+            Prefetch("report__collections", CollectionReports.objects.order_by("rank"))
+        )
     )
     fields: List[str] = []
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = f"Editing {self.object}"
+        context["title"] = f"Editing {self.object.report}"
 
         return context
 
     def post(self, request, *args, **kwargs):
-        report = Reports.objects.get(report_id=self.kwargs["pk"])
-        return redirect(report.get_absolute_url() + "?success=Changes saved.")
+        report_doc, _ = ReportDocs.objects.get_or_create(report_id=self.kwargs["pk"])
+
+        report_doc.description = request.POST.get("description", "")
+        report_doc.assumptions = request.POST.get("assumptions", "")
+
+        report_doc.ops_owner_id = request.POST.get("ops_owner_id", "")
+        report_doc.requester_id = request.POST.get("requester_id", "")
+        report_doc.external_url = request.POST.get("external_url", "")
+
+        report_doc.org_value_id = request.POST.get("org_value_id", "")
+        report_doc.frequency_id = request.POST.get("frequency_id", "")
+        report_doc.fragility_id = request.POST.get("fragility_id", "")
+        report_doc.maintenance_schedule_id = request.POST.get(
+            "maintenance_schedule_id", ""
+        )
+
+        report_doc.executive_report = request.POST.get("executive_report", "N")
+        report_doc.do_not_purge = request.POST.get("do_not_purge", "N")
+        report_doc.hidden = request.POST.get("hidden", "N")
+
+        report_doc.save()
+
+        # remove old linked fragility tags.
+        ReportFragilityTags.objects.filter(report_doc=report_doc).delete()
+
+        # add new tags
+        for fragility_tag_id in request.POST.getlist("fragility_tag_id"):
+            ReportFragilityTags(
+                report_doc=report_doc, fragility_tag_id=fragility_tag_id
+            ).save()
+
+        # remove old linked collections.
+        CollectionReports.objects.filter(report_id=report_doc.report_id).delete()
+
+        # add new collections
+        for rank, collection_id in enumerate(request.POST.getlist("collection_id")):
+            CollectionReports(
+                collection_id=collection_id, report_id=report_doc.report_id, rank=rank
+            ).save()
+
+        # remove old linked terms.
+        ReportTerms.objects.filter(report_doc=report_doc).delete()
+
+        # add new terms.
+        for term_id in request.POST.getlist("term_id"):
+            ReportTerms(report_doc=report_doc, term_id=term_id).save()
+
+        # remove removed images
+        image_list = request.POST.getlist("image_id")
+        ReportImages.objects.filter(report_id=report_doc.report_id).exclude(
+            image_id__in=image_list
+        ).delete()
+
+        # update image rank
+        for rank, image_id in enumerate(image_list):
+            ReportImages.objects.update_or_create(
+                report_id=report_doc.report_id,
+                image_id=image_id,
+                defaults={"rank": rank},
+            )
+
+        # add maintenance log
+        if request.POST.get("maintenance_status_id"):
+            MaintenanceLogs(
+                maintainer=request.user,
+                comments=request.POST.get("maintenance_comments", ""),
+                status_id=request.POST.get("maintenance_status_id"),
+                report_id=report_doc.report_id,
+            ).save()
+
+        # removed removed tickets
+        ticket_list = request.POST.getlist("ticket_id")
+        ReportTickets.objects.filter(report_doc=report_doc).exclude(
+            ticket_id__in=ticket_list
+        ).delete()
+
+        # add new ticket
+        if request.POST.get("ticket_number"):
+            ReportTickets(
+                number=request.POST.get("ticket_number"),
+                description=request.POST.get("ticket_description"),
+                report_doc=report_doc,
+                url=request.POST.get("ticket_url"),
+            ).save()
+
+        return redirect(
+            report_doc.report.get_absolute_url() + "?success=Changes saved."
+        )
 
 
 @login_required
 def profile(request, pk):
-    report_id = pk
+    # report_id = pk
     return render(
         request,
         "report/report_profile.html.dj",
@@ -253,6 +344,25 @@ def maint_status(request, pk):
 
 @login_required
 def image(request, report_id, pk=None):
+    if request.method == "POST":
+        # todo: add image file name
+
+        if request.FILES["File"].content_type not in [
+            "image/jpeg",
+            "image/png",
+            "image/gif",
+        ]:
+            return JsonResponse({"error": "Image must be a jpeg, png or gig."})
+
+        if request.FILES["File"].size > 1024 * 1024:  # 1mb max
+            return JsonResponse({"error": "Image must be less than 1MB."})
+
+        data = request.FILES["File"].file.read()
+        new_image = ReportImages(report_id=report_id, data=data, rank=-1)
+        new_image.save()
+
+        return JsonResponse({"image_id": new_image.image_id})
+
     image_format = request.GET.get("format", "webp")
 
     # Browsers (IE11) that do not support webp
@@ -273,7 +383,7 @@ def image(request, report_id, pk=None):
             img = None
 
     if img:
-        im = Image.open(io.BytesIO(img.image_data))
+        im = Image.open(io.BytesIO(img.data))
         pk = img.pk
     else:
         im = Image.open(
@@ -335,7 +445,7 @@ def image(request, report_id, pk=None):
 
         return response
 
-    response = HttpResponse(img.image_data, content_type="application/octet-stream")
+    response = HttpResponse(img.data, content_type="application/octet-stream")
     response["Content-Disposition"] = f'attachment; filename="{pk}_{size}.png"'
 
     return response

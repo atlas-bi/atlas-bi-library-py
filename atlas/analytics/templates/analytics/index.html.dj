@@ -6,7 +6,7 @@
 {% load static %}
 
 {% block js %}
-    <script src="{% static '/js/analytics.min.js' %}" defer async></script>
+    <script src="{% static '/js/analytics.min.js' %}" defer="defer" async="async"></script>
 {% endblock js %}
 
 {% block body %}
@@ -46,26 +46,29 @@
             </div>
             <div class="dropdown-menu" id="views-chart-dropdown"role="menu">
                 <div class="dropdown-content">
-                    <a href="#" class="dropdown-item" data-range="1">Today</a>
-                    <a class="dropdown-item is-active" data-range="2">Last 24 hours</a>
+                    <a title="today" href="#" class="dropdown-item" data-range="1">Today</a>
+                    <a title="last 24 hours"
+                       href="#"
+                       class="dropdown-item is-active"
+                       data-range="2">Last 24 hours</a>
                     <hr class="dropdown-divider" />
-                    <a href="#" class="dropdown-item" data-range="3">This week</a>
-                    <a href="#" class="dropdown-item" data-range="4">Last 7 days</a>
+                    <a title="this week" href="#" class="dropdown-item" data-range="3">This week</a>
+                    <a title="last 7 days" href="#" class="dropdown-item" data-range="4">Last 7 days</a>
                     <hr class="dropdown-divider" />
-                    <a href="#" class="dropdown-item" data-range="5">This month</a>
-                    <a href="#" class="dropdown-item" data-range="6">Last 30 days</a>
-                    <a href="#" class="dropdown-item" data-range="7">Last 90 days</a>
-                    <a href="#" class="dropdown-item" data-range="8">This year</a>
+                    <a title="this month" href="#" class="dropdown-item" data-range="5">This month</a>
+                    <a title="last 30 days" href="#" class="dropdown-item" data-range="6">Last 30 days</a>
+                    <a title="last 90 days" href="#" class="dropdown-item" data-range="7">Last 90 days</a>
+                    <a title="this year" href="#" class="dropdown-item" data-range="8">This year</a>
                     <hr class="dropdown-divider" />
-                    <a href="#" class="dropdown-item" data-range="9">All time</a>
+                    <a title="all time" href="#" class="dropdown-item" data-range="9">All time</a>
                     @*
                     <hr class="dropdown-divider" />
-                    <a href="#" class="dropdown-item" data-range="10">Custom range</a> *@
+                    <a title="custom range" href="#" class="dropdown-item" data-range="10">Custom range</a> *@
                 </div>
             </div>
         </div>
     </div>
-    <div class="chart-wrapper" style="height:400px;">
+    <div class="chart-wrapper">
         {% if user_id is not null %}
             <canvas id="visits-chart"
                     data-url="{% url 'analytics:visits' %}?user_id={{ user_id }}"

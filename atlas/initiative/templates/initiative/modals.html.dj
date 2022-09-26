@@ -17,7 +17,7 @@
                 <div class="field mt-4">
                     <label class="label">To:</label>
                     <div class="mini-tags field is-grouped is-grouped-multiline share-to"
-                         required
+                         required="required"
                          name="to"></div>
                     <div class="field">
                         <div class="control is-relative is-expanded">

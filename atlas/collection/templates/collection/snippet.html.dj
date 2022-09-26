@@ -5,7 +5,9 @@
 <div class="card has-shadow-gold">
     <div class="card-header">
         <div class="card-header-title py-2 is-justify-content-space-between">
-            <a class="has-text-dark" href="{{ collection.get_absolute_url }}">{{ collection.name }}
+            <a title="open collection"
+               class="has-text-dark"
+               href="{{ collection.get_absolute_url }}">{{ collection.name }}
                 <div class="fa-layers ml-2 fa-lg">
                     <span class="icon has-text-info "><i class="fas fa-certificate"></i></span>
                     <span class="icon has-text-white fa-transform"><i class="fas fa-check shrink-5"></i></span>
@@ -33,7 +35,8 @@
                         <source srcset="{% static 'img/report_placeholder_128x128.webp' %}"
                                 type="image/webp"
                                 loading="lazy"/>
-                        <img src="{% static 'img/report_placeholder_128x128.png' %}"
+                        <img title="placeholder"
+                             src="{% static 'img/report_placeholder_128x128.png' %}"
                              alt="placeholder image"
                              height="128"
                              width="128"
@@ -42,7 +45,8 @@
                 </figure>
             </div>
             <div class="is-flex is-flex-direction-column is-flex-grow-1">
-                <a class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96  has-text-dark"
+                <a title="open collection"
+                   class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96  has-text-dark"
                    href="{{ collection.get_absolute_url }}">
                     <p>
                         {% if collection|snippet %}
@@ -57,7 +61,9 @@
         </div>
     </div>
     <footer class="card-footer">
-        <a class="card-footer-item star"
+        <a href="#"
+           title="star this collection"
+           class="card-footer-item star"
            data-href="{% url 'user:stars_edit' %}?type=collection&id={{ collection.collection_id }}">
             <span class="icon-text">
                 {% if collection.collection_id in user.get_starred_collections %}
@@ -74,7 +80,9 @@
             </span>
         </a>
         <div class="card-footer-item">
-            <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+            <a href="#"
+               title="open collection profile"
+               class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
                data-target="collection-profile-{{ collection.collection_id }}"
                data-tooltip="Open Profile">
                 <span class="icon has-text-grey">
@@ -82,7 +90,9 @@
                 </span>
             </a>
             {# @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")            { #}
-            <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger ml-2"
+            <a href="#"
+               title="share this collection"
+               class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger ml-2"
                data-tooltip="Share"
                data-target="collection-share-{{ collection.collection_id }}"
                data-name="{{ collection.name }}"
