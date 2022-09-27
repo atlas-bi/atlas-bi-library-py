@@ -167,6 +167,7 @@ extend_exclude = 'atlas/templates/handlebars/search.html,atlas/report/templates/
 "atlas/templates/handlebars/search.html" = "D018"
 "atlas/templates/handlebars/search_pagination.html" = "H021"
 "atlas/report/templates/report/sections/details.html.dj" = "H023"
+"atlas/templates/layout.html.dj" = "H016,H030,H031"
 
 [tool.mypy]
 ignore_missing_imports = true

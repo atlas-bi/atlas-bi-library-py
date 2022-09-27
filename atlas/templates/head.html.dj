@@ -14,7 +14,12 @@
           charset="utf-8"/>
 {% endcompress %}
 
-<!-- load custom css -->
+{# load custom css #}
+
+{% compress css inline %}
+    {% global_css %}
+{% endcompress %}
+
 <link rel="preload"
       href="{% static_hashed '/font/inter/files/inter-latin-400-normal.woff2' %}"
       as="font"

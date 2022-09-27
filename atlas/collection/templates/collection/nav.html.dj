@@ -1,6 +1,7 @@
 <ul>
     <li>
-        <a title="open report profile"
+        <a href="#"
+           title="open report profile"
            class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
            data-target="collection-profile-{{ collection.collection_id }}"
            data-tooltip="Open Report Profile">
@@ -10,7 +11,8 @@
         </a>
     </li>
     <li>
-        <a title="start this report"
+        <a href="#"
+           title="start this report"
            class="has-tooltip-arrow has-tooltip-right star"
            data-tooltip="Star this report"
            data-href="{% url 'user:stars_edit' %}?type=collection&id={{ collection.collection_id }}">
@@ -31,7 +33,8 @@
     </li>
     {# @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")    { #}
     <li>
-        <a title="share this report"
+        <a href="#"
+           title="share this report"
            class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
            data-tooltip="Share"
            data-target="collection-share-{{ collection.collection_id }}"

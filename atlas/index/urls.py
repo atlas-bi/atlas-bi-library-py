@@ -15,6 +15,7 @@ apple_touch_icon = RedirectView.as_view(
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path("about_analytics", views.about, name="about"),
     path("favicon.ico", favicon_view),
     path("apple-touch-icon-precomposed.png", apple_touch_icon_precomposed),
     path("apple-touch-icon.png", apple_touch_icon),

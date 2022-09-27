@@ -22,7 +22,7 @@
                 <span aria-hidden="true"></span>
             </a>
         </div>
-        <div class="navbar-start is-flex is-flex-grow-1 is-align-items-center px-3 pt-5">{% include 'search.html.dj' %}</div>
+        <div class="navbar-start is-flex is-flex-grow-1 is-align-items-center px-3 pt-5">{% include "search.html.dj" %}</div>
         <div class="navbar-menu is-flex-grow-0" id="atlas-main-nav">
             <div class="navbar-end">
                 {% if "Edit User Permissions" in perms or "Edit Role Permissions" in perms or "View Site Analytics" in perms or "Create Parameters" in perms or "Delete Parameters" in perms %}
@@ -83,7 +83,9 @@
                         <a class="navbar-item" href="{% url 'term:list' %}" title="terms">Terms</a>
                         <hr class="dropdown-divider" />
                         <!-- bad url -->
-                        <a title="about analytics" class="navbar-item" href="/about_analytics">About Analytics</a>
+                        <a title="about analytics"
+                           class="navbar-item"
+                           href="{% url "index:about" %}">About Analytics</a>
                     </div>
                 </div>
                 <div class="navbar-item has-dropdown is-hoverable is-boxed">

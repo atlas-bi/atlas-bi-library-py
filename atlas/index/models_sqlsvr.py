@@ -974,7 +974,7 @@ class FragilityTag(models.Model):
         return self.name
 
 
-class Globalsitesettings(models.Model):
+class GlobalSettings(models.Model):
     id = models.AutoField(db_column="Id", primary_key=True)
     name = models.TextField(db_column="Name", blank=True, default="")
     description = models.TextField(db_column="Description", blank=True, default="")

@@ -184,7 +184,7 @@
             <a title="edit report"
                class="card-footer-item px-0"
                target="_blank"
-               href="@Model.EditReportUrl(Context,Configuration)">
+               href="{{ edit_report_url }}">
                 <span class="icon-text">
                     <span class="icon">
                         <i class="fas fa-pen-to-square"></i>

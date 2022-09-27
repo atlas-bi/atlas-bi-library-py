@@ -147,6 +147,7 @@ INSTALLED_APPS = [
     "collection.apps.CollectionConfig",
     "user.apps.UserConfig",
     "etl.apps.EtlConfig",
+    "settings.apps.SettingsConfig",
 ]
 
 MIDDLEWARE = [

@@ -9,3 +9,12 @@ def index(request):
     }
 
     return render(request, "index/index.html.dj", context)
+
+
+@login_required
+def about(request):
+    context = {
+        "title": "About",
+    }
+
+    return render(request, "index/about.html.dj", context)

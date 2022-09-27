@@ -1,0 +1,5 @@
+{% extends "layout.html.dj" %}
+
+{% block body %}
+    About Atlas.
+{% endblock body %}
