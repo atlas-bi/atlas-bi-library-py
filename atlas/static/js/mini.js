@@ -235,9 +235,8 @@
         const $hidden = $input.parentElement.querySelector(
           'input[type="hidden"], select.is-hidden',
         );
-        const $clear = $input.parentElement.parentElement.querySelector(
-          '.mini-clear',
-        );
+        const $clear =
+          $input.parentElement.parentElement.querySelector('.mini-clear');
 
         $input.addEventListener('click', () => {
           closeAllMinis();

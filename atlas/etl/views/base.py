@@ -63,6 +63,7 @@ def index(request):
             "initiatives",
             "users",
             "lookups",
+            "groups",
         ],
     }
 

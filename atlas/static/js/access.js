@@ -25,7 +25,16 @@
         })
         .join('&');
       const q = new XMLHttpRequest();
-      q.open('post', '/Settings/Roles/?handler=UpdatePermissions&' + url, true);
+      q.open(
+        'post',
+        '/settings/roles/' +
+          i.getAttribute('roleid') +
+          '/permission/' +
+          i.getAttribute('permissionid') +
+          '?' +
+          url,
+        true,
+      );
       q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       q.setRequestHeader('X-CSRFToken', csrftoken);

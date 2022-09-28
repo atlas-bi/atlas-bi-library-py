@@ -1,0 +1,46 @@
+<div>
+    {% if "Create Parameters" in perms %}
+        <form action="{% url "settings:tags" tag_type=tag_type %}" method="post">
+            {% csrf_token %}
+            <div class="field">
+                <label class="label">Add More</label>
+                <div class="field has-addons">
+                    <div class="control">
+                        <input type="text"
+                               class="input"
+                               placeholder="{{ placeholder }}"
+                               name="name"
+                               required="required"/>
+                    </div>
+                    <div class="control">
+                        <button class="button is-info" type="submit">Save</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    {% endif %}
+    <div class="field is-grouped is-grouped-multiline pt-3">
+        {% for tag in tags %}
+            <div class="control">
+                {% if "Delete Parameters" in perms %}
+                    <form action="{% url "settings:tags_delete" tag_type=tag_type pk=tag.pk %}"
+                          class=" is-inline"
+                          method="post">
+                        {% csrf_token %}
+                        <div class="tags has-addons">
+                            <span class="tag is-link">{{ tag }}</span>
+                            <span class="tag is-dark">{{ tag.usage }}</span>
+                            <input type="hidden" name="tag_id" value="{{ tag.pk }}" />
+                            <button type="submit" class="tag is-delete"></button>
+                        </div>
+                    </form>
+                {% else %}
+                    <div class="tags has-addons">
+                        <span class="tag is-link">{{ tag }}</span>
+                        <span class="tag is-dark">{{ tag.usage }}</span>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</div>

@@ -12,7 +12,7 @@
 {% block body %}
     <h1 class="title is-1 is-flex is-justify-content-space-between">
         {{ report|strip }}
-        {% for tag_link in report.tag_links.all %}
+        {% for tag_link in report.tags.all %}
             {% if tag_link.show_in_header == "Y" or tag_link.tag.show_in_header == "Y" %}
                 <span class="has-tooltip-arrow has-tooltip-multiline has-tooltip-bottom"
                       data-tooltip="{{ tag_link.tag.description }}">

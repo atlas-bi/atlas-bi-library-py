@@ -368,11 +368,11 @@
   <query>
 
     <!-- Maximum number of clauses allowed when parsing a boolean query string.
-         
+
          This limit only impacts boolean queries specified by a user as part of a query string,
          and provides per-collection controls on how complex user specified boolean queries can
          be.  Query strings that specify more clauses then this will result in an error.
-         
+
          If this per-collection limit is greater then the global `maxBooleanClauses` limit
          specified in `solr.xml`, it will have no effect, as that setting also limits the size
          of user specified boolean queries.
@@ -382,7 +382,7 @@
     <!-- Solr Internal Query Caches
 
          There are four implementations of cache available for Solr:
-         LRUCache, based on a synchronized LinkedHashMap, 
+         LRUCache, based on a synchronized LinkedHashMap,
          LFUCache and FastLRUCache, based on a ConcurrentHashMap, and CaffeineCache -
          a modern and robust cache implementation. Note that in Solr 9.0
          only CaffeineCache will be available, other implementations are now
@@ -632,9 +632,9 @@
      in logs and the corresponding error message should tell you what transpired (if the failure
      was caused by tripped circuit breakers).
     -->
-    
+
     <memBreaker enabled="true" threshold="75"/>
-    
+
 
       <!-- CPU Circuit Breaker Configuration
 
@@ -647,7 +647,7 @@
     -->
 
      <cpuBreaker enabled="true" threshold="75"/>
-    
+
   </circuitBreakers>
 
 
@@ -775,10 +775,10 @@
       <str name="echoParams">explicit</str>
       <int name="rows">10</int>
       <!-- Default search field
-         <str name="df">text</str> 
+         <str name="df">text</str>
         -->
       <!-- Change from JSON to XML format (the default prior to Solr 7.0)
-         <str name="wt">xml</str> 
+         <str name="wt">xml</str>
         -->
     </lst>
     <!-- In addition to defaults, "appends" params can be specified
@@ -841,20 +841,22 @@
       <str name="echoParams">explicit</str>
       <str name="wt">json</str>
       <str name="indent">true</str>
-      <str name="fl">id name description type atlas_id certification documented</str>
-      <str name="fq">visible:Y</str>
-      <str name="fq">orphan:N</str>
+      <str name="fl">id name description type report_type report_type_id documented atlas_id certification epic_master_file epic_record_id server_path source_server epic_template executive_visiblity enabled_for_hyperspace run_url</str>
       <str name="facet">on</str>
       <str name="facet.limit">10</str>
       <str name="facet.mincount">1</str>
-      <str name="facet.field">type</str>
-      <str name="facet.field">{!ex=certification}certification</str>
+      <str name="facet.field">{!ex=dt}type</str>
+       <str name="f.type.facet.mincount">0</str>
+      <str name="facet.field">{!ex=certification_text}certification_text</str>
+       <str name="facet.field">{!ex=visible_text}visible_text</str>
+       <str name="f.visible_text.facet.mincount">0</str>
       <str name="facet.range">last_updated</str>
       <str name="facet.range.start">NOW/MONTH-12MONTH</str>
       <str name="facet.range.end">NOW/MONTH</str>
       <str name="facet.range.gap">+1MONTH</str>
       <str name="facet.field">updated_by_text</str>
-      <str name="facet.field">{!key=report_type}report_type_short_text</str>
+      <str name="facet.field">{!ex=report_type_text}report_type_text</str>
+       <str name="f.report_type_text.facet.limit">-1</str>
     </lst>
   </requestHandler>
   <requestHandler name="/reports" class="solr.SearchHandler">
@@ -865,18 +867,21 @@
       <str name="echoParams">explicit</str>
       <str name="wt">json</str>
       <str name="indent">true</str>
-      <str name="fl">id name description type documented atlas_id certification</str>
-      <str name="fq">{!tag=visibility_text}visible:Y</str>
-      <str name="fq">orphan:N</str>
+      <str name="fl">id name description type report_type report_type_id documented atlas_id certification epic_master_file epic_record_id server_path source_server epic_template executive_visiblity enabled_for_hyperspace run_url</str>
       <str name="facet">on</str>
-      <str name="facet.field">{!ex=type}type</str>
-      <str name="facet.field">{!ex=certification}certification</str>
-      <str name="facet.field">{!ex=visibility_text key=visible}visibility_text</str>
-      <str name="facet.range">created</str>
+       <str name="facet.limit">10</str>
+       <str name="facet.mincount">1</str>
+       <str name="facet.field">{!ex=dt}type</str>
+       <str name="f.type.facet.mincount">0</str>
+       <str name="facet.field">{!ex=report_type_text}report_type_text</str>
+       <str name="f.report_type_text.facet.limit">-1</str>
+       <str name="facet.field">{!ex=visible_text}visible_text</str>
+       <str name="f.visible_text.facet.mincount">0</str>
+      <str name="facet.field">{!ex=certification_text}certification_text</str>
       <str name="facet.field">{!ex=documented}documented</str>
+       <str name="facet.range">created</str>
       <str name="facet.field">{!ex=source_server_text}source_server_text</str>
       <str name="facet.field">{!ex=source_database_text}source_database_text</str>
-      <str name="facet.field">{!ex=report_type_short_text}report_type_short_text</str>
       <str name="facet.range">report_last_updated</str>
       <str name="facet.field">{!ex=report_last_updated_by_text}report_last_updated_by_text</str>
       <str name="facet.field">{!ex=epic_master_file_text}epic_master_file_text</str>
@@ -909,14 +914,17 @@
       <str name="fl">id name description type atlas_id</str>
       <str name="facet">on</str>
       <str name="facet.limit">10</str>
+       <str name="facet.mincount">1</str>
       <str name="facet.field">{!ex=dt}type</str>
-      <str name="facet.field">approved_text</str>
-      <str name="facet.field">related_reports_text</str>
+       <str name="f.type.facet.mincount">0</str>
+       <str name="facet.field">{!ex=visible_text}visible_text</str>
+       <str name="f.visible_text.facet.mincount">0</str>
+      <str name="facet.field">{!ex=approved_text}approved_text</str>
+      <str name="facet.field">{!ex=related_reports_text}related_reports_text</str>
       <str name="facet.range">approval_date</str>
-      <str name="facet.field">has_external_standard_text</str>
       <str name="facet.range">valid_from</str>
       <str name="facet.range">valid_to</str>
-      <str name="facet.field">updated_by_text</str>
+      <str name="facet.field">{!ex=updated_by_text}updated_by_text</str>
       <str name="facet.Range">last_updated</str>
       <str name="facet.range.start">NOW/MONTH-12MONTH</str>
       <str name="facet.range.end">NOW/MONTH</str>
@@ -934,13 +942,17 @@
       <str name="fl">id name description type atlas_id</str>
       <str name="facet">on</str>
       <str name="facet.limit">10</str>
+       <str name="facet.mincount">1</str>
       <str name="facet.field">{!ex=dt}type</str>
-      <str name="facet.field">financial_impact_text</str>
-      <str name="facet.field">strategic_importance_text</str>
-      <str name="facet.field">updated_by_text</str>
+       <str name="f.type.facet.mincount">0</str>
+       <str name="facet.field">{!ex=visible_text}visible_text</str>
+       <str name="f.visible_text.facet.mincount">0</str>
+      <str name="facet.field">{!ex=financial_impact_text}financial_impact_text</str>
+      <str name="facet.field">{!ex=strategic_importance_text}strategic_importance_text</str>
+       <str name="facet.field">{!ex=updated_by_text}updated_by_text</str>
       <str name="facet.range">last_updated</str>
-      <str name="facet.field">operations_owner_text</str>
-      <str name="facet.field">executive_owner_text</str>
+      <str name="facet.field">{!ex=operations_owner_text}operations_owner_text</str>
+      <str name="facet.field">{!ex=executive_owner_text}executive_owner_text</str>
       <str name="facet.range.start">NOW/MONTH-12MONTH</str>
       <str name="facet.range.end">NOW/MONTH</str>
       <str name="facet.range.gap">+1MONTH</str>
@@ -957,9 +969,13 @@
       <str name="fl">id name description type atlas_id</str>
       <str name="facet">on</str>
       <str name="facet.limit">10</str>
+       <str name="facet.mincount">1</str>
       <str name="facet.field">{!ex=dt}type</str>
+       <str name="f.type.facet.mincount">0</str>
+       <str name="facet.field">{!ex=visible_text}visible_text</str>
+       <str name="f.visible_text.facet.mincount">0</str>
       <str name="facet.range">last_updated</str>
-      <str name="facet.field">updated_by_text</str>
+      <str name="facet.field">{!ex=updated_by_text}updated_by_text</str>
       <str name="facet.range.start">NOW/MONTH-12MONTH</str>
       <str name="facet.range.end">NOW/MONTH</str>
       <str name="facet.range.gap">+1MONTH</str>
@@ -975,15 +991,42 @@
       <str name="indent">true</str>
       <str name="fl">id name email epic_record_id type atlas_id</str>
       <str name="facet">on</str>
-      <str name="facet.field">user_roles</str>
       <str name="facet.limit">10</str>
+       <str name="facet.mincount">1</str>
       <str name="facet.field">{!ex=dt}type</str>
+       <str name="f.type.facet.mincount">0</str>
+       <str name="facet.field">{!ex=visible_text}visible_text</str>
+       <str name="f.visible_text.facet.mincount">0</str>
+       <str name="facet.field">{!ex=user_roles_text}user_roles_text</str>
+       <str name="facet.field">{!ex=user_groups_text}user_groups_text</str>
+    </lst>
+  </requestHandler>
+  <requestHandler name="/groups" class="solr.SearchHandler">
+    <lst name="appends">
+      <str name="fq">{!tag=dt}type:groups</str>
+    </lst>
+    <lst name="defaults">
+      <str name="echoParams">explicit</str>
+      <str name="wt">json</str>
+      <str name="indent">true</str>
+      <str name="fl">id name email epic_record_id type group_type atlas_id</str>
+      <str name="facet">on</str>
+      <str name="facet.field">group_type_text</str>
+      <str name="facet.limit">10</str>
+       <str name="facet.mincount">1</str>
+      <str name="facet.field">{!ex=dt}type</str>
+       <str name="f.type.facet.mincount">0</str>
+       <str name="facet.field">{!ex=visible_text}visible_text</str>
+       <str name="f.visible_text.facet.mincount">0</str>
     </lst>
   </requestHandler>
 
-  <initParams path="/update/**,/query,/select,/spell,/reports,/collections,/initiatives,/users,/aterms">
+  <initParams path="/update/**,/query,/select,/spell,/reports,/collections,/initiatives,/users,/groups,/aterms">
     <lst name="defaults">
       <str name="df">all_text</str>
+       <str name="hl">true</str>
+       <str name="hl.fl">*</str>
+       <str name="hl.fragsize">0</str>
     </lst>
   </initParams>
   <initParams path="/suggest">
@@ -992,8 +1035,8 @@
       <str name="wt">json</str>
       <str name="indent">true</str>
       <str name="df">name</str>
-      <str name="fq">visible:Y</str>
-      <str name="fq">orphan:N</str>
+      <str name="fq">{!tag=visible_text}visible_text:Y</str>
+      <str name="fq">{!tag=orphan_text}orphan_text:N</str>
     </lst>
   </initParams>
 

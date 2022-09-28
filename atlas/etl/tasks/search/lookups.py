@@ -233,8 +233,8 @@ def reset_lookups():
     docs.extend(
         [
             {
-                "id": "frequency_id_" + str(value.frequency_id),
-                "item_type": "frequency_id",
+                "id": "run_frequency" + str(value.frequency_id),
+                "item_type": "run_frequency",
                 "item_name": value.name,
                 "atlas_id": value.frequency_id,
             }

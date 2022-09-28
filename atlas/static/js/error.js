@@ -4,7 +4,9 @@
 
   function updateUrl($key) {
     delete vars[$key];
-    const $hash = document.location.hash ? '#' + document.location.hash : '';
+    const $hash = document.location.hash
+      ? '#' + document.location.hash.replace('#', '')
+      : '';
 
     let $parameters = Object.keys(vars)
       .map(function (x) {

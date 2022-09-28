@@ -207,7 +207,7 @@
                                class="input input-mini"
                                placeholder="click to select.."
                                value="{{ report_doc.frequency|default:"" }}"
-                               lookup-area="frequency_id"/>
+                               lookup-area="run_frequency"/>
                         <input type="hidden"
                                name="frequency_id"
                                value="{{ report_doc.frequency_id|default:"" }}"/>

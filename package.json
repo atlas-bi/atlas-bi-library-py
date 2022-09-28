@@ -16,11 +16,17 @@
     "build": "gulp build",
     "watch": "gulp watch",
     "commit": "git add . && pre-commit run ;  npm run pre-commit && git add . && cz --no-verify",
-    "format": "poetry run tox -e reformat;prettier --config .prettierrc \"**/*.{ts,css,less,scss,js,json,md,yaml}\" --write",
+    "format:python": "poetry run tox -e reformat",
+    "format:static": "prettier --config .prettierrc \"**/*.{ts,css,less,scss,js,json,md,yaml}\" --write",
+    "format": "npm run format:python; npm run format:static",
     "test": "npm run test:eslint; npm run test:prettier",
     "test:eslint": "eslint \"./atlas/**/*.js\" --color",
     "pre-commit": "lint-staged",
-    "lint": "poetry run tox -e lint;htmlhint \"**/*.{html,html.dj}\"",
+    "lint:python": "poetry run tox -e lint",
+    "lint:html": "htmlhint \"**/*.{html,html.dj}\"",
+    "lint:js": "xo atlas/static/js",
+    "lint:scss": "stylelint \"atlas/static/scss/**/*.scss\"",
+    "lint": "npm run lint:python; npm run lint:html; npm run lint:js; npm run lint:scss",
     "test:prettier": "prettier --check --config .prettierrc \"**/*.{ts,css,less,scss,js,json,md,yaml}\""
   },
   "dependencies": {
@@ -88,7 +94,12 @@
     "rollup-plugin-swc": "0.2.1",
     "rollup-stream-gulp": "0.0.3",
     "sass": "1.55.0",
-    "semantic-release": "19.0.5"
+    "semantic-release": "19.0.5",
+    "stylelint": "^14.13.0",
+    "stylelint-config-prettier-scss": "^0.0.1",
+    "stylelint-config-standard-scss": "^5.0.0",
+    "stylelint-scss": "^4.3.0",
+    "xo": "^0.52.3"
   },
   "config": {
     "commitizen": {
@@ -97,5 +108,59 @@
   },
   "lint-staged": {
     "**/*.{ts,css,less,scss,js,json,md,yaml}": "npm run format"
+  },
+  "xo": {
+    "space": true,
+    "prettier": true,
+    "ignores": [
+      "atlas/static/js/polyfill/",
+      "atlas/static/js/**/*.min.js",
+      "atlas/static/js/old_mail.js",
+      "atlas/static/js/essential.js"
+    ],
+    "globals": [
+      "cache",
+      "__dirname",
+      "debounce",
+      "showMessageBox",
+      "CodeMirror",
+      "getUrlVars",
+      "serialize",
+      "getOffset",
+      "getCookie",
+      "setCookie",
+      "window",
+      "document",
+      "CustomEvent",
+      "history",
+      "sessionStorage",
+      "getComputedStyle",
+      "parseInt",
+      "XMLHttpRequest",
+      "Node",
+      "navigator",
+      "FormData",
+      "Chart",
+      "event",
+      "DOMPurify",
+      "csrftoken"
+    ],
+    "rules": {
+      "unicorn/no-for-loop": "off",
+      "unicorn/no-array-for-each": "off",
+      "guard-for-in": "warn",
+      "unicorn/no-this-assignment": "off",
+      "unicorn/prefer-default-parameters": "off",
+      "unicorn/no-document-cookie": "off",
+      "unicorn/prefer-dom-node-dataset": "off",
+      "unicorn/no-empty-file": "off",
+      "unicorn/prefer-module": "off",
+      "unicorn/prefer-query-selector": "warn",
+      "unicorn/prefer-number-properties": "off",
+      "no-negated-condition": "warn",
+      "no-multi-assign": "warn",
+      "unicorn/prefer-keyboard-event-key": "off",
+      "no-new": "warn"
+    }
   }
 }

@@ -33,7 +33,7 @@
                 {% if "Edit Group Permissions" in perms %}
                     <a title="user groups"
                        class="panel-block panel-tab py-3 "
-                       href="#user-groups">
+                       href="#group-roles">
                         <div class="fa-layers mr-2 w-auto">
                             <span class="icon is-medium"><i class="fas fa-lg fa-users"></i></span>
                             <span class="icon is-small fa-transform is-group-roles has-background-white"><i class="fas fa-lg fa-lock shrink-7"></i></span>
@@ -90,7 +90,7 @@
                     </div>
                 {% endif %}
                 {% if "Edit Group Permissions" in perms %}
-                    <div class="panel-tab-data" id="user-groups">
+                    <div class="panel-tab-data" id="group-roles">
                         <div data-ajax="yes" data-url="{% url "settings:group_roles" %}"></div>
                     </div>
                 {% endif %}
@@ -99,30 +99,30 @@
                     <h3 class="title is-3 mb-0">Meta Fields</h3>
                     <h4 class="title is-4 mt-5">Organizational Value</h4>
                     <div data-ajax="yes"
-                         data-url="{% url "settings:tags" %}?name=OrganizationalValueList"></div>
+                         data-url="{% url "settings:tags" tag_type="organizational_value" %}"></div>
                     <h4 class="title is-4 mt-5">Estimated Run Frequency</h4>
                     <div data-ajax="yes"
-                         data-url="{% url "settings:tags" %}?name=EstimatedRunFrequencyList"></div>
+                         data-url="{% url "settings:tags" tag_type="run_frequency" %}"></div>
                     <h4 class="title is-4 mt-5">Fragility Types</h4>
                     <div data-ajax="yes"
-                         data-url="{% url "settings:tags" %}?name=FragilityList"></div>
+                         data-url="{% url "settings:tags" tag_type="fragility" %}"></div>
                     <h4 class="title is-4 mt-5">Fragility Tags</h4>
                     <div data-ajax="yes"
-                         data-url="{% url "settings:tags" %}?name=FragilityTagList"></div>
+                         data-url="{% url "settings:tags" tag_type="fragility_tag" %}"></div>
                     <h4 class="title is-4 mt-5">Maintenance Schedules</h4>
                     <div data-ajax="yes"
-                         data-url="{% url "settings:tags" %}?name=MaintenanceScheduleList"></div>
+                         data-url="{% url "settings:tags" tag_type="maintenance_schedule" %}"></div>
                     <h4 class="title is-4 mt-5">Maintenance Log Status</h4>
                     <div data-ajax="yes"
-                         data-url="{% url "settings:tags" %}?name=MaintenanceLogStatusList"></div>
+                         data-url="{% url "settings:tags" tag_type="maintenance_log_status" %}"></div>
                     <h4 class="title is-4 mt-5">Financial Impact</h4>
                     <div data-ajax="yes"
-                         data-url="{% url "settings:tags" %}?name=FinancialImpactList"></div>
+                         data-url="{% url "settings:tags" tag_type="financial_impact" %}"></div>
                     <h4 class="title is-4 mt-5">Strategic Importance</h4>
                     <div data-ajax="yes"
-                         data-url="{% url "settings:tags" %}?name=StrategicImportanceList"></div>
+                         data-url="{% url "settings:tags" tag_type="strategic_importance" %}"></div>
                     <h4 class="title is-4 mt-5">Tags</h4>
-                    <div data-ajax="yes" data-url="{% url "settings:tags" %}?name=TagList"></div>
+                    <div data-ajax="yes" data-url="{% url "settings:tags" tag_type="tags" %}"></div>
                 </div>
                 <div class="panel-tab-data" id="site-message">
                     <div data-ajax="yes" data-url="{% url "settings:site_messages" %}"></div>

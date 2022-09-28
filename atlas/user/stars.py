@@ -33,7 +33,7 @@ def index(request, pk=None):
         .select_related("report__docs")
         .select_related("report__type")
         .prefetch_related("report__attachments")
-        .prefetch_related("report__tag_links__tag")
+        .prefetch_related("report__tags__tag")
         .prefetch_related("report__starred")
         .order_by("rank", "report__name")
     )
@@ -59,7 +59,7 @@ def index(request, pk=None):
     groups = (
         user.starred_groups.select_related("group")
         .prefetch_related("group__starred")
-        .order_by("rank", "group__group_name")
+        .order_by("rank", "group__name")
     )
 
     users = (

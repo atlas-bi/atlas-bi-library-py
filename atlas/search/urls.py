@@ -8,6 +8,7 @@ urlpatterns = [
     path("template", views.template, name="template"),
     # search for users for dropdowns
     path("user_lookup", views.user_lookup, name="user_lookup"),
+    path("group_lookup", views.group_lookup, name="group_lookup"),
     path("director_lookup", views.director_lookup, name="director_lookup"),
     # search for users with role for dropdowns
     path("user_lookup/<str:role>", views.user_lookup, name="user_lookup"),

@@ -44,9 +44,7 @@ class CollectionDetails(LoginRequiredMixin, DetailView):
         .prefetch_related("reports__report__imgs")
         .prefetch_related("reports__report__type")
         .prefetch_related("reports__report__starred", "reports__report__starred__owner")
-        .prefetch_related(
-            "reports__report__tag_links", "reports__report__tag_links__tag"
-        )
+        .prefetch_related("reports__report__tags", "reports__report__tags__tag")
         .prefetch_related("terms", "terms__term", "terms__term__starred")
     )
 

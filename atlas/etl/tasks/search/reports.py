@@ -106,7 +106,7 @@ def build_doc(report):
         ],
         # "certification": report.certification_tag,
         "report_type": report.type.short,
-        "author": str(report.created_by or ""),
+        "author": str(report.created_by) if report.created_by else "",
         "report_last_updated_by": str(report.modified_by or ""),
         "report_last_updated": solr_date(report._modified_at),
         "epic_master_file": report.system_identifier,

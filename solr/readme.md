@@ -1,7 +1,5 @@
-# Running Solr for Testing
+# Running Solr for Dev/Testing
 
-
-To run solr for testing with docker
 
 ```sh
 cd /to/this/solr/folder :)

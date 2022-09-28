@@ -127,7 +127,7 @@ class Reports(models.Model):
 
     @cached_property
     def is_certified(self):
-        return self.tag_links.filter(
+        return self.tags.filter(
             tag__name__in=["Analytics Certified", "Analytics Reviewed"]
         ).exists()
 
@@ -294,6 +294,9 @@ class Tags(models.Model):
     def __str__(self):
         return self.name
 
+    def usage(self):
+        return self.reports.count()
+
 
 class ReportSystemTagLinks(models.Model):
     link_id = models.AutoField(
@@ -333,10 +336,10 @@ class ReportTagLinks(models.Model):
         db_column="ReportId",
         blank=True,
         default="",
-        related_name="tag_links",
+        related_name="tags",
     )
     tag = models.ForeignKey(
-        Tags, models.DO_NOTHING, db_column="TagId", related_name="system_report_links"
+        Tags, models.DO_NOTHING, db_column="TagId", related_name="reports"
     )
     show_in_header = models.TextField(db_column="ShowInHeader", blank=True, null=True)
 
@@ -632,10 +635,10 @@ class Users(AbstractUser, PermissionsMixin):
 class Groups(models.Model):
     group_id = models.AutoField(db_column="GroupId", primary_key=True)
     account_name = models.TextField(db_column="AccountName", blank=True, default="")
-    group_name = models.TextField(db_column="GroupName", blank=True, default="")
-    group_email = models.TextField(db_column="GroupEmail", blank=True, default="")
+    name = models.TextField(db_column="GroupName", blank=True, default="")
+    email = models.TextField(db_column="GroupEmail", blank=True, default="")
     group_type = models.TextField(db_column="GroupType", blank=True, default="")
-    group_source = models.TextField(db_column="GroupSource", blank=True, default="")
+    source = models.TextField(db_column="GroupSource", blank=True, default="")
     etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
     epic_id = models.TextField(db_column="EpicId", blank=True, default="")
 
@@ -644,10 +647,14 @@ class Groups(models.Model):
         db_table = "UserGroups"
 
     def __str__(self):
-        return self.group_name
+        return self.name
 
     def get_absolute_url(self):
         return reverse("group:details", kwargs={"pk": self.pk})
+
+    def get_roles(self):
+        """Get users roles."""
+        return list(self.role_links.values_list("role__name"))
 
 
 class UserGroupMemberships(models.Model):
@@ -937,6 +944,9 @@ class RunFrequency(models.Model):
     def __str__(self):
         return self.name
 
+    def usage(self):
+        return self.report_docs.count()
+
 
 class FinancialImpact(models.Model):
     impact_id = models.AutoField(db_column="Id", primary_key=True)
@@ -948,6 +958,9 @@ class FinancialImpact(models.Model):
 
     def __str__(self):
         return self.name
+
+    def usage(self):
+        return self.initiatives.count()
 
 
 class Fragility(models.Model):
@@ -961,6 +974,9 @@ class Fragility(models.Model):
     def __str__(self):
         return self.name
 
+    def usage(self):
+        return self.report_docs.count()
+
 
 class FragilityTag(models.Model):
     tag_id = models.AutoField(db_column="Id", primary_key=True)
@@ -972,6 +988,9 @@ class FragilityTag(models.Model):
 
     def __str__(self):
         return self.name
+
+    def usage(self):
+        return self.report_docs.count()
 
 
 class GlobalSettings(models.Model):
@@ -1178,6 +1197,9 @@ class MaintenanceLogStatus(models.Model):
     def __str__(self):
         return self.name
 
+    def usage(self):
+        return self.logs.count()
+
 
 class MaintenanceSchedule(models.Model):
     schedule_id = models.AutoField(db_column="Id", primary_key=True)
@@ -1190,6 +1212,9 @@ class MaintenanceSchedule(models.Model):
     def __str__(self):
         return self.name
 
+    def usage(self):
+        return self.report_docs.count()
+
 
 class OrganizationalValue(models.Model):
     value_id = models.AutoField(db_column="Id", primary_key=True)
@@ -1201,6 +1226,9 @@ class OrganizationalValue(models.Model):
 
     def __str__(self):
         return self.name
+
+    def usage(self):
+        return self.report_docs.count()
 
 
 class ReportFragilityTags(models.Model):
@@ -1215,7 +1243,7 @@ class ReportFragilityTags(models.Model):
         FragilityTag,
         models.DO_NOTHING,
         db_column="FragilityTagID",
-        related_name="reports",
+        related_name="report_docs",
     )
 
     class Meta:
@@ -1482,6 +1510,9 @@ class RolePermissionLinks(models.Model):
         managed = False
         db_table = "RolePermissionLinks"
 
+    def __str__(self):
+        return self.permission.name
+
 
 class RolePermissions(models.Model):
     permissions_id = models.AutoField(db_column="RolePermissionsId", primary_key=True)
@@ -1491,6 +1522,9 @@ class RolePermissions(models.Model):
     class Meta:
         managed = False
         db_table = "RolePermissions"
+
+    def __str__(self):
+        return self.name
 
 
 class Searchtable(models.Model):
@@ -1657,6 +1691,9 @@ class StrategicImportance(models.Model):
 
     def __str__(self):
         return self.name
+
+    def usage(self):
+        return self.initiatives.count()
 
 
 class Terms(models.Model):

@@ -242,6 +242,24 @@ def user_lookup(request, role=None):
 
 @never_cache
 @login_required
+def group_lookup(request, role=None):
+    """User lookup."""
+    solr = pysolr.Solr(settings.SOLR_URL, search_handler="groups")
+
+    results = solr.search(
+        build_search_string(request.GET.get("s"), search_type="fuzzy"),
+        fq=("user_roles:%s" % role if role else "*:*"),
+        **{"rows": 20}
+    )
+
+    output = [
+        {"ObjectId": item.get("atlas_id"), "Name": item.get("name")} for item in results
+    ]
+    return JsonResponse(output, safe=False)
+
+
+@never_cache
+@login_required
 def director_lookup(request):
     """Director lookup."""
     return redirect(user_lookup, role="Director")

@@ -78,7 +78,7 @@
             </span>
             <span class="tags">
                 <span class="tag">{{ report.type.short }}</span>
-                {% for link in report.tag_links.all %}
+                {% for link in report.tags.all %}
                     {% if link.show_in_header == "Y" or link.tag.show_in_header == "Y" %}
                         <span class="tag {{ link.tag|slugify }}">{{ link.tag }}</span>
                     {% endif %}

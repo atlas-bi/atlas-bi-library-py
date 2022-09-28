@@ -37,8 +37,9 @@
         }
 
         // Message
-        const message = form.querySelector('textarea[name="share-message"]')
-          .value;
+        const message = form.querySelector(
+          'textarea[name="share-message"]',
+        ).value;
 
         const data = {
           To: JSON.stringify(to),

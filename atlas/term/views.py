@@ -71,7 +71,7 @@ class TermDetails(LoginRequiredMixin, DetailView):
             .prefetch_related("imgs")
             .select_related("type")
             .prefetch_related("starred", "starred__owner")
-            .prefetch_related("tag_links", "tag_links__tag")
+            .prefetch_related("tags", "tags__tag")
             .prefetch_related("docs")
         ).distinct()
 

@@ -25,9 +25,10 @@ div.column.is-narrow:empty {
 }
 
 .image.is-133x40 {
-  width: 133px;
   height: 40px;
+  width: 133px;
 }
+
 /* card colors */
 
 $card-colors: (
@@ -258,8 +259,8 @@ button.is-ghost:not(.button) {
 
 .fav-count {
   position: absolute;
-  top: -14px;
   right: -14px;
+  top: -14px;
 }
 
 .favorites-folder.is-active {
@@ -301,9 +302,11 @@ button.is-ghost:not(.button) {
   display: inline-block;
   min-width: 100px;
 }
+
 .w-auto {
   width: auto !important;
 }
+
 .icon.is-group-roles {
   left: 15px;
   top: 11px;
@@ -311,6 +314,7 @@ button.is-ghost:not(.button) {
   width: 17px;
   height: 17px;
 }
+
 .bar-percent-fill {
   background-color: rgba(38 128 235 / 10%);
   border: 1px solid rgba(38 128 235 / 20%);

@@ -1,7 +1,16 @@
 from django.urls import path
 
 from . import apps
-from .views import base, collections, initiatives, lookups, reports, terms, users
+from .views import (
+    base,
+    collections,
+    groups,
+    initiatives,
+    lookups,
+    reports,
+    terms,
+    users,
+)
 
 app_name = apps.EtlConfig.name
 
@@ -18,6 +27,11 @@ urlpatterns = [
         "search/users/<str:arg>",
         users.users,
         name="search_users",
+    ),
+    path(
+        "search/groups/<str:arg>",
+        groups.groups,
+        name="search_groups",
     ),
     path(
         "search/collections/<str:arg>",

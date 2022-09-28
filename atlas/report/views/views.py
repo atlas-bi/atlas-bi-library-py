@@ -53,7 +53,7 @@ class ReportDetails(LoginRequiredMixin, DetailView):
         .prefetch_related("docs__maintenance_schedule")
         .prefetch_related("docs__fragility_tags__fragility_tag")
         .prefetch_related("docs__tickets")
-        .prefetch_related("tag_links__tag")
+        .prefetch_related("tags__tag")
         .prefetch_related("groups")
         .prefetch_related("groups__group")
         .prefetch_related(
