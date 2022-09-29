@@ -10,8 +10,7 @@
                 <a title="description" href="#description">Description</a>
             </li>
         {% endif %}
-        {% if terms %}
-            {# and terms enabled #}
+        {% if terms  and settings.ENABLE_TERMS %}
             <li>
                 <a title="terms" href="#terms">Terms</a>
             </li>

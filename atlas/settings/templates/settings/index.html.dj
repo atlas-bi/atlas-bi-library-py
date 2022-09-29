@@ -41,7 +41,7 @@
                         Group Roles
                     </a>
                 {% endif %}
-                <a class="panel-block panel-tab py-3 {% if "Edit Role Permissions" not in perms and "Edit User Permissions" not in perms %} is-active{% endif %}"
+                <a class="panel-block panel-tab py-3 {% if  "Manage Global Site Settings" not in perms and "Edit Role Permissions" not in perms and "Edit User Permissions" not in perms %} is-active{% endif %}"
                    href="#meta-fields">
                     <span class="icon is-medium mr-2">
                         <i class="fas fa-lg fa-list-ul" aria-hidden="true"></i>

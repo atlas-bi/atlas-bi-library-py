@@ -14,52 +14,51 @@
     </div>
     <button class="modal-close is-large" aria-label="close"></button>
 </div>
-{# @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true"){ #}
-<!-- share modal -->
-<div class="modal" id="collection-share-{{ collection.collection_id }}">
-    <div class="modal-background"></div>
-    <div class="modal-content">
-        <div class="box">
-            <strong class="mb-4">Share {{ collection.name }}</strong>
-            <form class="share" action="{% url 'mail:send' %}" method="post">
-                <input type="hidden" class="mlbx-share" value="1" />
-                <input type="hidden" class="share-name" value="{{ collection.name }}" />
-                <input type="hidden"
-                       class="share-url"
-                       value="{% fullurl 'collection:item' pk=collection.collection_id %}"/>
-                <input type="hidden" id="convid" />
-                <div class="field mt-4">
-                    <label class="label">To:</label>
-                    <div class="mini-tags field is-grouped is-grouped-multiline share-to"
-                         required="required"
-                         name="to"></div>
-                    <div class="field">
-                        <div class="control is-relative is-expanded">
-                            <input class="input input-mini multiselect mini-close-fast"
-                                   placeholder="search for someone.."
-                                   search-area="user_lookup"/>
-                            <div class="mini">
-                                <div class="mini-waiting">
-                                    <span class="icon">
-                                        <i class="fas fa-circle-notch fa-spin"></i>
-                                    </span>
+{% if settings.ENABLE_SHARING %}
+    <div class="modal" id="collection-share-{{ collection.collection_id }}">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box">
+                <strong class="mb-4">Share {{ collection.name }}</strong>
+                <form class="share" action="{% url 'mail:send' %}" method="post">
+                    <input type="hidden" class="mlbx-share" value="1" />
+                    <input type="hidden" class="share-name" value="{{ collection.name }}" />
+                    <input type="hidden"
+                           class="share-url"
+                           value="{% fullurl 'collection:item' pk=collection.collection_id %}"/>
+                    <input type="hidden" id="convid" />
+                    <div class="field mt-4">
+                        <label class="label">To:</label>
+                        <div class="mini-tags field is-grouped is-grouped-multiline share-to"
+                             required="required"
+                             name="to"></div>
+                        <div class="field">
+                            <div class="control is-relative is-expanded">
+                                <input class="input input-mini multiselect mini-close-fast"
+                                       placeholder="search for someone.."
+                                       search-area="user_lookup"/>
+                                <div class="mini">
+                                    <div class="mini-waiting">
+                                        <span class="icon">
+                                            <i class="fas fa-circle-notch fa-spin"></i>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="field">
-                    <label class="label">Subject</label>
-                    <div class="control">
-                        <input class="input share-subject"
-                               placeholder="e.g hey, check this out"
-                               value="[Share] {{ collection.name }}"/>
+                    <div class="field">
+                        <label class="label">Subject</label>
+                        <div class="control">
+                            <input class="input share-subject"
+                                   placeholder="e.g hey, check this out"
+                                   value="[Share] {{ collection.name }}"/>
+                        </div>
                     </div>
-                </div>
-                <div class="field">
-                    <label class="label">Message</label>
-                    <div class="editor" data-inputName="share-message">
-                        <textarea class="textarea">
+                    <div class="field">
+                        <label class="label">Message</label>
+                        <div class="editor" data-inputName="share-message">
+                            <textarea class="textarea">
 Hi!
 
 I would like to share this collection with you.
@@ -68,11 +67,11 @@ I would like to share this collection with you.
 
 Check it out sometime!
 Regards!</textarea>
+                        </div>
                     </div>
-                </div>
-                <button class="button">Send</button>
-            </form>
+                    <button class="button">Send</button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-{# } #}
+{% endif %}

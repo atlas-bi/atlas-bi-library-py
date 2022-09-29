@@ -34,8 +34,7 @@
     {% if report.description or report.detailed_description or report.docs.description or report.docs.assumptions or report.system_description %}
         {% include "report/sections/description.html.dj" %}
     {% endif %}
-    {% if terms %}
-        {# and terms enabled #}
+    {% if terms and settings.ENABLE_TERMS %}
         {% include "report/sections/terms.html.dj" %}
     {% endif %}
     {% include "report/sections/details.html.dj" %}

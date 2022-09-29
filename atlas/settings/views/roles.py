@@ -16,7 +16,10 @@ from atlas.decorators import NeverCacheMixin, PermissionsCheckMixin
 
 class Index(NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, TemplateView):
     template_name = "settings/roles.html.dj"
-    required_permissions = ("Manage Global Site Settings",)
+    required_permissions = (
+        "Manage Global Site Settings",
+        "Edit Role Permissions",
+    )
 
     def get_context_data(self, **kwargs):
         """Add context to request."""
@@ -42,7 +45,10 @@ class Index(NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, Template
 
 
 class Delete(NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, DeleteView):
-    required_permissions = ("Manage Global Site Settings",)
+    required_permissions = (
+        "Manage Global Site Settings",
+        "Edit Role Permissions",
+    )
     model = UserRoles
     template_name = "settings/roles.html.dj"
 
@@ -66,7 +72,10 @@ class Delete(NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, DeleteV
 class Permission(
     NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, UpdateView
 ):
-    required_permissions = ("Manage Global Site Settings",)
+    required_permissions = (
+        "Manage Global Site Settings",
+        "Edit Role Permissions",
+    )
 
     def post(self, request, *args, **kwargs):
         pk = self.kwargs["pk"]

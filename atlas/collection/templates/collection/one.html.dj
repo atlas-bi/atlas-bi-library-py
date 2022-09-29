@@ -21,14 +21,14 @@
                     <a title="linked reports" href="#reports">Linked Reports</a>
                 </li>
             {% endif %}
-            {% if collection.terms.exists %}
+            {% if collection.terms.exists and settings.ENABLE_TERMS %}
                 <li>
                     <a title="linked terms" href="#terms">Linked Terms</a>
                 </li>
             {% endif %}
         </ul>
     </nav>
-    {% if collection.initiative %}
+    {% if settings.ENABLE_INITIATIVES and collection.initiative %}
         <h2 class="title is-2" id="reports">Owning Initiative</h2>
         <div class="columns is-multiline">
             <div class="column is-half ">{% include "initiative/snippet.html.dj" with initiative=collection.initiative %}</div>
@@ -42,8 +42,7 @@
             {% endfor %}
         </div>
     {% endif %}
-    {% if collection.terms.exists %}
-        {# and terms are enabled in preferences #}
+    {% if settings.ENABLE_TERMS and collection.terms.exists %}
         <h2 class="title is-2">Terms</h2>
         <div class="columns is-multiline">
             {% for link in collection.terms.all %}
@@ -68,7 +67,7 @@
                 <tr>
                     <td>Last Updated By</td>
                     <td>
-                        {% if "View Other User" in perms %}
+                        {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
                             <a title="open user"
                                href="{{ collection.modified_by.get_absolute_url }}">{{ collection.modified_by }}</a>
                         {% else %}

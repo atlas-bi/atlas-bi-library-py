@@ -92,19 +92,19 @@
                     <i class="fas fa-chart-bar"></i>
                 </span>
             </a>
-            {# @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")            { #}
-            <a title="share this term"
-               href="#"
-               class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
-               data-tooltip="Share"
-               data-target="term-share-{{ term.term_id }}"
-               data-name="{{ term }}"
-               data-type="term">
-                <span class="icon has-text-grey">
-                    <i class="fas fa-share"></i>
-                </span>
-            </a>
-            {# } #}
+            {% if settings.ENABLE_SHARING %}
+                <a title="share this term"
+                   href="#"
+                   class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+                   data-tooltip="Share"
+                   data-target="term-share-{{ term.term_id }}"
+                   data-name="{{ term }}"
+                   data-type="term">
+                    <span class="icon has-text-grey">
+                        <i class="fas fa-share"></i>
+                    </span>
+                </a>
+            {% endif %}
         </div>
     </footer>
 </div>

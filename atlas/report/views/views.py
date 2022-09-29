@@ -9,13 +9,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Prefetch
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect, render, reverse
 from django.utils import timezone
-from django.views.generic import DetailView, UpdateView
+from django.views.generic import DetailView, TemplateView, UpdateView, View
 from index.models import (
     CollectionReports,
     Collections,
     MaintenanceLogs,
+    ReportAttachments,
     ReportDocs,
     ReportFragilityTags,
     ReportImages,
@@ -26,8 +27,31 @@ from index.models import (
     Terms,
 )
 from PIL import Image
+from report.templatetags.url_tags import run_authorization
 
 from atlas.decorators import NeverCacheMixin, PermissionsCheckMixin
+
+
+class Attachment(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        pk = self.kwargs["pk"]
+
+        attachment = (
+            ReportAttachments.objects.filter(attachment_id=pk)
+            .select_related("report", "report__type")
+            .first()
+        )
+
+        if run_authorization(attachment.report, request):
+            response = HttpResponse("", status=302)
+            response["Location"] = f"file:{attachment.path}"
+            return response
+            # return HttpResponseRedirect(attachment.path)
+        else:
+            return redirect(
+                reverse("report:item", kwargs={"pk": attachment.report_id})
+                + "?error=You are not authorized to view that report."
+            )
 
 
 class ReportDetails(LoginRequiredMixin, DetailView):
@@ -279,8 +303,9 @@ def profile(request, pk):
     )
 
 
-@login_required
-def maint_status(request, pk):
+class MaintenanceStatus(
+    NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, TemplateView
+):
     """Check report maintenance status.
 
     To be "past due":
@@ -288,58 +313,55 @@ def maint_status(request, pk):
         2. must not have a maint log of 1 or 2 in the schedule interval
 
     """
-    report_id = pk
-    today = timezone.now()
-    report = ReportDocs.objects.filter(report_id=report_id).exclude(
-        maintenance_schedule__schedule_id=5
-    )
 
-    context = {"maint_status": False}
+    template_name = "report/sections/maint_status.html.dj"
+    required_permissions = ("Edit Report Documentation",)
 
-    if (
-        not report.exists()
-        or (report.exists() and not hasattr(report, "logs"))
-        or (
-            report.exists()
-            and report.logs.filter(log__status__status_id__in=[1, 2]).exists()
-        )
-    ):
-        return render(
-            request,
-            "report/sections/maint_status.html.dj",
-            context,
+    def get_context_data(self, **kwargs):
+        report_id = self.kwargs["pk"]
+        today = timezone.now()
+        report = ReportDocs.objects.filter(report_id=report_id).exclude(
+            maintenance_schedule__schedule_id=5
         )
 
-    report = report.first()
+        context = {"maint_status": False}
 
-    last_maintained = (
-        report.logs.filter(log__status__status_id__in=[1, 2])
-        .latest("log__maintained_at")
-        .log.maintained_at
-    )
+        if (
+            not report.exists()
+            or (report.exists() and not hasattr(report, "logs"))
+            or (
+                report.exists()
+                and report.logs.filter(log__status__status_id__in=[1, 2]).exists()
+            )
+        ):
+            return context
 
-    maint_lookup = {
-        # quarterly
-        1: last_maintained + relativedelta(months=3),
-        # semi-yearly
-        2: last_maintained + relativedelta(months=6),
-        # yearly
-        3: last_maintained + relativedelta(years=1),
-        # bi-yearly
-        4: last_maintained + relativedelta(years=2),
-    }
+        report = report.first()
 
-    # lookup, otherwise past due
-    next_date = maint_lookup.get(report.maintenance_schedule_id, last_maintained)
+        last_maintained = (
+            report.logs.filter(log__status__status_id__in=[1, 2])
+            .latest("log__maintained_at")
+            .log.maintained_at
+        )
 
-    if next_date <= today:
-        context["maint_status"] = True
+        maint_lookup = {
+            # quarterly
+            1: last_maintained + relativedelta(months=3),
+            # semi-yearly
+            2: last_maintained + relativedelta(months=6),
+            # yearly
+            3: last_maintained + relativedelta(years=1),
+            # bi-yearly
+            4: last_maintained + relativedelta(years=2),
+        }
 
-    return render(
-        request,
-        "report/sections/maint_status.html.dj",
-        context,
-    )
+        # lookup, otherwise past due
+        next_date = maint_lookup.get(report.maintenance_schedule_id, last_maintained)
+
+        if next_date <= today:
+            context["maint_status"] = True
+
+        return context
 
 
 @login_required

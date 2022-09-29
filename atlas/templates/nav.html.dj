@@ -25,7 +25,7 @@
         <div class="navbar-start is-flex is-flex-grow-1 is-align-items-center px-3 pt-5">{% include "search.html.dj" %}</div>
         <div class="navbar-menu is-flex-grow-0" id="atlas-main-nav">
             <div class="navbar-end">
-                {% if "Edit User Permissions" in perms or "Edit Role Permissions" in perms or "View Site Analytics" in perms or "Create Parameters" in perms or "Delete Parameters" in perms %}
+                {% if "Edit User Permissions" in perms or "Edit Role Permissions" in perms or "View Site Analytics" in perms or "Create Parameters" in perms or "Delete Parameters" in perms or "Manage Global Site Settings" in perms %}
                     <div class="navbar-item has-dropdown is-hoverable is-boxed">
                         <div class="navbar-link is-arrowless">
                             <span class="icon is-medium">
@@ -37,7 +37,7 @@
                         </div>
                         <div class="navbar-dropdown">
                             <hr class="hide-desktop dropdown-divider" />
-                            {% if "Create Parameters" in perms or "Delete Parameters" in perms or "Edit Role Permissions" in perms or "Edit User Permissions" in perms %}
+                            {% if "Create Parameters" in perms or "Manage Global Site Settings" in perms or "Delete Parameters" in perms or "Edit Role Permissions" in perms or "Edit User Permissions" in perms %}
                                 <a title="settings"
                                    class="navbar-item"
                                    href="{% url 'settings:index' %}">Settings</a>
@@ -71,18 +71,18 @@
                     </div>
                     <div class="navbar-dropdown">
                         <hr class=" hide-desktop dropdown-divider" />
-                        <!-- missing permission check -->
-                        <a class="navbar-item"
-                           href="{% url 'initiative:list' %}"
-                           title="initiatives">Initiatives</a>
-                        <!-- missing permission check -->
+                        {% if settings.ENABLE_INITIATIVES %}
+                            <a class="navbar-item"
+                               href="{% url 'initiative:list' %}"
+                               title="initiatives">Initiatives</a>
+                        {% endif %}
                         <a class="navbar-item"
                            href="{% url 'collection:list' %}"
                            title="collections">Collections</a>
-                        <!-- missing permission check -->
-                        <a class="navbar-item" href="{% url 'term:list' %}" title="terms">Terms</a>
+                        {% if settings.ENABLE_TERMS %}
+                            <a class="navbar-item" href="{% url 'term:list' %}" title="terms">Terms</a>
+                        {% endif %}
                         <hr class="dropdown-divider" />
-                        <!-- bad url -->
                         <a title="about analytics"
                            class="navbar-item"
                            href="{% url "index:about" %}">About Analytics</a>

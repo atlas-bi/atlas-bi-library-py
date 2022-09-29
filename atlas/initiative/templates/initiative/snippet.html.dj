@@ -83,19 +83,19 @@
             </span>
         </a>
         <div class="card-footer-item">
-            {# @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")            { #}
-            <a title="share this initiative"
-               href="#"
-               class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
-               data-tooltip="Share"
-               data-target="initiative-share-{{ initiative.initiative_id }}"
-               data-name="{{ initiaitve.name }}"
-               data-type="initiative">
-                <span class="icon has-text-grey">
-                    <i class="fas fa-share"></i>
-                </span>
-            </a>
-            {# } #}
+            {% if settings.ENABLE_SHARING %}
+                <a title="share this initiative"
+                   href="#"
+                   class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+                   data-tooltip="Share"
+                   data-target="initiative-share-{{ initiative.initiative_id }}"
+                   data-name="{{ initiaitve.name }}"
+                   data-type="initiative">
+                    <span class="icon has-text-grey">
+                        <i class="fas fa-share"></i>
+                    </span>
+                </a>
+            {% endif %}
         </div>
     </footer>
 </div>

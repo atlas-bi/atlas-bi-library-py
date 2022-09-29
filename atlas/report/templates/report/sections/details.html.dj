@@ -26,7 +26,7 @@
                     {{ report.modified_at|relative }}
                     {% if report.modified_by or report.created_by %}
                         &nbsp;&middot;&nbsp;
-                        {% if "View Other User" in perms %}
+                        {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
                             <a title="open user profile"
                                href="{% if report.modified_by %}{{ report.modified_by.get_absolute_url }}{% else %}{{ report.created_by.get_absolute_url }}{% endif %}">
                                 {{ report.modified_by|default:report.created_by }}
@@ -44,7 +44,7 @@
                         {{ report.docs.modified_at|relative }}
                         {% if report.docs.modified_by or report.docs.created_by %}
                             &nbsp;&middot;&nbsp;
-                            {% if "View Other User" in perms %}
+                            {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
                                 <a title="open user profile"
                                    href="{% if report.docs.modified_by %} {{ report.docs.modified_by.get_absolute_url }} {% else %} {{ report.docs.created_by.get_absolute_url }} {% endif %} ">
                                     {{ report.docs.modified_by|default:report.docs.created_by }}
@@ -60,7 +60,7 @@
                 <tr>
                     <td>Report Author</td>
                     <td>
-                        {% if "View Other User" in perms %}
+                        {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
                             <a title="open user profile"
                                href="{{ report.created_by.get_absolute_url }}">{{ report.created_by }}</a>
                         {% else %}
@@ -73,7 +73,7 @@
                 <tr>
                     <td>Report Requester</td>
                     <td>
-                        {% if "View Other User" in perms %}
+                        {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
                             <a title="open user profile"
                                href="{{ report.docs.requester.get_absolute_url }}">{{ report.docs.requester }}</a>
                         {% else %}
@@ -86,7 +86,7 @@
                 <tr>
                     <td>Operational Owner</td>
                     <td>
-                        {% if "View Other User" in perms %}
+                        {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
                             <a title="open user profile"
                                href="{{ report.docs.ops_owner.get_absolute_url }}">{{ report.docs.ops_owner }}</a>
                         {% else %}

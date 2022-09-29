@@ -2,14 +2,15 @@
 import re
 
 from django import template
+from django.urls import reverse
 from index.models import Reports
 
 register = template.Library()
 
 
 def run_authorization(report, request):
-    """User authorization for Crystal Report (3) & Reporting Workbench (17) reports."""
-    if report.type_id not in [3, 17]:
+    """User authorization for Crystal Report & Reporting Workbench reports."""
+    if report.type.name not in ["Epic-Crystal Report", "Reporting Workbench Report"]:
         return True
 
     user_groups = request.user.get_group_ids
@@ -29,8 +30,25 @@ def run_authorization(report, request):
 
 
 @register.simple_tag(takes_context=True)
+def attachment_url(context, attachment):
+    """Build a url to open a file attachment."""
+    if context["is_hyperspace"]:
+        return (
+            "EpicAct:AC_RW_WEB_BROWSER,LaunchOptions:2,runparams:"
+            + context.request.build_absolute_uri(
+                reverse("report:attachment", kwargs={"pk": attachment.attachment_id})
+            )
+            + f"|FormCaption={attachment.name}|ActivityName={attachment.name}"
+        )
+
+    return context.request.build_absolute_uri(
+        reverse("report:attachment", kwargs={"pk": attachment.attachment_id})
+    )
+
+
+@register.simple_tag(takes_context=True)
 def run_url(context, report):
-    """Check if user is authorized to use favorites.
+    """Build a report run url.
 
     :param value: list of permissions
     :returns: true/false if they have a 41

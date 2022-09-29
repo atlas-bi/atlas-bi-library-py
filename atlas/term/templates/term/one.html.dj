@@ -79,8 +79,7 @@
                     <tr>
                         <td>Approved By</td>
                         <td>
-                            {% if "View Other User" in perms %}
-                                {# @if (User.HasPermission("View Other User") && @Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")                        { #}
+                            {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
                                 <a title="open user profile"
                                    href="{{ term.approved_by.get_absolute_url }}">{{ term.approved_by }}</a>
                             {% else %}
@@ -97,8 +96,7 @@
                 <tr>
                     <td>Last Updated By</td>
                     <td>
-                        {% if "View Other User" in perms %}
-                            {# @if (User.HasPermission("View Other User") && @Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")                    { #}
+                        {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
                             <a title="open user profile"
                                href="{{ term.modified_by.get_absolute_url }}">{{ term.modified_by }}</a>
                         {% else %}

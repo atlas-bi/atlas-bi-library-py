@@ -5,7 +5,7 @@
     <div class="panel-heading">Maintenance Logs</div>
     {% for log in report.docs.maintenance_logs.all %}
         <div class="panel-block">
-            {% if "View Other User" in perms %}
+            {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
                 <a title="open user profile"
                    href="{{ log.maintainer.get_absolute_url }}">{{ log.maintainer }}</a>
             {% else %}

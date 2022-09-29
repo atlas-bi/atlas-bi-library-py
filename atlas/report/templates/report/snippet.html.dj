@@ -180,7 +180,6 @@
             </span>
         </a>
         {% if "Open In Editor" in perms %}
-            {# @if (!string.IsNullOrEmpty(Model.EditReportUrl(Context,Configuration)) && User.HasPermission("Open In Editor")) #}
             <a title="edit report"
                class="card-footer-item px-0"
                target="_blank"
@@ -192,7 +191,6 @@
                     <span>Edit</span>
                 </span>
             </a>
-            {# } #}
         {% endif %}
         {% if "Open In Editor" in perms and manage_report_url %}
             <a title="manage report"
@@ -217,34 +215,32 @@
                     <i class="fas fa-chart-bar"></i>
                 </span>
             </a>
-            {# @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true") #}
-            {# { #}
-            <a title="share this report"
-               href="#"
-               class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2"
-               data-tooltip="Share"
-               data-target="report-share-{{ report.report_id }}">
-                <span class="icon has-text-grey">
-                    <i class="fas fa-share"></i>
-                </span>
-            </a>
-            {# } #}
-            {# @if (@Configuration["features:enable_request_access"] == null || @Configuration["features:enable_request_access"].ToString().ToLower() == "true") #}
-            {# { #}
-            {# @if (Model.ReportObjectAttachments.Count() > 0 || !string.IsNullOrEmpty(Model.RunReportUrl(Context,Configuration,(await Authorization.AuthorizeAsync(User,Model, "ReportRunPolicy")).Succeeded))) #}
-            {# { #}
-            <a title="request access"
-               href="#"
-               class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2"
-               data-tooltip="Request Access"
-               data-target="request-access-{{ report.report_id }}">
-                <span class="icon has-text-grey">
-                    <i class="fas fa-universal-access"></i>
-                </span>
-            </a>
-            {# } #}
-            {# } #}
+            {% if settings.ENABLE_SHARING %}
+                <a title="share this report"
+                   href="#"
+                   class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2"
+                   data-tooltip="Share"
+                   data-target="report-share-{{ report.report_id }}">
+                    <span class="icon has-text-grey">
+                        <i class="fas fa-share"></i>
+                    </span>
+                </a>
+            {% endif %}
+            {% if settings.ENABLE_REQUEST_ACCESS %}
+                {# also can only request access if the report is currently run-able. #}
+                {% if report.attachements.exists or run_report_url %}
+                    <a title="request access"
+                       href="#"
+                       class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2"
+                       data-tooltip="Request Access"
+                       data-target="request-access-{{ report.report_id }}">
+                        <span class="icon has-text-grey">
+                            <i class="fas fa-universal-access"></i>
+                        </span>
+                    </a>
+                {% endif %}
+            {% endif %}
         </div>
     </footer>
 </div>
-{# <partial name="Reports/_Modals" /> #}
+{% include "report/modals.html.dj" %}

@@ -145,7 +145,7 @@ class Reports(models.Model):
     def get_absolute_url(self):
         return reverse("report:item", kwargs={"pk": self.pk})
 
-    def get_absolute__maint_status_url(self):
+    def get_absolute_maint_status_url(self):
         return reverse("report:maint_status", kwargs={"pk": self.pk})
 
     def get_absolute_edit_url(self):
@@ -254,7 +254,7 @@ class ReportAttachments(models.Model):
     )
     name = models.TextField(db_column="Name")  # Field name made lowercase.
     path = models.TextField(db_column="Path")  # Field name made lowercase.
-    _created_at = models.DateTimeField(db_column="CreationDate", blank=True, null=True)
+    created_at = models.DateTimeField(db_column="CreationDate", blank=True, null=True)
     source = models.TextField(db_column="Source", blank=True, null=True)
     type = models.TextField(db_column="Type", blank=True, null=True)
     etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)

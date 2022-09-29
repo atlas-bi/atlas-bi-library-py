@@ -401,6 +401,13 @@ FOOTER = {
 SITE_MESSAGE = "Welcom to Atlas"
 LOGO = "img/thinking-face-text-266x80.png"
 
+ENABLE_INITIATIVES = True
+ENABLE_REQUEST_ACCESS = True
+ENABLE_SHARING = True
+ENABLE_TERMS = True
+ENABLE_USER_PROFILES = True
+ENABLE_BREADCRUMBS = True
+
 # import custom overrides
 with contextlib.suppress(ImportError):
     from .settings_cust import *
@@ -412,6 +419,12 @@ SETTINGS_EXPORT = [
     "FOOTER",
     "VERSION",
     "SITE_MESSAGE",
+    "ENABLE_INITIATIVES",
+    "ENABLE_REQUEST_ACCESS",
+    "ENABLE_SHARING",
+    "ENABLE_TERMS",
+    "ENABLE_USER_PROFILES",
+    "ENABLE_BREADCRUMBS",
 ]
 
 SAFE_HTML_TAGS = [

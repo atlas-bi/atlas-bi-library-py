@@ -61,35 +61,37 @@
                    {% if collection.hidden == "Y" %} checked="checked"{% endif %}/>
             <label for="switch-hidden">Hide Collection?</label>
         </div>
-        <div class="field">
-            <label class="label">Linked Terms</label>
-            <div class="mini-tags field is-grouped is-grouped-multiline">
-                {% for term_link in collection.terms.all %}
-                    <div class="control">
-                        <div class="tags has-addons">
-                            <span class="tag is-link">{{ term_link.term }}</span>
-                            <input type="hidden" name="linked_terms" value="{{ term_link.term_id }}" />
-                            <a href="#" title="delete" class="tag is-delete"></a>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
+        {% if settings.ENALBE_TERMS %}
             <div class="field">
-                <div class="control is-relative is-expanded">
-                    <input class="input input-mini multiselect"
-                           placeholder="search for terms.."
-                           search-area="term_lookup"
-                           data-name="linked_terms"/>
-                    <div class="mini">
-                        <div class="mini-waiting">
-                            <span class="icon">
-                                <i class="fas fa-circle-notch fa-spin"></i>
-                            </span>
+                <label class="label">Linked Terms</label>
+                <div class="mini-tags field is-grouped is-grouped-multiline">
+                    {% for term_link in collection.terms.all %}
+                        <div class="control">
+                            <div class="tags has-addons">
+                                <span class="tag is-link">{{ term_link.term }}</span>
+                                <input type="hidden" name="linked_terms" value="{{ term_link.term_id }}" />
+                                <a href="#" title="delete" class="tag is-delete"></a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="field">
+                    <div class="control is-relative is-expanded">
+                        <input class="input input-mini multiselect"
+                               placeholder="search for terms.."
+                               search-area="term_lookup"
+                               data-name="linked_terms"/>
+                        <div class="mini">
+                            <div class="mini-waiting">
+                                <span class="icon">
+                                    <i class="fas fa-circle-notch fa-spin"></i>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
         <div class="field">
             <label class="label">Linked Reports</label>
             <div class="mini-tags field is-grouped is-grouped-multiline reorder">

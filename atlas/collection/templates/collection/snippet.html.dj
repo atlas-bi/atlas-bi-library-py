@@ -89,19 +89,19 @@
                     <i class="fas fa-chart-bar"></i>
                 </span>
             </a>
-            {# @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")            { #}
-            <a href="#"
-               title="share this collection"
-               class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger ml-2"
-               data-tooltip="Share"
-               data-target="collection-share-{{ collection.collection_id }}"
-               data-name="{{ collection.name }}"
-               data-type="collection">
-                <span class="icon has-text-grey">
-                    <i class="fas fa-share"></i>
-                </span>
-            </a>
-            {# } #}
+            {% if settings.ENABLE_SHARING %}
+                <a href="#"
+                   title="share this collection"
+                   class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger ml-2"
+                   data-tooltip="Share"
+                   data-target="collection-share-{{ collection.collection_id }}"
+                   data-name="{{ collection.name }}"
+                   data-type="collection">
+                    <span class="icon has-text-grey">
+                        <i class="fas fa-share"></i>
+                    </span>
+                </a>
+            {% endif %}
         </div>
     </footer>
 </div>

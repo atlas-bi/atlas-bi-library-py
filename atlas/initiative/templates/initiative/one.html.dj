@@ -35,8 +35,7 @@
                     <tr>
                         <td>Operational Owner</td>
                         <td>
-                            {% if "View Other User" in perms %}
-                                {# and profile enabled #}
+                            {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
                                 <a title="open user profile"
                                    href="{{ initiative.ops_owner.get_absolute_url }}">{{ initiative.ops_owner }}</a>
                             {% else %}
@@ -49,8 +48,7 @@
                     <tr>
                         <td>Executive Owner</td>
                         <td>
-                            {% if "View Other User" in perms %}
-                                {# and profile enabled #}
+                            {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
                                 <a title="open user profile"
                                    href="{{ initiative.exec_owner.get_absolute_url }}">{{ initiative.exec_owner }}</a>
                             {% else %}
@@ -74,8 +72,7 @@
                 <tr>
                     <td>Last Updated By</td>
                     <td>
-                        {% if "View Other User" in perms %}
-                            {# and profile enabled #}
+                        {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
                             <a title="open user profile"
                                href="{{ initiative.modified_by.get_absolute_url }}">{{ initiative.modified_by }}</a>
                         {% else %}

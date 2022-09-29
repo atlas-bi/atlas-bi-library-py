@@ -1,7 +1,7 @@
 {% load url_tags %}
 
 <ul>
-    {# @{string RunReportUrl = Model.Report.RunReportUrl(Context, Configuration, (await Authorization.AuthorizeAsync(Context.User,Model.Report, "ReportRunPolicy")).Succeeded);    } #}
+    {% run_url report as run_report_url %}
     {% if report.attachments.exists %}
         <li>
             <a title="run report"
@@ -15,22 +15,20 @@
                 </span>
             </a>
         </li>
-    {% endif %}
-    {% run_url report as run_report_url %}
-    {% if run_report_url %}
-        <li>
-            <a title="run report"
-               class="is-block has-tooltip-arrow has-tooltip-right"
-               target="_blank"
-               data-tooltip="Run Report"
-               href="{{ run_report_url }}">
-                <span class="icon is-large has-text-success">
-                    <i class="far fa-2_3x fa-circle-play"></i>
-                </span>
-            </a>
-        </li>
     {% else %}
-        {% if report.system_identifier == "IDB" %}
+        {% if run_report_url %}
+            <li>
+                <a title="run report"
+                   class="is-block has-tooltip-arrow has-tooltip-right"
+                   target="_blank"
+                   data-tooltip="Run Report"
+                   href="{{ run_report_url }}">
+                    <span class="icon is-large has-text-success">
+                        <i class="far fa-2_3x fa-circle-play"></i>
+                    </span>
+                </a>
+            </li>
+        {% elif report.system_identifier == "IDB" %}
             <li>
                 <a title="run report"
                    href="#"
@@ -110,32 +108,32 @@
             </a>
         </li>
     {% endif %}
-    {# @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")   { #}
-    <li>
-        <a title="share this report"
-           href="#"
-           class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
-           data-tooltip="Share"
-           data-target="report-share-{{ report.report_id }}">
-            <span class="icon has-text-grey is-large ">
-                <i class="fas fa-lg fa-share"></i>
-            </span>
-        </a>
-    </li>
-    {# } #}
-    {# @if (@Configuration["features:enable_request_access"] == null || @Configuration["features:enable_request_access"].ToString().ToLower() == "true")    { #}
-    <li>
-        <a title="request access"
-           href="#"
-           class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
-           data-tooltip="Request Access"
-           data-target="request-access-{{ report.report_id }}">
-            <span class="icon has-text-grey is-large ">
-                <i class="fas fa-lg fa-universal-access"></i>
-            </span>
-        </a>
-    </li>
-    {# } #}
+    {% if settings.ENABLE_SHARING %}
+        <li>
+            <a title="share this report"
+               href="#"
+               class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+               data-tooltip="Share"
+               data-target="report-share-{{ report.report_id }}">
+                <span class="icon has-text-grey is-large ">
+                    <i class="fas fa-lg fa-share"></i>
+                </span>
+            </a>
+        </li>
+    {% endif %}
+    {% if settings.ENABLE_REQUEST_ACCESS %}
+        <li>
+            <a title="request access"
+               href="#"
+               class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+               data-tooltip="Request Access"
+               data-target="request-access-{{ report.report_id }}">
+                <span class="icon has-text-grey is-large ">
+                    <i class="fas fa-lg fa-universal-access"></i>
+                </span>
+            </a>
+        </li>
+    {% endif %}
     {% edit_url report as edit_report_url %}
     {% if "Open In Editor" in perms and edit_report_url %}
         <li>
