@@ -1,5 +1,6 @@
 """Atlas Settings for Test."""
 
+import contextlib
 import os
 
 from .base import *
@@ -68,7 +69,5 @@ LOGGING = {
 MIGRATION_MODULES = DisableMigrations()
 
 # import custom overrides
-try:
+with contextlib.suppress(ImportError):
     from .test_cust import *
-except ImportError:
-    pass

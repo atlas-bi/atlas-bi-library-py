@@ -1,7 +1,9 @@
+"""Atlas prod settings."""
+import contextlib
+
 from .base import *
 
 # import custom overrides
-try:
+
+with contextlib.suppress(ImportError):
     from .prod_cust import *
-except ImportError:
-    pass

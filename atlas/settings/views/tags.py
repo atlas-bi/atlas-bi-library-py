@@ -69,7 +69,11 @@ class Index(NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, Template
         if tag_type == "run_frequency":
             RunFrequency(name=request.POST.get("name")).save()
         elif tag_type == "tags":
-            Tags(name=request.POST.get("name")).save()
+            Tags(
+                name=request.POST.get("name"),
+                description=request.POST.get("description"),
+                show_in_header=request.POST.get("show_in_header"),
+            ).save()
         elif tag_type == "financial_impact":
             FinancialImpact(name=request.POST.get("name")).save()
         elif tag_type == "fragility":

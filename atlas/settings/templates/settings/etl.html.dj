@@ -1,0 +1,19 @@
+<div>
+    <h2 class="title is-2">Report Tag ETL</h2>
+    <form action="{% url "settings:etl" %}" method="post">
+        {% csrf_token %}
+        <div class="field">
+            <div class="control report-tags-etl">
+                <textarea rows="20" class="textarea"  name="value" placeholder="">{{ etl.value|safe }}</textarea>
+            </div>
+        </div>
+        <div class="is-flex is-justify-content-space-between">
+            <div class="control">
+                <button class="button is-link">Save Changes</button>
+            </div>
+            <div class="control">
+                <button type="button" class="button report-tags-etl-reset">Reset to Default</button>
+            </div>
+        </div>
+    </form>
+</div>

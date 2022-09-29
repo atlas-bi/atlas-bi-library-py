@@ -1,3 +1,6 @@
+"""Atlas dev settings."""
+import contextlib
+
 from .base import *
 from .base import BASE_DIR, INSTALLED_APPS
 
@@ -51,7 +54,5 @@ COMPRESS_ENABLED = False
 
 
 # import custom overrides
-try:
+with contextlib.suppress(ImportError):
     from .dev_cust import *
-except ImportError:
-    pass

@@ -1,0 +1,129 @@
+<div>
+    <h2 class="title is-2">Search Settings</h2>
+    <h3 class="title is-3">Visible Objects</h3>
+    <div class="table-container">
+        <table class="table is-narrow is-fullwidth is-align-middel"
+               aria-label="visible objects">
+            <thead>
+                <tr>
+                    <th class="is-narrow"></th>
+                    <th>Object</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="is-narrow">
+                        <div class="field" typeId="users">
+                            <input id="switch-users"
+                                   type="checkbox"
+                                   name="switch-users"
+                                   class="switch is-rounded is-info settings-search-visiblity"
+                                   {% if user_visiblity.value == "Y" %}checked="checked"{% endif %}/>
+                            <label for="switch-users"></label>
+                        </div>
+                    </td>
+                    <td>Users</td>
+                </tr>
+                <tr>
+                    <td class="is-narrow">
+                        <div class="field" typeId="groups">
+                            <input id="switch-groups"
+                                   type="checkbox"
+                                   name="switch-groups"
+                                   class="switch is-rounded is-info settings-search-visiblity"
+                                   {% if group_visiblity.value == "Y" %}checked="checked"{% endif %}/>
+                            <label for="switch-groups"></label>
+                        </div>
+                    </td>
+                    <td>Groups</td>
+                </tr>
+                <tr>
+                    <td class="is-narrow">
+                        <div class="field" typeId="terms">
+                            <input id="switch-terms"
+                                   type="checkbox"
+                                   name="switch-terms"
+                                   class="switch is-rounded is-info settings-search-visiblity"
+                                   {% if term_visiblity.value == "Y" %}checked="checked"{% endif %}/>
+                            <label for="switch-terms"></label>
+                        </div>
+                    </td>
+                    <td>Terms</td>
+                </tr>
+                <tr>
+                    <td class="is-narrow">
+                        <div class="field" typeId="initiatives">
+                            <input id="switch-initiatives"
+                                   type="checkbox"
+                                   name="switch-initiatives"
+                                   class="switch is-rounded is-info settings-search-visiblity"
+                                   {% if initiative_visiblity.value == "Y" %}checked="checked"{% endif %}/>
+                            <label for="switch-initiatives"></label>
+                        </div>
+                    </td>
+                    <td>Initiatives</td>
+                </tr>
+                <tr>
+                    <td class="is-narrow">
+                        <div class="field" typeId="collections">
+                            <input id="switch-collections"
+                                   type="checkbox"
+                                   name="switch-collections"
+                                   class="switch is-rounded is-info settings-search-visiblity"
+                                   {% if collection_visiblity.value == "Y" %}checked="checked"{% endif %}/>
+                            <label for="switch-collections"></label>
+                        </div>
+                    </td>
+                    <td>Collections</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <h3 class="title is-3">Visible Report Types</h3>
+    <div class="table-container">
+        <table class="table is-narrow is-fullwidth is-align-middel"
+               aria-label="visible report types">
+            <thead>
+                <tr>
+                    <th class="is-narrow"></th>
+                    <th>Report Type</th>
+                    <th>Search Name Override</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for type in report_types %}
+                    <tr>
+                        <td class="is-narrow">
+                            <div class="field" typeId="reports" groupId="{{ type.type_id }}">
+                                <input id="switch-{{ type.type_id }}"
+                                       type="checkbox"
+                                       name="switch-{{ type.type_id }}"
+                                       class="switch is-rounded is-info settings-search-visiblity"
+                                       {% if type.visible == "Y" %} checked="checked"{% endif %}/>
+                                <label for="switch-{{ type.type_id }}"></label>
+                            </div>
+                        </td>
+                        <td>
+                            {{ type }}
+                            {% if type.code %}<span>({{ type.code }})</span>{% endif %}
+                        </td>
+                        <td>
+                            <div class="field has-addons">
+                                <div class="control">
+                                    <input type="text"
+                                           class="input"
+                                           placeholder="{{ type.name }}"
+                                           value="{{ type.short_name|default:"" }}"
+                                           groupId="{{ type.type_id }}"/>
+                                </div>
+                                <div class="control">
+                                    <a title="save" href="#" class="button is-info settings-search-name">Save</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

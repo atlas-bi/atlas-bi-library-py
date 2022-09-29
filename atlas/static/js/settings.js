@@ -3,7 +3,7 @@
   document.addEventListener('click', function (event) {
     if (event.target.matches('button.report-tags-etl-reset')) {
       q = new XMLHttpRequest();
-      q.open('get', '/Settings/?handler=DefaultEtl', true);
+      q.open('get', '/settings/etl/default', true);
       q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       q.setRequestHeader('X-CSRFToken', csrftoken);
@@ -43,7 +43,10 @@
       q = new XMLHttpRequest();
       q.open(
         'post',
-        '/Settings/Search/?handler=SearchUpdateVisibility&' + url,
+        '/settings/search/visiblity/' +
+          p.getAttribute('typeId') +
+          '/' +
+          (p.hasAttribute('groupId') ? p.getAttribute('groupId') : '1'),
         true,
       );
       q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
@@ -53,20 +56,29 @@
 
       q.addEventListener('readystatechange', function () {
         if (this.readyState === 4 && this.status === 200) {
-          showMessageBox('Changes saved.');
+          document.dispatchEvent(
+            new CustomEvent('notification', {
+              cancelable: true,
+              detail: {
+                value: 'Changes saved.',
+                type: 'success',
+              },
+            }),
+          );
         }
       });
     } else if (event.target.matches('a.settings-search-name')) {
+      event.preventDefault();
       const input = event.target
         .closest('.field')
         .querySelector('input[groupId]');
       if (input === undefined) return !1;
       q = new XMLHttpRequest();
       q.open(
-        'post',
-        '/Settings/Search/?handler=SearchUpdateText&id=' +
+        'get',
+        '/settings/search/report_type_name/' +
           input.getAttribute('groupId') +
-          '&text=' +
+          '?name=' +
           input.value,
         true,
       );
@@ -77,7 +89,15 @@
 
       q.addEventListener('readystatechange', function () {
         if (this.readyState === 4 && this.status === 200) {
-          showMessageBox('Changes saved.');
+          document.dispatchEvent(
+            new CustomEvent('notification', {
+              cancelable: true,
+              detail: {
+                value: 'Changes saved.',
+                type: 'success',
+              },
+            }),
+          );
         }
       });
     }

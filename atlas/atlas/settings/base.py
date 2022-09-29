@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
+import contextlib
 import logging
 import os
 from pathlib import Path
@@ -268,6 +269,8 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "static"
 
+DEFAULT_ROOT = BASE_DIR / "defaults"
+
 COMPRESS_ROOT = BASE_DIR / "static"
 COMPRESS_CSS_HASHING_METHOD = "content"
 
@@ -293,9 +296,7 @@ COMPRESS_PRECOMPILERS = (
     #  ("text/javascript", "npm run babel {infile} -- --out-file {outfile}"),
     # ("test/css", "npm run postcss {infile} -o {outfile} --verbose"),
 )
-# COMPRESS_CACHEABLE_PRECOMPILERS = (
-#     "text/javascript",
-# )
+
 LIBSASS_OUTPUT_STYLE = "compressed"
 
 HTML_MINIFY = True
@@ -368,7 +369,6 @@ def find_project_root(src: Path) -> Path:
 
 def find_pyproject(root: Path) -> Optional[Path]:
     """Search upstream for a pyproject.toml file."""
-
     pyproject = root / "pyproject.toml"
 
     if pyproject.is_file():
@@ -400,11 +400,10 @@ FOOTER = {
 }
 SITE_MESSAGE = "Welcom to Atlas"
 LOGO = "img/thinking-face-text-266x80.png"
+
 # import custom overrides
-try:
+with contextlib.suppress(ImportError):
     from .settings_cust import *
-except ImportError:
-    pass
 
 SETTINGS_EXPORT = [
     "ORG_NAME",

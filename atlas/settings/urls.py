@@ -1,12 +1,22 @@
 from django.urls import path
 
 from . import apps
-from .views import group_roles, roles, tags, theme, user_roles, views
+from .views import (
+    etl,
+    group_roles,
+    roles,
+    search,
+    site_messages,
+    tags,
+    theme,
+    user_roles,
+    views,
+)
 
 app_name = apps.SettingsConfig.name
 
 urlpatterns = [
-    path("", views.index, name="index"),
+    path("", views.Index.as_view(), name="index"),
     path("roles", roles.Index.as_view(), name="roles"),
     path("roles/<int:pk>/delete", roles.Delete.as_view(), name="delete_role"),
     path(
@@ -30,8 +40,24 @@ urlpatterns = [
     path(
         "tags/<str:tag_type>/delete/<int:pk>", tags.Delete.as_view(), name="tags_delete"
     ),
-    path("site_messages", views.index, name="site_messages"),
-    path("search", views.index, name="search"),
+    path("site_messages", site_messages.Index.as_view(), name="site_messages"),
+    path(
+        "site_messages/<int:pk>/delete",
+        site_messages.Delete.as_view(),
+        name="delete_site_message",
+    ),
+    path("search", search.Index.as_view(), name="search"),
+    path(
+        "search/visiblity/<str:type>/<int:id>",
+        search.Index.as_view(),
+        name="search_update",
+    ),
+    path(
+        "search/report_type_name/<int:id>",
+        search.ReportTypeName.as_view(),
+        name="search_report_type_update",
+    ),
     path("theme", theme.Index.as_view(), name="theme"),
-    path("etl", views.index, name="etl"),
+    path("etl", etl.Index.as_view(), name="etl"),
+    path("etl/default", etl.default, name="etl_default"),
 ]

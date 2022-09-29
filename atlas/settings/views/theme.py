@@ -1,3 +1,4 @@
+"""Atlas theme settings."""
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, reverse
 from django.views.generic.base import TemplateView
@@ -24,4 +25,4 @@ class Index(NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, Template
         setting.value = global_css
         setting.save()
 
-        return redirect(reverse("settings:index") + "#theme")
+        return redirect(reverse("settings:index") + "?success=Theme saved.#theme")

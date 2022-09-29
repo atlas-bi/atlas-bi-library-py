@@ -1,3 +1,4 @@
+"""Atlas user roles settings."""
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import HttpResponse, redirect
 from django.urls import resolve, reverse
@@ -35,7 +36,9 @@ class Index(NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, Template
 
         UserRoles(name=request.POST.get("name")).save()
 
-        return redirect(reverse("settings:index") + "#roles")
+        return redirect(
+            reverse("settings:index") + "?success=Role successfully saved.#roles"
+        )
 
 
 class Delete(NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, DeleteView):
@@ -44,7 +47,6 @@ class Delete(NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, DeleteV
     template_name = "settings/roles.html.dj"
 
     def get_success_url(self):
-        print("success!")
         return reverse("settings:index") + "?success=Role successfully deleted.#roles"
 
     def get(self, *args, **kwargs):

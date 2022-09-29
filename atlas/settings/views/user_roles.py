@@ -1,14 +1,9 @@
+"""Atlas user roles settings."""
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import HttpResponse, redirect
+from django.shortcuts import redirect
 from django.urls import resolve, reverse
-from django.views.generic import DeleteView, TemplateView, UpdateView
-from index.models import (
-    GroupRoleLinks,
-    RolePermissionLinks,
-    RolePermissions,
-    UserRolelinks,
-    UserRoles,
-)
+from django.views.generic import DeleteView, TemplateView
+from index.models import UserRolelinks
 
 from atlas.decorators import NeverCacheMixin, PermissionsCheckMixin
 
@@ -56,7 +51,6 @@ class Delete(NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, DeleteV
         )
 
     def get(self, *args, **kwargs):
-        pk = self.kwargs["pk"]
         return redirect(
             resolve("settings:index")
             + "?error=You are not authorized to access that page.#user-roles"
