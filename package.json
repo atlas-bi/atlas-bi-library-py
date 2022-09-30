@@ -95,10 +95,10 @@
     "rollup-stream-gulp": "0.0.3",
     "sass": "1.55.0",
     "semantic-release": "19.0.5",
-    "stylelint": "^14.13.0",
-    "stylelint-config-prettier-scss": "^0.0.1",
-    "stylelint-config-standard-scss": "^5.0.0",
-    "stylelint-scss": "^4.3.0",
+    "stylelint": "14.13.0",
+    "stylelint-config-prettier-scss": "0.0.1",
+    "stylelint-config-standard-scss": "5.0.0",
+    "stylelint-scss": "4.3.0",
     "xo": "^0.52.3"
   },
   "config": {
