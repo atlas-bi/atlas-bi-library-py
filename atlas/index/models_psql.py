@@ -18,20 +18,18 @@ from datetime import datetime
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
+from django.utils.functional import cached_property
 
 
-class Groups(models.Model):
-    group_id = models.AutoField(primary_key=True)
-    account_name = models.TextField(blank=True, default="")
-    group_name = models.TextField(blank=True, default="")
-    group_email = models.TextField(blank=True, default="")
-    group_type = models.TextField(blank=True, default="")
-    group_source = models.TextField(blank=True, default="")
+class ReportGroupMemberships(models.Model):
+    membership_id = models.AutoField(primary_key=True)
+    group = models.ForeignKey(
+        "Groups", on_delete=models.CASCADE, related_name="reports"
+    )
+    report = models.ForeignKey(
+        "Reports", on_delete=models.CASCADE, related_name="groups"
+    )
     etl_date = models.DateTimeField(blank=True, null=True)
-    epic_id = models.TextField(blank=True, default="")
-
-    def __str__(self):
-        return self.group_name
 
 
 class Reports(models.Model):
@@ -83,112 +81,122 @@ class Reports(models.Model):
     orphan = models.CharField(max_length=1, blank=True, default="")
     system_path = models.TextField(blank=True, default="")
     etl_date = models.DateTimeField(blank=True, null=True)
-    certification_tag = models.CharField(max_length=200, blank=True, default="")
+    availability = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.title or self.name
+
+    @cached_property
+    def is_certified(self):
+        return self.tags.filter(
+            tag__name__in=["Analytics Certified", "Analytics Reviewed"]
+        ).exists()
+
+    def has_docs(self):
+        return hasattr(self, "docs")
+
+    @cached_property
+    def get_group_ids(self):
+        return self.groups.all().values_list("group__group_id", flat=True)
 
     @property
     def friendly_name(self):
         return self.title or self.name
 
-    def has_docs(self):
-        return hasattr(self, "docs")
-
     def get_absolute_url(self):
-        return reverse("report:index", kwargs={"pk": self.pk})
+        return reverse("report:item", kwargs={"pk": self.pk})
 
-    def get_absolute_comments_url(self):
-        return reverse("report:comments", kwargs={"pk": self.pk})
+    def get_absolute_maint_status_url(self):
+        return reverse("report:maint_status", kwargs={"pk": self.pk})
 
-    def system_viewer_url(self, in_system):
-        """Build system record viewer url."""
-        if self.system_id and self.system_identifier and in_system:
-            return "EpicAct:AR_RECORD_VIEWER,runparams:{}|{}".format(
-                self.system_identifier,
-                self.system_id,
-            )
-
-        return None
-
-    def system_editor_url(self, in_system, domain):
-        """Build system editor url."""
-        url = None
-        if self.system_path and in_system:
-            url = "reportbuilder:Action=Edit&ItemPath={}&Endpoint=https://{}.:{}433/ReportServer".format(
-                self.system_path,
-                self.system_server,
-                domain,
-            )
-        elif self.system_identifier == "FDM" and self.system_id and in_system:
-            url = (
-                "EpicACT:BI_SLICERDICER,LaunchOptions:16,RunParams:StartingDataModelId=%s"
-                % self.system_id
-            )
-        elif self.system_identifier == "IDM" and self.system_id and in_system:
-            url = (
-                "EpicAct:WM_DASHBOARD_EDITOR,INFONAME:IDMRECORDID,INFOVALUE%s:"
-                % self.system_id
-            )
-        elif self.system_identifier == "IDB" and self.system_id and in_system:
-            url = (
-                "EpicAct:WM_COMPONENT_EDITOR,INFONAME:IDBRECORDID,INFOVALUE:%s"
-                % self.system_id
-            )
-        elif (
-            self.system_identifier == "HRX"
-            and self.system_id
-            and in_system
-            and self.system_template_id
-        ):
-            url = (
-                "EpicAct:IP_REPORT_SETTING_POPUP,runparams:"
-                + self.system_template_id
-                + "|"
-                + self.system_id
-            )
-        elif (
-            self.system_identifier == "IDN"
-            and self.system_id
-            and in_system
-            and self.system_template_id
-        ):
-            url = (
-                "EpicAct:WM_METRIC_EDITOR,INFONAME:IDNRECORDID,INFOVALUE:%s"
-                % self.system_id
-            )
-
-        return url
-
-    def system_manage_url(self, in_system, domain):
-        """Build system manage url."""
-        if self.type_id.name == "SSRS Report" and not in_system:
-            return "https://{}.{}/Reports/manage/catalogitem/properties{}".format(
-                self.system_server,
-                domain,
-                self.system_path,
-            )
-        return None
+    def get_absolute_edit_url(self):
+        return reverse("report:edit", kwargs={"pk": self.pk})
 
     @property
     def modified_at(self):
         if self._modified_at:
-            return datetime.strftime(self._modified_at, "%m/%d/%y")
+            return self._modified_at  # datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
-    # def system_run_url(self):
-    #     return None
 
-
-class ReportGroupMemberships(models.Model):
-    membership_id = models.AutoField(primary_key=True)
-    group = models.ForeignKey(
-        "Groups", on_delete=models.CASCADE, related_name="report_memberships"
-    )
+class ReportParameters(models.Model):
+    parameter_id = models.AutoField(primary_key=True)
     report = models.ForeignKey(
-        "Reports", on_delete=models.CASCADE, related_name="group_memeberships"
+        Reports,
+        models.DO_NOTHING,
+        related_name="parameters",
     )
+    name = models.TextField(blank=True, null=True)
+    value = models.TextField(blank=True, null=True)
+
+
+class ReportAttachments(models.Model):
+    attachment_id = models.AutoField(primary_key=True)
+    report = models.ForeignKey(
+        Reports,
+        models.DO_NOTHING,
+        db_column="ReportObjectId",
+        related_name="attachments",
+    )
+    name = models.TextField()
+    path = models.TextField()
+    created_at = models.DateTimeField(blank=True, null=True)
+    source = models.TextField(blank=True, null=True)
+    type = models.TextField(blank=True, null=True)
     etl_date = models.DateTimeField(blank=True, null=True)
+
+
+class ReportTags(models.Model):
+    tag_id = models.AutoField(primary_key=True)
+    system_id = models.DecimalField(
+        max_digits=18, decimal_places=0, blank=True, null=True
+    )
+    name = models.CharField(max_length=200, blank=True, null=True)
+
+
+class Tags(models.Model):
+    tag_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=450, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    priority = models.IntegerField(blank=True, null=True)
+    show_in_header = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    def usage(self):
+        return self.reports.count()
+
+
+class ReportSystemTagLinks(models.Model):
+    link_id = models.AutoField(primary_key=True)
+    report = models.ForeignKey(
+        Reports,
+        models.DO_NOTHING,
+        blank=True,
+        default="",
+        related_name="system_tag_links",
+    )
+
+    tag = models.ForeignKey(
+        ReportTags,
+        models.DO_NOTHING,
+        related_name="system_report_links",
+    )
+    line = models.IntegerField(blank=True, null=True)
+
+
+class ReportTagLinks(models.Model):
+    link_id = models.AutoField(primary_key=True)
+    report = models.ForeignKey(
+        Reports,
+        models.DO_NOTHING,
+        blank=True,
+        default="",
+        related_name="tags",
+    )
+    tag = models.ForeignKey(Tags, models.DO_NOTHING, related_name="reports")
+    show_in_header = models.TextField(blank=True, null=True)
 
 
 class ReportHierarchies(models.Model):
@@ -211,6 +219,9 @@ class ReportQueries(models.Model):
     )
     query = models.TextField(blank=True, default="")
     etl_date = models.DateTimeField(blank=True, null=True)
+    sourceserver = models.TextField(blank=True, null=True)
+    language = models.TextField(blank=True, null=True)
+    name = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.query
@@ -266,6 +277,7 @@ class ReportTypes(models.Model):
     code = models.TextField(blank=True, default="")
     short_name = models.TextField(blank=True, default="")
     etl_date = models.DateTimeField(blank=True, null=True)
+    visible = models.CharField(max_length=1, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -283,6 +295,8 @@ class Users(AbstractUser):
     display_name = models.TextField(blank=True, default="")
     _full_name = models.TextField(blank=True, default="")
     _first_name = models.TextField(blank=True, default="")
+    full_name = models.TextField(blank=True, null=True)
+    first_name = models.TextField(blank=True, null=True)
     last_name = models.TextField(blank=True, default="")
     department = models.TextField(blank=True, default="")
     title = models.TextField(blank=True, default="")
@@ -294,128 +308,147 @@ class Users(AbstractUser):
     last_login = models.DateTimeField(blank=True, null=True)
     is_active = True
     date_joined = None
-    is_superuser = True  # check permissions for admin
+
     is_staff = True
 
     def __str__(self):
-        return self.build_full_name()
+        return self.full_name or self._full_name
 
-    @property
-    def is_admin(self):
-        return self.role_links.filter(name="Administrator").exists()
-
-    def get_absolute_url(self):
-        return reverse("user:profile", kwargs={"pk": self.pk})
-
-    def has_permission(self, perm, obj=None):
-        # check if they have a permission
+    @cached_property
+    def is_superuser(self):
+        # either an admin, or in a group that is an admin.
         return (
-            self.role_links.filter(role_id=1).exists()
-            or self.role_links.permission_links.filter(permissions_id=perm).exists()
+            self.role_links.filter(role__name="Administrator").exists()
+            or self.group_links.filter(
+                group__role_links__role__name="Administrator"
+            ).exists()
         )
 
-    def get_preferences(self):
-        # return users preferences as queriable object
-        return self.user_preferences
+    def get_user_permissions(self, obj=None):
+        # if an active admin, return all permissions
+        if (
+            not self.user_preferences.filter(key="AdminDisabled").exists()
+            and self.is_superuser
+        ):
+            return RolePermissions.objects.all().values_list("name", flat=True)
 
-    def get_permissions(self):
-        # return all permissions
-        if self.role_links.filter(role_id=1).exists():
-            return list(
-                RolePermissions.objects.all().values_list("permissions_id", flat=True)
-            )
-
-        return list(
-            self.role_links.values_list(
-                "role_id__permission_links__permission_id", flat=True
-            )
-        ).append(
-            # every one can get ``user`` permissions.
-            list(
+        # otherwise get the users group permissions, and add in the default user permissions.
+        return (
+            self.role_links.exclude(role__name__in=["Administrator", "User"])
+            .values_list("role__permission_links__permission__name", flat=True)
+            .union(
                 RolePermissions.objects.filter(
-                    role_permission_links__role_id=6
-                ).values_list("permissions_id", flat=True)
+                    role_permission_links__role__name="User"
+                ).values_list("name", flat=True)
             )
         )
+
+    def get_group_permissions(self, obj=None):
+        # don't need to get admin or user permissions here, they are passed from the user permissions check.
+        return (
+            UserRoles.objects.filter(
+                name__in=self.group_links.values_list(
+                    "group__role_links__role__name", flat=True
+                )
+            )
+            .exclude(name__in=["Administrator", "User"])
+            .values_list("permission_links__permission__name", flat=True)
+        )
+
+    @cached_property
+    def get_group_ids(self):
+        return self.group_links.all().values_list("group__group_id", flat=True)
+
+    @cached_property
+    def get_all_permissions(self, obj=None):
+        return self.get_user_permissions().union(self.get_group_permissions())
+
+    def has_perm(self, perm, obj=None):
+        return perm in self.get_all_permissions
+
+    def has_perms(self, perms, obj=None):
+        return set(perms) < set(self.get_all_permissions)
+        pass
 
     def get_roles(self):
         """Get users roles."""
         return list(self.role_links.values_list("role__name"))
 
+    def get_absolute_url(self):
+        return reverse("user:profile", kwargs={"pk": self.pk})
+
+    @cached_property
+    def get_preferences(self):
+        # return users preferences as queriable object
+        return dict(self.user_preferences.values_list("key", "value"))
+
+    @cached_property
     def get_starred_reports(self):
         # return all favorites
-        return list(self.starred_reports.values_list("report__report_id"))
+        return list(self.starred_reports.values_list("report__report_id", flat=True))
 
-    @property
-    def active_role(self):
-        if self.user_preferences.filter(key="ActiveRole").exists():
-            return UserRoles.objects.filter(
-                role_id=self.user_preferences.filter(key="ActiveRole").first().value
-            ).first()
-        return None
+    @cached_property
+    def get_starred_initiatives(self):
+        # return all favorites
+        return list(
+            self.starred_initiatives.values_list("initiative__initiative_id", flat=True)
+        )
+
+    @cached_property
+    def get_starred_collections(self):
+        # return all favorites
+        return list(
+            self.starred_collections.values_list("collection__collection_id", flat=True)
+        )
+
+    @cached_property
+    def get_starred_terms(self):
+        # return all favorites
+        return list(self.starred_terms.values_list("term__term_id", flat=True))
+
+    @cached_property
+    def get_starred_users(self):
+        # return all favorites
+        return list(self.starred_users.values_list("user__user_id", flat=True))
+
+    @cached_property
+    def get_starred_groups(self):
+        # return all favorites
+        return list(self.starred_groups.values_list("group__group_id", flat=True))
+
+    @cached_property
+    def get_starred_searches(self):
+        # return all favorites
+        return list(self.starred_searches.values_list("search__search_id", flat=True))
 
     @property
     def password(self):
         return 123
 
     @property
-    def full_name(self):
-        return self.build_full_name()
-
-    @property
     def first_initial(self):
         return self.full_name[0]
 
-    @property
-    def first_name(self):
-        if self._first_name:
-            return self._first_name
 
-        # if the name format is "last, first" > "First Last"
-        if self.account_name and "," in self.account_name:
-            name = self.account_name.replace(", ", ",").split(" ")[0].split(",")
-            if len(name) > 1:
-                return name[1].title()
+class Groups(models.Model):
+    group_id = models.AutoField(primary_key=True)
+    account_name = models.TextField(blank=True, default="")
+    group_name = models.TextField(blank=True, default="")
+    group_email = models.TextField(blank=True, default="")
+    group_type = models.TextField(blank=True, default="")
+    group_source = models.TextField(blank=True, default="")
+    etl_date = models.DateTimeField(blank=True, null=True)
+    epic_id = models.TextField(blank=True, default="")
 
-        # if the name format is "domain\first-last" > "First Last"
-        if self.account_name:
-            return re.sub(r".+?\\+", "", self.account_name).split("-")[0].title()
+    def __str__(self):
+        return self.group_name
 
-        # if the name format is "last, first" > "First Last"
-        if self.username and "," in self.username:
-            name = self.username.replace(", ", ",").split(" ")[0].split(",")
-            if len(name) > 1:
-                return name[1].title()
+    def get_absolute_url(self):
+        return reverse("group:details", kwargs={"pk": self.pk})
 
-        # if the name format is "domain\first-last" > "First Last"
-        if self.username:
-            return re.sub(r".+?\\+", "", self.username).split("-")[0].title()
-
-    def build_full_name(self):
-        if self._full_name:
-            return self._full_name
-
-        # if the name format is "last, first" > "First Last"
-        if self.account_name and "," in self.account_name:
-            name = self.account_name.replace(", ", ",").split(" ")[0].split(",")
-            if len(name) > 1:
-                return ("{} {}".format(name[1], name[0])).title()
-
-        # if the name format is "domain\first-last" > "First Last"
-        if self.account_name:
-            return re.sub(r".+?\\+", "", self.account_name).replace("-", " ").title()
-
-        # if the name format is "last, first" > "First Last"
-        if self.username and "," in self.username:
-            name = self.username.replace(", ", ",").split(" ")[0].split(",")
-            if len(name) > 1:
-                return ("{} {}".format(name[1], name[0])).title()
-
-        # if the name format is "domain\first-last" > "First Last"
-        if self.username:
-            return re.sub(r".+?\\+", "", self.username).replace("-", " ").title()
-
-        return "{} {}".format(self.first_name, self.last_name)
+    def get_roles(self):
+        """Get users roles."""
+        return list(self.role_links.values_list("role__name"))
 
 
 class UserGroupMemberships(models.Model):
@@ -425,7 +458,7 @@ class UserGroupMemberships(models.Model):
         blank=True,
         default="",
         on_delete=models.CASCADE,
-        related_name="group_memeberships",
+        related_name="group_links",
     )
     group = models.ForeignKey(
         Groups,
@@ -439,16 +472,8 @@ class UserGroupMemberships(models.Model):
 
 class Analytics(models.Model):
     analytics_id = models.AutoField(primary_key=True)
-    username = models.TextField(blank=True, default="")
-    app_code_name = models.TextField(blank=True, default="")
-    app_name = models.TextField(blank=True, default="")
-    app_version = models.TextField(blank=True, default="")
-    cookie_enabled = models.TextField(blank=True, default="")
     language = models.TextField(blank=True, default="")
-    oscpu = models.TextField(blank=True, default="")
-    platform = models.TextField(blank=True, default="")
     useragent = models.TextField(blank=True, default="")
-    host = models.TextField(blank=True, default="")
     hostname = models.TextField(blank=True, default="")
     href = models.TextField(blank=True, default="")
     protocol = models.TextField(blank=True, default="")
@@ -458,7 +483,6 @@ class Analytics(models.Model):
     screen_height = models.TextField(blank=True, default="")
     screen_width = models.TextField(blank=True, default="")
     origin = models.TextField(blank=True, default="")
-    title = models.TextField(blank=True, default="")
     load_time = models.TextField(blank=True, default="")
     access_date = models.DateTimeField(blank=True, null=True)
     referrer = models.TextField(blank=True, default="")
@@ -474,87 +498,7 @@ class Analytics(models.Model):
     page_id = models.TextField(blank=True, default="")
     session_id = models.TextField(blank=True, default="")
     page_time = models.IntegerField(blank=True, null=True)
-    session_time = models.IntegerField(blank=True, null=True)
     update_time = models.DateTimeField(blank=True, null=True)
-
-
-class CollectionAgreements(models.Model):
-    agreement_id = models.AutoField(primary_key=True)
-    description = models.TextField(blank=True, default="")
-    _met_at = models.DateTimeField(blank=True, null=True)
-    _effective_from = models.DateTimeField(blank=True, null=True)
-    _modified_at = models.DateTimeField(blank=True, auto_now=True)
-    modified_by = models.ForeignKey(
-        "Users",
-        related_name="collection_agreement_modifier",
-        blank=True,
-        null=True,
-        on_delete=models.CASCADE,
-    )
-    collection_id = models.ForeignKey(
-        "Collections",
-        blank=True,
-        null=True,
-        related_name="agreements",
-        on_delete=models.CASCADE,
-    )
-    rank = models.IntegerField(blank=True, null=True)
-
-    @property
-    def met_at(self):
-        if self._met_at:
-            return datetime.strftime(self._met_at, "%m/%d/%y")
-        return ""
-
-    @property
-    def effective_from(self):
-        if self._effective_from:
-            return datetime.strftime(self._effective_from, "%m/%d/%y")
-        return ""
-
-    @property
-    def modified_at(self):
-        if self._modified_at:
-            return datetime.strftime(self._modified_at, "%m/%d/%y")
-        return ""
-
-
-class CollectionAgreementUsers(models.Model):
-    agreementusers_id = models.AutoField(primary_key=True)
-    agreement = models.ForeignKey(
-        CollectionAgreements,
-        blank=True,
-        null=True,
-        on_delete=models.CASCADE,
-        related_name="agreement_users",
-    )
-    user = models.ForeignKey(
-        "Users",
-        blank=True,
-        null=True,
-        related_name="collection_agreement",
-        on_delete=models.CASCADE,
-    )
-    modified_at = models.DateTimeField(blank=True, null=True)
-    modified_by = models.ForeignKey(
-        "Users",
-        related_name="collection_agreement_users_modifier",
-        blank=True,
-        null=True,
-        on_delete=models.CASCADE,
-    )
-
-
-class CollectionAttachments(models.Model):
-    attachment_id = models.AutoField(primary_key=True)
-    collection = models.ForeignKey(
-        "Collections", on_delete=models.CASCADE, related_name="attachments"
-    )
-    rank = models.IntegerField()
-    data = models.BinaryField()
-    category = models.TextField()
-    name = models.TextField(blank=True, default="")
-    size = models.IntegerField(blank=True, null=True)
 
 
 class Initiatives(models.Model):
@@ -598,6 +542,7 @@ class Initiatives(models.Model):
         null=True,
         on_delete=models.CASCADE,
     )
+    hidden = models.CharField(max_length=1, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -611,10 +556,13 @@ class Initiatives(models.Model):
     def get_absolute_edit_url(self):
         return reverse("initiative:edit", kwargs={"pk": self.pk})
 
+    def stars(self):
+        return self.stars.count()
+
     @property
     def modified_at(self):
         if self._modified_at:
-            return datetime.strftime(self._modified_at, "%m/%d/%y")
+            return self._modified_at  # datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
 
@@ -655,121 +603,11 @@ class Collections(models.Model):
     def get_absolute_edit_url(self):
         return reverse("collection:edit", kwargs={"pk": self.pk})
 
-    def get_absolute_comments_url(self):
-        return reverse("collection:comments", kwargs={"pk": self.pk})
-
     @property
     def modified_at(self):
         if self._modified_at:
-            return datetime.strftime(self._modified_at, "%m/%d/%y")
+            return self._modified_at  # datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
-
-
-class CollectionChecklist(models.Model):
-    checklist_id = models.AutoField(primary_key=True)
-    task = models.ForeignKey(
-        "CollectionMilestoneTasks",
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-        related_name="checklist",
-    )
-    item = models.TextField(blank=True, default="")
-
-
-class CollectionChecklistCompleted(models.Model):
-    checklistcompleted_id = models.AutoField(primary_key=True)
-    collection = models.ForeignKey(
-        Collections,
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-        related_name="completed_checklist",
-    )
-    task_date = models.DateTimeField(blank=True, null=True)
-    task_id = models.IntegerField(blank=True, null=True)
-    checklist_id = models.IntegerField(blank=True, null=True)
-    status = models.BooleanField(blank=True, default="")
-    completion_date = models.DateTimeField(blank=True, null=True)
-    completion_user = models.IntegerField(blank=True, null=True)
-
-
-class CollectionMilestoneFrequency(models.Model):
-    frequency_id = models.AutoField(primary_key=True)
-    name = models.TextField(blank=True, default="")
-
-
-class CollectionMilestoneTasks(models.Model):
-    task_id = models.AutoField(primary_key=True)
-    template = models.ForeignKey(
-        "CollectionMilestoneTemplates",
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-        related_name="tasks",
-    )
-    owner = models.ForeignKey(
-        "Users",
-        on_delete=models.CASCADE,
-        related_name="collection_task_owner",
-        blank=True,
-        null=True,
-    )
-    description = models.TextField(blank=True, default="")
-    start_date = models.DateTimeField(blank=True, null=True)
-    end_date = models.DateTimeField(blank=True, null=True)
-    modified_by = models.ForeignKey(
-        "Users",
-        on_delete=models.CASCADE,
-        related_name="collection_task_modifier",
-        blank=True,
-        null=True,
-    )
-    modified_at = models.DateTimeField(blank=True, null=True)
-    collection = models.ForeignKey(
-        Collections,
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-        related_name="tasks",
-    )
-
-
-class CollectionMilestoneTasksCompleted(models.Model):
-    task_id = models.AutoField(primary_key=True)
-    collection = models.ForeignKey(
-        Collections,
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-        related_name="completed_tasks",
-    )
-    completion_date = models.DateTimeField(blank=True, null=True)
-    completion_user = models.ForeignKey(
-        "Users",
-        on_delete=models.CASCADE,
-        related_name="collection_task_completed_by",
-        blank=True,
-        default="",
-    )
-    comments = models.TextField(blank=True, default="")
-    owner = models.TextField(blank=True, default="")
-    due_date = models.DateTimeField(blank=True, null=True)
-
-
-class CollectionMilestoneTemplates(models.Model):
-    template_id = models.AutoField(primary_key=True)
-    name = models.TextField(blank=True, default="")
-    type_id = models.ForeignKey(
-        CollectionMilestoneFrequency,
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-        related_name="milestone_templates",
-    )
-    lastupdateuser = models.IntegerField(blank=True, null=True)
-    lastupdatedate = models.DateTimeField(blank=True, null=True)
-    interval = models.IntegerField(blank=True, null=True)
 
 
 class CollectionReports(models.Model):
@@ -840,45 +678,15 @@ class CollectionTerms(models.Model):
         )
 
 
-class CollectionCommentStream(models.Model):
-    stream_id = models.AutoField(primary_key=True)
-    collection = models.ForeignKey(
-        Collections, on_delete=models.CASCADE, related_name="comment_streams"
-    )
-
-
-class CollectionComments(models.Model):
-    comment_id = models.AutoField(primary_key=True)
-    stream = models.ForeignKey(
-        CollectionCommentStream,
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-        related_name="comments",
-    )
-    user = models.ForeignKey(
-        "Users",
-        on_delete=models.CASCADE,
-        related_name="user_collection_comments",
-        blank=True,
-        null=True,
-    )
-    message = models.TextField(blank=True, default="")
-    posted_at = models.DateTimeField(blank=True, null=True)
-
-    def get_absolute_delete_url(self):
-        return reverse(
-            "collection:comments_delete",
-            kwargs={"pk": self.stream.collection_id, "comment_id": self.pk},
-        )
-
-
 class RunFrequency(models.Model):
     frequency_id = models.AutoField(primary_key=True)
     name = models.TextField(blank=True, default="")
 
     def __str__(self):
         return self.name
+
+    def usage(self):
+        return self.report_docs.count()
 
 
 class FinancialImpact(models.Model):
@@ -888,6 +696,9 @@ class FinancialImpact(models.Model):
     def __str__(self):
         return self.name
 
+    def usage(self):
+        return self.initiatives.count()
+
 
 class Fragility(models.Model):
     fragility_id = models.AutoField(primary_key=True)
@@ -895,6 +706,9 @@ class Fragility(models.Model):
 
     def __str__(self):
         return self.name
+
+    def usage(self):
+        return self.report_docs.count()
 
 
 class FragilityTag(models.Model):
@@ -904,8 +718,11 @@ class FragilityTag(models.Model):
     def __str__(self):
         return self.name
 
+    def usage(self):
+        return self.report_docs.count()
 
-class Globalsitesettings(models.Model):
+
+class GlobalSettings(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.TextField(blank=True, default="")
     description = models.TextField(blank=True, default="")
@@ -1022,6 +839,11 @@ class MaintenanceLogs(models.Model):
         null=True,
         related_name="logs",
     )
+    report = models.ForeignKey(
+        "ReportDocs",
+        models.DO_NOTHING,
+        related_name="maintenance_logs",
+    )
 
     class Meta:
         ordering = ["maintained_at"]
@@ -1034,6 +856,9 @@ class MaintenanceLogStatus(models.Model):
     def __str__(self):
         return self.name
 
+    def usage(self):
+        return self.logs.count()
+
 
 class MaintenanceSchedule(models.Model):
     schedule_id = models.AutoField(primary_key=True)
@@ -1041,6 +866,9 @@ class MaintenanceSchedule(models.Model):
 
     def __str__(self):
         return self.name
+
+    def usage(self):
+        return self.report_docs.count()
 
 
 class OrganizationalValue(models.Model):
@@ -1050,45 +878,8 @@ class OrganizationalValue(models.Model):
     def __str__(self):
         return self.name
 
-
-class ReportTickets(models.Model):
-    ticket_id = models.AutoField(primary_key=True)
-    number = models.IntegerField(blank=True, null=True)
-    description = models.TextField(blank=True, default="")
-    report_id = models.OneToOneField(
-        "ReportDocs",
-        blank=True,
-        default="",
-        on_delete=models.CASCADE,
-        related_name="tickets",
-    )
-    url = models.TextField(blank=True, default="")
-
-    def __str__(self):
-        return self.number
-
-
-class ReportCommentStream(models.Model):
-    stream_id = models.AutoField(primary_key=True)
-    report = models.ForeignKey(
-        "Reports", on_delete=models.CASCADE, related_name="comment_streams"
-    )
-
-
-class ReportComments(models.Model):
-    comment_id = models.AutoField(primary_key=True)
-    stream = models.ForeignKey(
-        "ReportCommentStream", on_delete=models.CASCADE, related_name="stream_comments"
-    )
-    user = models.ForeignKey(
-        "Users",
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-        related_name="user_report_comments",
-    )
-    message = models.TextField()
-    posted_at = models.DateTimeField()
+    def usage(self):
+        return self.report_docs.count()
 
 
 class ReportFragilityTags(models.Model):
@@ -1097,25 +888,11 @@ class ReportFragilityTags(models.Model):
         "ReportDocs", on_delete=models.CASCADE, related_name="fragility_tags"
     )
     fragility_tag = models.ForeignKey(
-        FragilityTag, on_delete=models.CASCADE, related_name="reports"
+        FragilityTag, on_delete=models.CASCADE, related_name="report_docs"
     )
 
     class Meta:
         unique_together = (("report", "fragility_tag"),)
-
-
-class ReportMaintenanceLogs(models.Model):
-    link_id = models.AutoField(primary_key=True)
-    report = models.ForeignKey(
-        "ReportDocs", on_delete=models.CASCADE, related_name="logs"
-    )
-    log = models.ForeignKey(
-        MaintenanceLogs, on_delete=models.CASCADE, related_name="reports"
-    )
-
-    class Meta:
-        unique_together = (("report", "log"),)
-        ordering = ["-log__maintained_at"]
 
 
 class ReportTerms(models.Model):
@@ -1144,9 +921,9 @@ class ReportImages(models.Model):
         on_delete=models.CASCADE,
         related_name="imgs",
     )
-    image_rank = models.IntegerField()
-    image_data = models.BinaryField()
-    image_source = models.TextField(blank=True, default="")
+    rank = models.IntegerField()
+    data = models.BinaryField()
+    source = models.TextField(blank=True, default="")
 
     def get_absolute_url(self):
         return reverse(
@@ -1200,7 +977,7 @@ class ReportDocs(models.Model):
         blank=True,
         null=True,
     )
-    collection_url = models.TextField(blank=True, default="")
+    external_url = models.TextField(blank=True, default="")
     description = models.TextField(blank=True, default="")
     assumptions = models.TextField(blank=True, default="")
     org_value = models.ForeignKey(
@@ -1262,26 +1039,43 @@ class ReportDocs(models.Model):
     @property
     def modified_at(self):
         if self._modified_at:
-            return datetime.strftime(self._modified_at, "%m/%d/%y")
+            return self._modified_at  # datetime.strftime(self._modified_at, "%m/%d/%y")
         return ""
 
     @property
     def created_at(self):
         if self._created_at:
-            return datetime.strftime(self._created_at, "%m/%d/%y")
+            return self._created_at  # datetime.strftime(self._created_at, "%m/%d/%y")
         return ""
+
+
+class ReportTickets(models.Model):
+    ticket_id = models.AutoField(primary_key=True)
+    number = models.IntegerField(blank=True, null=True)
+    description = models.TextField(blank=True, default="")
+    report_doc = models.OneToOneField(
+        "ReportDocs",
+        blank=True,
+        default="",
+        on_delete=models.CASCADE,
+        related_name="tickets",
+    )
+    url = models.TextField(blank=True, default="")
+
+    def __str__(self):
+        return self.number
 
 
 class RolePermissionLinks(models.Model):
     permissionlinks_id = models.AutoField(primary_key=True)
-    role_id = models.ForeignKey(
+    role = models.ForeignKey(
         "UserRoles",
         on_delete=models.CASCADE,
         blank=True,
         null=True,
         related_name="permission_links",
     )
-    permission_id = models.ForeignKey(
+    permission = models.ForeignKey(
         "RolePermissions",
         on_delete=models.CASCADE,
         blank=True,
@@ -1289,89 +1083,17 @@ class RolePermissionLinks(models.Model):
         related_name="role_permission_links",
     )
 
+    def __str__(self):
+        return self.permission.name
+
 
 class RolePermissions(models.Model):
     permissions_id = models.AutoField(primary_key=True)
     name = models.TextField(blank=True, default="")
     description = models.TextField(blank=True, default="")
 
-
-class Searchtable(models.Model):
-    id = models.AutoField(primary_key=True)
-    itemid = models.IntegerField(blank=True, null=True)
-    typeid = models.IntegerField(blank=True, null=True)
-    itemtype = models.CharField(max_length=100, blank=True, default="")
-    itemrank = models.IntegerField(blank=True, null=True)
-    searchfielddescription = models.CharField(max_length=100, blank=True, default="")
-    searchfield = models.TextField(blank=True, default="")
-
-
-class SearchBasicsearchdata(models.Model):
-    id = models.AutoField(primary_key=True)
-    itemid = models.IntegerField(blank=True, null=True)
-    typeid = models.IntegerField(blank=True, null=True)
-    itemtype = models.CharField(max_length=100, blank=True, default="")
-    itemrank = models.IntegerField(blank=True, null=True)
-    searchfielddescription = models.CharField(max_length=100, blank=True, default="")
-    searchfield = models.TextField(blank=True, default="")
-    hidden = models.IntegerField(blank=True, null=True)
-    visibletype = models.IntegerField(blank=True, null=True)
-    orphaned = models.IntegerField(blank=True, null=True)
-
-
-class SearchBasicsearchdataSmall(models.Model):
-    id = models.AutoField(primary_key=True)
-    itemid = models.IntegerField(blank=True, null=True)
-    typeid = models.IntegerField(blank=True, null=True)
-    itemtype = models.CharField(max_length=100, blank=True, default="")
-    itemrank = models.IntegerField(blank=True, null=True)
-    searchfielddescription = models.CharField(max_length=100, blank=True, default="")
-    searchfield = models.TextField(blank=True, default="")
-    hidden = models.IntegerField(blank=True, null=True)
-    visibletype = models.IntegerField(blank=True, null=True)
-    orphaned = models.IntegerField(blank=True, null=True)
-
-
-class SearchReportobjectsearchdata(models.Model):
-    primk = models.AutoField(primary_key=True)
-    id = models.IntegerField()
-    columnname = models.TextField(blank=True, default="")
-    value = models.TextField(blank=True, default="")
-    lastmodifieddate = models.DateTimeField(blank=True, null=True)
-    epicmasterfile = models.CharField(max_length=3, blank=True, default="")
-    defaultvisibilityyn = models.CharField(max_length=1, blank=True, default="")
-    orphanedreportobjectyn = models.CharField(max_length=1, blank=True, default="")
-    reportobjecttypeid = models.IntegerField(blank=True, null=True)
-    authoruserid = models.IntegerField(blank=True, null=True)
-    lastmodifiedbyuserid = models.IntegerField(blank=True, null=True)
-    epicreporttemplateid = models.DecimalField(
-        max_digits=18,
-        decimal_places=0,
-        blank=True,
-        null=True,
-    )
-    sourceserver = models.CharField(max_length=255)
-    sourcedb = models.CharField(max_length=255)
-    sourcetable = models.CharField(max_length=255)
-    documented = models.IntegerField()
-    docownerid = models.IntegerField(blank=True, null=True)
-    docrequesterid = models.IntegerField(blank=True, null=True)
-    docorgvalueid = models.IntegerField(blank=True, null=True)
-    docrunfreqid = models.IntegerField(blank=True, null=True)
-    docfragid = models.IntegerField(blank=True, null=True)
-    docexecvis = models.CharField(max_length=1, blank=True, default="")
-    docmainschedid = models.IntegerField(blank=True, null=True)
-    doclastupdated = models.DateTimeField(blank=True, null=True)
-    doccreated = models.DateTimeField(blank=True, null=True)
-    doccreatedby = models.IntegerField(blank=True, null=True)
-    docupdatedby = models.IntegerField(blank=True, null=True)
-    dochypeenabled = models.CharField(max_length=1, blank=True, default="")
-    docdonotpurge = models.CharField(max_length=1, blank=True, default="")
-    dochidden = models.CharField(max_length=1, blank=True, default="")
-    twoyearruns = models.IntegerField(blank=True, null=True)
-    oneyearruns = models.IntegerField(blank=True, null=True)
-    sixmonthsruns = models.IntegerField(blank=True, null=True)
-    onemonthruns = models.IntegerField(blank=True, null=True)
+    def __str__(self):
+        return self.name
 
 
 class Shareditems(models.Model):
@@ -1389,6 +1111,9 @@ class StrategicImportance(models.Model):
 
     def __str__(self):
         return self.name
+
+    def usage(self):
+        return self.initiatives.count()
 
 
 class Terms(models.Model):
@@ -1430,65 +1155,29 @@ class Terms(models.Model):
     def get_absolute_edit_url(self):
         return reverse("term:edit", kwargs={"pk": self.pk})
 
-    def get_absolute_comments_url(self):
-        return reverse("term:comments", kwargs={"pk": self.pk})
-
     @property
     def approved_at(self):
         if self._approved_at:
-            return datetime.strftime(self._approved_at, "%m/%d/%y")
+            return datetime.strftime(self._approved_at, "%-m/%-d/%y")
         return ""
 
     @property
     def valid_from(self):
         if self._valid_from:
-            return datetime.strftime(self._valid_from, "%m/%d/%y")
+            return datetime.strftime(self._valid_from, "%-m/%-d/%y")
         return ""
 
     @property
     def valid_to(self):
         if self._valid_to:
-            return datetime.strftime(self._valid_to, "%m/%d/%y")
+            return datetime.strftime(self._valid_to, "%-m/%-d/%y")
         return ""
 
     @property
     def modified_at(self):
         if self._modified_at:
-            return datetime.strftime(self._modified_at, "%m/%d/%y")
+            return datetime.strftime(self._modified_at, "%-m/%-d/%y")
         return ""
-
-
-class TermCommentStream(models.Model):
-    stream_id = models.AutoField(primary_key=True)
-    term = models.ForeignKey(
-        Terms,
-        on_delete=models.CASCADE,
-        related_name="comment_streams",
-    )
-
-
-class TermComments(models.Model):
-    comment_id = models.AutoField(primary_key=True)
-    stream = models.ForeignKey(
-        TermCommentStream,
-        on_delete=models.CASCADE,
-        related_name="comments",
-    )
-    user = models.ForeignKey(
-        "Users",
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-        related_name="term_comments",
-    )
-    message = models.TextField()
-    posted_at = models.DateTimeField(auto_now=True)
-
-    def get_absolute_delete_url(self):
-        return reverse(
-            "term:comments_delete",
-            kwargs={"pk": self.stream.term_id, "comment_id": self.pk},
-        )
 
 
 class FavoriteFolders(models.Model):
@@ -1502,6 +1191,17 @@ class FavoriteFolders(models.Model):
         related_name="favorite_folders",
     )
     rank = models.IntegerField(blank=True, null=True)
+
+    @property
+    def total(self):
+        return (
+            self.starred_reports.count()
+            + self.starred_collections.count()
+            + self.starred_initiatives.count()
+            + self.starred_terms.count()
+            + self.starred_users.count()
+            + self.starred_groups.count()
+        )
 
     class Meta:
         ordering = ["rank"]
@@ -1519,6 +1219,13 @@ class StarredUsers(models.Model):
     )
     owner = models.ForeignKey(
         "Users",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="starred_users",
+    )
+    folder = models.ForeignKey(
+        FavoriteFolders,
         on_delete=models.CASCADE,
         blank=True,
         null=True,
@@ -1579,6 +1286,14 @@ class StarredCollections(models.Model):
         related_name="starred_collections",
     )
 
+    folder = models.ForeignKey(
+        FavoriteFolders,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="starred_collections",
+    )
+
     class Meta:
         ordering = ["rank"]
 
@@ -1595,6 +1310,13 @@ class StarredGroups(models.Model):
     )
     owner = models.ForeignKey(
         "Users",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="starred_groups",
+    )
+    folder = models.ForeignKey(
+        FavoriteFolders,
         on_delete=models.CASCADE,
         blank=True,
         null=True,
@@ -1617,6 +1339,13 @@ class StarredTerms(models.Model):
     )
     owner = models.ForeignKey(
         "Users",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="starred_terms",
+    )
+    folder = models.ForeignKey(
+        FavoriteFolders,
         on_delete=models.CASCADE,
         blank=True,
         null=True,
@@ -1653,6 +1382,13 @@ class StarredInitiatives(models.Model):
         null=True,
         related_name="starred",
     )
+    folder = models.ForeignKey(
+        "FavoriteFolders",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="starred_initiatives",
+    )
     owner = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
@@ -1663,109 +1399,6 @@ class StarredInitiatives(models.Model):
 
     class Meta:
         ordering = ["rank"]
-
-
-# class Favorites(models.Model):
-#     favorites_id = models.AutoField(primary_key=True)
-#     item_type = models.TextField(blank=True, default="")
-#     rank = models.IntegerField(blank=True, null=True)
-#     item_id = models.IntegerField(blank=True, null=True)
-#     user = models.ForeignKey(
-#         "Users",
-#         on_delete=models.CASCADE,
-#         blank=True,
-#         null=True,
-#         related_name="favorites",
-#     )
-#     name = models.TextField(blank=True, default="")
-#     folder = models.ForeignKey(
-#         FavoriteFolders,
-#         on_delete=models.CASCADE,
-#         blank=True,
-#         null=True,
-#         related_name="favorites",
-#     )
-
-#     class Meta:
-#         ordering = ["rank"]
-
-#     def __str__(self):
-#         if self.item_type.lower() == "report":
-#             return str(Reports.objects.get(report_id=self.item_id))
-#         elif self.item_type.lower() == "term":
-#             return str(Terms.objects.get(term_id=self.item_id))
-#         elif self.item_type.lower() in ["collection", "project"]:
-#             return str(Collections.objects.get(collection_id=self.item_id))
-#         elif self.item_type.lower() == "initiative":
-#             return str(Initiatives.objects.get(initiative_id=self.item_id))
-#         else:
-#             return ""
-
-# @property
-# def atlas_url(self):
-#     return "{}s/{}".format(
-#         self.item_type,
-#         self.item_id,
-#     )
-
-# @property
-# def system_run_url(self):
-#     if self.item_type.lower() == "report":
-#         return Reports.objects.get(report_id=self.item_id).system_run_url()
-
-# @property
-# def system_manage_url(self):
-#     if self.item_type.lower() == "report":
-#         return Reports.objects.get(report_id=self.item_id).system_manage_url()
-
-# @property
-# def system_editor_url(self):
-#     if self.item_type.lower() == "report":
-#         return Reports.objects.get(report_id=self.item_id).system_editor_url()
-
-# @property
-# def system_id(self):
-#     if self.item_type.lower() == "report":
-#         return Reports.objects.filter(report_id=self.item_id).first().system_id
-
-#     return None
-
-# @property
-# def system_identifier(self):
-#     if self.item_type.lower() == "report":
-#         return (
-#             Reports.objects.filter(report_id=self.item_id).first().system_identifier
-#         )
-
-#     return None
-
-# @property
-# def certification_tag(self):
-#     if self.item_type.lower() == "report":
-#         return (
-#             Reports.objects.filter(report_id=self.item_id).first().certification_tag
-#         )
-
-#     return None
-
-# @property
-# def description(self):
-#     if self.item_type.lower() == "report":
-#         report = Reports.objects.get(report_id=self.item_id)
-#         return (
-#             report.docs.description
-#             or report.description
-#             or report.detailed_descripion
-#             or report.docs.assumptions
-#         )
-#     elif self.item_type.lower() == "term":
-#         term = Terms.objects.get(term_id=self.item_id)
-#         return term.summary or term.technical_definition
-#     elif self.item_type.lower() == "collection":
-#         collection = Collections.objects.get(collection_id=self.item_id)
-#         return collection.purpose or collection.description
-#     elif self.item_type.lower() == "initiative":
-#         return Initiatives.objects.get(initiative_id=self.item_id).description
 
 
 class UserPreferences(models.Model):
@@ -1779,6 +1412,24 @@ class UserPreferences(models.Model):
         blank=True,
         null=True,
         related_name="user_preferences",
+    )
+
+
+class GroupRoleLinks(models.Model):
+    rolelinks_id = models.AutoField(primary_key=True)
+    group = models.ForeignKey(
+        "Groups",
+        models.DO_NOTHING,
+        blank=True,
+        null=True,
+        related_name="role_links",
+    )
+    role = models.ForeignKey(
+        "UserRoles",
+        models.DO_NOTHING,
+        blank=True,
+        null=True,
+        related_name="role_groups",
     )
 
 
@@ -1804,6 +1455,9 @@ class UserRoles(models.Model):
     role_id = models.AutoField(primary_key=True)
     name = models.TextField(blank=True, default="")
     description = models.TextField(blank=True, default="")
+
+    def __str__(self):
+        return self.name
 
 
 class UserNamedata(models.Model):

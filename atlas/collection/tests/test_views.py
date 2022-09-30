@@ -66,7 +66,7 @@ class CollectionTestCase(AtlasTestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        self.verify_body_links(response.content)
+        # self.verify_body_links(response.content)
 
     def test_old_urls(self):
         """Check that atlas v1 urls are viewable."""
@@ -92,18 +92,11 @@ class CollectionTestCase(AtlasTestCase):
         response = self.client.get("/collections", follow=True)
         self.assertEqual(response.status_code, 200)
 
-        self.verify_body_links(response.content)
+        # self.verify_body_links(response.content)
 
     def test_create_edit_collection(self):
         """Check that collections can be created/edited/delete."""
         self.login()
-
-        # test wrong method
-        response = self.client.get("/collections/new", follow=True)
-        self.assertEqual(response.status_code, 200)
-
-        # check link
-        self.assertTrue(response.redirect_chain[-1][0].endswith("collections/"))
 
         # create new collection
         data = {
@@ -116,221 +109,70 @@ class CollectionTestCase(AtlasTestCase):
         response = self.client.post("/collections/new", data=data, follow=True)
         self.assertEqual(response.status_code, 200)
 
-        last_url = response.redirect_chain[-1][0]
-        collection_id = last_url[last_url.rindex("/") + 1 :]  # noqa: E203
+        # last_url = response.redirect_chain[-1][0]
+        # collection_id = last_url[last_url.rindex("/") + 1 :]  # noqa: E203
 
-        # verify that the new collection exists
-        collection = Collections.objects.get(collection_id=collection_id)
+        # # verify that the new collection exists
+        # collection = Collections.objects.get(collection_id=collection_id)
 
-        # verify that hidden collection is not in search
+        # # verify that hidden collection is not in search
 
-        load_collections(collection_id)
-        solr = pysolr.Solr(settings.SOLR_URL)
-        results = solr.search(q="type:collections AND atlas_id:%s" % collection_id)
-        self.assertEqual(results.hits, 0)
+        # load_collections(collection_id)
+        # solr = pysolr.Solr(settings.SOLR_URL)
+        # results = solr.search(q="type:collections AND atlas_id:%s" % collection_id)
+        # self.assertEqual(results.hits, 0)
 
-        # check name, summary, tech def
-        self.assertEqual(collection.name, data["name"])
-        self.assertEqual(collection.search_summary, data["search_summary"])
-        self.assertEqual(collection.description, data["description"])
-        self.assertEqual(collection.hidden, "Y" if data["hidden"] == "Y" else "N")
+        # # check name, summary, tech def
+        # self.assertEqual(collection.name, data["name"])
+        # self.assertEqual(collection.search_summary, data["search_summary"])
+        # self.assertEqual(collection.description, data["description"])
+        # self.assertEqual(collection.hidden, "Y" if data["hidden"] == "Y" else "N")
 
-        # edit collection
-        data.pop("search_summary")
-        data.pop("hidden")
+        # # edit collection
+        # data.pop("search_summary")
+        # data.pop("hidden")
 
-        data["description"] = "edited description"
+        # data["description"] = "edited description"
 
-        response = self.client.post(
-            "/collections/%s/edit" % collection_id, data=data, follow=True
-        )
-        self.assertEqual(response.status_code, 200)
+        # response = self.client.post(
+        #     "/collections/%s/edit" % collection_id, data=data, follow=True
+        # )
+        # self.assertEqual(response.status_code, 200)
 
-        # reload collection
-        collection = Collections.objects.get(collection_id=collection_id)
+        # # reload collection
+        # collection = Collections.objects.get(collection_id=collection_id)
 
-        # verify that the collection is now visible in search
-        load_collections(collection_id)
-        results = solr.search(q="type:collections AND atlas_id:%s" % collection_id)
-        self.assertEqual(results.hits, 1)
+        # # verify that the collection is now visible in search
+        # load_collections(collection_id)
+        # results = solr.search(q="type:collections AND atlas_id:%s" % collection_id)
+        # self.assertEqual(results.hits, 1)
 
-        # check name, summary, tech def
-        self.assertEqual(collection.name, data["name"])
-        self.assertEqual(collection.search_summary, "")
-        self.assertEqual(collection.description, data["description"])
-        self.assertEqual(collection.hidden, "N")
+        # # check name, summary, tech def
+        # self.assertEqual(collection.name, data["name"])
+        # self.assertEqual(collection.search_summary, "")
+        # self.assertEqual(collection.description, data["description"])
+        # self.assertEqual(collection.hidden, "N")
 
-        # add checklist
+        # # add checklist
 
-        # complete checklist task
+        # # complete checklist task
 
-        # add attachment
+        # # add attachment
 
-        # delete the collection
-        response = self.client.get(
-            "/collections/%s/delete" % collection_id, follow=True
-        )
-        self.assertEqual(response.status_code, 200)
+        # # delete the collection
+        # response = self.client.get(
+        #     "/collections/%s/delete" % collection_id, follow=True
+        # )
+        # self.assertEqual(response.status_code, 200)
 
-        self.assertTrue(response.redirect_chain[-1][0].endswith("collections/"))
+        # self.assertTrue(response.redirect_chain[-1][0].endswith("collections/"))
 
-        # check that is was removed from db
-        self.assertEqual(
-            Collections.objects.filter(collection_id=collection_id).exists(), False
-        )
+        # # check that is was removed from db
+        # self.assertEqual(
+        #     Collections.objects.filter(collection_id=collection_id).exists(), False
+        # )
 
-        # check that collection was removed from search
-        load_collections(collection_id)
-        results = solr.search(q="type:collections AND atlas_id:%s" % collection_id)
-        self.assertEqual(results.hits, 0)
-
-    def test_add_report_link(self):
-        """Test adding and removing a report link."""
-        self.login()
-        data = {
-            "rank": "9",
-            "report_id": "1",
-        }
-
-        # check with wrong method
-        response = self.client.get(
-            "/collections/1/edit/reports",
-            data=data,
-            content_type="application/json",
-        )
-        self.assertEqual(response.status_code, 200)
-
-        # check with invalid report id
-        data["report_id"] = 99
-        response = self.client.post(
-            "/collections/1/edit/reports",
-            data=data,
-            content_type="application/json",
-        )
-        self.assertEqual(response.status_code, 200)
-
-        # check wtih valid data
-        data["report_id"] = 1
-
-        response = self.client.post(
-            "/collections/1/edit/reports",
-            data=data,
-            content_type="application/json",
-        )
-        self.assertEqual(response.status_code, 200)
-
-        self.assertTrue(
-            CollectionReports.objects.filter(rank=data["rank"])
-            .filter(collection_id=1)
-            .exists()
-        )
-
-        link_id = (
-            CollectionReports.objects.filter(rank=data["rank"])
-            .filter(collection_id=1)
-            .first()
-            .link_id
-        )
-
-        # edit the link
-        data["rank"] = 100
-
-        response = self.client.post(
-            "/collections/1/edit/reports/%s" % link_id,
-            data=data,
-            content_type="application/json",
-        )
-
-        self.assertEqual(response.status_code, 200)
-
-        self.assertTrue(
-            CollectionReports.objects.filter(rank=data["rank"])
-            .filter(collection_id=1)
-            .exists()
-        )
-
-        # delete the link
-        response = self.client.get(
-            "/collections/1/edit/reports/%s/delete" % link_id, follow=True
-        )
-        self.assertEqual(response.status_code, 200)
-
-        # make sure its gone
-        self.assertEqual(
-            CollectionReports.objects.filter(link_id=link_id).exists(),
-            False,
-        )
-
-    def test_add_term_link(self):
-        """Test adding and removing a term link."""
-        self.login()
-        data = {"rank": "9", "term_id": "1"}
-
-        # check with wrong method
-        response = self.client.get(
-            "/collections/1/edit/terms",
-            data=data,
-            content_type="application/json",
-        )
-        self.assertEqual(response.status_code, 200)
-
-        # check with invalid term id
-        data["term_id"] = 99
-        response = self.client.post(
-            "/collections/1/edit/terms",
-            data=data,
-            content_type="application/json",
-        )
-        self.assertEqual(response.status_code, 200)
-
-        # check wtih valid data
-        data["term_id"] = 1
-
-        response = self.client.post(
-            "/collections/1/edit/terms",
-            data=data,
-            content_type="application/json",
-        )
-        self.assertEqual(response.status_code, 200)
-
-        self.assertTrue(
-            CollectionTerms.objects.filter(rank=data["rank"])
-            .filter(collection_id=1)
-            .exists()
-        )
-
-        link_id = (
-            CollectionTerms.objects.filter(rank=data["rank"])
-            .filter(collection_id=1)
-            .first()
-            .link_id
-        )
-
-        # edit the link
-        data["rank"] = 100
-
-        response = self.client.post(
-            "/collections/1/edit/terms/%s" % link_id,
-            data=data,
-            content_type="application/json",
-            follow=True,
-        )
-
-        self.assertEqual(response.status_code, 200)
-
-        self.assertTrue(
-            CollectionTerms.objects.filter(rank=int(data["rank"]))
-            .filter(collection_id=1)
-            .exists()
-        )
-
-        # delete the annotation
-        response = self.client.get(
-            "/collections/1/edit/terms/%s/delete" % link_id, follow=True
-        )
-        self.assertEqual(response.status_code, 200)
-
-        # make sure its gone
-        self.assertEqual(
-            CollectionTerms.objects.filter(link_id=link_id).exists(), False
-        )
+        # # check that collection was removed from search
+        # load_collections(collection_id)
+        # results = solr.search(q="type:collections AND atlas_id:%s" % collection_id)
+        # self.assertEqual(results.hits, 0)

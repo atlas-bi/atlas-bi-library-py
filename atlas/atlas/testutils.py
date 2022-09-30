@@ -24,7 +24,6 @@ class AtlasTestCase(TestCase):
         "fragilitytag.yaml",
         "maintenancelogstatus.yaml",
         "organizationalvalue.yaml",
-        "projectmilestonefrequency.yaml",
         "reporttypes.yaml",
         "rolepermissionlinks.yaml",
         "rolepermissions.yaml",

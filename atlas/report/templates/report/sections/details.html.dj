@@ -126,7 +126,8 @@
                 <tr>
                     <td>Epic Identifier</td>
                     <td>
-                        {% if report.system_viewer_url %}<a title="open record viewer" href="{{ report.system_viewer_url }}">{% endif %}
+                        {% viewer_url report as run_viewer_url %}
+                        {% if run_viewer_url %}<a title="open record viewer" href="{{ run_viewer_url }}">{% endif %}
                         <span id="epic-ini">{{ report.system_identifier }}&nbsp;</span>
                         {% if report.system_id %}
                             <span id="epic-id" data-epic-hgr="{{ system_template_id }}">
@@ -134,7 +135,7 @@
                                 {% if report.system_template_id %}(Template {{ report.system_template_id }}){% endif %}
                             </span>
                         {% endif %}
-                        {% if report.system_viewer_url %}</a>{% endif %}
+                        {% if run_viewer_url %}</a>{% endif %}
                     </td>
                 </tr>
             {% endif %}

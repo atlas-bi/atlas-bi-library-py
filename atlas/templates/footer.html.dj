@@ -7,7 +7,7 @@
                 <img src="{% static 'img/thinking-face-text-266x80.png' %}"
                      width="133"
                      height="40"
-                     alt="{{ settings.LOGIN_TITLE|default:"Atlas Dev" }}"/>
+                     alt="atlas logo"/>
                 <p class="mt-4 mb-2">{{ settings.FOOTER.SUBTITLE }}</p>
                 <p class="has-text-grey mt-4">
                     ©{% now "Y" %} {{ settings.ORG_NAME }}

@@ -414,7 +414,6 @@ with contextlib.suppress(ImportError):
 
 SETTINGS_EXPORT = [
     "ORG_NAME",
-    "LOGIN_TITLE",
     "DEMO",
     "FOOTER",
     "VERSION",

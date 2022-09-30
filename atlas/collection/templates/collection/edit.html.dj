@@ -61,7 +61,7 @@
                    {% if collection.hidden == "Y" %} checked="checked"{% endif %}/>
             <label for="switch-hidden">Hide Collection?</label>
         </div>
-        {% if settings.ENALBE_TERMS %}
+        {% if settings.ENABLE_TERMS %}
             <div class="field">
                 <label class="label">Linked Terms</label>
                 <div class="mini-tags field is-grouped is-grouped-multiline">

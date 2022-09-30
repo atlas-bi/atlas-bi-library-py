@@ -47,6 +47,17 @@ def attachment_url(context, attachment):
 
 
 @register.simple_tag(takes_context=True)
+def viewer_url(context, report):
+    """Build a url to open a file attachment."""
+    if context["is_hyperspace"] and report.system_id and report.system_identifier:
+        return "EpicAct:AR_RECORD_VIEWER,runparams:{}|{}".format(
+            report.system_identifier,
+            report.system_id,
+        )
+    return None
+
+
+@register.simple_tag(takes_context=True)
 def run_url(context, report):
     """Build a report run url.
 
