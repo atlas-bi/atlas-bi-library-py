@@ -26,6 +26,7 @@ module.exports = {
     },
     collect: {
       startServerCommand: 'npm run start:test',
+      startServerReadyTimeou: 60000,
       url: ['http://localhost:8009'],
       maxAutodiscoverUrls: 10,
       settings: {
