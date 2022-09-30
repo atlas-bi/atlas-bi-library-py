@@ -44,7 +44,7 @@ jobs:
       - name: setup db
         run: |
           cd atlas
-          poetry run python manage.py migrate
+          poetry run python manage.py migrate --run-syncdb # create db without migrations
         env:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
