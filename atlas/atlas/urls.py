@@ -44,12 +44,9 @@ urlpatterns = [
 
 # if in dev or test use local auth
 if (
-    hasattr(django_settings, "DEBUG")
-    and getattr(django_settings, "DEBUG")
-    or hasattr(django_settings, "TESTING")
-    and getattr(django_settings, "TESTING")
-    or hasattr(django_settings, "DEMO")
-    and getattr(django_settings, "DEMO")
+    getattr(django_settings, "DEBUG", False)
+    or getattr(django_settings, "TESTING", False)
+    or getattr(django_settings, "DEMO", False)
 ):
     urlpatterns.append(path("accounts/", include("django.contrib.auth.urls")))
 
@@ -57,6 +54,31 @@ if hasattr(django_settings, "DEBUG") and getattr(django_settings, "DEBUG"):
     import debug_toolbar
 
     urlpatterns += (path("__debug__/", include(debug_toolbar.urls)),)
+
+# if running test server, enable static urls
+if getattr(django_settings, "TESTING", False):
+    import os
+    import posixpath
+
+    from django.contrib.staticfiles import finders
+    from django.http import Http404
+    from django.views import static
+
+    def serve(request, path, insecure=False, **kwargs):
+        """Custom static file serve to ignore debug flag."""
+        normalized_path = posixpath.normpath(path).lstrip("/")
+        absolute_path = finders.find(normalized_path)
+        if not absolute_path:
+            if path.endswith("/") or path == "":
+                raise Http404("Directory indexes are not allowed here.")
+            raise Http404("'%s' could not be found" % path)
+        document_root, path = os.path.split(absolute_path)
+        return static.serve(request, path, document_root=document_root, **kwargs)
+
+    urlpatterns += [
+        re_path(r"^static/(?P<path>.*)$", serve),
+    ]
+
 
 import sys
 import traceback

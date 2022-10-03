@@ -110,19 +110,21 @@ INTERNAL_IPS = [
 
 SESSION_ENGINE = "redis_sessions.session"
 
+REDIS_HOST = os.environ.get("REDIS_HOST", "localhost")
+REDIS_PORT = os.environ.get("REDIS_PORT", 6379)
+REDIS_URL = os.environ.get("REDIS_URL", "redis://127.0.0.1:6379")
+
 SESSION_REDIS = {
-    "host": os.environ.get("REDIS_HOST", "localhost"),
-    "port": os.environ.get("REDIS_PORT", 6379),
+    "host": REDIS_HOST,
+    "port": REDIS_PORT,
     "db": 0,
     "prefix": "atlas_session",
     "socket_timeout": 1,
     "retry_on_timeout": False,
 }
 
-GULP_DEVELOP_COMMAND = "gulp watch"
-GULP_PRODUCTION_COMMAND = "gulp build"
+
 INSTALLED_APPS = [
-    "django_gulp",
     # "django.contrib.admin",
     # django stuff
     "django.contrib.auth",
@@ -240,8 +242,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
-        "LOCATION": "127.0.0.1:11211",
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": REDIS_URL,
     }
 }
 CACHE_MIDDLEWARE_ALIAS = "default"
@@ -331,7 +333,7 @@ SOLR_LOOKUP_URL = "http://localhost:8983/solr/atlas_lookups/"
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
-CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
+CELERY_BROKER_URL = REDIS_URL
 CELERY_RESULT_BACKEND = "django-db"
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"

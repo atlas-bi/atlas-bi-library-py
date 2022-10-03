@@ -32,15 +32,15 @@ function get_ajax(e) {
   q.send();
 
   q.onreadystatechange = function () {
-    if (q.readyState == 4 && q.status == 200) {
-      data = isJson(q.responseText);
+    if (q.readyState === 4 && q.status === 200) {
+      const data = isJson(q.responseText);
 
       if (!data) {
         e.innerHTML = q.responseText;
       } else {
         e.innerHTML = data.message;
 
-        // set color or text based on status
+        // Set color or text based on status
         if (data.hasOwnProperty('status')) {
           e.setAttribute('data-color', data.status);
         } else {
@@ -52,7 +52,7 @@ function get_ajax(e) {
         e.hasAttribute('data-toggle') &&
         document.querySelector('.field input#' + e.getAttribute('data-toggle'))
       ) {
-        var el = document.querySelector(
+        let el = document.querySelector(
           '.field input#' + e.getAttribute('data-toggle'),
         );
         if (data.status === 'success') {
@@ -74,15 +74,15 @@ function get_ajax(e) {
 }
 
 /**
- * function for loading all ajax content on page.
+ * Function for loading all ajax content on page.
  * can be called for force refresh of all, otherwise
  * it will run when page loads.
  */
 function load_ajax() {
   var ajax = document.querySelectorAll('*[data-ajax]');
 
-  [].forEach.call(ajax, function (e) {
-    get_ajax(e);
+  [].forEach.call(ajax, function (event) {
+    get_ajax(event);
   });
 }
 
@@ -93,14 +93,14 @@ document.addEventListener('something_changed', function () {
 });
 
 // toggle
-document.addEventListener('click', function (e) {
-  if (e.target.matches('input.switch[data-url')) {
-    STATUS = { true: 'enable', false: 'disable' };
+document.addEventListener('click', function (event) {
+  if (event.target.matches('input.switch[data-url')) {
+    const STATUS = { true: 'enable', false: 'disable' };
 
     var q = new XMLHttpRequest();
     q.open(
       'get',
-      e.target.getAttribute('data-url') + STATUS[e.target.checked],
+      event.target.getAttribute('data-url') + STATUS[event.target.checked],
       true,
     );
     q.setRequestHeader('X-CSRFToken', csrftoken);

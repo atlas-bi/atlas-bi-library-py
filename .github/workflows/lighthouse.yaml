@@ -41,8 +41,8 @@ jobs:
 
       - name: Install Node Deps
         run: |
-         npm --version
-         npm install
+          npm --version
+          npm install
       - name: Setup Poetry
         uses: snok/install-poetry@v1
       - name: install deps
@@ -51,18 +51,6 @@ jobs:
           python -m pip install tox poetry codecov
           sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl
           poetry install
-      - name: setup db
-        run: |
-          cd atlas
-          poetry run python manage.py migrate --run-syncdb # create db without migrations
-        env:
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: 5432
-          PGPASSWORD: 12345
-          POSTGRES_DB: postgres
-          REDIS_HOST: localhost
-          REDIS_PORT: 6379
-          DJANGO_SETTINGS_MODULE: atlas.settings.test
       - name: run Lighthouse CI
         run: |
           npm install -g @lhci/cli@0.9.x

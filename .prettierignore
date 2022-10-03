@@ -18,3 +18,4 @@ atlas/static/CACHE/*
 .venv/*
 .mypy_cache/*
 .tox/*
+.lighthouseci/*

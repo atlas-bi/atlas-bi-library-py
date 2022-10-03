@@ -1,4 +1,5 @@
 {% load dates %}
+{% load url_tags %}
 
 <h2 id="details" class="title is-2">Details</h2>
 <div class="table-container mt-5">

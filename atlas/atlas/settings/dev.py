@@ -49,9 +49,14 @@ DATABASES = {
     },
 }
 
+INSTALLED_APPS.insert(0, "django_gulp")
+
+
 INSTALLED_APPS.append("debug_toolbar")
 COMPRESS_ENABLED = False
 
+GULP_DEVELOP_COMMAND = "gulp watch"
+GULP_PRODUCTION_COMMAND = "gulp build"
 
 # import custom overrides
 with contextlib.suppress(ImportError):

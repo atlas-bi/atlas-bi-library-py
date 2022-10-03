@@ -7,13 +7,14 @@
 
     const notification = document.createElement('div');
     notification.classList.add('notification', 'py-2');
-    if (type == 'error') {
+    if (type === 'error') {
       notification.classList.add('is-danger');
-    } else if (type == 'warning') {
+    } else if (type === 'warning') {
       notification.classList.add('is-warning');
     } else {
       notification.classList.add('is-info');
     }
+
     const button = document.createElement('button');
     button.classList.add('delete');
 

@@ -48,6 +48,12 @@ CELERY_BROKER_URL = "memory://"
 CELERY_RESULT_BACKEND = "cache+memory://"
 CELERY_ALWAYS_EAGER = True
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.dummy.DummyCache",  # for debug
+    }
+}
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,

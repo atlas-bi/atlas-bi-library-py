@@ -269,10 +269,6 @@
                 differenceInSeconds(addYears(now, -10), now) +
                 '&end_at=0';
               break;
-            case '10':
-              // Custom range
-
-              break;
             case '1':
               // Yesterday
               dataset =

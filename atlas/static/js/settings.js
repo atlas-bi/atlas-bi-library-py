@@ -25,21 +25,10 @@
 
       if (i.hasAttribute('checked')) {
         i.removeAttribute('checked');
-        type = 2;
       } else {
         i.setAttribute('checked', 'checked');
       }
 
-      const data = {
-        TypeId: p.getAttribute('typeId'),
-        GroupId: p.hasAttribute('groupId') ? p.getAttribute('groupId') : '',
-        Type: type,
-      };
-      const url = Object.keys(data)
-        .map(function (k) {
-          return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]);
-        })
-        .join('&');
       q = new XMLHttpRequest();
       q.open(
         'post',

@@ -39,18 +39,6 @@
     });
   }
 
-  function updateId(taglist) {
-    // const $hiddenInputs = taglist.querySelectorAll(
-    //   'input[type="hidden"][name]:not(.drag)',
-    // );
-    // for (let x = 0; x < $hiddenInputs.length; x++) {
-    //   $hiddenInputs[x].setAttribute(
-    //     'name',
-    //     $hiddenInputs[x].getAttribute('name').replace(/\[\d*?]/, '[' + x + ']'),
-    //   );
-    // }
-  }
-
   function load($mini, $data, $hidden, $input) {
     const data = JSON.parse($data);
     if (data.length === 0) {
