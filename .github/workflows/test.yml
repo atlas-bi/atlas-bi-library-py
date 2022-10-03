@@ -74,6 +74,6 @@ jobs:
     - name: upload cov
       uses: codecov/codecov-action@v3
       with:
-        files: ./coverage.xml
+        files: ./atlas/coverage.xml
         fail_ci_if_error: true
         verbose: true
