@@ -51,6 +51,8 @@ jobs:
           python -m pip install tox poetry codecov
           sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl
           poetry install
+      - name: start Atlas Testserver
+        run: (npm run start:test&)
       - name: run Lighthouse CI
         run: |
           npm install -g @lhci/cli@0.9.x
