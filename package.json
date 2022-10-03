@@ -76,7 +76,7 @@
     "gulp-sass": "5.1.0",
     "gulp-swc": "1.2.3",
     "gulp-uglify": "3.0.2",
-    "htmlhint": "^1.1.4",
+    "htmlhint": "1.1.4",
     "jsnlog": "2.30.0",
     "lint-staged": "13.0.3",
     "markdown-it": "13.0.1",
@@ -92,7 +92,7 @@
     "stylelint-config-prettier-scss": "0.0.1",
     "stylelint-config-standard-scss": "5.0.0",
     "stylelint-scss": "4.3.0",
-    "xo": "^0.52.3"
+    "xo": "0.52.3"
   },
   "config": {
     "commitizen": {
