@@ -50,7 +50,7 @@
                              src="{{ img.get_absolute_url }}?size=1200x400"
                              alt="report image"
                              height="400"
-                             width="auto" />
+                             width="auto"/>
                     </picture>
                 </figure>
             </div>
@@ -62,11 +62,11 @@
                             <source srcset="{{ img.get_absolute_url }}?size=1200x1200&type=webp 800w, {{ img.get_absolute_url }}?size=2000x2000&type=webp 1200w"
                                     type="image/webp"
                                     sizes="100vw"/>
-                                    {# djlint:off H006 #}
+                            {# djlint:off H006 #}
                             <img title="report image"
                                  src="{{ img.get_absolute_url }}?size=1200x2000"
                                  alt="report image"/>
-                                 {# djlint:on #}
+                            {# djlint:on #}
                         </picture>
                     </p>
                 </div>

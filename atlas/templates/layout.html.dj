@@ -30,8 +30,9 @@
             <div class="container is-relative mb-5">
                 <div class="columns">
                     {# djlint:off H021 #}
-                        <div class="column is-narrow side-links" style="z-index: 2;">
-                    {# djlint:on #}
+                    <div class="column is-narrow side-links" style="z-index: 2;">
+                        {# djlint:on #}
+
                         {% block side_links %}
                         {% endblock side_links %}
 

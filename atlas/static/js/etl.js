@@ -2,17 +2,17 @@
 /**
  *
  */
-function isNormalInteger(str) {
-  return /^\+?(0|[1-9]\d*)$/.test(str);
+function isNormalInteger(string_) {
+  return /^\+?(0|[1-9]\d*)$/.test(string_);
 }
 
 /**
  *
  */
-function isJson(str) {
+function isJson(string_) {
   try {
-    return JSON.parse(str);
-  } catch (e) {
+    return JSON.parse(string_);
+  } catch {
     return false;
   }
 }
@@ -20,9 +20,9 @@ function isJson(str) {
 /**
  *
  */
-function get_ajax(e) {
-  var q = new XMLHttpRequest();
-  q.open('get', e.getAttribute('data-ajax'), true);
+function getAjax(element) {
+  const q = new XMLHttpRequest();
+  q.open('get', element.getAttribute('data-ajax'), true);
   q.setRequestHeader(
     'Content-Type',
     'application/x-www-form-urlencoded; charset=UTF-8',
@@ -31,46 +31,51 @@ function get_ajax(e) {
   q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
   q.send();
 
-  q.onreadystatechange = function () {
+  q.addEventListener('readystatechange', function () {
     if (q.readyState === 4 && q.status === 200) {
       const data = isJson(q.responseText);
 
       if (!data) {
-        e.innerHTML = q.responseText;
+        element.innerHTML = q.responseText;
       } else {
-        e.innerHTML = data.message;
+        element.innerHTML = data.message;
 
         // Set color or text based on status
         if (data.hasOwnProperty('status')) {
-          e.setAttribute('data-color', data.status);
+          element.setAttribute('data-color', data.status);
         } else {
-          e.removeAttribute('data-color');
+          element.removeAttribute('data-color');
         }
       }
 
       if (
-        e.hasAttribute('data-toggle') &&
-        document.querySelector('.field input#' + e.getAttribute('data-toggle'))
+        element.hasAttribute('data-toggle') &&
+        document.querySelector(
+          '.field input#' + element.getAttribute('data-toggle'),
+        )
       ) {
-        let el = document.querySelector(
-          '.field input#' + e.getAttribute('data-toggle'),
+        const element = document.querySelector(
+          '.field input#' + element.getAttribute('data-toggle'),
         );
         if (data.status === 'success') {
-          el.setAttribute('checked', 'checked');
+          element.setAttribute('checked', 'checked');
         } else {
-          el.removeAttribute('checked');
+          element.removeAttribute('checked');
         }
       }
 
-      // enable periodic update
+      // Enable periodic update
       if (
-        e.hasAttribute('data-freq') &&
-        isNormalInteger(e.getAttribute('data-freq'))
+        element.hasAttribute('data-freq') &&
+        isNormalInteger(element.getAttribute('data-freq'))
       ) {
-        setTimeout(get_ajax.bind(this, e), e.getAttribute('data-freq') * 1000);
+        setTimeout(
+          getAjax.bind(this, element),
+          element.getAttribute('data-freq') * 1000,
+        );
       }
     }
-  };
+  });
 }
 
 /**
@@ -78,26 +83,25 @@ function get_ajax(e) {
  * can be called for force refresh of all, otherwise
  * it will run when page loads.
  */
-function load_ajax() {
-  var ajax = document.querySelectorAll('*[data-ajax]');
+function loadAjax() {
+  const ajax = document.querySelectorAll('*[data-ajax]');
 
-  [].forEach.call(ajax, function (event) {
-    get_ajax(event);
+  Array.prototype.forEach.call(ajax, function (event) {
+    getAjax(event);
   });
 }
 
-load_ajax();
+loadAjax();
 
 document.addEventListener('something_changed', function () {
-  load_ajax();
+  loadAjax();
 });
 
-// toggle
 document.addEventListener('click', function (event) {
   if (event.target.matches('input.switch[data-url')) {
     const STATUS = { true: 'enable', false: 'disable' };
 
-    var q = new XMLHttpRequest();
+    const q = new XMLHttpRequest();
     q.open(
       'get',
       event.target.getAttribute('data-url') + STATUS[event.target.checked],

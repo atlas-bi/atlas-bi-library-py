@@ -63,6 +63,7 @@
     "del": "7.0.0",
     "dompurify": "2.4.0",
     "es-main": "1.2.0",
+    "eslint": "^8.24.0",
     "focus-within": "3.0.2",
     "fontawesome-subset": "4.3.1",
     "fonteditor-core": "2.1.8",
@@ -158,7 +159,8 @@
       "no-multi-assign": "warn",
       "unicorn/prefer-keyboard-event-key": "off",
       "no-new": "warn",
-      "unicorn/no-useless-switch-case": "warn"
+      "unicorn/no-useless-switch-case": "warn",
+      "no-prototype-builtins": "warn"
     }
   }
 }

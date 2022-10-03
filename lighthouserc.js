@@ -27,6 +27,7 @@ module.exports = {
         'image-size-responsive': 'warn',
         'lcp-lazy-loaded': 'warn',
         'errors-in-console': 'warn',
+        'font-size': 'warn',
       },
     },
 
@@ -42,12 +43,14 @@ module.exports = {
           '--display',
         ],
       },
+      psiStrategy: 'dekstop',
       disableStorageReset: true,
       settings: {
         disableStorageReset: true,
         maxWaitForLoad: 60000,
         throttlingMethod: 'devtools',
         hostname: '127.0.0.1',
+        preset: 'desktop',
       },
       maxAutodiscoverUrls: 10,
       url: [

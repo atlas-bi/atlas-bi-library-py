@@ -171,11 +171,13 @@
       let q;
       if (event.target.closest('.favorite-folders.reorder')) {
         document.querySelectorAll('.favorites-folder').forEach(($element) => {
-          const item = {};
-          item.folder_id = $element.dataset.folderid;
-          item.rank = i;
           i++;
-          array.push(item);
+          array.push({
+            /* eslint-disable camelcase */
+            folder_id: $element.dataset.folderid,
+            /* eslint-enable camelcase */
+            rank: i,
+          });
         });
 
         q = new XMLHttpRequest();
@@ -186,13 +188,14 @@
         q.send(JSON.stringify(array));
       } else if (event.target.closest('.favorites .reorder')) {
         document.querySelectorAll('.favorite').forEach(($element) => {
-          const item = {};
-          item.star_id = $element.dataset.starid;
-          item.rank = i;
-          item.type = $element.dataset.type;
-
           i++;
-          array.push(item);
+          array.push({
+            /* eslint-disable camelcase */
+            star_id: $element.dataset.starid,
+            /* eslint-enable camelcase */
+            rank: i,
+            type: $element.dataset.type,
+          });
         });
 
         q = new XMLHttpRequest();
@@ -306,8 +309,10 @@
   function updateFavFolder($favorite, $folder) {
     const item = {};
     $favorite.dataset.folderid = $folder.dataset.folderid;
+    /* eslint-disable camelcase */
     item.star_id = $favorite.dataset.starid;
     item.folder_id = $folder.dataset.folderid;
+    /* eslint-enable camelcase */
     item.type = $favorite.dataset.type;
     const q = new XMLHttpRequest();
     q.open('post', '/users/stars_change_folder', true);

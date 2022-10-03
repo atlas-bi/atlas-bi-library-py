@@ -88,10 +88,9 @@
             const del = document.createElement('a');
             del.classList.add('tag', 'is-delete');
 
-            del.addEventListener('click', function (del_event) {
-              del_event.preventDefault();
+            del.addEventListener('click', function (delEvent) {
+              delEvent.preventDefault();
               control.remove();
-              //updateId(taglist);
             });
 
             if (taglist.classList.contains('reorder')) {
@@ -106,8 +105,6 @@
 
             if (taglist !== undefined) {
               taglist.append(control);
-              // Update index for c#
-              //updateId(taglist);
             }
 
             $input.value = '';
@@ -207,9 +204,7 @@
       ($tag) => {
         $tag.addEventListener('click', function () {
           const $control = $tag.closest('.control');
-          const $taglist = $tag.closest('.mini-tags');
           $control.remove();
-          //updateId($taglist);
         });
       },
     );
@@ -343,8 +338,8 @@
         }
 
         if ($clear) {
-          $clear.addEventListener('click', function (clear_event) {
-            clear_event.preventDefault();
+          $clear.addEventListener('click', function (clearEvent) {
+            clearEvent.preventDefault();
             $hidden.value = '';
             $input.value = '';
             $input.classList.remove('is-danger');
@@ -388,9 +383,8 @@
     ).forEach(($tag) => {
       $tag.classList.add('loaded');
       $tag.addEventListener('reorder', function () {
-        // call load to add back missing events
+        // Call load to add back missing events
         loadMinis();
-        //   updateId($tag);
       });
     });
   }

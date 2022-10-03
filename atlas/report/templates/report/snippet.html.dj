@@ -139,13 +139,12 @@
                                     type="image/webp"
                                     loading="lazy"
                                     sizes="100vw"/>
-                                    {# djlint:off H006 #}
+                            {# djlint:off H006 #}
                             <img title="report image"
                                  src="{{ report.imgs.first.get_absolute_url }}?size=1200x2000&format=jpeg"
                                  alt="report image"
-                                 loading="lazy"
-                                 />
-                                 {# djlint:on #}
+                                 loading="lazy"/>
+                            {# djlint:on #}
                         </picture>
                     </p>
                 </div>
