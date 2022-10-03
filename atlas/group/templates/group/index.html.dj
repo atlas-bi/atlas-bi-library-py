@@ -1,1 +1,188 @@
+{% extends "layout.html.dj" %}
 
+{% load dates %}
+
+{% comment %}
+@{
+    ViewData["Title"] = @Model.Group.Name;
+    ViewBag.GroupId = @Model.Group.Id;
+    if(ViewBag.DefaultReportTypes.Count > 0)
+    {
+        foreach (var item in ViewBag.DefaultReportTypes){
+            ViewBag.DefaultFilters += "&reportType=" + @item;
+        }
+    }
+}
+{% endcomment %}
+
+{% block body %}
+    <h1 class="title is-1">{{ group }}</h1>
+    <nav class="breadcrumb">
+        <ul>
+            <li>
+                <a title="details" href="#details" class="tab-lnk active">Details</a>
+            </li>
+            <li>
+                <a title="users" href="#users" class="tab-lnk">Users In Group</a>
+            </li>
+            <li>
+                <a title="reports" href="#reports" class="tab-lnk">Reports In Group</a>
+            </li>
+            <li>
+                <a title="run analytics" class="tab-lnk" href="#activity">Run Analytics</a>
+            </li>
+            <li>
+                <a title="runs" class="tab-lnk" href="#run-list">Report Runs</a>
+            </li>
+            {% if "View Site Analytics" in perms %}
+                <li>
+                    <a title="analytics" class="tab-lnk" href="#analytics">Analytics</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <section class="tab-cnt">
+        <div class="tab-dta active" id="details">
+            <h3 class="title is-3">Details</h3>
+            <div class="table-container">
+                <table class="table is-narrow" aria-label="Details">
+                    {% if group.email %}
+                        <tr>
+                            <td>Email</td>
+                            <td>{{ group.email }}</td>
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <td>Type</td>
+                        <td>{{ group.type }}</td>
+                    </tr>
+                    <tr>
+                        <td>Source</td>
+                        <td>{{ group.source }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="tab-dta" id="users">
+            {% if group.user_memberships.exists %}
+                <h3 class="title is-3">Users With This Group</h3>
+                <div class="table-responsive">
+                    <table class="table sort" aria-label="users with this group">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Epic Id</th>
+                                <th>Employee Id</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for membership in group.user_memberships.all %}
+                                {% with membership.user as user %}
+                                    <tr>
+                                        <td>
+                                            {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
+                                                <a title="open user" href="{{ user.get_absolute_url }}">{{ user }}</a>
+                                            {% else %}
+                                                {{ user }}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if user.email %}<a title="email user" href="mailto:{{ user.email }}">{{ user.email }}</a>{% endif %}
+                                        </td>
+                                        <td>{{ user.phone }}</td>
+                                        <td>{{ user.system_id }}</td>
+                                        <td>{{ user.employee_id }}</td>
+                                    </tr>
+                                {% endwith %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>No Users With This Group</p>
+            {% endif %}
+        </div>
+        <div class="tab-dta" id="reports">
+            {% if group.reports.exists %}
+                <h3 class="title is-3">
+                    Reports With This Group
+                </h3>
+                <div class="table-responsive">
+                    <table class="table sort" aria-label="reports with this group">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Last Updated
+                                </th>
+                                <th>
+                                    # Subscriptions
+                                </th>
+                                <th>
+                                    # Favorites
+                                </th>
+                                <th>
+                                    # Runs (2yrs)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for membership in group.reports.all %}
+                                {% with membership.report as report %}
+                                    <tr>
+                                        <td>
+                                            <a title="open report" href="{{ report.get_absolute_url }}">{{ report }}</a>
+                                        </td>
+                                        <td data-tooltip="{{ report.modified_at }}">
+                                            {{ report.modified_at|relative }}
+                                        </td>
+                                        <td>
+                                            {{ report.subscriptions.count }}
+                                        </td>
+                                        <td>
+                                            {{ report.starred.count }}
+                                        </td>
+                                        <td>
+                                            @s.Runs
+                                        </td>
+                                    </tr>
+                                {% endwith %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>
+                    No Reports With This Group
+                </p>
+            {% endif %}
+        </div>
+        {% comment %}
+    @{
+        ViewBag.ProfileType = "group";
+        ViewBag.ProfileId = ViewBag.GroupId;
+    }
+        {% endcomment %}
+        <div class="tab-dta" id="activity">
+            <partial name="Profile/Partials/_FullProfile" />
+        </div>
+        <div class="tab-dta" id="run-list">
+            <div data-ajax="yes"
+                 data-url="{% url "sketch:index" %}"
+                 data-parameters="handler=RunList&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters">
+            </div>
+        </div>
+        {% if "View Site Analytics" in perms %}
+            <div class="tab-dta" id="analytics">
+                @section js {
+                <script src="/js/analytics.min.js" defer="defer" async="async"></script>
+                }
+                <partial name="Analytics/Partials/_Index" />
+            </div>
+        {% endif %}
+    </section>
+{% endblock body %}

@@ -5,5 +5,5 @@ from . import apps, views
 app_name = apps.GroupConfig.name
 
 urlpatterns = [
-    path("<int:pk>", views.index, name="profile"),
+    path("<int:pk>", views.GroupDetails.as_view(), name="profile"),
 ]

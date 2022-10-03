@@ -1,25 +1,24 @@
 """Atlas Group views."""
 
-import io
-import re
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import DetailView
+from index.models import Groups
 
-from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
-from django.utils.http import url_has_allowed_host_and_scheme
-from index.models import (
-    FavoriteFolders,
-    StarredReports,
-    UserPreferences,
-    UserRoles,
-    Users,
-)
-from PIL import Image, ImageDraw, ImageFont
-
-from atlas.decorators import admin_required
+from atlas.decorators import PermissionsCheckMixin
 
 
-@login_required
-def index(request, pk=None):
-    """User profile page."""
-    return render(request, "group/index.html.dj")
+class GroupDetails(LoginRequiredMixin, PermissionsCheckMixin, DetailView):
+    required_permissions = ("View Groups",)
+    template_name = "group/index.html.dj"
+    context_object_name = "group"
+    queryset = Groups.objects.prefetch_related(
+        "user_memberships", "user_memberships__user"
+    ).prefetch_related("starred")
+
+    def get_context_data(self, **kwargs):
+        """Add additional items to the context."""
+        context = super().get_context_data(**kwargs)
+
+        context["title"] = self.object
+
+        return context

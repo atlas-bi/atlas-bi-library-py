@@ -136,7 +136,7 @@ sections="FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
 
 
 [tool.pylint.master]
-ignore="migrations,analytics,mail,index,task,group,sketch,models*.py,apps.py,__init__.py,apps.py,urls.py"
+ignore="migrations,analytics,mail,index,task,sketch,models*.py,apps.py,__init__.py,apps.py,urls.py"
 
 [tool.pylint.messages_control]
 disable = "R0903, E0401, C0415, F0401"

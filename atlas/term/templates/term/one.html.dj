@@ -1,4 +1,4 @@
-{% extends "term/all.html.dj" %}
+{% extends "layout.html.dj" %}
 
 {% load static %}
 

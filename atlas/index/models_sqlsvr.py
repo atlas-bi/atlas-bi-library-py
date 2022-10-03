@@ -575,7 +575,7 @@ class Groups(models.Model):
     account_name = models.TextField(db_column="AccountName", blank=True, default="")
     name = models.TextField(db_column="GroupName", blank=True, default="")
     email = models.TextField(db_column="GroupEmail", blank=True, default="")
-    group_type = models.TextField(db_column="GroupType", blank=True, default="")
+    type = models.TextField(db_column="GroupType", blank=True, default="")
     source = models.TextField(db_column="GroupSource", blank=True, default="")
     etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
     epic_id = models.TextField(db_column="EpicId", blank=True, default="")

@@ -151,6 +151,7 @@ INSTALLED_APPS = [
     "user.apps.UserConfig",
     "etl.apps.EtlConfig",
     "settings.apps.SettingsConfig",
+    "group.apps.GroupConfig",
 ]
 
 MIDDLEWARE = [
