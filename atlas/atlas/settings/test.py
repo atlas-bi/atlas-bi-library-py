@@ -18,7 +18,7 @@ class DisableMigrations:
         return None
 
 
-AUTHENTICATION_BACKENDS = ("atlas.no_pass_auth.Backend",)
+AUTHENTICATION_BACKENDS = ("atlas.no_pass_auth.Backend",)  # type: ignore[assignment]
 
 LOGIN_URL = "/accounts/login/"
 
@@ -41,7 +41,7 @@ LOGIN_REDIRECT_URL = "/"
 
 COMPRESS_ENABLED = False
 
-DATABASE_ROUTERS: list = []
+DATABASE_ROUTERS: list = []  # type: ignore[no-redef]
 
 # make celery tasks run as blocking
 CELERY_BROKER_URL = "memory://"

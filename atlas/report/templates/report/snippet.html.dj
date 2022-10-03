@@ -113,7 +113,9 @@
                                  src="{% static '/img/report_placeholder_128x128.png' %}"
                                  alt="report image"
                                  loading="lazy"
-                                 title="report image"/>
+                                 title="report image"
+                                 height="128"
+                                 width="128"/>
                         {% else %}
                             <source srcset="{% static '/img/report_placeholder_128x128.webp' %}"
                                     type="image/webp"
@@ -121,7 +123,9 @@
                             <img title="report image"
                                  src="{% static '/img/report_placeholder_128x128.png' %}"
                                  alt="report image"
-                                 loading="lazy"/>
+                                 loading="lazy"
+                                 height="128"
+                                 width="128"/>
                         {% endif %}
                     </picture>
                 </figure>
@@ -135,10 +139,13 @@
                                     type="image/webp"
                                     loading="lazy"
                                     sizes="100vw"/>
+                                    {# djlint:off H006 #}
                             <img title="report image"
                                  src="{{ report.imgs.first.get_absolute_url }}?size=1200x2000&format=jpeg"
                                  alt="report image"
-                                 loading="lazy"/>
+                                 loading="lazy"
+                                 />
+                                 {# djlint:on #}
                         </picture>
                     </p>
                 </div>

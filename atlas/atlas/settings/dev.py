@@ -6,9 +6,10 @@ from .base import BASE_DIR, INSTALLED_APPS
 
 DEBUG = True
 
-AUTHENTICATION_BACKENDS = ("atlas.no_pass_auth.Backend",)
+AUTHENTICATION_BACKENDS = ("atlas.no_pass_auth.Backend",)  # type: ignore[assignment]
 
 LOGIN_URL = "/accounts/login/"
+LOGIN_REDIRECT_URL = "/"
 
 MIDDLEWARE = [
     "django.middleware.cache.UpdateCacheMiddleware",  # for caching
@@ -26,9 +27,6 @@ MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
-
-LOGIN_REDIRECT_URL = "/"
-
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.dummy.DummyCache",  # for debug
@@ -38,7 +36,7 @@ CACHES = {
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": str(BASE_DIR / "db.sqlite3"),
     },
     "dg_db": {
         "ENGINE": "django.db.backends.postgresql",
@@ -50,9 +48,8 @@ DATABASES = {
 }
 
 INSTALLED_APPS.insert(0, "django_gulp")
-
-
 INSTALLED_APPS.append("debug_toolbar")
+
 COMPRESS_ENABLED = False
 
 GULP_DEVELOP_COMMAND = "gulp watch"

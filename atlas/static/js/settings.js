@@ -21,7 +21,6 @@
     ) {
       const p = event.target.parentElement;
       const i = event.target;
-      let type = 1;
 
       if (i.hasAttribute('checked')) {
         i.removeAttribute('checked');

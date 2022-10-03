@@ -177,3 +177,7 @@ ignore_missing_imports = true
 module = '*.migrations.*'
 ignore_errors = true
 
+[[tool.mypy.overrides]]
+module = '*.settings.*'
+ignore_errors = true
+
