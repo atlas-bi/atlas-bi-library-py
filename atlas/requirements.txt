@@ -50,7 +50,7 @@ django-timezone-field==5.0; python_version >= "3.5"
 django==4.0.6; python_version >= "3.6"
 djangosaml2==1.5.1
 djlint==1.7.0; python_version >= "3.6"
-dparse==0.5.1; python_version >= "3.5"
+dparse==0.5.2; python_version >= "3.5"
 elementpath==3.0.0; python_version >= "3.6" and python_version < "4"
 fabric==2.7.1
 filelock==3.7.1; python_full_version >= "3.6.1"
