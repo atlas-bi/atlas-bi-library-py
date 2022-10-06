@@ -39,9 +39,11 @@ class TermList(LoginRequiredMixin, ListView):
 class TermDetails(LoginRequiredMixin, DetailView):
     template_name = "term/one.html.dj"
     context_object_name = "term"
-    queryset = Terms.objects.select_related(
-        "approved_by", "modified_by"
-    ).prefetch_related("collections__collection")
+    queryset = (
+        Terms.objects.select_related("approved_by", "modified_by")
+        .prefetch_related("collections__collection")
+        .prefetch_related("starred")
+    )
 
     def get_context_data(self, **kwargs):
         """Add additional items to the context."""

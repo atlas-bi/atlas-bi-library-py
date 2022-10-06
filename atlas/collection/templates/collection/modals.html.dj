@@ -5,11 +5,9 @@
     <div class="box modal-card modal-large">
         <section class="modal-card-body">
             <h3 class="title is-3">Profile</h3>
-            {% comment %}@{
-                ViewBag.ProfileType="collection";
-                ViewBag.ProfileId={{ collection.collection_id }};
-            }{% endcomment %}
-            <partial name="Profile/Partials/_Profile" />
+            {% with profile_id=collection.collection_id profile_type="collection" %}
+                {% include "sketch/profile.html.dj" %}
+            {% endwith %}
         </section>
     </div>
     <button class="modal-close is-large" aria-label="close"></button>

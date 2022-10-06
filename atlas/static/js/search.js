@@ -96,23 +96,23 @@
     // If we are on the search page already, keep filters.
     if (urlPath) {
       value = encodeURIComponent(
-        value || getQueryStringParameters('Query', url),
+        value || getQueryStringParameters('query', url),
       );
       s =
         url ||
         replaceUrlParameter(
           replaceUrlParameter(
             window.location.href.replace(window.location.origin, ''),
-            'Query',
+            'query',
             value,
           ),
-          'PageIndex',
+          'page',
           '',
         );
     } else if (url) {
       s = url;
     } else {
-      s = '/Search?Query=' + value;
+      s = '/search/?query=' + value;
 
       // Add default filters for type depending on url
       if (window.location.pathname.toLowerCase() === '/users') {
@@ -122,7 +122,7 @@
       }
     }
 
-    const u = s.replace('/Search?Query=', '');
+    const u = s.replace('/search/?query=', '');
 
     start = new Date();
     if (
@@ -142,7 +142,7 @@
           search: value,
         },
         document.title,
-        w.location.origin + '/Search?Query=' + encodeURI(decodeURI(u)),
+        w.location.origin + '/search/?query=' + encodeURI(decodeURI(u)),
       );
 
       if (sAjx !== null) {
@@ -207,7 +207,7 @@
         search: value,
       },
       document.title,
-      w.location.origin + '/Search?Query=' + encodeURI(decodeURI(u)),
+      w.location.origin + '/search/?query=' + encodeURI(decodeURI(u)),
     );
 
     atmr = setTimeout(function () {

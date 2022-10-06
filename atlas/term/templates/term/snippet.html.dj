@@ -18,14 +18,12 @@
             <span class="tags">
                 <span class="tag">term</span>
                 {% if term.approved == "Y" %}<span class="tag is-success">Approved</span>{% endif %}
-                {% comment %}
-                @if(!string.IsNullOrEmpty(ViewBag.SearchMatch))
-                {
+                {% if matched_field %}
                     <div class="tags has-addons mb-0">
                         <span class="tag is-info is-light">Matched</span>
-                        <span class="tag is-info">@ViewBag.SearchMatch</span>
+                        <span class="tag is-info">{{ matched_field }}</span>
                     </div>
-                } {% endcomment %}
+                {% endif %}
             </span>
         </div>
     </div>

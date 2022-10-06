@@ -152,6 +152,7 @@ INSTALLED_APPS = [
     "etl.apps.EtlConfig",
     "settings.apps.SettingsConfig",
     "group.apps.GroupConfig",
+    "sketch.apps.SketchConfig",
 ]
 
 MIDDLEWARE = [

@@ -128,9 +128,9 @@ gulp.task('js:profile', function () {
   return (
     gulp
       .src(['atlas/static/js/profile.js'])
-      // .pipe(rollup(rollupConfig))
+      .pipe(rollup(rollupConfig))
       .pipe(concat('profile.min.js'))
-      .pipe(swc(swcOptions))
+      // .pipe(swc(swcOptions))
       // .pipe(uglify(uglifyConfig))
       .pipe(gulp.dest('atlas/static/js/'))
   );

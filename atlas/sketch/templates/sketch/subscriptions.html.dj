@@ -1,0 +1,42 @@
+{% load dates %}
+
+<div>
+    {% if subscriptions %}
+        <div class="table-responsive">
+            <table class="table" aria-label="active users">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Subscription Description</th>
+                        <th>Last Run</th>
+                        <th>Message</th>
+                        <th>Subscribed As</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subscription in subscriptions %}
+                        <tr>
+                            <td>
+                                {% if subscription.user %}
+                                    {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
+                                        <a href="{{ subscription.user.get_absolute_url }}">{{ subscription.user }}</a>
+                                    {% else %}
+                                        {{ subscription.user }}
+                                    {% endif %}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
+                            <td>{{ subscription.description }}</td>
+                            <td data-tooltip="{{ subscription.last_run }}">{{ subscription.last_run|relative }}</td>
+                            <td>{{ subscription.status }}</td>
+                            <td>{{ subscription.email_list }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <strong>There are no subscriptions.</strong>
+    {% endif %}
+</div>

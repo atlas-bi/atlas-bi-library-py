@@ -1,0 +1,9 @@
+{% extends "layout.html.dj" %}
+
+{% load static %}
+
+{% block body %}
+    {% with profile_type="report" profile_id=0 %}
+        {% include "sketch/profile.html.dj" %}
+    {% endwith %}
+{% endblock body %}

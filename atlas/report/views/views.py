@@ -68,6 +68,7 @@ class ReportDetails(LoginRequiredMixin, DetailView):
         .select_related("docs__ops_owner")
         .select_related("type")
         .prefetch_related("queries")
+        .prefetch_related("starred")
         .prefetch_related(Prefetch("imgs", ReportImages.objects.order_by("rank")))
         .prefetch_related("docs__maintenance_logs")
         .prefetch_related("docs__maintenance_logs__maintainer")

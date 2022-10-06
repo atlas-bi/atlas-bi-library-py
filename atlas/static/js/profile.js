@@ -287,7 +287,6 @@
                 '&end_at=0';
               break;
           }
-
           loadChart(dataset);
           loadBoxes(dataset);
           loadAjax(dataset);
@@ -384,17 +383,16 @@
       ).forEach(($element) => {
         $element.style.opacity = '.5';
         if (parameters !== undefined) {
-          $element.setAttribute(
-            'data-parameters',
-            parameters.replace('?', '&'),
-          );
+          if ($element.dataset.url.includes('?')) {
+            parameters = parameters.replace('?', '&');
+          }
+          $element.setAttribute('data-parameters', parameters);
         }
 
         const aj = new XMLHttpRequest();
         aj.open(
           'get',
-          $element.dataset.url +
-            ($element.dataset.parameters || '').replace('?', '&'),
+          $element.dataset.url + ($element.dataset.parameters || ''),
           true,
         );
         aj.setRequestHeader(
@@ -407,7 +405,7 @@
 
         aj.addEventListener('load', function () {
           $element.innerHTML = '';
-          $element.append(buildDataTable(JSON.parse(aj.responseText)));
+          $element.append(buildDataTable(JSON.parse(aj.responseText).context));
           $element.style.visibility = 'visible';
           $element.style.opacity = '1';
           document.dispatchEvent(new CustomEvent('ajax'));

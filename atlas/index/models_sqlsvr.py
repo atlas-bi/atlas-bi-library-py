@@ -339,32 +339,32 @@ class ReportQueries(models.Model):
         return self.query
 
 
-class ReportRuns(models.Model):
-    report_id = models.OneToOneField(
-        Reports, models.DO_NOTHING, db_column="ReportObjectID", primary_key=True
-    )
-    run_id = models.IntegerField(db_column="RunID")
-    user = models.ForeignKey(
-        "Users",
-        models.DO_NOTHING,
-        db_column="RunUserID",
-        blank=True,
-        default="",
-        related_name="report_runs",
-    )
-    start_time = models.DateTimeField(db_column="RunStartTime", blank=True, null=True)
-    duration_seconds = models.IntegerField(
-        db_column="RunDurationSeconds", blank=True, null=True
-    )
-    status = models.CharField(
-        db_column="RunStatus", max_length=100, blank=True, default=""
-    )
-    etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
+# class ReportRuns(models.Model):
+#     report_id = models.OneToOneField(
+#         Reports, models.DO_NOTHING, db_column="ReportObjectID", primary_key=True
+#     )
+#     run_id = models.IntegerField(db_column="RunID")
+#     user = models.ForeignKey(
+#         "Users",
+#         models.DO_NOTHING,
+#         db_column="RunUserID",
+#         blank=True,
+#         default="",
+#         related_name="report_runs",
+#     )
+#     start_time = models.DateTimeField(db_column="RunStartTime", blank=True, null=True)
+#     duration_seconds = models.IntegerField(
+#         db_column="RunDurationSeconds", blank=True, null=True
+#     )
+#     status = models.CharField(
+#         db_column="RunStatus", max_length=100, blank=True, default=""
+#     )
+#     etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = "ReportObjectRunData"
-        unique_together = (("report_id", "run_id"),)
+#     class Meta:
+#         managed = False
+#         db_table = "ReportObjectRunData"
+#         unique_together = (("report_id", "run_id"),)
 
 
 class ReportSubscriptions(models.Model):
@@ -379,7 +379,7 @@ class ReportSubscriptions(models.Model):
         default="",
         related_name="user_subscriptions",
     )
-    user_id = models.ForeignKey(
+    user = models.ForeignKey(
         "Users",
         models.DO_NOTHING,
         db_column="UserId",
@@ -407,9 +407,7 @@ class ReportTypes(models.Model):
     short_name = models.TextField(db_column="ShortName", blank=True, default="")
     code = models.TextField(db_column="DefaultEpicMasterFile", blank=True, default="")
     etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
-    visible = models.CharField(
-        db_column="Visible", max_length=1, blank=True, null=True
-    )  # F
+    visible = models.CharField(db_column="Visible", max_length=1, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -452,7 +450,7 @@ class Users(AbstractUser, PermissionsMixin):
         db_table = "User"
 
     def __str__(self):
-        return self.full_name or self._full_name
+        return self.full_name or self._full_name or ""
 
     @cached_property
     def is_superuser(self):
@@ -1232,51 +1230,72 @@ class ReportImages(models.Model):
         )
 
 
-class Reportobjectruntime(models.Model):
-    id = models.AutoField(db_column="Id", primary_key=True)
-    runuserid = models.IntegerField(db_column="RunUserId", blank=True, null=True)
-    runs = models.IntegerField(db_column="Runs", blank=True, null=True)
-    runtime = models.DecimalField(
-        db_column="RunTime", max_digits=10, decimal_places=2, blank=True, null=True
+class ReportRunDetails(models.Model):
+    run_id = models.AutoField(db_column="RunId", primary_key=True)
+
+    user = models.ForeignKey(
+        "Users",
+        on_delete=models.CASCADE,
+        db_column="RunUserID",
+        blank=True,
+        null=True,
+        related_name="report_runs",
     )
-    runweek = models.DateTimeField(db_column="RunWeek", blank=True, null=True)
-    runweekstring = models.TextField(db_column="RunWeekString", blank=True, default="")
+
+    etl_date = models.DateTimeField(db_column="LastLoadDate")
+    rundurationseconds = models.IntegerField(
+        db_column="RunDurationSeconds", blank=True, null=True
+    )  # Field name made lowercase.
+    runstarttime = models.DateTimeField(
+        db_column="RunStartTime"
+    )  # Field name made lowercase.
+    status = models.CharField(
+        db_column="RunStatus", max_length=100, blank=True, null=True
+    )  # Field name made lowercase.
+
+    rundataid = models.CharField(db_column="RunDataId", unique=True, max_length=450)
+    runstarttime_day = models.DateTimeField(
+        db_column="RunStartTime_Day"
+    )  # Field name made lowercase.
+    runstarttime_hour = models.DateTimeField(
+        db_column="RunStartTime_Hour"
+    )  # Field name made lowercase.
+    runstarttime_month = models.DateTimeField(
+        db_column="RunStartTime_Month"
+    )  # Field name made lowercase.
+    runstarttime_year = models.DateTimeField(
+        db_column="RunStartTime_Year"
+    )  # Field name made lowercase.
 
     class Meta:
         managed = False
-        db_table = "ReportObjectRunTime"
+        db_table = "ReportObjectRunData"
 
 
-class Reportobjecttopruns(models.Model):
-    id = models.AutoField(db_column="Id", primary_key=True)
-    reportobjectid = models.IntegerField(
-        db_column="ReportObjectId", blank=True, null=True
+class ReportRunBridge(models.Model):
+    bridge_id = models.AutoField(db_column="BridgeId", primary_key=True)
+
+    report = models.OneToOneField(
+        "Reports",
+        models.DO_NOTHING,
+        db_column="ReportObjectID",
+        related_name="runs",
     )
-    name = models.TextField(db_column="Name", blank=True, default="")
-    runuserid = models.IntegerField(db_column="RunUserId", blank=True, null=True)
-    runs = models.IntegerField(db_column="Runs", blank=True, null=True)
-    runtime = models.DecimalField(
-        db_column="RunTime", max_digits=10, decimal_places=2, blank=True, null=True
+
+    run = models.OneToOneField(
+        "ReportRunDetails",
+        models.DO_NOTHING,
+        db_column="RunId",
+        related_name="runs",
+        to_field="rundataid",
     )
-    lastrun = models.TextField(db_column="LastRun", blank=True, default="")
-    reportobjecttypeid = models.IntegerField(
-        db_column="ReportObjectTypeId", blank=True, null=True
-    )
+
+    runs = models.IntegerField(db_column="Runs")
+    inherited = models.IntegerField(db_column="Inherited")
 
     class Meta:
         managed = False
-        db_table = "ReportObjectTopRuns"
-
-
-class Reportobjectweightedrunrank(models.Model):
-    reportobjectid = models.IntegerField()
-    weighted_run_rank = models.DecimalField(
-        max_digits=12, decimal_places=4, blank=True, null=True
-    )
-
-    class Meta:
-        managed = False
-        db_table = "ReportObjectWeightedRunRank"
+        db_table = "ReportObjectRunDataBridge"
 
 
 class ReportDocs(models.Model):
