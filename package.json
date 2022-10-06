@@ -15,7 +15,7 @@
     "start:beat": "cd atlas; DJANGO_SETTINGS_MODULE='atlas.settings.dev' poetry run celery -A atlas beat -l DEBUG --scheduler django_celery_beat.schedulers:DatabaseScheduler",
     "build": "gulp build",
     "watch": "gulp watch",
-    "commit": "git add . && pre-commit run ;  npm run pre-commit && git add . && cz --no-verify",
+    "commit": "git add . && pre-commit run ; git add . ;  npm run pre-commit && git add . && cz --no-verify",
     "format:python": "poetry run tox -e reformat",
     "format:static": "prettier --config .prettierrc \"**/*.{ts,css,less,scss,js,json,md,yaml}\" --write",
     "format": "npm run format:python; npm run format:static",
