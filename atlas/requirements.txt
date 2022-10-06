@@ -110,7 +110,7 @@ redis==4.3.4; python_version >= "2.7" and python_full_version < "3.0.0" or pytho
 regex==2022.9.13
 relative-to-now==1.0.0; python_version >= "3.6"
 requests==2.28.1; python_version >= "3.6" and python_full_version < "3.0.0" and python_version < "4" or python_version >= "3.6" and python_version < "4" and python_full_version >= "3.6.0"
-rich==10.16.2; python_version >= "3.6" and python_version < "4.0"
+rich==11.2.0; python_version >= "3.6" and python_version < "4.0"
 rjsmin==1.2.1
 selenium==3.141.0
 simplejson==3.17.6; (python_version >= "2.5" and python_full_version < "3.0.0") or (python_full_version >= "3.3.0")
