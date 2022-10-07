@@ -1,0 +1,154 @@
+{% load fullurl %}
+{% load url_tags %}
+
+{% if settings.ENABLE_REQUEST_ACCESS %}
+    <div class="modal"  id="request-access-{{ report.report_id }}">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box">
+                <strong>Request Report Access</strong>
+                <small>{{ report }}</small>
+                <br />
+                <div class="field pt-5">
+                    <label class="label">Find your Director</label>
+                    <div class="field is-grouped">
+                        <div class="control is-relative is-expanded">
+                            <input class="input input-mini"
+                                   placeholder="type to search.."
+                                   search-area="director_lookup"/>
+                            <input type="hidden" class="director-name" />
+                            <div class="mini">
+                                <div class="mini-waiting">
+                                    <span class="icon">
+                                        <i class="fas fa-circle-notch fa-spin"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <a title="clear" href="#" class="button mini-clear">
+                                <span class="icon">
+                                    <i class="fas fa-xmark"></i>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <button class="button request-access pt-3"  report-name="{{ report }}">Request Access</button>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% if settings.ENABLE_SHARING %}
+    <div class="modal" id="report-share-{{ report.report_id }}">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box">
+                <strong class="mb-4">Share {{ report }}</strong>
+                <form class="share" action="{% url 'mail:send' %}" method="post">
+                    <input type="hidden" class="mlbx-share" value="1" />
+                    <input type="hidden" class="share-name" value="{{ report }}" />
+                    <input type="hidden"
+                           class="share-url"
+                           value="{% fullurl 'report:item' pk=report.report_id %}"/>
+                    <input type="hidden" id="convid" />
+                    <div class="field mt-4">
+                        <label class="label">To:</label>
+                        <div class="mini-tags field is-grouped is-grouped-multiline share-to"
+                             required="required"
+                             name="to"></div>
+                        <div class="field">
+                            <div class="control is-relative is-expanded">
+                                <input class="input input-mini multiselect mini-close-fast"
+                                       placeholder="search for someone.."
+                                       search-area="user_lookup"/>
+                                <div class="mini">
+                                    <div class="mini-waiting">
+                                        <span class="icon">
+                                            <i class="fas fa-circle-notch fa-spin"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Subject</label>
+                        <div class="control">
+                            <input class="input share-subject"
+                                   placeholder="e.g hey, check this out"
+                                   value="[Share] {{ report }}"/>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Message</label>
+                        <div class="editor" data-inputName="share-message">
+                            <textarea class="textarea">
+Hi!
+
+I would like to share this report with you.
+
+[{{ report }}]({% fullurl 'report:item' pk=report.report_id %})
+
+Check it out sometime!
+Regards!</textarea>
+                        </div>
+                    </div>
+                    <button class="button pt-3">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endif %}
+<div class="modal" id="report-profile-{{ report.report_id }}">
+    <div class="modal-background"></div>
+    <div class="box modal-card modal-large">
+        <section class="modal-card-body">
+            <h3 class="title is-3">Profile</h3>
+            {% with profile_id=report.report_id profile_type="report" %}
+                {% include "sketch/profile.html.dj" %}
+            {% endwith %}
+        </section>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+<!-- attachment run modal -->
+{% if report.attachments.exists %}
+    <div class="modal" id="report-run-{{ report.report_id }}">
+        <div class="modal-background"></div>
+        <div class="modal-card box">
+            <div class="modal-card-body content">
+                <strong class="my-4">Run This Report</strong>
+                <p>
+                    This is a Crystal Report. Here are the recent run outputs.
+                    <ul>
+                        {% for attachment in report.attachments.all %}
+                            {% attachment_url attachment as open_attachment_url %}
+                            <li>
+                                <a title="open file" href="{{ open_attachment_url }}" target="_blank">{{ attachment.name }}</a><span>· {{ attachment.created_at }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </p>
+                <p>
+                    If you need a <strong>newer</strong> dataset request a new run from the Report Library.
+                    <ol>
+                        <li>Open the Report Library</li>
+                        <li>Search for this report</li>
+                        <li>Click "view" > click "Request"</li>
+                    </ol>
+                </p>
+                <p>
+                    ~ after 5 minutes ~
+                    <ol>
+                        <li>Open My Reports</li>
+                        <li>In the lower section of the screen you will find the report listed</li>
+                        <li>Click "View Output"</li>
+                    </ol>
+                </p>
+            </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close">
+        </button>
+    </div>
+{% endif %}

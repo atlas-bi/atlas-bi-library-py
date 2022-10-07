@@ -1,0 +1,30 @@
+{% load dates %}
+
+{% if run_list %}
+    <div class="table-responsive">
+        <table class="table sort">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Runs</th>
+                    <th>Last Run</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for run in run_list %}
+                    <tr>
+                        <td>
+                            <a href="{% url "report:item" pk=run.report_id %}">{{ run.title|default:run.name }}</a>
+                        </td>
+                        <td>{{ run.type_short|default:run.type }}</td>
+                        <td>{{ run.run_sum }}</td>
+                        <td data-tooltip="{{ run.last_run }}">{{ run.last_run|relative }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div>No run data to show.</div>
+{% endif %}

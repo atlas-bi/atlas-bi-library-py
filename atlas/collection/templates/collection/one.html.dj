@@ -1,32 +1,92 @@
 {% extends "layout.html.dj" %}
 
 {% load compress %}
+
 {% load static %}
+{% load markdown %}
+
+{% block side_links %}
+    {% include "collection/nav.html.dj" %}
+{% endblock side_links %}
 
 {% block body %}
     <h1 class="title is-1">{{ collection }}</h1>
-    {% include "collection/links.html.dj" %}
-    <div class="columns">
-        <div class="column is-narrow">{% include "collection/nav.html.dj" %}</div>
-        <div class="column">
-            <span class="location" id="about"></span>
-            {% include "collection/details.html.dj" %}
-            <span class="location" id="relationships"></span>
-            {% if collection.reports.all or collection.terms.all %}
-                {% include "collection/relationships.html.dj" %}
+    <nav class="breadcrumb">
+        <ul>
+            <li>
+                <a title="details" href="#details">Details</a>
+            </li>
+            {% if collection.reports.exists %}
+                <li>
+                    <a title="linked reports" href="#reports">Linked Reports</a>
+                </li>
             {% endif %}
-            <span class="location" id="agreements"></span>
-            {% if collection.agreements.all %}
-                {% include "collection/agreements.html.dj" %}
+            {% if collection.terms.exists and settings.ENABLE_TERMS %}
+                <li>
+                    <a title="linked terms" href="#terms">Linked Terms</a>
+                </li>
             {% endif %}
-            <span class="location" id="tasks"></span>
-            {% if collection.tasks.all %}
-                {% include "collection/tasks.html.dj" %}
-            {% endif %}
-            <span class="location" id="comments"></span>
-            <div class="comments"
-                 data-ajax="yes"
-                 data-url="{{ collection.get_absolute_comments_url }}"></div>
+        </ul>
+    </nav>
+    {% if settings.ENABLE_INITIATIVES and collection.initiative %}
+        <h2 class="title is-2" id="reports">Owning Initiative</h2>
+        <div class="columns is-multiline">
+            <div class="column is-half ">{% include "initiative/snippet.html.dj" with initiative=collection.initiative %}</div>
         </div>
+    {% endif %}
+    {% if collection.reports.exists %}
+        <h2 class="title is-2">Reports</h2>
+        <div class="columns is-multiline">
+            {% for link in collection.reports.all %}
+                <div class="column is-half ">{% include "report/snippet.html.dj" with report=link.report %}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if settings.ENABLE_TERMS and collection.terms.exists %}
+        <h2 class="title is-2">Terms</h2>
+        <div class="columns is-multiline">
+            {% for link in collection.terms.all %}
+                <div class="column is-half ">{% include "term/snippet.html.dj" with term=link.term %}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <h2 class="title is-2" id="details">Details</h2>
+    <div class="content">
+        {% if collection.description %}
+            <h2 class="title is-3">Description</h2>
+            <div class="markdown">{{ collection.description|markdown }}</div>
+        {% endif %}
+        {% if collection.search_summary %}
+            <h2 class="title is-3">Search Summary</h2>
+            <div class="content">{{ collection.search_summary|markdown }}</div>
+        {% endif %}
     </div>
+    <div class="table-container mt-4">
+        <table class="table is-narrow" aria-label="details">
+            <tbody>
+                <tr>
+                    <td>Last Updated By</td>
+                    <td>
+                        {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
+                            <a title="open user"
+                               href="{{ collection.modified_by.get_absolute_url }}">{{ collection.modified_by }}</a>
+                        {% else %}
+                            {{ collection.modified_by }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Last Updated</td>
+                    <td>{{ collection.modified_at }}</td>
+                </tr>
+                {% if collection.hidden == "Y" %}
+                    <tr>
+                        <td>Hidden from Search?</td>
+                        <td>Yes</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    {% include "collection/modals.html.dj" %}
 {% endblock body %}

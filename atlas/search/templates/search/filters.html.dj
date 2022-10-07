@@ -1,0 +1,69 @@
+{% load search_tags %}
+
+<form id="searchForm">
+    {% if applied_filters %}
+        @if(ViewBag.AppliedFilters > 0){
+        <a class="button is-warning is-fullwidth is-outlined has-text-dark"
+           href="/search?query=@ViewBag.Query">
+            <span class="icon">
+                <i class="fas fa-xmark"></i>
+            </span>
+            <span>Clear All Filters</span>
+        </a>
+        }
+    {% endif %}
+    {% if "Show Advanced Search" in perms %}
+        {% facet_checked "advanced" "Y" as checked %}
+        <div class="m-2">
+            <div class="field search-filter">
+                <input id="advanced"
+                       type="checkbox"
+                       class="switch is-rounded is-info"
+                       value="{% facet_url "advanced" "Y" %}"
+                       {% if checked %}checked="checked"{% endif %}/>
+                <label for="advanced">Advanced Filters</label>
+            </div>
+        </div>
+    {% endif %}
+    {% if filter_fields %}
+        <strong>Search Fields</strong>
+        <div class="m-2">
+            {% for field in filter_fields %}
+                {% facet_checked "field" field.key as checked %}
+                <div class="field search-filter">
+                    <input class="is-checkradio is-info"
+                           id="field-{{ field.key|slugify }}"
+                           type="checkbox"
+                           value="{% facet_url "field" field.key %}"
+                           {% if checked %}checked="checked"{% endif %}/>
+                    <label for="field-{{ field.key|slugify }}">{{ field.value|friendly_name }}</label>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% for facet in facets.facet_fields %}
+        {% facet_has_checked facet.key as checked %}
+        {# if there is only one value, do not show. #}
+        {% if advanced == "Y" and "Show Advanced Search" in perms and facet.key == "visible_text" or facet.key != "visible_text" and facet.value|length > 1 or facet.key == "type" or checked %}
+            <strong>{{ facet.key|friendly_name }}</strong>
+            <div class="m-2">
+                {% for value in facet.value %}
+                    {% facet_checked facet.key value.key as checked %}
+                    {# hide filters with 0 matches, or show advanced search #}
+                    {% if "Show Advanced Search" in perms and facet.key == "visible_text" or facet.key != "visible_text" and value.value > 0 or facet.key == "type" or checked %}
+                        <div class="field search-filter">
+                            <input class="is-checkradio is-info"
+                                   id="{{ facet.key|slugify }}-{{ value.key|slugify }}"
+                                   type="checkbox"
+                                   value="{% facet_url facet.key value.key %}"
+                                   {% if checked %}checked="checked"{% endif %}/>
+                            <label for="{{ facet.key|slugify }}-{{ value.key|slugify }}">
+                                {{ value.key|friendly_name }}<span class="search-badge tag ml-3 is-info is-rounded is-light">{{ value.value }}</span>
+                            </label>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endfor %}
+</form>

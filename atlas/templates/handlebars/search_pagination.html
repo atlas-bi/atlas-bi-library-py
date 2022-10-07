@@ -1,5 +1,4 @@
 {% verbatim %}
-
     {{#if_cond hits '>' 10 }}
         {{#with (get_page start) as | page | }}
             <form id="searchPagination" style="margin-bottom: 50px;">
@@ -8,21 +7,11 @@
                         {{#each (get_pages ../hits ../start) }}
                             {{#if_cond this '==' page }}
                                 <li class="page-item disabled">
-                                    <button
-                                        class="page-link"
-                                        type="button"
-                                        name="p"
-                                        value="{{ this }}">{{ this }}
-                                    </button>
+                                    <button class="page-link" type="button" name="p" value="{{ this }}">{{ this }}</button>
                                 </li>
                             {{^}}
                                 <li class="page-item">
-                                    <button
-                                        class="page-link"
-                                        type="button"
-                                        name="p"
-                                        value="{{ this }}">{{ this }}
-                                    </button>
+                                    <button class="page-link" type="button" name="p" value="{{ this }}">{{ this }}</button>
                                 </li>
                             {{/if_cond }}
                         {{/each }}

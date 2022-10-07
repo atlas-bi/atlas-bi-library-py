@@ -1,16 +1,18 @@
 {% load markdown %}
 {% load static %}
 
-<h2 class="title is-2">Relationships</h2>
-<div class="content">
-    {% if report.groups.all %}
-        <h4 class="drop" data-toggle="clps" data-target="related-groups">
-            Related Groups
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                <path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/>
-            </svg>
-        </h4>
-        <div id="related-groups" class="clps">
+<h2 id="relationships" class="title is-2">Relationships</h2>
+{% if "View Groups" in perms and report.groups.exists %}
+    <nav id="groups" class="panel">
+        <p class="panel-heading is-flex is-justify-content-space-between"
+           data-action="collapse"
+           data-target="related-groups">
+            <span>Report Groups</span>
+            <span class="icon">
+                <i class="fas fa-chevron-down"></i>
+            </span>
+        </p>
+        <div class="panel-block is-collapsible is-block" id="related-groups">
             <div class="table-responsive">
                 <table class="table sort">
                     <thead>
@@ -24,7 +26,7 @@
                         {% for group in report.groups.all %}
                             <tr>
                                 <td>
-                                    <a href="/groups/{{ group.group_id }}">{{ group.group }}</a>
+                                    <a title="open this group" href="{{ group.get_absolute_url }}">{{ group.group }}</a>
                                 </td>
                                 <td>{{ group.group.group_type }}</td>
                                 <td>{{ group.group.group_source }}</td>
@@ -34,42 +36,29 @@
                 </table>
             </div>
         </div>
-    {% endif %}
-    {% if children %}
-        <h3 class="title is-3">Reports included in this report.</h3>
-        <div class="columns is-multiline">
-            {% for report in children %}
-                <div class="column is-half ">{% include "report/snippet.html.dj" with report=report %}</div>
-                <!-- @foreach (var subchild in child.Child)
-        {
-            <h6>
-                <a href="Reports?id=@subchild.Id">@subchild.Name [@subchild.EpicMasterFile]</a>
-            </h6>
-
-            @foreach (var supersubchild in subchild.GrandChild)
-            {
-                <h6 style="margin-left:40px">
-<a href="Reports?id=@supersubchild.Id">@supersubchild.Name [@supersubchild.EpicMasterFile]</a>
-</h6>
-            }
-    } -->
-            {% endfor %}
-        </div>
-    {% endif %}
-    {% if parents %}
-        <h3 class="title is-3">Reports that include this report.</h3>
-        <div class="columns is-multiline">
-            {% for report in parents %}
-                <div class="column is-half ">{% include "report/snippet.html.dj" with report=report %}</div>
-            {% endfor %}
-        </div>
-    {% endif %}
-    {% if report.collections.all %}
-        <h3 class="title is-3">Data Collections that include this report.</h3>
-        <div class="columns is-multiline">
-            {% for annotation in report.collections.all %}
-                <div class="column is-half ">{% include "collection/snippet.html.dj" with collection=annotation.collection %}</div>
-            {% endfor %}
-        </div>
-    {% endif %}
-</div>
+    </nav>
+{% endif %}
+{% if children %}
+    <h3 class="title is-3">Reports included in this report.</h3>
+    <div class="columns is-multiline">
+        {% for report in children %}
+            <div class="column is-half ">{% include "report/snippet.html.dj" with report=report %}</div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% if parents %}
+    <h3 class="title is-3">Reports that include this report.</h3>
+    <div class="columns is-multiline">
+        {% for report in parents %}
+            <div class="column is-half ">{% include "report/snippet.html.dj" with report=report %}</div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% if report.collections.all %}
+    <h3 id="collections" class="title is-3">Linked Collections</h3>
+    <div class="columns is-multiline">
+        {% for annotation in report.collections.all %}
+            <div class="column is-half ">{% include "collection/snippet.html.dj" with collection=annotation.collection %}</div>
+        {% endfor %}
+    </div>
+{% endif %}

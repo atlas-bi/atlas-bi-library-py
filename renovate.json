@@ -1,26 +1,24 @@
 {
   "extends": [
-    "config:base", 
+    "config:base",
     "group:allNonMajor",
     ":separateMultipleMajorReleases",
     ":ignoreUnstable",
     ":enableVulnerabilityAlertsWithLabel(security)",
-    ":rebaseStalePrs", 
+    ":rebaseStalePrs",
     ":npm",
     "npm:unpublishSafe"
   ],
   "ignoreDeps": ["@fortawesome/fontawesome-free", "chart.js"],
+  "baseBranches": ["dev"],
   "assigneesSampleSize": 2,
   "bumpVersion": "patch",
   "baseBranches": ["dev"],
   "commitMessagePrefix": "chore(deps)",
-  "labels": [
-    "maintenance", 
-    "renovate"
-  ],
+  "labels": ["maintenance", "renovate"],
   "packageRules": [
     {
-      "matchUpdateTypes": ["pin","digest"],
+      "matchUpdateTypes": ["pin", "digest"],
       "automerge": true
     },
     {
@@ -38,9 +36,7 @@
       "automerge": true
     },
     {
-      "matchDepTypes": [
-        "devDependencies"
-      ],
+      "matchDepTypes": ["devDependencies"],
       "automerge": true
     }
   ],

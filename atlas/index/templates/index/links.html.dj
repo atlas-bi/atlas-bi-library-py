@@ -1,0 +1,16 @@
+<nav class="breadcrumb">
+    <ul>
+        <li>
+            <a title="stars" class="tab-lnk active" href="#stars">Stars</a>
+        </li>
+        <li>
+            <a title="subscriptions" class="tab-lnk" href="#subscriptions">Subscriptions</a>
+        </li>
+        <li>
+            <a title="report runs" class="tab-lnk " href="#run-list">Report Runs</a>
+        </li>
+        <li>
+            <a title="groups" class="tab-lnk" href="#groups">Groups</a>
+        </li>
+    </ul>
+</nav>

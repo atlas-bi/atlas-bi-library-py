@@ -1,68 +1,88 @@
-<aside class="menu">
-    <ul>
-        {% if 28 in permissions %}
-            <!-- editor -->
-            <li>
-                <a class="has-tooltip-arrow has-tooltip-right"
-                   data-toggle="mdl"
-                   data-target="editModal"
-                   data-tooltip="Open Atlas Editor">
-                    <span class="icon has-text-grey is-large">
-                        <i class="fas fa-lg fa-edit"></i>
-                    </span>
-                </a>
-            </li>
-        {% endif %}
-        {% if 27 in permissions %}
-            <!-- delete -->
-            <li>
-                <a class="has-tooltip-arrow has-tooltip-right"
-                   data-tooltip="Delete this Collection"
-                   href="{{ collection.get_absolute_delete_url }}"
-                   onclick="return confirm('Are you sure you want to remove this?');">
-                    <span class="icon has-text-grey is-large">
-                        <i class="fas fa-lg fa-trash"></i>
-                    </span>
-                </a>
-            </li>
-        {% endif %}
-        <li>
-            <a class="has-tooltip-arrow has-tooltip-right {{ favorite }}"
-               data-tooltip="
-               {% if favorite %}
-                   Remove from Favorites
-               {% else %}
-                   Add to Favorites
-               {% endif %} "
-               fav-type="collection"
-               object-id="{{ collection.collection_id }}">
-                <span class="icon has-text-grey is-large">
-                    <i class="fas fa-lg fa-star"></i>
+<ul>
+    <li>
+        <a href="#"
+           title="open report profile"
+           class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+           data-target="collection-profile-{{ collection.collection_id }}"
+           data-tooltip="Open Report Profile">
+            <span class="icon has-text-grey is-large ">
+                <i class="fas fa-lg fa-chart-bar"></i>
+            </span>
+        </a>
+    </li>
+    <li>
+        <a href="#"
+           title="start this report"
+           class="has-tooltip-arrow has-tooltip-right star"
+           data-tooltip="Star this report"
+           data-href="{% url 'user:stars_edit' %}?type=collection&id={{ collection.collection_id }}">
+            {% if collection.collection_id in user.get_starred_collections %}
+                <span class="icon is-large has-text-gold ">
+                    <i class="fas fa-lg fa-star is-relative">
+                        <span class="badge star-count">{{ collection.starred.all.count }}</span>
+                    </i>
                 </span>
-            </a>
-        </li>
+            {% else %}
+                <span class="icon has-text-grey is-large">
+                    <i class="far fa-lg fa-star is-relative">
+                        <span class="badge star-count">{{ collection.starred.all.count }}</span>
+                    </i>
+                </span>
+            {% endif %}
+        </a>
+    </li>
+    {% if settings.ENABLE_SHARING %}
         <li>
-            <a class="has-tooltip-arrow has-tooltip-right"
+            <a href="#"
+               title="share this report"
+               class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
                data-tooltip="Share"
-               data-toggle="mdl"
-               data-target="shareModal"
+               data-target="collection-share-{{ collection.collection_id }}"
                data-name="{{ collection }}"
                data-type="collection">
-                <span class="icon has-text-grey is-large">
+                <span class="icon has-text-grey is-large ">
                     <i class="fas fa-lg fa-share"></i>
                 </span>
             </a>
         </li>
+    {% endif %}
+    {% if "Create Collection" in perms %}
         <li>
-            <a class="has-tooltip-arrow has-tooltip-right"
-               data-tooltip="Share Feedback"
-               data-toggle="mdl"
-               data-target="shareFeedback"
-               data-name="{{ collection }}">
-                <span class="icon has-text-grey is-large">
-                    <i class="far fa-lg fa-thumbs-up"></i>
+            <a title="create a new collection"
+               class="is-block has-tooltip-arrow has-tooltip-right"
+               href="{% url 'collection:new' %}"
+               data-tooltip="Create New Collections">
+                <span class="icon has-text-grey is-large ">
+                    <i class="fas fa-lg fa-plus"></i>
                 </span>
             </a>
         </li>
-    </ul>
-</aside>
+    {% endif %}
+    {% if "Edit Collection" in perms %}
+        <li>
+            <a title="open editor"
+               class="is-block has-tooltip-arrow has-tooltip-right"
+               href="{{ collection.get_absolute_edit_url }}"
+               data-tooltip="Open Atlas Editor">
+                <span class="icon has-text-grey is-large ">
+                    <i class="fas fa-lg fa-pen-to-square"></i>
+                </span>
+            </a>
+        </li>
+    {% endif %}
+    {% if "Delete Collection" in perms %}
+        <li>
+            <form method="post" action="{{ collection.get_absolute_delete_url }}">
+                {% csrf_token %}
+                <button class="is-ghost is-block has-tooltip-arrow has-tooltip-right p-0"
+                        data-tooltip="Delete this Collection"
+                        href="{{ collection.get_absolute_delete_url }}"
+                        onclick="return confirm('Are you sure you want to remove this?');">
+                    <span class="icon has-text-grey is-large ">
+                        <i class="fas fa-lg fa-trash"></i>
+                    </span>
+                </button>
+            </form>
+        </li>
+    {% endif %}
+</ul>

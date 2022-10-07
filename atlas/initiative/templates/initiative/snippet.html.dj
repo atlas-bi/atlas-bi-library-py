@@ -4,27 +4,96 @@
 
 <div class="card">
     <div class="card-header">
-        <p class="card-header-title">
-            {{ initiative }}
-        </p>
+        <div class="card-header-title py-2 is-justify-content-space-between">
+            <a title="open initiative"
+               class="has-text-dark"
+               href="{{ initiative.get_absolute_url }}">{{ initiative }}
+                <div class="fa-layers ml-2 fa-lg">
+                    <span class="icon has-text-info "><i class="fas fa-certificate"></i></span>
+                    <span class="icon has-text-white fa-transform"><i class="fas fa-check shrink-5"></i></span>
+                </div>
+            </a>
+            <span class="tags">
+                <span class="tag">initiative</span>
+                {% if matched_field %}
+                    <div class="tags has-addons mb-0">
+                        <span class="tag is-info is-light">Matched</span>
+                        <span class="tag is-info">{{ matched_field }}</span>
+                    </div>
+                {% endif %}
+            </span>
+        </div>
     </div>
-    <div class="card-content">
+    <div class="card-content pt-3 pb-2">
         <div class="media">
             <div class="media-left">
-                <figure class="image is-96x96">
-                    <img src="{% static "img/report_placeholder.png" %}" alt="report image" />
+                <figure class="image is-128x128">
+                    <picture>
+                        <source srcset="{% static "img/report_placeholder_128x128.webp" %}"
+                                type="image/webp"
+                                loading="lazy"/>
+                        <img src="{% static "img/report_placeholder_128x128.png" %}"
+                             alt="placeholder image"
+                             width="128"
+                             height="128"
+                             loading="lazy"/>
+                    </picture>
                 </figure>
             </div>
-            <div class="media-content">
-                {{ initiative|snippet|markdown|safe }}
-                <br>
-                <p class="subtitle is-6">
-                    blank
-                </p>
+            {# extra wrap if to fix IE11 bug https://github.com/philipwalton/flexbugs#flexbug-3 #}
+            <div class="is-flex is-flex-direction-column is-flex-grow-1">
+                <a title="open initiative"
+                   class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96  has-text-dark"
+                   href="{{ initiative.get_absolute_url }}">
+                    <p>
+                        {% if initiative|snippet %}
+                            {{ initiative|snippet|markdown|unwrap }}
+                            <span class="has-text-link">read more</span>
+                        {% else %}
+                            <span class="has-text-link">Open to view details</span>
+                        {% endif %}
+                    </p>
+                    <div class="tags">
+                        {% for collection in initiative.collections.all %}<span class="tag is-link">{{ collection }}</span>{% endfor %}
+                    </div>
+                </a>
             </div>
         </div>
     </div>
     <footer class="card-footer">
-        <a href="{{ initiative.get_absolute_url }}" class="card-footer-item">Open</a>
+        <a title="start this initiative"
+           href="#"
+           class="card-footer-item star"
+           data-href="{% url 'user:stars_edit' %}?type=initiative&id={{ initiative.initiative_id }}">
+            <span class="icon-text">
+                {% if initiative.initiative_id in user.get_starred_initiatives %}
+                    <span class="icon has-text-gold">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <span>Starred <span class="tag is-rounded">{{ initiative.starred.all.count }}</span></span>
+                {% else %}
+                    <span class="icon ">
+                        <i class="far fa-star"></i>
+                    </span>
+                    <span>Star <span class="tag is-rounded star-count">{{ initiative.starred.all.count }}</span></span>
+                {% endif %}
+            </span>
+        </a>
+        <div class="card-footer-item">
+            {% if settings.ENABLE_SHARING %}
+                <a title="share this initiative"
+                   href="#"
+                   class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+                   data-tooltip="Share"
+                   data-target="initiative-share-{{ initiative.initiative_id }}"
+                   data-name="{{ initiaitve.name }}"
+                   data-type="initiative">
+                    <span class="icon has-text-grey">
+                        <i class="fas fa-share"></i>
+                    </span>
+                </a>
+            {% endif %}
+        </div>
     </footer>
 </div>
+{% include "initiative/modals.html.dj" %}

@@ -1,0 +1,62 @@
+{% extends "layout.html.dj" %}
+
+{% block body %}
+    <form class="mb-4" action="{{ term.get_absolute_edit_url }}" method="post">
+        {% csrf_token %}
+        <h1 class="title is-1">{{ title }}</h1>
+        <p class="buttons is-flex is-justify-content-space-between">
+            <a title="go back" class="button p-5" href="{{ term.get_absolute_url }}">
+                <span class="icon">
+                    <i class="fas fa-lg fa-left-long"></i>
+                </span>
+                <span><strong>Cancel</strong>
+                    <br />
+                Go Back</span>
+            </a>
+            <button class="button p-5" type="submit">
+                <span><strong>Save</strong>
+                    <br />
+                and Continue</span>
+                <span class="icon ">
+                    <i class="fas fa-lg fa-right-long"></i>
+                </span>
+            </button>
+        </p>
+        <div class="field">
+            <label class="label">Name</label>
+            <div class="control">
+                <input class="input"
+                       placeholder="e.g LOSI"
+                       name="name"
+                       required="required"
+                       value="{{ term.name }}"/>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Summary</label>
+            <div class="editor" data-inputName="summary" data-inputId="summary">
+                <textarea class="textarea">{{ term.summary|default:""|safe }}</textarea>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Technical Definition</label>
+            <div class="editor"
+                 data-inputName="technical_definition"
+                 data-inputId="technical_definition">
+                <textarea class="textarea">{{ term.technical_definition|default:""|safe }}</textarea>
+            </div>
+        </div>
+        {% if "Approve Terms" in perms %}
+            <label class="label">Other Options</label>
+            <div class="field toggle" typeId="groups">
+                <input type="hidden" name="approved" value="{{ term.approved }}" />
+                <input id="switch-groups"
+                       type="checkbox"
+                       name="switch-groups"
+                       class="switch is-rounded is-info settings-search-visiblity"
+                       {% if term.approved == "Y" %} checked="checked"{% endif %}/>
+                <label for="switch-groups">Approved?</label>
+            </div>
+        {% endif %}
+    </form>
+{% endblock body %}

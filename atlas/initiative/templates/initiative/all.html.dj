@@ -1,37 +1,15 @@
 {% extends "layout.html.dj" %}
 
-{% load markdown %}
-{% load compress %}
-{% load static %}
-
-{% block start_css %}
-    {% if 20 in permissions or 22 in permissions %}
-        <link rel="stylesheet"
-              href="{% static '/lib/codemirror/mycss.css' %}"
-              type="text/css"/>
-        <link rel="stylesheet"
-              href="{% static '/css/live-editor.css' %}"
-              type="text/css"/>
-    {% endif %}
-{% endblock start_css %}
-{% block modals %}
-    {% if 20 in permissions or 22 in permissions %}
-        {% include "initiative/new.html.dj" %}
-    {% endif %}
-{% endblock modals %}
 {% block body %}
     <h1 class="title is-1">{{ title }}</h1>
-    {% if 20 in permissions or 22 in permissions %}
-
-<div class="field has-addons">
-    <p class="control">
-        <a href="{% url 'initiative:new' %}" class="button" title="new initiatve"><span class="icon"><i class="fas fa-plus"></i></span><span>Create an Initiative</span></a>
-    </p>
-</div>
-
-
-
-
+    {% if "Create Initiative" in perms %}
+        <div class="field has-addons">
+            <p class="control">
+                <a href="{% url 'initiative:new' %}"
+                   class="button"
+                   title="new initiatve"><span class="icon"><i class="fas fa-plus"></i></span><span>Create an Initiative</span></a>
+            </p>
+        </div>
     {% endif %}
     <div class="columns is-multiline">
         {% for initiative in initiatives %}

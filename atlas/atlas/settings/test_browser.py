@@ -2,6 +2,7 @@
 
 Imports the standard test config and adds a test runner.
 """
+import contextlib
 
 from .test import *
 
@@ -172,7 +173,5 @@ BROWSERSTACK_CAPS.append(
 TEST_RUNNER = "atlas.browserstack_runner.BrowserStackDiscoverRunner"
 
 # import custom overrides
-try:
+with contextlib.suppress(ImportError):
     from .test_browser_cust import *
-except ImportError:
-    pass

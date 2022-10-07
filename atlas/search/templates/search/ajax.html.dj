@@ -1,0 +1,100 @@
+{% load search_tags %}
+
+<section class="section my-4 p-0 is-flex is-flex-direction-row is-align-items-center">
+    <div class="icon-text mr-5">
+        <span class="icon">
+            <i class="fas fa-filter"></i>
+        </span>
+        <strong>Filter Results</strong>
+    </div>
+    {% if search_filters %}
+        <div class="field is-grouped is-grouped-multiline">
+            {% for filter in search_filters %}
+                <div class="control">
+                    <div class="tags has-addons">
+                        {% if filter.key == "field" %}
+                            <span class="tag is-light is-medium">Field</span>
+                            <span class="tag is-warning is-medium">{{ filter.value|friendly_name }}<a class="delete is-small" href="{% facet_url "field" filter.value %}"></a></span>
+                        {% else %}
+                            {% for value in filter.value %}
+                                <span class="tag is-light is-medium">{{ filter.key|friendly_name }}</span>
+                                {# if there are 0 results, the filters do not show or have values #}
+                                <span class="tag is-warning is-medium">{{ value|friendly_name }}<a class="delete is-small" href="{% facet_url filter.key value %}"></a></span>
+                                {% comment %}
+                            } else {
+                                <span class="tag is-warning is-medium">@field.Value<a class="delete is-small" href="{% facet_url "field" field.value %}"></a></span>
+                            }
+                                {% endcomment %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</section>
+<div class="columns">
+    <div class="column is-one-quarter is-sticky is-align-self-flex-start"
+         style="max-height:calc(100vh - 137px); overflow-Y:auto">
+        {% include "search/filters.html.dj" %}
+    </div>
+    <div class="column" id="results">
+        {% if results|length > 0 %}
+            <div class="columns is-multiline">
+                {% for result in results %}
+                    {% if result.collection %}
+                        <div class="column is-full collection">
+                            {% include "collection/snippet.html.dj" with collection=result.collection matched_field=result.matched_field %}
+                        </div>
+                    {% endif %}
+                    {% if result.initiative %}
+                        <div class="column is-full initiative">
+                            {% include "initiative/snippet.html.dj" with initiative=result.initiative matched_field=result.matched_field %}
+                        </div>
+                    {% endif %}
+                    {% if result.report %}
+                        <div class="column is-full report">
+                            {% include "report/snippet.html.dj" with report=result.report matched_field=result.matched_field %}
+                        </div>
+                    {% endif %}
+                    {% if result.term %}
+                        <div class="column is-full term">
+                            {% include "term/snippet.html.dj" with term=result.term matched_field=result.matched_field %}
+                        </div>
+                    {% endif %}
+                    {% if result.user %}
+                        <div class="column is-full user">
+                            {% include "user/snippet.html.dj" with user=result.user matched_field=result.matched_field %}
+                        </div>
+                    {% endif %}
+                    {% if result.group %}
+                        <div class="column is-full group">
+                            {% include "group/snippet.html.dj" with group=result.group matched_field=result.matched_field %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% include "search/pagination.html.dj" %}
+        {% else %}
+            <div class="has-text-centered p-5">
+                <h5>
+                    Not finding what you are looking for?
+                    <br>
+                    <a href="http://reports.riversidehealthcare.net/" target="_blank">Request a New Report here.</a>
+                </h5>
+                <p>
+                    <hr />
+                    A few things to consider -
+                    <br>
+                    <br>
+                    Are you searching for a private or hidden report? Try out the advanced search filters!
+                    <br>
+                    <br>
+                    Is it a new Hyperspace Report? Hyperspace reports typically are not imported until the following business day.
+                    <br>
+                    Is it a new SSRS Report? SSRS reports typically take two hours to be loaded into the search results.
+                </p>
+            </div>
+        {% endif %}
+    </div>
+</div>

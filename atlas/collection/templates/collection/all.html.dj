@@ -1,31 +1,15 @@
 {% extends "layout.html.dj" %}
 
-{% load markdown %}
-{% load compress %}
-{% load static %}
-
-{% block start_css %}
-    {% if 26 in permissions %}
-        <link rel="stylesheet"
-              href="{% static '/lib/codemirror/mycss.css' %}"
-              type="text/css"/>
-        <!--
-<link rel="stylesheet" href="{% static '/css/live-editor.css' %}" type="text/css" />
--->
-    {% endif %}
-{% endblock start_css %}
-{% block modals %}
-    {% if 26 in permissions %}
-        {% include "collection/new.html.dj" %}
-    {% endif %}
-{% endblock modals %}
 {% block body %}
     <h1 class="title is-1">{{ title }}</h1>
-    {% if 26 in permissions %}
-        <a class="nav-link"
-           data-toggle="mdl"
-           data-target="newModal"
-           data-tooltip="Create New Collection">New Collections</a>
+    {% if "Create Collection" in perms %}
+        <div class="field has-addons">
+            <p class="control">
+                <a href="{% url 'collection:new' %}"
+                   class="button"
+                   title="new initiatve"><span class="icon"><i class="fas fa-plus"></i></span><span>Create a Collection</span></a>
+            </p>
+        </div>
     {% endif %}
     <div class="columns is-multiline">
         {% for collection in collections %}

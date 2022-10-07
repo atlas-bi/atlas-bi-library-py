@@ -2,29 +2,104 @@
 {% load static %}
 {% load markdown %}
 
-<div class="card">
+<div class="card has-shadow-gold">
     <div class="card-header">
-        <p class="card-header-title">
-            {{ collection }}
-        </p>
+        <div class="card-header-title py-2 is-justify-content-space-between">
+            <a title="open collection"
+               class="has-text-dark"
+               href="{{ collection.get_absolute_url }}">{{ collection.name }}
+                <div class="fa-layers ml-2 fa-lg">
+                    <span class="icon has-text-info "><i class="fas fa-certificate"></i></span>
+                    <span class="icon has-text-white fa-transform"><i class="fas fa-check shrink-5"></i></span>
+                </div>
+            </a>
+            <span class="tags">
+                <span class="tag">collection</span>
+                {% if matched_field %}
+                    <div class="tags has-addons mb-0">
+                        <span class="tag is-info is-light">Matched</span>
+                        <span class="tag is-info">{{ matched_field }}</span>
+                    </div>
+                {% endif %}
+            </span>
+        </div>
     </div>
-    <div class="card-content">
+    <div class="card-content pt-3 pb-2">
         <div class="media">
             <div class="media-left">
-                <figure class="image is-96x96">
-                    <img src="{% static "img/report_placeholder.png" %}" alt="report image" />
+                <figure class="image is-128x128">
+                    <picture>
+                        <source srcset="{% static 'img/report_placeholder_128x128.webp' %}"
+                                type="image/webp"
+                                loading="lazy"/>
+                        <img title="placeholder"
+                             src="{% static 'img/report_placeholder_128x128.png' %}"
+                             alt="placeholder image"
+                             height="128"
+                             width="128"
+                             loading="lazy"/>
+                    </picture>
                 </figure>
             </div>
-            <div class="media-content">
-                {{ collection|snippet|markdown|safe }}
-                <br>
-                <p class="subtitle is-6">
-                    blank
-                </p>
+            <div class="is-flex is-flex-direction-column is-flex-grow-1">
+                <a title="open collection"
+                   class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96  has-text-dark"
+                   href="{{ collection.get_absolute_url }}">
+                    <p>
+                        {% if collection|snippet %}
+                            {{ collection|snippet|markdown|unwrap }}
+                            <span class="has-text-link">read more</span>
+                        {% else %}
+                            <span class="has-text-link">Open to view details.</span>
+                        {% endif %}
+                    </p>
+                </a>
             </div>
         </div>
     </div>
     <footer class="card-footer">
-        <a href="{{ collection.get_absolute_url }}" class="card-footer-item">Open</a>
+        <a href="#"
+           title="star this collection"
+           class="card-footer-item star"
+           data-href="{% url 'user:stars_edit' %}?type=collection&id={{ collection.collection_id }}">
+            <span class="icon-text">
+                {% if collection.collection_id in user.get_starred_collections %}
+                    <span class="icon has-text-gold">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <span>Starred <span class="tag is-rounded">{{ collection.starred.all.count }}</span></span>
+                {% else %}
+                    <span class="icon ">
+                        <i class="far fa-star"></i>
+                    </span>
+                    <span>Star <span class="tag is-rounded star-count">{{ collection.starred.all.count }}</span></span>
+                {% endif %}
+            </span>
+        </a>
+        <div class="card-footer-item">
+            <a href="#"
+               title="open collection profile"
+               class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+               data-target="collection-profile-{{ collection.collection_id }}"
+               data-tooltip="Open Profile">
+                <span class="icon has-text-grey">
+                    <i class="fas fa-chart-bar"></i>
+                </span>
+            </a>
+            {% if settings.ENABLE_SHARING %}
+                <a href="#"
+                   title="share this collection"
+                   class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger ml-2"
+                   data-tooltip="Share"
+                   data-target="collection-share-{{ collection.collection_id }}"
+                   data-name="{{ collection.name }}"
+                   data-type="collection">
+                    <span class="icon has-text-grey">
+                        <i class="fas fa-share"></i>
+                    </span>
+                </a>
+            {% endif %}
+        </div>
     </footer>
 </div>
+{% include "collection/modals.html.dj" %}

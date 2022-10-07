@@ -1,23 +1,24 @@
 {% extends "layout.html.dj" %}
 
 {% load compress %}
+
 {% load static %}
 
+{% comment %}
 {% compress css file etl %}
     {% block start_css %}
-        <link rel="stylesheet"
-              href="{% static '/css/etl.css' %}"
-              type="text/css"
-              charset="utf-8"/>
-    {% endblock start_css %}
+        <link rel="stylesheet" href="{% static '/css/etl.css' %}" type="text/css" charset="utf-8"/>
+    {% endblock start_css %} #}
 {% endcompress %}
+
+
+{% endcomment %}
+
 {% block body %}
     <section class="section">
         <div class="container">
             <h1 class="title">Atlas ETL Administration</h1>
-            <h3 class="title is-3">
-                Health Check
-            </h2>
+            <h3 class="title is-3">Health Check</h3>
             <div class="block">
                 <h3>
                     Solr:
@@ -29,9 +30,7 @@
                 </h3>
                 <h3>Celery Beat: ?</h3>
             </div>
-            <h3 class="title is-3">
-                Solr Panl
-            </h2>
+            <h3 class="title is-3">Solr Panl</h3>
             <div class="columns">
                 <div class="column">
                     <table class="table is-fullwidth">
@@ -56,7 +55,7 @@
                                           data-freq="10"></span>
                                 </td>
                                 <td>
-                                    <a href="/etl/search/{{ type }}/run">Run Now</a>
+                                    <a title="run now" href="/etl/search/{{ type }}/run">Run Now</a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -95,9 +94,10 @@
                     </tbody>
                 </table>
             </div>
-        </tr>
-    </thead>
+        </div>
+    </section>
 {% endblock body %}
+
 {% block js %}
-    <script type="text/javascript" src="{% static '/js/etl.js' %}" defer></script>
+    <script type="text/javascript" src="{% static '/js/etl.js' %}" defer="defer"></script>
 {% endblock js %}

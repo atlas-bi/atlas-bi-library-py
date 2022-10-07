@@ -1,0 +1,373 @@
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+}
+
+section {
+  position: relative;
+}
+
+@media screen and (min-width: $desktop) {
+  .atlas-navbar .navbar-start {
+    padding-top: 0 !important;
+  }
+
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+div.column.is-narrow:empty {
+  padding: 0 !important;
+}
+
+.image.is-133x40 {
+  height: 40px;
+  width: 133px;
+}
+
+/* card colors */
+
+$card-colors: (
+  'warning': $warning,
+  'danger': $danger,
+  'success': $success,
+  'info': $info,
+);
+@each $code, $color in $card-colors {
+  .card.is-#{$code} {
+    box-shadow: 0 0.5em 1em -0.125em rgba($color, 0.7),
+      0 0 0 1px rgba($scheme-invert, 0.02);
+  }
+  .card.is-#{$code}:hover {
+    box-shadow: 0 0 1.5em -0.125em rgba($color, 0.7),
+      0 0 0 2px rgba($scheme-invert, 0.02);
+  }
+}
+
+/* load image */
+
+.modal-image img,
+.modal-image source {
+  max-height: 90vh !important;
+}
+
+.image picture img {
+  max-height: 100%;
+  max-width: 100%;
+  width: auto;
+}
+
+.report-image {
+  height: 400px;
+}
+
+.report-image .image img,
+.report-image .image source {
+  width: auto;
+  height: 400px;
+}
+
+/* search */
+#search-form .button:hover {
+  color: $grey-darker !important;
+}
+
+/* badge in headings */
+.title.is-2 .badge {
+  font-size: 50%;
+  padding: 6px;
+  width: 13px;
+  height: 13px;
+}
+
+.ss-content pre,
+.CodeMirror pre {
+  padding: 0;
+  padding: unset;
+}
+
+.atlas-navbar {
+  padding-left: 15px;
+}
+
+.column {
+  min-width: 1px;
+}
+
+/* fix nav dropdown in IE 11. focus within breaks it all */
+@include desktop {
+  .navbar-item {
+    &.is-hoverable:hover {
+      .navbar-dropdown {
+        display: block;
+      }
+    }
+  }
+}
+
+.icon.is-large .fa-lg .fa-circle-play {
+  font-size: 1.8em !important;
+}
+
+.is-flex-widescreen {
+  display: none !important;
+}
+@media screen and (min-width: $widescreen) {
+  .is-flex-widescreen {
+    display: flex !important;
+  }
+}
+
+.tag:not(body) {
+  line-height: 2;
+}
+
+button.tag {
+  border: none;
+}
+
+.card .tag {
+  min-height: 2em;
+  height: auto;
+  height: unset;
+  white-space: normal;
+  white-space: unset;
+}
+
+.is-min-h-96 {
+  min-height: 96px;
+}
+
+.fa-2_3x {
+  font-size: 2.3em;
+}
+
+/* flex overflow fix */
+.is-flex {
+  min-width: 1px;
+}
+
+/* narrow table column */
+
+.table td.is-narrow,
+.table th.is-narrow {
+  width: 1px;
+  white-space: nowrap;
+}
+
+.table.is-align-middel th,
+.table.is-align-middel td {
+  vertical-align: middle;
+}
+
+/* sticky */
+.sticky,
+.is-sticky {
+  position: sticky;
+  top: calc(56px + 24px);
+}
+
+nav.sticky,
+nav.is-sticky {
+  top: 0;
+}
+
+.panel-tab.is-active {
+  color: $panel-list-item-hover-color;
+  background-color: $panel-block-hover-background-color;
+}
+
+.is-nobreak {
+  white-space: nowrap;
+}
+
+.is-wordbreak {
+  word-break: break-word;
+}
+
+code {
+  background-color: #f6f6f6;
+  padding: 3px;
+  border-radius: 3px;
+}
+
+[data-tooltip]:not(.is-disabled):hover::after,
+[data-tooltip]:not(.is-disabled):hover::before,
+[data-tooltip]:not(.is-loading):hover::after,
+[data-tooltip]:not(.is-loading):hover::before,
+[data-tooltip]:not([disabled]):hover::after,
+[data-tooltip]:not([disabled]):hover::before {
+  font-weight: $weight-light;
+}
+
+// modal overrides
+.modal,
+.modal-content {
+  overflow: visible;
+}
+
+.modal-large {
+  width: 90vw;
+  height: 90vh;
+}
+
+.modal-image {
+  max-width: 90vw;
+  width: auto;
+  height: auto;
+  max-height: 90vh;
+}
+
+.js-modal-trigger {
+  cursor: pointer;
+}
+
+button.is-ghost:not(.button) {
+  background-color: transparent;
+  border: none;
+  font-size: 1rem;
+  font-weight: $weight-normal;
+  outline: none;
+}
+
+.has-text-gold {
+  color: #ffd700;
+}
+
+.panel-block.is-collapsible {
+  padding: 0;
+}
+
+.has-shadow-gold {
+  box-shadow: 0 0.5em 1em -0.125em rgba(255 215 0 / 10%),
+    0 0 0 1px rgba(255 215 0 / 2%);
+  border: 1px solid rgb(255 215 0);
+}
+
+.is-hover {
+  border: 1px solid $warning;
+}
+
+.is-warning.is-outlined.is-active {
+  background-color: $warning;
+  border-color: transparent;
+}
+
+.fav-count {
+  position: absolute;
+  right: -14px;
+  top: -14px;
+}
+
+.favorites-folder.is-active {
+  font-weight: bold;
+}
+
+.button.favorite-reorder,
+.favorite-folder-controls {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  transform: translateY(-50%);
+  display: none;
+}
+
+.favorite-folder-controls {
+  right: -14px;
+}
+
+.button.favorite-reorder {
+  left: 0;
+}
+
+.favorite:hover .favorite-reorder {
+  display: block;
+}
+
+.favorites-folder:hover .favorite-folder-controls,
+.favorites-show-all:hover .favorite-folder-controls {
+  display: block;
+}
+
+.table.is-no-border td,
+.table.is-no-border th {
+  border: 1px solid transparent;
+}
+
+.bar-percent {
+  display: inline-block;
+  min-width: 100px;
+}
+
+.w-auto {
+  width: auto !important;
+}
+
+.icon.is-group-roles {
+  left: 15px;
+  top: 11px;
+  border-radius: 8px;
+  width: 17px;
+  height: 17px;
+}
+
+.bar-percent-fill {
+  background-color: rgba(38 128 235 / 10%);
+  border: 1px solid rgba(38 128 235 / 20%);
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border-left: 1px solid $grey-light;
+  position: absolute;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.table.bar tr:hover .bar-percent-fill {
+  background-color: rgba(38 128 235 / 20%);
+  border: 1px solid rgba(38 128 235 / 30%);
+  border-left: 1px solid $grey-light;
+}
+
+.table.bar.sort tr th {
+  cursor: pointer;
+}
+
+.bar-data-wrapper {
+  visibility: hidden;
+  transition: visibiliy 0.2s, opacity 0.2s;
+}
+
+.is-middle {
+  vertical-align: middle !important;
+}
+
+input.css-collapse {
+  display: none;
+}
+
+.css-collapse ~ div {
+  display: none;
+}
+
+.css-collapse-label {
+  width: 100%;
+  height: calc($body-font-size * $body-line-height);
+}
+
+.css-collapse-label::before {
+  position: absolute;
+  content: 'show more';
+}
+
+.css-collapse:checked ~ div {
+  display: block;
+}
+
+.css-collapse:checked ~ div ~ .css-collapse-label::before {
+  content: 'show less';
+}

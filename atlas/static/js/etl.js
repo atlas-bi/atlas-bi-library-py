@@ -1,19 +1,18 @@
-
 // https://stackoverflow.com/a/10834843/10265880
 /**
  *
  */
-function isNormalInteger(str) {
-    return /^\+?(0|[1-9]\d*)$/.test(str);
+function isNormalInteger(string_) {
+  return /^\+?(0|[1-9]\d*)$/.test(string_);
 }
 
 /**
  *
  */
-function isJson(str){
-  try{
-    return JSON.parse(str);
-  } catch(e){
+function isJson(string_) {
+  try {
+    return JSON.parse(string_);
+  } catch {
     return false;
   }
 }
@@ -21,89 +20,101 @@ function isJson(str){
 /**
  *
  */
-function get_ajax(e){
-    var q= new XMLHttpRequest();
-    q.open("get", e.getAttribute("data-ajax"), true);
-    q.setRequestHeader(
-        "Content-Type",
-        "application/x-www-form-urlencoded; charset=UTF-8"
-    );
-    q.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-    q.send();
+function getAjax(element) {
+  const q = new XMLHttpRequest();
+  q.open('get', element.getAttribute('data-ajax'), true);
+  q.setRequestHeader(
+    'Content-Type',
+    'application/x-www-form-urlencoded; charset=UTF-8',
+  );
+  q.setRequestHeader('X-CSRFToken', csrftoken);
+  q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+  q.send();
 
-    q.onreadystatechange = function () {
-      if(q.readyState == 4 && q.status == 200){
-        data = isJson(q.responseText);
+  q.addEventListener('readystatechange', function () {
+    if (q.readyState === 4 && q.status === 200) {
+      const data = isJson(q.responseText);
 
-
-      if(!data){
-        e.innerHTML = q.responseText;
+      if (!data) {
+        element.innerHTML = q.responseText;
       } else {
+        element.innerHTML = data.message;
 
-        e.innerHTML = data.message;
-
-        // set color or text based on status
-        if(data.hasOwnProperty("status")){
-          e.setAttribute("data-color", data.status);
-        }
-        else{
-          e.removeAttribute("data-color");
+        // Set color or text based on status
+        if (data.hasOwnProperty('status')) {
+          element.setAttribute('data-color', data.status);
+        } else {
+          element.removeAttribute('data-color');
         }
       }
 
-      if(e.hasAttribute("data-toggle") && document.querySelector('.field input#'+e.getAttribute("data-toggle"))){
-        var el =  document.querySelector('.field input#'+e.getAttribute("data-toggle"));
-        if(data.status === "success"){
-       el.setAttribute("checked","checked");
-        }
-        else {
-         el.removeAttribute("checked");
+      if (
+        element.hasAttribute('data-toggle') &&
+        document.querySelector(
+          '.field input#' + element.getAttribute('data-toggle'),
+        )
+      ) {
+        const checkbox = document.querySelector(
+          '.field input#' + element.getAttribute('data-toggle'),
+        );
+        if (data.active === true) {
+          checkbox.setAttribute('checked', 'checked');
+        } else {
+          checkbox.removeAttribute('checked');
         }
       }
 
-      // enable periodic update
-      if(e.hasAttribute("data-freq") && isNormalInteger(e.getAttribute("data-freq"))){
-        setTimeout(get_ajax.bind(this,e), e.getAttribute("data-freq")*1000);
+      // Enable periodic update
+      if (
+        element.hasAttribute('data-freq') &&
+        isNormalInteger(element.getAttribute('data-freq'))
+      ) {
+        setTimeout(
+          getAjax.bind(this, element),
+          element.getAttribute('data-freq') * 1000,
+        );
       }
-     }
-    };
-}
-
-/**
- * function for loading all ajax content on page.
- * can be called for force refresh of all, otherwise
- * it will run when page loads.
- */
-function load_ajax(){
-  var ajax = document.querySelectorAll('*[data-ajax]');
-
-  [].forEach.call(ajax, function (e) {
-      get_ajax(e);
+    }
   });
 }
 
-load_ajax();
+/**
+ * Function for loading all ajax content on page.
+ * can be called for force refresh of all, otherwise
+ * it will run when page loads.
+ */
+function loadAjax() {
+  const ajax = document.querySelectorAll('*[data-ajax]');
 
-document.addEventListener('something_changed', function(){
-  load_ajax();
+  Array.prototype.forEach.call(ajax, function (event) {
+    getAjax(event);
+  });
+}
+
+loadAjax();
+
+document.addEventListener('something_changed', function () {
+  loadAjax();
 });
 
-// toggle
-document.addEventListener("click", function(e){
-  if(e.target.matches('input.switch[data-url')){
+document.addEventListener('click', function (event) {
+  if (event.target.matches('input.switch[data-url')) {
+    const STATUS = { true: 'enable', false: 'disable' };
 
-    STATUS = {"true":"enable","false":"disable"};
-
-    var q= new XMLHttpRequest();
-    q.open("get", e.target.getAttribute("data-url") + STATUS[e.target.checked], true);
-    q.setRequestHeader(
-        "Content-Type",
-        "application/x-www-form-urlencoded; charset=UTF-8"
+    const q = new XMLHttpRequest();
+    q.open(
+      'get',
+      event.target.getAttribute('data-url') + STATUS[event.target.checked],
+      true,
     );
-    q.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+    q.setRequestHeader('X-CSRFToken', csrftoken);
+    q.setRequestHeader(
+      'Content-Type',
+      'application/x-www-form-urlencoded; charset=UTF-8',
+    );
+    q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
     q.send();
 
-    document.dispatchEvent(new CustomEvent("something_changed"));
-
+    document.dispatchEvent(new CustomEvent('something_changed'));
   }
 });

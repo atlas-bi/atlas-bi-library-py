@@ -1,6 +1,0 @@
-<h2 class="title is-2">Linked Reports</h2>
-<div class="columns is-multiline">
-    {% for report in related_reports %}
-        <div class="column is-half ">{% include "report/snippet.html.dj" with report=report %}</div>
-    {% endfor %}
-</div>

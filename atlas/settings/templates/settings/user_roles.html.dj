@@ -1,0 +1,92 @@
+<div>
+    <h2 class="title is-2">User Roles</h2>
+    <h3 class="title is-3">Add Privileged User</h3>
+    <form class="content"
+          method="post"
+          action="{% url "settings:user_roles" %}">
+        {% csrf_token %}
+        <div class="field">
+            <label class="label">User</label>
+            <div class="field is-grouped">
+                <div class="control is-relative is-expanded">
+                    <input class="input input-mini"
+                           placeholder="type to search.."
+                           search-area="user_lookup"/>
+                    <input type="hidden" name="user_id"/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="control">
+                    <a title="clear" href="#" class="button mini-clear">
+                        <span class="icon">
+                            <i class="fas fa-xmark"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Role</label>
+            <div class="field is-grouped">
+                <div class="control is-relative is-expanded">
+                    <input class="input input-mini"
+                           placeholder="type to search.."
+                           lookup-area="user_roles"/>
+                    <input type="hidden" name="role_id"/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="control">
+                    <a title="clear" href="#" class="button mini-clear">
+                        <span class="icon">
+                            <i class="fas fa-xmark"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <button class="button" type="submit">Save</button>
+    </form>
+    <h3 class="title is-3">Privileged Users</h3>
+    <div class="table-container">
+        <table class="table is-narrow is-fullwidth is-align-middel"
+               aria-label="privileged users">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Role</th>
+                    <th>Remove Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for link in privaledged_users %}
+                    <tr>
+                        <td>{{ link.user }}</td>
+                        <td>{{ link.role }}</td>
+                        <td>
+                            <form method="post"
+                                  action="{% url "settings:delete_user_role" pk=link.rolelinks_id %}">
+                                {% csrf_token %}
+                                <button class="is-ghost is-clickable has-text-link " type="submit">
+                                    <span class="icon">
+                                        <i class="fas fa-trash"></i>
+                                    </span>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

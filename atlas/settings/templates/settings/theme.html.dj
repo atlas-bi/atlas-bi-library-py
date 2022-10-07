@@ -1,0 +1,15 @@
+<div>
+    <h2 class="title is-2">Theme</h2>
+    <form action="{% url "settings:theme" %}" method="post">
+        {% csrf_token %}
+        <div class="field">
+            <label class="label">Global CSS Styles</label>
+            <div class="control">
+                <textarea class="textarea" id="global_css" name="global_css" placeholder="div { background: pink; }">{{ global_css.value|default:""|safe }}</textarea>
+            </div>
+        </div>
+        <div class="control">
+            <button class="button is-link">Save Changes</button>
+        </div>
+    </form>
+</div>

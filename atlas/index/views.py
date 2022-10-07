@@ -1,10 +1,9 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render
 
 
 @login_required
 def index(request):
-
     context = {
         "title": "Home",
     }
@@ -13,17 +12,9 @@ def index(request):
 
 
 @login_required
-def video(request):
-
-    video_status = request.user.get_preferences().filter(key="WelcomeToAtlasVideo")
-
-    if video_status.exists():
-        video_open = bool(video_status.first().value == 1)
-    else:
-        video_open = False
-
+def about(request):
     context = {
-        "video_open": video_open,
+        "title": "About",
     }
 
-    return render(request, "index/video.html.dj", context)
+    return render(request, "index/about.html.dj", context)

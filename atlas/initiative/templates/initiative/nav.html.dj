@@ -1,67 +1,78 @@
-<aside class="menu">
-    <ul>
-        {% if 22 in permissions %}
-            <li>
-                <a class="has-tooltip-arrow has-tooltip-right"
-                   data-toggle="mdl"
-                   data-target="editModal"
-                   data-tooltip="Open Atlas Editor">
-                    <span class="icon has-text-grey is-large">
-                        <i class="fas fa-lg fa-edit"></i>
-                    </span>
-                </a>
-            </li>
-        {% endif %}
-        {% if 21 in permissions %}
-            <!-- delete -->
-            <li>
-                <a class="has-tooltip-arrow has-tooltip-right"
-                   data-tooltip="Delete this Initaitive"
-                   href="{{ initiative.get_absolute_delete_url }}"
-                   onclick="return confirm('Are you sure you want to remove this?');">
-                    <span class="icon has-text-grey is-large">
-                        <i class="fas fa-lg fa-trash"></i>
-                    </span>
-                </a>
-            </li>
-        {% endif %}
-        <li>
-            <a class="has-tooltip-arrow has-tooltip-right {{ favorite }}"
-               data-tooltip="
-               {% if favorite %}
-                   Remove from Favorites
-               {% else %}
-                   Add to Favorites
-               {% endif %} "
-               fav-type="initiative"
-               object-id="{{ initiative.initiative_id }}">
-                <span class="icon has-text-grey is-large">
-                    <i class="fas fa-lg fa-star"></i>
+<ul>
+    <li>
+        <a href="#"
+           title="star this initiative"
+           class="is-block has-tooltip-arrow has-tooltip-right star"
+           data-tooltip="Star this initiative"
+           data-href="{% url 'user:stars_edit' %}?type=initiative&id={{ initiative.initiative_id }}">
+            {% if initiative.initiative_id in user.get_starred_initiatives %}
+                <span class="icon is-large has-text-gold ">
+                    <i class="fas fa-lg fa-star is-relative">
+                        <span class="badge star-count">{{ initiative.starred.all.count }}</span>
+                    </i>
                 </span>
-            </a>
-        </li>
-        <li>
-            <a class="has-tooltip-arrow has-tooltip-right"
-               data-tooltip="Share"
-               data-toggle="mdl"
-               data-target="shareModal"
-               data-name="{{ initiative.name }}"
-               data-type="initiative">
+            {% else %}
                 <span class="icon has-text-grey is-large">
+                    <i class="far fa-lg fa-star is-relative">
+                        <span class="badge star-count">{{ initiative.starred.all.count }}</span>
+                    </i>
+                </span>
+            {% endif %}
+        </a>
+    </li>
+    {% if settings.ENABLE_SHARING %}
+        <li>
+            <a title="share"
+               href="#"
+               class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+               data-tooltip="Share"
+               data-target="initiative-share-{{ initiative.initiative_id }}"
+               data-name="{{ initiative }}"
+               data-type="initiative">
+                <span class="icon has-text-grey is-large ">
                     <i class="fas fa-lg fa-share"></i>
                 </span>
             </a>
         </li>
+    {% endif %}
+    {% if "Create Initiative" in perms %}
         <li>
-            <a class="has-tooltip-arrow has-tooltip-right"
-               data-tooltip="Share Feedback"
-               data-toggle="mdl"
-               data-target="shareFeedback"
-               data-name="{{ initiative.name }}">
-                <span class="icon has-text-grey is-large">
-                    <i class="far fa-lg fa-thumbs-up"></i>
+            <a title="create an initiative"
+               class="is-block has-tooltip-arrow has-tooltip-right"
+               href="{% url 'initiative:new' %}"
+               data-tooltip="Create New Initiative">
+                <span class="icon has-text-grey is-large ">
+                    <i class="fas fa-lg fa-plus"></i>
                 </span>
             </a>
         </li>
-    </ul>
-</aside>
+    {% endif %}
+    {% if "Edit Initiative" in perms %}
+        <li>
+            <a title="open editor"
+               class="is-block has-tooltip-arrow has-tooltip-right"
+               href="{{ initiative.get_absolute_edit_url }}"
+               data-tooltip="Open Atlas Editor">
+                <span class="icon has-text-grey is-large ">
+                    <i class="fas fa-lg fa-pen-to-square"></i>
+                </span>
+            </a>
+        </li>
+    {% endif %}
+    {% if "Delete Initiative" in perms %}
+        <li>
+            <form method="post" action="{{ initiative.get_absolute_delete_url }}">
+                {% csrf_token %}
+                <button class="is-ghost is-block has-tooltip-arrow has-tooltip-right p-0"
+                        data-tooltip="Delete this Initaitive"
+                        href="{{ initiative.get_absolute_delete_url }}"
+                        onclick="return confirm('Are you sure you want to remove this?');"
+                        type="submit">
+                    <span class="icon has-text-grey is-large ">
+                        <i class="fas fa-lg fa-trash"></i>
+                    </span>
+                </button>
+            </form>
+        </li>
+    {% endif %}
+</ul>

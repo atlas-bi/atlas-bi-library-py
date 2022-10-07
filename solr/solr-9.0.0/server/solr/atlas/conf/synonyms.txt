@@ -1,0 +1,126 @@
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+# Some synonym groups specific to this example
+GB,gib,gigabyte,gigabytes
+MB,mib,megabyte,megabytes
+
+#notice we use "gib" instead of "GiB" so any WordDelimiterGraphFilter coming
+#after us won't split it into two words.
+
+
+carity,clarity
+covid,covid-19,corona virus,covid 19,covid dashboard,covid dash,covid department,sars,corona,covid19,the rona,sars-cov-2,coronavirus
+vaccination,vax,vaxx,vaccinated,booster,boosted,jabbed
+chemo,chemotherapty
+ip,inpatient
+w/,with
+w/o,without
+cbo,corporate billing office
+ccc,coal city campus
+ed,er,emergency department,emergency room,emergency
+slicer dicer,slicerdicer,slicer,dicer
+np,nurse practitioner
+slc,ltc,sa40,long term care
+rmc,riverside medical center
+Bruce Wayne,Batman,Daniel Ryan,Blerg
+physician,provider
+adt,admission discharge transfer
+hb,hospital billing
+tran,trans,transfer,transfers
+los,length of stay
+hh,home health,rmc hh,homehealth
+lt,longterm,long term
+bcma,barcoded medication administration
+rx,prescription,medication,drugs,perscription
+rvu,relative value unit
+obs,observation,obv,obervaton,observatin
+dept,department
+mrsa,methicillin resistant staphyloccocus aureus
+mh,mental health,bh,behavioral health,psych
+raf,hcc,hierarchical condition category
+pacu,postanesthesia care unit
+rac,recovery audit contractor
+ascus,atypical squamous cells of unknown significance
+losi,length of stay index
+hf,heart failure
+mdro,multi drug resistant organisms
+mssa,methicillin susceptible staphylococcus aureus
+ect,electroconvulsive therapy
+mg,milligram
+nhsn,national healthcare safety network
+qi,quality improvement,quality initiative,quality indicator
+mst,malnutrition screening tool
+ccl,cath lab
+ar,accounts receivable,accounts recievable,atb
+iru,interventional radiology unit
+gme,graduate medical education,student doctors,medical students,resident
+aim,hospitalist
+cac,childrens asthma care
+cms,medicare,medicaid,center for medicare and medicaid services
+vte,venous thromboembolism
+sbo,single billing office
+cv,cardiovascular
+ris,radiology information system
+evs,environmental services
+pn,pneumonia
+ami,heart attack,cardiac arrest,infarction
+pb,professional billing
+pcp,primary care provider
+hcpc,hcpcs,cpt,current procedural terminology
+payer,payor
+canceled,cancelled
+diagnosis,dx,diag
+procedure,px,proc
+hx,history
+har,hospital account
+mrn,medical record,mrun
+narcan,naloxone
+patos,palos,pre-service
+authorization,pre-auth,no-auth,auth,financial clearance
+transaction,treatment
+BPA, Best Practice Advisory, Best Practice Advisories, BestPractice Advisory, BestPractice Advisories
+
+# Names
+chris,christopher
+dan,daniel
+
+# Numbers
+1,one
+2,two
+3,three
+4,four
+5,five
+6,six
+7,seven
+8,eight
+9,nine
+10,ten
+11,eleven
+12,twelve
+13,thirteen
+14,fouteen
+15,fifteen
+16,sixteen
+17,seventeen
+18,eighteen
+19,nineteen
+20,twenty
+30,thirty
+40,fourty
+50,fifty
+60,sixty
+70,seventy
+80,eighty
+90,ninety
+100,one hundred,hundred

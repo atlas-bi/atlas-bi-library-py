@@ -1,0 +1,23 @@
+<div>
+    {% if stars %}
+        <div class="table-responsive">
+            <table class="table" aria-label="active users">
+                <tbody>
+                    {% for star in stars %}
+                        <tr>
+                            <td>
+                                {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
+                                    <a href="{{ star.owner.get_absolute_url }}">{{ star.owner }}</a>
+                                {% else %}
+                                    {{ star.user }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <strong>There are no stars.</strong>
+    {% endif %}
+</div>

@@ -1,110 +1,166 @@
-<aside class="menu">
-    <ul>
-        {% if 12 in permissions %}
-            <!-- edit -->
+{% load url_tags %}
+
+<ul>
+    {% run_url report as run_report_url %}
+    {% if report.attachments.exists %}
+        <li>
+            <a title="run report"
+               href="#"
+               class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+               data-target="report-run-{{ report.report_id }}"
+               data-tooltip="Run Report"
+               data-runurl="@RunReportUrl">
+                <span class="icon is-large has-text-success">
+                    <i class="far fa-2_3x fa-circle-play"></i>
+                </span>
+            </a>
+        </li>
+    {% else %}
+        {% if run_report_url %}
             <li>
-                <a id="open-editor"
-                   data-toggle="mdl"
-                   data-target="edit-modal"
-                   class="has-tooltip-arrow has-tooltip-right"
-                   data-tooltip="Open Atlas Editor">
-                    <span class="icon has-text-grey is-large ">
-                        <i class="fas fa-lg fa-edit"></i>
+                <a title="run report"
+                   class="is-block has-tooltip-arrow has-tooltip-right"
+                   target="_blank"
+                   data-tooltip="Run Report"
+                   href="{{ run_report_url }}">
+                    <span class="icon is-large has-text-success">
+                        <i class="far fa-2_3x fa-circle-play"></i>
+                    </span>
+                </a>
+            </li>
+        {% elif report.system_identifier == "IDB" %}
+            <li>
+                <a title="run report"
+                   href="#"
+                   class="is-disabled is-block has-tooltip-arrow has-tooltip-right"
+                   data-tooltip="Open a related dashboard that uses this.">
+                    <span class="icon is-large has-text-grey-light">
+                        <i class="far fa-2_3x fa-circle-play"></i>
+                    </span>
+                </a>
+            </li>
+        {% elif report.system_editor_url %}
+            <li>
+                <a title="run report"
+                   href="#"
+                   class="is-disabled is-block has-tooltip-arrow has-tooltip-right"
+                   data-tooltip="Open in report library.">
+                    <span class="icon is-large has-text-grey-light">
+                        <i class="far fa-2_3x fa-circle-play"></i>
+                    </span>
+                </a>
+            </li>
+        {% elif report.system_identifier %}
+            <li>
+                <a title="run report"
+                   href="#"
+                   class="is-disabled is-block has-tooltip-arrow has-tooltip-right"
+                   data-tooltip="Run from the Hyperspace report library.">
+                    <span class="icon is-large has-text-grey-light">
+                        <i class="far fa-2_3x fa-circle-play"></i>
                     </span>
                 </a>
             </li>
         {% endif %}
-        <!-- report profile -->
+    {% endif %}
+    <li>
+        <a title="open report profile"
+           href="#"
+           class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+           data-target="report-profile-{{ report.report_id }}"
+           data-tooltip="Open Report Profile">
+            <span class="icon has-text-grey is-large ">
+                <i class="fas fa-lg fa-chart-bar"></i>
+            </span>
+        </a>
+    </li>
+    <li>
+        <a title="star this report"
+           href="#"
+           class="is-block has-tooltip-arrow has-tooltip-right star"
+           data-tooltip="Star this report"
+           data-href="{% url 'user:stars_edit' %}?type=report&id={{ report.report_id }}">
+            {% if report.report_id in user.get_starred_reports %}
+                <span class="icon is-large has-text-gold ">
+                    <i class="fas fa-lg fa-star is-relative">
+                        <span class="badge star-count">{{ report.starred.all.count }}</span>
+                    </i>
+                </span>
+            {% else %}
+                <span class="icon has-text-grey is-large">
+                    <i class="far fa-lg fa-star is-relative">
+                        <span class="badge star-count">{{ report.starred.all.count }}</span>
+                    </i>
+                </span>
+            {% endif %}
+        </a>
+    </li>
+    {% if "Edit Report Documentation" in perms %}
         <li>
-            <a data-toggle="mdl"
-               data-target="profile-modal"
-               class="has-tooltip-arrow has-tooltip-right"
-               data-tooltip="Open Report Profile">
+            <a title="open editor"
+               class="is-block has-tooltip-arrow has-tooltip-right"
+               id="open-editor"
+               href="{{ report.get_absolute_edit_url }}"
+               data-tooltip="Open Atlas Editor">
                 <span class="icon has-text-grey is-large ">
-                    <i class="far fa-lg fa-chart-bar"></i>
+                    <i class="fas fa-lg fa-pen-to-square"></i>
                 </span>
             </a>
         </li>
+    {% endif %}
+    {% if settings.ENABLE_SHARING %}
         <li>
-            <a class="
-               {% if favorite == "yes" %}
-                   favorite
-               {% endif %}
-               has-tooltip-arrow has-tooltip-right"
-               data-tooltip="
-               {% if favorite == "yes" %}
-                   Remove from Favorites
-               {% else %}
-                   Add to Favorites
-               {% endif %}"
-               fav-type="report"
-               object-id="{{ report.report_id }}">
-                <span class="icon has-text-grey is-large ">
-                    <i class="fas fa-lg fa-star"></i>
-                </span>
-            </a>
-        </li>
-        <li>
-            <a class="has-tooltip-arrow has-tooltip-right"
+            <a title="share this report"
+               href="#"
+               class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
                data-tooltip="Share"
-               data-toggle="mdl"
-               data-target="shareModal"
-               data-type="report"
-               data-name="{{ report }}"
-               data-url="/reports/{{ report.report_id }}">
+               data-target="report-share-{{ report.report_id }}">
                 <span class="icon has-text-grey is-large ">
                     <i class="fas fa-lg fa-share"></i>
                 </span>
             </a>
         </li>
+    {% endif %}
+    {% if settings.ENABLE_REQUEST_ACCESS %}
         <li>
-            <a class="has-tooltip-arrow has-tooltip-right"
+            <a title="request access"
+               href="#"
+               class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
                data-tooltip="Request Access"
-               data-toggle="mdl"
-               data-target="requestAccessModal"
-               data-name="{{ report }}"
-               data-name-clean="{{ report }}">
+               data-target="request-access-{{ report.report_id }}">
                 <span class="icon has-text-grey is-large ">
                     <i class="fas fa-lg fa-universal-access"></i>
                 </span>
             </a>
         </li>
+    {% endif %}
+    {% edit_url report as edit_report_url %}
+    {% if "Open In Editor" in perms and edit_report_url %}
         <li>
-            <a class="has-tooltip-arrow has-tooltip-right"
-               data-tooltip="Share Feedback"
-               data-toggle="mdl"
-               data-target="shareFeedback"
-               data-name="{{ report }}">
+            <a title="open report editor"
+               class="is-block has-tooltip-arrow has-tooltip-right"
+               data-tooltip="Open Report Editor"
+               target="_blank"
+               href="{{ edit_report_url }}">
                 <span class="icon has-text-grey is-large ">
-                    <i class="far fa-lg fa-thumbs-up"></i>
+                    <i class="fas fa-lg fa-arrow-up-right-from-square"></i>
                 </span>
             </a>
         </li>
-        {% if 38 in permissions and report.system_edit_url %}
-            <li>
-                <a class="has-tooltip-arrow has-tooltip-right"
-                   data-tooltip="Open Report Editer"
-                   target="_blank"
-                   href="{{ report.system_edit_url }}">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                        <path d="M448 80v352c0 26.51-21.49 48-48 48H48c-26.51 0-48-21.49-48-48V80c0-26.51 21.49-48 48-48h352c26.51 0 48 21.49 48 48zm-88 16H248.029c-21.313 0-32.08 25.861-16.971 40.971l31.984 31.987L67.515 364.485c-4.686 4.686-4.686 12.284 0 16.971l31.029 31.029c4.687 4.686 12.285 4.686 16.971 0l195.526-195.526 31.988 31.991C358.058 263.977 384 253.425 384 231.979V120c0-13.255-10.745-24-24-24z"/>
-                    </svg>
-                </a>
-            </li>
-        {% endif %}
-        {% if 38 in permissions and report.system_manage_url %}
-            <!-- manage ssrs report -->
-            <li>
-                <a class="has-tooltip-arrow has-tooltip-right"
-                   data-tooltip="Manage Report"
-                   rel="noopener"
-                   target="_blank"
-                   href="{{ report.system_manage_url }}">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
-                        <path d="M512.1 191l-8.2 14.3c-3 5.3-9.4 7.5-15.1 5.4-11.8-4.4-22.6-10.7-32.1-18.6-4.6-3.8-5.8-10.5-2.8-15.7l8.2-14.3c-6.9-8-12.3-17.3-15.9-27.4h-16.5c-6 0-11.2-4.3-12.2-10.3-2-12-2.1-24.6 0-37.1 1-6 6.2-10.4 12.2-10.4h16.5c3.6-10.1 9-19.4 15.9-27.4l-8.2-14.3c-3-5.2-1.9-11.9 2.8-15.7 9.5-7.9 20.4-14.2 32.1-18.6 5.7-2.1 12.1.1 15.1 5.4l8.2 14.3c10.5-1.9 21.2-1.9 31.7 0L552 6.3c3-5.3 9.4-7.5 15.1-5.4 11.8 4.4 22.6 10.7 32.1 18.6 4.6 3.8 5.8 10.5 2.8 15.7l-8.2 14.3c6.9 8 12.3 17.3 15.9 27.4h16.5c6 0 11.2 4.3 12.2 10.3 2 12 2.1 24.6 0 37.1-1 6-6.2 10.4-12.2 10.4h-16.5c-3.6 10.1-9 19.4-15.9 27.4l8.2 14.3c3 5.2 1.9 11.9-2.8 15.7-9.5 7.9-20.4 14.2-32.1 18.6-5.7 2.1-12.1-.1-15.1-5.4l-8.2-14.3c-10.4 1.9-21.2 1.9-31.7 0zm-10.5-58.8c38.5 29.6 82.4-14.3 52.8-52.8-38.5-29.7-82.4 14.3-52.8 52.8zM386.3 286.1l33.7 16.8c10.1 5.8 14.5 18.1 10.5 29.1-8.9 24.2-26.4 46.4-42.6 65.8-7.4 8.9-20.2 11.1-30.3 5.3l-29.1-16.8c-16 13.7-34.6 24.6-54.9 31.7v33.6c0 11.6-8.3 21.6-19.7 23.6-24.6 4.2-50.4 4.4-75.9 0-11.5-2-20-11.9-20-23.6V418c-20.3-7.2-38.9-18-54.9-31.7L74 403c-10 5.8-22.9 3.6-30.3-5.3-16.2-19.4-33.3-41.6-42.2-65.7-4-10.9.4-23.2 10.5-29.1l33.3-16.8c-3.9-20.9-3.9-42.4 0-63.4L12 205.8c-10.1-5.8-14.6-18.1-10.5-29 8.9-24.2 26-46.4 42.2-65.8 7.4-8.9 20.2-11.1 30.3-5.3l29.1 16.8c16-13.7 34.6-24.6 54.9-31.7V57.1c0-11.5 8.2-21.5 19.6-23.5 24.6-4.2 50.5-4.4 76-.1 11.5 2 20 11.9 20 23.6v33.6c20.3 7.2 38.9 18 54.9 31.7l29.1-16.8c10-5.8 22.9-3.6 30.3 5.3 16.2 19.4 33.2 41.6 42.1 65.8 4 10.9.1 23.2-10 29.1l-33.7 16.8c3.9 21 3.9 42.5 0 63.5zm-117.6 21.1c59.2-77-28.7-164.9-105.7-105.7-59.2 77 28.7 164.9 105.7 105.7zm243.4 182.7l-8.2 14.3c-3 5.3-9.4 7.5-15.1 5.4-11.8-4.4-22.6-10.7-32.1-18.6-4.6-3.8-5.8-10.5-2.8-15.7l8.2-14.3c-6.9-8-12.3-17.3-15.9-27.4h-16.5c-6 0-11.2-4.3-12.2-10.3-2-12-2.1-24.6 0-37.1 1-6 6.2-10.4 12.2-10.4h16.5c3.6-10.1 9-19.4 15.9-27.4l-8.2-14.3c-3-5.2-1.9-11.9 2.8-15.7 9.5-7.9 20.4-14.2 32.1-18.6 5.7-2.1 12.1.1 15.1 5.4l8.2 14.3c10.5-1.9 21.2-1.9 31.7 0l8.2-14.3c3-5.3 9.4-7.5 15.1-5.4 11.8 4.4 22.6 10.7 32.1 18.6 4.6 3.8 5.8 10.5 2.8 15.7l-8.2 14.3c6.9 8 12.3 17.3 15.9 27.4h16.5c6 0 11.2 4.3 12.2 10.3 2 12 2.1 24.6 0 37.1-1 6-6.2 10.4-12.2 10.4h-16.5c-3.6 10.1-9 19.4-15.9 27.4l8.2 14.3c3 5.2 1.9 11.9-2.8 15.7-9.5 7.9-20.4 14.2-32.1 18.6-5.7 2.1-12.1-.1-15.1-5.4l-8.2-14.3c-10.4 1.9-21.2 1.9-31.7 0zM501.6 431c38.5 29.6 82.4-14.3 52.8-52.8-38.5-29.6-82.4 14.3-52.8 52.8z"/>
-                    </svg>
-                </a>
-            </li>
-        {% endif %}
-    </ul>
-</aside>
+    {% endif %}
+    {% manage_url report as manage_report_url %}
+    {% if "Open In Editor" in perms and manage_report_url %}
+        <li>
+            <a title="manage report"
+               class="is-block has-tooltip-arrow has-tooltip-right"
+               data-tooltip="Manage Report"
+               rel="noopener"
+               target="_blank"
+               href="{{ manage_report_url }}">
+                <span class="icon has-text-grey is-large ">
+                    <i class="fas fa-lg fa-gears"></i>
+                </span>
+            </a>
+        </li>
+    {% endif %}
+</ul>

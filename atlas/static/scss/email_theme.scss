@@ -1,0 +1,102 @@
+/* stylelint-disable no-invalid-position-at-import-rule */
+$weight-normal: 500;
+$weight-light: 400;
+$weight-semibold: 600;
+$weight-bold: 700;
+$dimensions: 16 24 32 48 64 96 128 256;
+$body-size: 14px;
+
+// reset
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: $weight-bold;
+}
+@import '../../../node_modules/bulma/sass/utilities/initial-variables';
+
+$fullhd: 1400px + (2 * $gap);
+$card-footer-padding: 0.5rem 0.75rem;
+@import '../../../node_modules/bulma-checkradio/src/sass/index';
+
+$navbar-height: 4.25rem;
+$navbar-item-img-max-height: auto;
+$navbar-item-hover-background-color: transparent;
+$navbar-dropdown-item-hover-background-color: transparent;
+$size-1: 2.5rem;
+$size-2: 2rem;
+$size-3: 1.5rem;
+$size-4: 1.25rem;
+$size-5: 1rem;
+$size-6: 0.75rem;
+$size-7: 0.75rem;
+$sizes: $size-1 $size-2 $size-3 $size-4 $size-5 $size-6 $size-7;
+$block-spacing: 1rem;
+
+// $size-normal: $size-5;
+// $size-medium: $size-4;
+// $size-large: $size-3;
+
+@import '../../../node_modules/bulma/bulma';
+
+// reset pre
+pre,
+.content pre {
+  -webkit-overflow-scrolling: touch;
+  background-color: transparent;
+  font-size: 1em;
+  overflow-x: hidden;
+  padding: 0;
+  white-space: pre;
+  word-wrap: normal;
+  font-family: $family-monospace;
+}
+
+$badge-height: 13px;
+@import '../../../node_modules/@creativebulma/bulma-badge/src/sass/index';
+@import '../../../node_modules/bulma-switch/src/sass/index';
+
+$steps-active-color: $link;
+$steps-completed-color: $link;
+@import '../../../node_modules/bulma-steps-component/bulma-steps';
+@import '../../../node_modules/@creativebulma/bulma-tooltip/src/sass/index';
+
+// override tooltip bottom border
+span[data-tooltip] {
+  border-bottom: none;
+}
+
+// @import './mail/mail';
+// @import './mail/mail-folders';
+// @import './mail/mail-menu';
+// @import './mail/mail-msgPreview';
+@import './mail/mail-notification';
+
+// @import './mail/mail-reader';
+
+@import './utility/carousel';
+
+/* purgecss start ignore */
+@import '../lib/codemirror/mycss';
+
+/* purgecss end ignore */
+
+@import './page';
+@import './search';
+@import './utility/collapse';
+@import './utility/tabs';
+@import './utility/drag';
+@import './messagebox';
+
+/* purgecss start ignore */
+@import './editor'; // codemirror format
+@import '../lib/scrollbars/simple-scrollbar';
+@import '../lib/highlight/rainbow';
+
+/* purgecss end ignore */
+@import './mail/mail-newMessage';
+@import './query';
+@import './mini';
+@import './base';

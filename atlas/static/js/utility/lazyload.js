@@ -1,60 +1,93 @@
-/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 (function () {
-  var d = document,
-    load = debounce(function () {
-      [].forEach.call(d.querySelectorAll("img[data-src]"), function (img) {
+  const d = document;
+  const srcset = function ($element) {
+    Array.prototype.forEach.call(
+      $element.querySelectorAll('source[data-srcset]'),
+      function (img) {
         if (isInViewport(img)) {
-          // set image to nothing to clear, then load new
-          img.setAttribute("src", "");
-          img.setAttribute("src", img.getAttribute("data-src"));
-          img.removeAttribute("data-src");
+          // Set image to nothing to clear, then load new
+          const attrib = img.getAttribute('data-srcset');
+          img.setAttribute('srcset', '');
+          img.removeAttribute('srcset');
+          img.setAttribute('srcset', attrib);
+          img.removeAttribute('data-srcset');
         }
-      });
-    }, 250);
+      },
+    );
+  };
 
-  var isInViewport = function isInViewport(elem) {
-    var bounding = elem.getBoundingClientRect(),
-      padding = 400;
+  const src = function ($element) {
+    Array.prototype.forEach.call(
+      $element.querySelectorAll('img[data-src]'),
+      function (img) {
+        if (isInViewport(img)) {
+          // Set image to nothing to clear, then load new
+          const attrib = img.dataset.src;
+          img.setAttribute('src', '');
+          delete img.dataset.src;
+          img.setAttribute('src', attrib);
+        }
+      },
+    );
+  };
+
+  const load = function () {
+    // Start with "picture" so all elements are updated together.
+    Array.prototype.forEach.call(
+      d.querySelectorAll('picture'),
+      function (picture) {
+        src(picture);
+        srcset(picture);
+      },
+    );
+
+    // Then global any leftovers
+    src(d);
+    srcset(d);
+  };
+
+  const isInViewport = function (element) {
+    const bounding = element.getBoundingClientRect();
+    const padding = 600;
     return (
-      bounding.top >= 0 &&
+      bounding.top >= 0 - padding &&
       bounding.left >= 0 &&
-      bounding.bottom - elem.clientHeight - padding <=
+      bounding.bottom - element.clientHeight - padding <=
         (document.documentElement.clientHeight ||
           d.documentElement.clientHeight) &&
-      bounding.right - padding - elem.clientWidth <=
-        (document.documentElement.clientWidth || d.documentElement.clientWidth)
+      bounding.right - padding - element.clientWidth <=
+        (document.documentElement.clientWidth ||
+          d.documentElement.clientWidth) &&
+      // Is visible
+      element.offsetParent !== null
     );
   };
 
   load();
-  d.addEventListener("lazy", function () {
+  d.addEventListener('ajax', function () {
     setTimeout(function () {
       load();
     }, 0);
   });
+  d.addEventListener('modal-open', function () {
+    load();
+  });
+  d.addEventListener('tab-opened', function () {
+    load();
+  });
+  d.addEventListener('step-tab-opened', function () {
+    load();
+  });
+  d.addEventListener('panel-tab-opened', function () {
+    load();
+  });
   d.addEventListener(
-    "scroll",
+    'scroll',
     function () {
       debounce(load(), 100);
     },
     {
       passive: true,
-    }
+    },
   );
 })();

@@ -1,0 +1,85 @@
+
+# https://editorconfig.org/
+
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+end_of_line = lf
+charset = utf-8
+
+
+# Docstrings and comments use max_line_length = 79
+[*.py]
+max_line_length = 88
+
+# Use 4 spaces for the HTML files
+[*.html]
+indent_size = 4
+
+# The JSON files contain newlines inconsistently
+[*.json]
+indent_size = 2
+insert_final_newline = ignore
+
+
+[**/solr/**]
+indent_style = ignore
+indent_size = ignore
+
+[**/atlas/static/lib/**]
+indent_style = ignore
+indent_size = ignore
+
+[**/atlas/static/font/**]
+indent_style = ignore
+indent_size = ignore
+
+[**/atlas/static/css/**]
+indent_style = ignore
+indent_size = ignore
+
+# Minified JavaScript files shouldn't be changed
+[**.min.js]
+indent_style = ignore
+insert_final_newline = ignore
+
+# Minified CSS files shouldn't be changed
+[**.min.css]
+indent_style = ignore
+insert_final_newline = ignore
+
+# Makefiles always use tabs for indentation
+[Makefile]
+indent_style = tab
+
+# Batch files use tabs for indentation
+[*.bat]
+indent_style = tab
+
+[*.yml]
+indent_size = 2
+indent_style = space
+
+[*.snyk]
+indent_size = 2
+indent_style = space
+
+[*.yaml]
+indent_size = 2
+indent_style = space
+
+[*.scss]
+indent_size = 2
+
+[*.csproj]
+indent_size = 2
+
+[*.js]
+indent_size = 2
+
+[.releaserc]
+indent_size = 2

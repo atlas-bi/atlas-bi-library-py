@@ -27,7 +27,7 @@
                         <td>{{ job.name }}</td>
                         <td>{{ job.task }}</td>
                         <td>
-                            <a href="{% url 'etl:job_delete' job.id %}">Delete</a>
+                            <a title="delete" href="{% url 'etl:job_delete' job.id %}">Delete</a>
                         </td>
                         <td>{{ job.interval }}</td>
                         <td>{{ job.crontab }}</td>

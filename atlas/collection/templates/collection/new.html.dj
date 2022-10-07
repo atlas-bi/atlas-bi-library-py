@@ -1,43 +1,95 @@
-<div class="mdl" id="newModal" tabindex="-1">
-    <div class="mdl-d editorMdl">
-        <div class="mdl-c editorMdl-inner">
-            <div class="editorMdl-title">
-                <h2 class="editorMdl-titleText">
-                    Create a New Collection
-                    <button type="button" data-dismiss="mdl" data-tooltip="Close">&times;</button>
-                </h2>
-                <div id="editorMdl-titleSave">changes saved.</div>
+{% extends "layout.html.dj" %}
+
+{% load compress %}
+
+{% load static %}
+
+{% block body %}
+    <form action="{% url 'collection:new' %}" method="post">
+        {% csrf_token %}
+        <h1 class="title is-1">{{ title }}</h1>
+        <p class="buttons is-flex is-justify-content-space-between">
+            <a title="go back" class="button p-5" href="{% url 'collection:list' %}">
+                <span class="icon">
+                    <i class="fas fa-lg fa-left-long"></i>
+                </span>
+                <span><strong>Cancel</strong>
+                    <br />
+                Go Back</span>
+            </a>
+            <button class="button p-5" type="submit">
+                <span><strong>Save</strong>
+                    <br />
+                and Continue</span>
+                <span class="icon ">
+                    <i class="fas fa-lg fa-right-long"></i>
+                </span>
+            </button>
+        </p>
+        <div class="field">
+            <label class="label">Name</label>
+            <div class="control">
+                <input class="input"
+                       placeholder="e.g Data Sorting"
+                       name="name"
+                       required="required"/>
             </div>
-            <div class="editorMdl-cnt" ss-container>
-                <div class="editorMdl-cntLiner">
-                    <form action="{% url 'collection:new' %}" method="post">
-                        {% csrf_token %}
-                        <h3>Details</h3>
-                        <div class="listDetails">
-                            <label>Name</label>
-                            <input name="name" required />
-                            <label>Hide Report?</label>
-                            <div class="form-check">
-                                <input type="checkbox" id="DoNotPurge" />
-                                <input type="hidden" name="hidden"/>
+        </div>
+        <div class="field">
+            <label class="label">Search Summary</label>
+            <div class="editor"
+                 data-inputName="search_summary"
+                 data-inputId="search_summary">
+                <textarea></textarea>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Description</label>
+            <div class="editor"
+                 data-inputName="description"
+                 data-inputId="description">
+                <textarea></textarea>
+            </div>
+        </div>
+        {% if settings.ENABLE_TERMS %}
+            <div class="field">
+                <label class="label">Linked Terms</label>
+                <div class="mini-tags field is-grouped is-grouped-multiline"></div>
+                <div class="field">
+                    <div class="control is-relative is-expanded">
+                        <input class="input input-mini multiselect"
+                               placeholder="search for terms.."
+                               search-area="term_lookup"
+                               data-name="linked_terms"/>
+                        <div class="mini">
+                            <div class="mini-waiting">
+                                <span class="icon">
+                                    <i class="fas fa-circle-notch fa-spin"></i>
+                                </span>
                             </div>
                         </div>
-                        <h3>Purpose</h3>
-                        <div class="editor" data-inputName="purpose" data-inputId="purpose">
-                            <textarea></textarea>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <div class="field">
+            <label class="label">Linked Reports</label>
+            <div class="mini-tags field is-grouped is-grouped-multiline"></div>
+            <div class="field">
+                <div class="control is-relative is-expanded">
+                    <input class="input input-mini multiselect"
+                           placeholder="search for reports.."
+                           search-area="report_lookup"
+                           data-name="linked_reports"/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
                         </div>
-                        <h3>Description</h3>
-                        <div class="editor"
-                             data-inputName="description"
-                             data-inputId="description">
-                            <textarea></textarea>
-                        </div>
-                        <h3>
-                            <button class="editor-save" type="submit">Save</button>
-                        </h3>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    </form>
+{% endblock body %}

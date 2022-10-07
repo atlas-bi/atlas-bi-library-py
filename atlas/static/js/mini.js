@@ -1,0 +1,396 @@
+// Functions to open and close a mini
+(function () {
+  function openMini($element) {
+    $element.classList.add('is-active');
+    const $danger = $element.parentElement.querySelector('input.is-danger');
+    if ($danger) {
+      $danger.classList.remove('is-danger');
+    }
+  }
+
+  function closeMini($element) {
+    $element.classList.remove('is-active');
+    // If the mini input has remaining text, add red outline
+
+    const $input = $element.parentElement.querySelector(
+      'input.input-mini.multiselect',
+    );
+    if ($input && $input.value) {
+      $input.classList.add('is-danger');
+    }
+
+    // Or if there is a hidden input, not populated
+    const $hiddenInput = $element.parentElement.querySelector(
+      'input[type="hidden"]',
+    );
+    if ($hiddenInput && $hiddenInput.value === '') {
+      const $visInput = $element.parentElement.querySelector(
+        'input.input-mini:not(.multiselect)',
+      );
+      if ($visInput) {
+        $visInput.classList.add('is-danger');
+      }
+    }
+  }
+
+  function closeAllMinis() {
+    (document.querySelectorAll('.mini.is-active') || []).forEach(($mini) => {
+      closeMini($mini);
+    });
+  }
+
+  function load($mini, $data, $hidden, $input) {
+    const data = JSON.parse($data);
+    if (data.length === 0) {
+      $mini.innerHTML = '<div class="mini-waiting">No matches found.</div>';
+    } else {
+      $mini.textContent = '';
+
+      for (const element of data) {
+        // Var hiddenClass = '';
+        // if (active.indexOf(el.ObjectId) !== -1) {
+        //   hiddenClass = 'hidden';
+        // }
+        const a = document.createElement('a');
+        a.classList.add('mini-item');
+        a.textContent = element.Name;
+        a.setAttribute('value', element.ObjectId || element.Description);
+
+        a.addEventListener('click', function (event) {
+          if (!$input.classList.contains('multiselect')) {
+            event.preventDefault();
+            $input.value = event.target.textContent;
+            $hidden.value = event.target.getAttribute('value');
+            closeAllMinis();
+          } else if ($input.classList.contains('multiselect')) {
+            event.preventDefault();
+            const taglist = $input
+              .closest('.field')
+              .parentNode.querySelector('.mini-tags');
+            // Add it to the tag list
+            const control = document.createElement('div');
+            control.classList.add('control');
+
+            const input = document.createElement('input');
+            input.setAttribute('type', 'hidden');
+            input.setAttribute('value', event.target.getAttribute('value'));
+            if ($input.hasAttribute('data-name')) {
+              input.setAttribute('name', $input.getAttribute('data-name'));
+            }
+
+            const group = document.createElement('div');
+            group.classList.add('tags', 'has-addons');
+
+            const tag = document.createElement('span');
+            tag.classList.add('tag', 'is-link');
+            tag.textContent = event.target.textContent;
+
+            const del = document.createElement('a');
+            del.classList.add('tag', 'is-delete');
+
+            del.addEventListener('click', function (delEvent) {
+              delEvent.preventDefault();
+              control.remove();
+            });
+
+            if (taglist.classList.contains('reorder')) {
+              control.classList.add('drg');
+              tag.classList.add('drg-hdl');
+            }
+
+            control.append(group);
+            group.append(tag);
+            group.append(input);
+            group.append(del);
+
+            if (taglist !== undefined) {
+              taglist.append(control);
+            }
+
+            $input.value = '';
+
+            // If it is a static list then clear the filter
+            if ($input.hasAttribute('lookup-area')) {
+              inputFilter($input, $mini);
+            }
+
+            if ($input.classList.contains('mini-close-fast')) {
+              closeAllMinis();
+            }
+          }
+        });
+
+        $mini.append(a);
+      }
+
+      if ($mini.querySelectorAll('.mini-item:not(.hidden)').length === 0) {
+        $mini.innerHTML += '<div class="mini-waiting">No matches found.</div>';
+      }
+    }
+  }
+
+  let loadMiniAjax = null;
+  function loadMini($input, $mini, $sa, $hidden) {
+    const value = $input.value;
+
+    // Run query if txt
+    if ($input.value.length > 0) {
+      if (loadMiniAjax !== null) {
+        loadMiniAjax.abort();
+      }
+
+      loadMiniAjax = new XMLHttpRequest();
+      loadMiniAjax.open('post', '/search/' + $sa + '?s=' + value, true);
+      loadMiniAjax.setRequestHeader('X-CSRFToken', csrftoken);
+      loadMiniAjax.setRequestHeader(
+        'Content-Type',
+        'application/x-www-form-urlencoded; charset=UTF-8',
+      );
+      loadMiniAjax.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      loadMiniAjax.send();
+
+      loadMiniAjax.addEventListener('load', function () {
+        const $data = loadMiniAjax.responseText;
+        load($mini, $data, $hidden, $input);
+      });
+    }
+    // Else reset it to loader
+    else {
+      $mini.innerHTML = `<div class="mini-waiting">
+                    <span class="icon">
+                        <i class="fas fa-circle-notch fa-spin"></i>
+                    </span>
+                </div>`;
+    }
+  }
+
+  function preloadMini($input, $mini, $searchArea, $hidden) {
+    const q = new XMLHttpRequest();
+    q.open('post', '/search/lookup/' + $searchArea, true);
+    q.setRequestHeader(
+      'Content-Type',
+      'application/x-www-form-urlencoded; charset=UTF-8',
+    );
+    q.setRequestHeader('X-CSRFToken', csrftoken);
+    q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    q.send();
+
+    q.addEventListener('load', function () {
+      const l = q.responseText;
+      load($mini, l, $hidden, $input);
+    });
+  }
+
+  function inputFilter($input, $mini) {
+    const $options = $mini.querySelectorAll('.mini-item');
+    $options.forEach(($option) => {
+      if (
+        $input.value === '' ||
+        $option.textContent.toLowerCase().includes($input.value.toLowerCase())
+      ) {
+        $option.style.display = '';
+      } else {
+        $option.style.display = 'none';
+      }
+    });
+  }
+
+  const searchTimeout = 250;
+  let searchTimerId = null;
+
+  function loadMinis() {
+    // Delete event for existing tags
+    (document.querySelectorAll('.mini-tags .tag.is-delete') || []).forEach(
+      ($tag) => {
+        $tag.addEventListener('click', function () {
+          const $control = $tag.closest('.control');
+          $control.remove();
+        });
+      },
+    );
+
+    // Add a click event on buttons to open a specific mini
+    (document.querySelectorAll('.input-mini:not(.loaded)') || []).forEach(
+      ($input) => {
+        // Open it when clicking
+        $input.classList.add('loaded');
+        const $mini = $input.parentElement.querySelector('.mini');
+        const $hidden = $input.parentElement.querySelector(
+          'input[type="hidden"], select.is-hidden',
+        );
+        const $clear =
+          $input.parentElement.parentElement.querySelector('.mini-clear');
+
+        $input.addEventListener('click', () => {
+          closeAllMinis();
+          openMini($mini);
+        });
+        $input.addEventListener('focus', () => {
+          if ($input.value !== '') {
+            closeAllMinis();
+            openMini($mini);
+            // Reload search
+            $mini.dispatchEvent(new CustomEvent('input'));
+          }
+        });
+
+        // Open when typing in the related input
+        if ($input.hasAttribute('search-area')) {
+          $input.addEventListener('keydown', (event) => {
+            if (Number(event.keyCode) === 13 || Number(event.keyCode) === 3) {
+              event.preventDefault();
+              console.log($mini);
+              const active = $mini.querySelector('.mini-item.is-active');
+
+              if (active) {
+                active.dispatchEvent(new CustomEvent('click'));
+              }
+            } else if (Number(event.keyCode) === 40) {
+              // Down arrow
+              const active = $mini.querySelector('.mini-item.is-active');
+
+              if (active) {
+                if (active.nextElementSibling) {
+                  active.nextElementSibling.classList.add('is-active');
+                } else {
+                  const next = $mini.querySelector('.mini-item');
+                  if (next) {
+                    next.classList.add('is-active');
+                  }
+                }
+
+                active.classList.remove('is-active');
+              } else {
+                const next = $mini.querySelector('.mini-item');
+                if (next) {
+                  next.classList.add('is-active');
+                }
+              }
+
+              event.preventDefault();
+              // Find the active element
+              console.log($mini);
+            } else if (Number(event.keyCode) === 38) {
+              // Up arrow
+              event.preventDefault();
+              // Find the active element
+              const active = $mini.querySelector('.mini-item.is-active');
+
+              if (active) {
+                if (active.previousElementSibling) {
+                  active.previousElementSibling.classList.add('is-active');
+                } else {
+                  const next = $mini.querySelector('.mini-item:last-child');
+                  if (next) {
+                    next.classList.add('is-active');
+                  }
+                }
+
+                active.classList.remove('is-active');
+              } else {
+                const next = $mini.querySelector('.mini-item:last-child');
+                if (next) {
+                  next.classList.add('is-active');
+                }
+              }
+            } else if (Number(event.keyCode) === 9) {
+              // Tab
+              closeAllMinis();
+            }
+          });
+          $input.addEventListener('input', () => {
+            if (!$mini.classList.contains('is-active')) {
+              openMini($mini);
+            }
+
+            // Clear input
+            if ($hidden) {
+              $hidden.value = '';
+            }
+
+            window.clearTimeout(searchTimerId);
+            $input.classList.remove('is-danger');
+            searchTimerId = window.setTimeout(function () {
+              loadMini(
+                $input,
+                $mini,
+                $input.getAttribute('search-area'),
+                $hidden,
+              );
+              window.clearTimeout(searchTimerId);
+            }, searchTimeout);
+          });
+        } else if ($input.hasAttribute('lookup-area')) {
+          preloadMini(
+            $input,
+            $mini,
+            $input.getAttribute('lookup-area'),
+            $hidden,
+          );
+
+          // If it is a multiselect, we can use typing to filter the static list
+          if ($input.classList.contains('multiselect')) {
+            $input.addEventListener('input', () => {
+              $input.classList.remove('is-danger');
+              inputFilter($input, $mini);
+            });
+          }
+        }
+
+        if ($clear) {
+          $clear.addEventListener('click', function (clearEvent) {
+            clearEvent.preventDefault();
+            $hidden.value = '';
+            $input.value = '';
+            $input.classList.remove('is-danger');
+          });
+        }
+      },
+    );
+
+    // Add a click event on various child elements to close the parent mini
+    (
+      document.querySelectorAll(
+        '.mini-background:not(.loaded), .mini-close:not(.loaded), .mini-card-head:not(.loaded) .delete:not(.loaded), .mini-card-foot:not(.loaded) .button:not(.loaded)',
+      ) || []
+    ).forEach(($close) => {
+      const $target = $close.closest('.mini');
+      $close.classList.add('loaded');
+      $close.addEventListener('click', () => {
+        closeMini($target);
+      });
+    });
+
+    window.addEventListener('click', function (event) {
+      if (!event.target.closest('.mini,.input-mini')) {
+        closeAllMinis();
+      }
+    });
+
+    // Add a keyboard event to close all minis
+    document.addEventListener('keydown', (event) => {
+      event = event || window.event;
+
+      if (Number(event.keyCode) === 27) {
+        // Escape key
+        closeAllMinis();
+      }
+    });
+
+    // On reorder events, update id
+    (
+      document.querySelectorAll('.mini-tags.reorder:not(.loaded)') || []
+    ).forEach(($tag) => {
+      $tag.classList.add('loaded');
+      $tag.addEventListener('reorder', function () {
+        // Call load to add back missing events
+        loadMinis();
+      });
+    });
+  }
+
+  loadMinis();
+  document.addEventListener('ajax', () => {
+    loadMinis();
+  });
+})();

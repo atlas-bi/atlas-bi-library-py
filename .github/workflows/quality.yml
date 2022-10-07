@@ -1,81 +1,37 @@
 name: quality
 
-on:
-  push:
-    branches:
-      # - "**"
-      - "blah"
-    tags-ignore:
-      - "*.*.*"
-  pull_request:
-  workflow_dispatch:
+on: [push, pull_request,workflow_dispatch]
 
 jobs:
   lint:
-    name: "Pylint, Black, iSort, etc"
+    name: Quality
 
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
-      - name: "Check out the repo"
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - name: "Install Python"
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Node Deps
+        run: |
+         npm --version
+         npm install
+
+      - name: Install Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
+          python-version: "3.10"
 
-      - name: "Install Deps"
-        run: python -m pip install --no-cache-dir tox
+      - name: Setup Poetry
+        uses: snok/install-poetry@v1
 
-      - name: "Lint"
-        run: python -m tox -e lint
+      - name: Install Python Deps
+        run: poetry install
 
-  # static:
-  #   name: "eslint, stylelint, etc"
-
-  #   runs-on: macos-latest
-
-
-#    steps:
-#      - name: "Check out the repo"
-#        uses: actions/checkout@v3
-
-#      - name: "Install Node"
-#        uses: actions/setup-node@v3
-#        with:
-#          node-version: '14'
-
-#      - name: "Install Python"
-#        uses: actions/setup-python@v3
-#        with:
-#          python-version: "3.9"
-
-  #     - name: "Install Deps"
-  #       run: |
-  #         python -m pip install --no-cache-dir tox
-  #         rm -rf package-lock.json
-  #         rm -rf node_modules
-
-  #     - name: "Test"
-  #       run: tox -e static
-
-  # html:
-  #   name: "djlint"
-
-  #   runs-on: macos-latest
-
-#    steps:
-#      - name: "Check out the repo"
-#        uses: actions/checkout@v3
-
-#      - name: "Install Python"
-#        uses: actions/setup-python@v3
-#        with:
-#          python-version: "3.9"
-
-  #     - name: "Install Deps"
-  #       run: python -m pip install --no-cache-dir tox
-
-  #     - name: "Lint"
-  #       run: python -m tox -e djlint
+      - name: Test
+        run: npm run lint

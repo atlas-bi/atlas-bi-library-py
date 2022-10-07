@@ -1,35 +1,127 @@
-<div class="mdl" id="editModal" tabindex="-1">
-    <div class="mdl-d editorMdl">
-        <div class="mdl-c editorMdl-inner">
-            <div class="editorMdl-title">
-                <h2 class="editorMdl-titleText">
-                    Editing
-                    <span class="text-green">{{ collection }}</span>
-                    <button type="button"
-                            class="editorMdl-close"
-                            data-dismiss="mdl"
-                            data-tooltip="Close">&times;</button>
-                </h2>
-                <div id="editorMdl-titleSave">changes saved.</div>
+{% extends "layout.html.dj" %}
+
+{% block body %}
+    <form action="{{ collection.get_absolute_edit_url }}" method="post">
+        {% csrf_token %}
+        <h1 class="title is-1">{{ title }}</h1>
+        <p class="buttons is-flex is-justify-content-space-between">
+            <a title="go back"
+               class="button p-5"
+               href="{{ collection.get_absolute_url }}">
+                <span class="icon">
+                    <i class="fas fa-lg fa-left-long"></i>
+                </span>
+                <span><strong>Cancel</strong>
+                    <br />
+                Go Back</span>
+            </a>
+            <button class="button p-5" type="submit">
+                <span><strong>Save</strong>
+                    <br />
+                and Continue</span>
+                <span class="icon ">
+                    <i class="fas fa-lg fa-right-long"></i>
+                </span>
+            </button>
+        </p>
+        <div class="field">
+            <label class="label">Name</label>
+            <div class="control">
+                <input class="input"
+                       placeholder="e.g Data Sorting"
+                       name="name"
+                       required="required"
+                       value="{{ collection.name }}"/>
             </div>
-            <div class="editorMdl-cnt" ss-container>
-                <div class="editorMdl-cntLiner">
-                    <div class="tab">
-                        <a class="tab-lnk active" href="#detailstab">Details</a>
-                        <a class="tab-lnk" href="#reportlinkstab">Linked Reports</a>
-                        <a class="tab-lnk" href="#termlinkstab">Linked Terms</a>
-                        <a class="tab-lnk" href="#agreetab">Agreements</a>
-                        <a class="tab-lnk" href="#milestab">Milestones</a>
+        </div>
+        <div class="field">
+            <label class="label">Search Summary</label>
+            <div class="editor"
+                 data-inputName="search_summary"
+                 data-inputId="search_summary">
+                <textarea class="textarea">{{ collection.search_summary|default:""|safe }}</textarea>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Description</label>
+            <div class="editor"
+                 data-inputName="description"
+                 data-inputId="description">
+                <textarea class="textarea">{{ collection.description|default:""|safe }}</textarea>
+            </div>
+        </div>
+        <div class="field toggle">
+            <input type="hidden"
+                   name="hidden"
+                   value="{{ collection.hidden|default:"N" }}"/>
+            <input id="switch-hidden"
+                   type="checkbox"
+                   name="switch-hidden"
+                   class="switch is-rounded is-info"
+                   {% if collection.hidden == "Y" %} checked="checked"{% endif %}/>
+            <label for="switch-hidden">Hide Collection?</label>
+        </div>
+        {% if settings.ENABLE_TERMS %}
+            <div class="field">
+                <label class="label">Linked Terms</label>
+                <div class="mini-tags field is-grouped is-grouped-multiline">
+                    {% for term_link in collection.terms.all %}
+                        <div class="control">
+                            <div class="tags has-addons">
+                                <span class="tag is-link">{{ term_link.term }}</span>
+                                <input type="hidden" name="linked_terms" value="{{ term_link.term_id }}" />
+                                <a href="#" title="delete" class="tag is-delete"></a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="field">
+                    <div class="control is-relative is-expanded">
+                        <input class="input input-mini multiselect"
+                               placeholder="search for terms.."
+                               search-area="term_lookup"
+                               data-name="linked_terms"/>
+                        <div class="mini">
+                            <div class="mini-waiting">
+                                <span class="icon">
+                                    <i class="fas fa-circle-notch fa-spin"></i>
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="tab-cnt">
-                        <div class="tab-dta active" id="detailstab">{% include "collection/edit/details.html.dj" %}</div>
-                        <div class="tab-dta" id="reportlinkstab">{% include "collection/edit/reports.html.dj" %}</div>
-                        <div class="tab-dta" id="termlinkstab">{% include "collection/edit/terms.html.dj" %}</div>
-                        <div class="tab-dta" id="agreetab">{% include "collection/edit/agreements.html.dj" %}</div>
-                        <div class="tab-dta" id="milestab">{% include "collection/edit/milestones.html.dj" %}</div>
+                </div>
+            </div>
+        {% endif %}
+        <div class="field">
+            <label class="label">Linked Reports</label>
+            <div class="mini-tags field is-grouped is-grouped-multiline reorder">
+                {% for report_link in collection.reports.all %}
+                    <div class="control drg">
+                        <div class="tags has-addons">
+                            <span class="tag is-link drg-hdl">{{ report_link.report }}</span>
+                            <input type="hidden"
+                                   name="linked_reports"
+                                   value="{{ report_link.report_id }}"/>
+                            <a href="#" title="delete" class="tag is-delete"></a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="field">
+                <div class="control is-relative is-expanded">
+                    <input class="input input-mini multiselect"
+                           placeholder="search for reports.."
+                           search-area="report_lookup"
+                           data-name="linked_reports"/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    </form>
+{% endblock body %}

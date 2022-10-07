@@ -6,7 +6,9 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.views import redirect_to_login
-from django.shortcuts import resolve_url
+from django.shortcuts import redirect, resolve_url
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
 
 DEFAULT_MESSAGE = "Unauthorized action."
 
@@ -60,7 +62,7 @@ def admin_required(
     superuser, displaying message if provided.
     """
     actual_decorator = user_passes_test(
-        lambda u: u.is_active and u.is_admin and u.is_authenticated,
+        lambda u: u.is_active and u.is_superuser and u.is_authenticated,
         login_url=login_url,
         redirect_field_name=redirect_field_name,
         message=message,
@@ -68,3 +70,25 @@ def admin_required(
     if view_func:
         return actual_decorator(view_func)
     return actual_decorator
+
+
+class NeverCacheMixin:
+    """Use for class views where we don't want any caching."""
+
+    @method_decorator(never_cache)
+    def dispatch(self, *args, **kwargs):
+        """Wrap function with decorator."""
+        return super(NeverCacheMixin, self).dispatch(*args, **kwargs)
+
+
+class PermissionsCheckMixin:
+    """Verify user permissions on class views."""
+
+    def dispatch(self, request, *args, **kwargs):
+        """Wrap function with decorator."""
+        if not self.request.user.has_perms(self.required_permissions):
+            return redirect(
+                request.META.get("HTTP_REFERER", "/")
+                + "?error=You do not have permission to access that page."
+            )
+        return super(PermissionsCheckMixin, self).dispatch(request, *args, **kwargs)

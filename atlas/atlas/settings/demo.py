@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 import dj_database_url
 import django_heroku
 
-from .settings import *
+from .base import *
 
 AUTHENTICATION_BACKENDS = ("atlas.no_pass_auth.Backend",)
 
@@ -16,13 +16,12 @@ LOGIN_REDIRECT_URL = "/"
 
 COMPRESS_ENABLED = True
 
-DATABASES = {}
-DATABASES["default"] = dj_database_url.config(conn_max_age=600)
+DATABASES = {"default": dj_database_url.config(conn_max_age=600)}
 
 # debug true as we run w/out a static file server (nginx.)
 DEBUG = True
 ALLOWED_HOSTS = ["*"]
-DATABASE_ROUTERS: list = []
+DATABASE_ROUTERS: list = []  # type: ignore[no-redef]
 
 CACHES = {
     "default": {
@@ -30,25 +29,22 @@ CACHES = {
     }
 }
 
-
-redis_url = urlparse(os.environ.get("REDIS_URL", "redis://localhost:6379"))
+parsed_redis_url = urlparse(REDIS_URL)  # noqa: F405
 
 
 SESSION_REDIS = {
-    "host": redis_url.hostname,
-    "port": redis_url.port,
-    "password": redis_url.password,
+    "host": parsed_redis_url.hostname,
+    "port": parsed_redis_url.port,
+    "password": parsed_redis_url.password,
     "db": 0,
     "prefix": "atlas_session",
     "socket_timeout": 1,
     "retry_on_timeout": False,
 }
 
-CELERY_BROKER_URL = os.environ.get("REDIS_URL", "redis://localhost:6379")
+CELERY_BROKER_URL = REDIS_URL  # noqa: F405
 
 DEMO = True
-
-LOGIN_TITLE = "Welcome to Atlas"
 
 
 class DisableMigrations:

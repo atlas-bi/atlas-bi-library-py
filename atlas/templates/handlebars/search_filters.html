@@ -8,27 +8,24 @@
                     {{#each this }}
                         {{#filter_open_collapse @index ../this @../key @key ../../search_filters }}
                             <div id="{{@../key }}" class="clps">
-
                             {{/filter_open_collapse }}
-                            <div
-                                class="form-check search-filter"
-                                group="{{@../key }}"
-                                group-value="{{@key }}">
+                            <div class="form-check search-filter"
+                                 group="{{@../key }}"
+                                 group-value="{{@key }}">
                                 <input type="checkbox"/>
                                 <input type="hidden" />
                                 <label>
                                     {{ titleCase @key }}
-                                    <span class="search-filterQty">{{ this }}
-                                    </span>
+                                    <span class="search-filterQty">{{ this }}</span>
                                 </label>
                             </div>
                             {{#filter_close_collapse @index ../this @../key @key ../../search_filters }}
                             </div>
-                            <a
-                                class="search-filter-showMore"
-                                data-toggle="clps"
-                                data-target="{{@../key }}">Show More
-                            </a>
+                            <a title="show more"
+                               href="#"
+                               class="search-filter-showMore"
+                               data-toggle="clps"
+                               data-target="{{@../key }}">Show More</a>
                         {{/filter_close_collapse }}
                     {{/each }}
                 </div>

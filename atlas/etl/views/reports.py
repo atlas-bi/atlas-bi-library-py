@@ -22,7 +22,6 @@ def reports(request, arg):
 
     if arg == "status":
         return JsonResponse(build_task_status(task_name, task_function))
-
     elif arg in ["enable", "disable"]:
         return JsonResponse(
             {"message": toggle_task_status(task_name, task_function, arg)}

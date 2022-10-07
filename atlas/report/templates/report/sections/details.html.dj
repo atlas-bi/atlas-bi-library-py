@@ -1,13 +1,10 @@
 {% load dates %}
+{% load url_tags %}
 
-<h2 class="title is-2">Details</h2>
-<div class="table-container">
-    <table class="table is-narrow">
+<h2 id="details" class="title is-2">Details</h2>
+<div class="table-container mt-5">
+    <table class="table is-narrow" aria-label="details">
         <tbody>
-            <tr>
-                <td>Report URL</td>
-                <td>{{ report.system_run_url }}</td>
-            </tr>
             {% if report.name != report.title %}
                 <tr>
                     <td>Report Name</td>
@@ -21,43 +18,41 @@
             {% if report.etl_date %}
                 <tr>
                     <td>Last ETL Load Date</td>
-                    <td>{{ report.etl_date|relative }}</td>
+                    <td data-tooltip="{{ report.etl_date }}">{{ report.etl_date|relative }}</td>
                 </tr>
             {% endif %}
             <tr>
                 <td>Report Last Modified</td>
-                <td>
+                <td data-tooltip="{{ report.modified_at }}">
                     {{ report.modified_at|relative }}
                     {% if report.modified_by or report.created_by %}
-                        <span class="text-light">
-                            &nbsp;&middot;&nbsp;
-                            <a href="{% if report.modified_by %}
-                                         {{ report.modified_by.get_absolute_url }}
-                                     {% else %}
-                                         {{ report.created_by.get_absolute_url }}
-                                     {% endif %} ">
+                        &nbsp;&middot;&nbsp;
+                        {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
+                            <a title="open user profile"
+                               href="{% if report.modified_by %}{{ report.modified_by.get_absolute_url }}{% else %}{{ report.created_by.get_absolute_url }}{% endif %}">
                                 {{ report.modified_by|default:report.created_by }}
                             </a>
-                        </span>
+                        {% else %}
+                            {{ report.modified_by|default:report.created_by }}
+                        {% endif %}
                     {% endif %}
                 </td>
             </tr>
             {% if report.docs.modified_at %}
                 <tr>
                     <td>Documentation Last Modified</td>
-                    <td>
+                    <td data-tooltip="{{ report.docs.modified_at }}">
                         {{ report.docs.modified_at|relative }}
                         {% if report.docs.modified_by or report.docs.created_by %}
-                            <span class="text-light">
-                                &nbsp;&middot;&nbsp;
-                                <a href="{% if report.docs.modified_by %}
-                                             {{ report.docs.modified_by.get_absolute_url }}
-                                         {% else %}
-                                             {{ report.docs.created_by.get_absolute_url }}
-                                         {% endif %} ">
+                            &nbsp;&middot;&nbsp;
+                            {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
+                                <a title="open user profile"
+                                   href="{% if report.docs.modified_by %} {{ report.docs.modified_by.get_absolute_url }} {% else %} {{ report.docs.created_by.get_absolute_url }} {% endif %} ">
                                     {{ report.docs.modified_by|default:report.docs.created_by }}
                                 </a>
-                            </span>
+                            {% else %}
+                                {{ report.docs.modified_by|default:report.docs.created_by }}
+                            {% endif %}
                         {% endif %}
                     </td>
                 </tr>
@@ -66,7 +61,12 @@
                 <tr>
                     <td>Report Author</td>
                     <td>
-                        <a href="{{ report.created_by.get_absolute_url }}">{{ report.created_by }}</a>
+                        {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
+                            <a title="open user profile"
+                               href="{{ report.created_by.get_absolute_url }}">{{ report.created_by }}</a>
+                        {% else %}
+                            {{ report.created_by }}
+                        {% endif %}
                     </td>
                 </tr>
             {% endif %}
@@ -74,7 +74,12 @@
                 <tr>
                     <td>Report Requester</td>
                     <td>
-                        <a href="{{ report.docs.requester.get_absolute_url }}">{{ report.docs.requester }}</a>
+                        {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
+                            <a title="open user profile"
+                               href="{{ report.docs.requester.get_absolute_url }}">{{ report.docs.requester }}</a>
+                        {% else %}
+                            {{ report.docs.requester }}
+                        {% endif %}
                     </td>
                 </tr>
             {% endif %}
@@ -82,17 +87,39 @@
                 <tr>
                     <td>Operational Owner</td>
                     <td>
-                        <a href="{{ report.docs.ops_owner.get_absolute_url }}">{{ report.docs.ops_owner }}</a>
+                        {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
+                            <a title="open user profile"
+                               href="{{ report.docs.ops_owner.get_absolute_url }}">{{ report.docs.ops_owner }}</a>
+                        {% else %}
+                            {{ report.docs.ops_owner }}
+                        {% endif %}
                     </td>
                 </tr>
             {% endif %}
-            {% if report.docs.collection_url %}
+            {% if report.availability %}
                 <tr>
-                    <td>Git Collection Link</td>
+                    <td>Availability</td>
+                    <td>{{ report.availability }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <td>Visible in Search</td>
+                <td>
+                    {% if report.orphan != "Y" and report.type.visible == "Y" and report.visible == "Y" and report.doc.hidden != "Y" %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}
+                </td>
+            </tr>
+            {% if report.docs.external_url %}
+                <tr>
+                    <td>GitLab Project Link</td>
                     <td>
-                        <a target="_blank"
+                        <a title="external link"
+                           target="_blank"
                            rel="noopener"
-                           href="{{ report.docs.collection_url }}">View Source</a>
+                           href="{{ report.docs.external_url }}">View Source</a>
                     </td>
                 </tr>
             {% endif %}
@@ -100,7 +127,8 @@
                 <tr>
                     <td>Epic Identifier</td>
                     <td>
-                        {% if report.system_viewer_url %}<a href="{{ report.system_viewer_url }}">{% endif %}
+                        {% viewer_url report as run_viewer_url %}
+                        {% if run_viewer_url %}<a title="open record viewer" href="{{ run_viewer_url }}">{% endif %}
                         <span id="epic-ini">{{ report.system_identifier }}&nbsp;</span>
                         {% if report.system_id %}
                             <span id="epic-id" data-epic-hgr="{{ system_template_id }}">
@@ -108,7 +136,7 @@
                                 {% if report.system_template_id %}(Template {{ report.system_template_id }}){% endif %}
                             </span>
                         {% endif %}
-                        {% if report.system_viewer_url %}</a>{% endif %}
+                        {% if run_viewer_url %}</a>{% endif %}
                     </td>
                 </tr>
             {% endif %}
@@ -116,9 +144,11 @@
                 <td>Atlas Id</td>
                 <td>{{ report.report_id }}</td>
             </tr>
-            {% if report.orphaned == "Y" %}
+            {% if report.orphan == "Y" %}
                 <tr>
-                    <td>Orphaned?</td>
+                    <td>
+                        Orphan?
+                    </td>
                     <td>
                         Yes
                     </td>
@@ -127,24 +157,20 @@
             {% if report.docs.executive_report == "Y" %}
                 <tr>
                     <td>
-                        Executive Visiblity
+                        Executive Visibility
                     </td>
                     <td>
                         Yes
                     </td>
                 </tr>
             {% endif %}
-            {% if report.type == "SSRS Report" %}
+            {% if report.type.name == "SSRS Report" and report.docs.enabled_for_hyperspace == "Y" %}
                 <tr>
                     <td>
                         Enabled for Hyperspace
                     </td>
                     <td>
-                        {% if report.docs.enabled_for_hyperspace == "Y" %}
-                            Yes
-                        {% else %}
-                            No
-                        {% endif %}
+                        Yes
                     </td>
                 </tr>
             {% endif %}
@@ -208,41 +234,54 @@
                     </td>
                 </tr>
             {% endif %}
-            {% if report.docs.fragility_tags.all %}
+            {% if report.docs.fragility_tags.exists %}
                 <tr>
                     <td>
                         Fragility Tags
                     </td>
                     <td>
-                        {% for tag in report.docs.fragility_tags.all %}
-                            {% if forloop.last %}
+                        <div class="tags">
+                            {% for tag_link in report.docs.fragility_tags.all %}
                                 <span class="tag">
-                                    {{ tag.fragility_tag }}
+                                    {{ tag_link.fragility_tag }}
                                 </span>
-                            {% else %}
-                                <span class="tag">
-                                    {{ tag.fragility_tag }},
-                                </span>
-                            {% endif %}
-                        {% endfor %}
+                            {% endfor %}
+                        </div>
+                    </td>
+                </tr>
+            {% endif %}
+            {% if report.system_tags.exists %}
+                <tr>
+                    <td>
+                        Report Tags
+                    </td>
+                    <td>
+                        <div class="tags">
+                            {% for tag_link in report.system_tags %}<span class="tag">{{ tag_link.tag }}</span>{% endfor %}
+                        </div>
                     </td>
                 </tr>
             {% endif %}
         </tbody>
     </table>
 </div>
-<!-- this should be a panel -->
-<section id="report-meticket-container">
-    {% if report.tickets.all %}
-        <h4>
-            Service Request Tickets
-        </h4>
-        <div class="reportDetails">
-            {% for ticket in report.tickets.all %}
-                <a target="_blank" class="reportDetails-title" href="{{ ticket.url }}">
-                    #{{ ticket }} <code >
-                </a>
-            {% endfor %}
+{% if report.docs.tickets.exists %}
+    <nav id="maintenance" class="panel">
+        <div class="panel-heading">
+            Service Requests
         </div>
-    {% endif %}
-</section>
+        {% for ticket in report.docs.tickets.all %}
+            <div class="panel-block">
+                {% if ticket.url %}
+                    <a title="external link"
+                       target="_blank"
+                       rel="noopener"
+                       href="{{ ticket.url }}">{{ ticket.number }}</a>
+                {% else %}
+                    {{ ticket.number }}
+                {% endif %}
+                {% if ticket.description %}<span class="text-muted">&nbsp;·&nbsp;{{ ticket.description }}</span>{% endif %}
+            </div>
+        {% endfor %}
+    </nav>
+{% endif %}

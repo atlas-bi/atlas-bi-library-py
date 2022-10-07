@@ -5,12 +5,9 @@ from django.conf import settings
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from index.models import (
-    CollectionMilestoneFrequency,
-    CollectionMilestoneTemplates,
     FinancialImpact,
     Fragility,
     FragilityTag,
-    InitiativeContacts,
     MaintenanceLogStatus,
     MaintenanceSchedule,
     OrganizationalValue,
@@ -102,46 +99,6 @@ def deleted_maintenance_log_status(sender, instance, **kwargs):
 def updated_maintenance_log_status(sender, instance, **kwargs):
     """When maintenance_log_status is updated, add it to search."""
     load_lookup.delay("maintenance_log_status", instance.status_id, str(instance))
-
-
-@receiver(pre_delete, sender=InitiativeContacts)
-def deleted_initiative_contacts(sender, instance, **kwargs):
-    """When initiative_contacts is delete, remove it from search."""
-    delete_lookup.delay("initiative_contacts", instance.contact_id)
-
-
-@receiver(post_save, sender=InitiativeContacts)
-def updated_initiative_contacts(sender, instance, **kwargs):
-    """When initiative_contacts is updated, add it to search."""
-    load_lookup.delay("initiative_contacts", instance.contact_id, str(instance))
-
-
-@receiver(pre_delete, sender=CollectionMilestoneFrequency)
-def deleted_collection_milestone_frequency(sender, instance, **kwargs):
-    """When collection_milestone_frequency is delete, remove it from search."""
-    delete_lookup.delay("collection_milestone_frequency", instance.frequency_id)
-
-
-@receiver(post_save, sender=CollectionMilestoneFrequency)
-def updated_collection_milestone_frequency(sender, instance, **kwargs):
-    """When collection_milestone_frequency is updated, add it to search."""
-    load_lookup.delay(
-        "collection_milestone_frequency", instance.frequency_id, str(instance)
-    )
-
-
-@receiver(pre_delete, sender=CollectionMilestoneTemplates)
-def deleted_collection_milestone_templates(sender, instance, **kwargs):
-    """When collection_milestone_templates is delete, remove it from search."""
-    delete_lookup.delay("collection_milestone_templates", instance.template_id)
-
-
-@receiver(post_save, sender=CollectionMilestoneTemplates)
-def updated_collection_milestone_templates(sender, instance, **kwargs):
-    """When collection_milestone_templates is updated, add it to search."""
-    load_lookup.delay(
-        "collection_milestone_templates", instance.template_id, str(instance)
-    )
 
 
 @receiver(pre_delete, sender=UserRoles)
@@ -243,17 +200,6 @@ def reset_lookups():
     docs.extend(
         [
             {
-                "id": "initiative_contacts_" + str(value.contact_id),
-                "item_type": "initiative_contacts",
-                "item_name": value.name,
-                "atlas_id": value.contact_id,
-            }
-            for value in InitiativeContacts.objects.all()
-        ]
-    )
-    docs.extend(
-        [
-            {
                 "id": "maintenance_log_status_" + str(value.status_id),
                 "item_type": "maintenance_log_status",
                 "item_name": value.name,
@@ -287,30 +233,8 @@ def reset_lookups():
     docs.extend(
         [
             {
-                "id": "collection_milestone_frequency_" + str(value.frequency_id),
-                "item_type": "collection_milestone_frequency",
-                "item_name": value.name,
-                "atlas_id": value.frequency_id,
-            }
-            for value in CollectionMilestoneFrequency.objects.all()
-        ]
-    )
-    docs.extend(
-        [
-            {
-                "id": "collection_milestone_templates_" + str(value.template_id),
-                "item_type": "collection_milestone_templates",
-                "item_name": value.name,
-                "atlas_id": value.template_id,
-            }
-            for value in CollectionMilestoneTemplates.objects.all()
-        ]
-    )
-    docs.extend(
-        [
-            {
-                "id": "frequency_id_" + str(value.frequency_id),
-                "item_type": "frequency_id",
+                "id": "run_frequency" + str(value.frequency_id),
+                "item_type": "run_frequency",
                 "item_name": value.name,
                 "atlas_id": value.frequency_id,
             }

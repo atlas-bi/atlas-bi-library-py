@@ -1,37 +1,115 @@
-{% extends "term/all.html.dj" %}
+{% extends "layout.html.dj" %}
 
 {% load static %}
-{% load compress %}
 
-{% block modals %}
-    {{ block.super }}
-    {% if 13 in permissions and term.approved != "Y" or 11 in permissions and term.approved == "Y" %}
-        {% include "term/term_editor.html.dj" %}
-    {% endif %}
-{% endblock modals %}
+{% load compress %}
+{% load markdown %}
+
+{% block side_links %}
+    {% include "term/nav.html.dj" %}
+{% endblock side_links %}
+
 {% block body %}
-    <h1 class="title is-1">
-        {{ term.name }}
-        {% if term.approved == "Y" %}<span class="tag is-pulled-right is-success is-large">Approved</span>{% endif %}
+    <h1 class="title is-1 is-flex is-justify-content-space-between">
+        <span>{{ term }}</span>
+        {% if term.approved == "Y" %}<span class="tag is-success">Approved</span>{% endif %}
     </h1>
-    {% include "term/links.html.dj" %}
-    <div class="columns">
-        <div class="column is-narrow">{% include "term/nav.html.dj" %}</div>
-        <div class="column">
+    <nav class="breadcrumb">
+        <ul>
             {% if term.summary or term.technical_definition %}
-                <span class="location" id="description"></span>
-                {% include "term/description.html.dj" %}
+                <li>
+                    <a title="details" href="#details">Details</a>
+                </li>
             {% endif %}
-            <span class="location" id="details"></span>
-            {% include "term/details.html.dj" %}
             {% if related_reports %}
-                <span class="location" id="reports"></span>
-                {% include "term/reports.html.dj" %}
+                <li>
+                    <a title="linked reports" href="#reports">Linked Reports</a>
+                </li>
             {% endif %}
-            <span class="location" id="comments"></span>
-            <div class="comments"
-                 data-ajax="yes"
-                 data-url="{% url 'term:comments' term.term_id %}"></div>
-        </div>
+            {% if term.collections.exists %}
+                <li>
+                    <a title="collections" href="#collections">Linked Collections</a>
+                </li>
+            {% endif %}
+            <li>
+                <a title="metadata" href="#meta">Metadata</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="content">
+        <h2 id="details" class="title is-2">Description</h2>
+        {% if term.summary %}
+            <h3 class="title is-3">Summary</h3>
+            <div class="markdown">{{ term.summary|markdown }}</div>
+        {% endif %}
+        {% if term.technical_definition %}
+            <h3 class="title is-3">Technical Definition</h3>
+            <div class="markdown">{{ term.technical_definition|markdown }}</div>
+        {% endif %}
+        {% if related_reports %}
+            <h2 id="reports" class="title is-2">Linked Reports</h2>
+            <div class="columns is-multiline">
+                {% for report in related_reports %}
+                    <div class="column is-half ">{% include "report/snippet.html.dj" %}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if term.collections.exists %}
+            <h2 id="collections" class="title is-2">Linked Collections</h2>
+            <div class="columns is-multiline">
+                {% for collection_link in term.collections.all %}
+                    <div class="column is-half ">
+                        <div class="column is-half ">
+                            {% include "collection/snippet.html.dj" with collection=collection_link.collection %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
+    <h2 id="meta" class="title is-2">Details</h2>
+    <div class="table-container mt-4">
+        <table class="table is-narrow" aria-label="details">
+            <tbody>
+                {% if term.approved == "Y" %}
+                    <tr>
+                        <td>Approval Date</td>
+                        <td>{{ term.approved_at }}</td>
+                    </tr>
+                    <tr>
+                        <td>Approved By</td>
+                        <td>
+                            {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
+                                <a title="open user profile"
+                                   href="{{ term.approved_by.get_absolute_url }}">{{ term.approved_by }}</a>
+                            {% else %}
+                                {{ term.approved_by }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td>Has Been Approved</td>
+                        <td>No</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td>Last Updated By</td>
+                    <td>
+                        {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
+                            <a title="open user profile"
+                               href="{{ term.modified_by.get_absolute_url }}">{{ term.modified_by }}</a>
+                        {% else %}
+                            {{ term.modified_by }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Last Updated</td>
+                    <td>{{ term.modified_at }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {% include "term/modals.html.dj" %}
 {% endblock body %}

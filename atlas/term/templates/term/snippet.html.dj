@@ -4,28 +4,106 @@
 
 <div class="card">
     <div class="card-header">
-        <p class="card-header-title is-justify-content-space-between">
-            {{ term }}
-            {% if term.approved == "Y" %}<span class="tag is-success">Approved</span>{% endif %}
-        </p>
+        <div class="card-header-title is-justify-content-space-between py-2">
+            <a title="open term"
+               class="has-text-dark"
+               href="{{ term.get_absolute_url }}">{{ term }}
+                {% if term.approved == "Y" %}
+                    <div class="fa-layers ml-2 fa-lg">
+                        <span class="icon has-text-info "><i class="fas fa-certificate"></i></span>
+                        <span class="icon has-text-white fa-transform"><i class="fas fa-check shrink-5"></i></span>
+                    </div>
+                {% endif %}
+            </a>
+            <span class="tags">
+                <span class="tag">term</span>
+                {% if term.approved == "Y" %}<span class="tag is-success">Approved</span>{% endif %}
+                {% if matched_field %}
+                    <div class="tags has-addons mb-0">
+                        <span class="tag is-info is-light">Matched</span>
+                        <span class="tag is-info">{{ matched_field }}</span>
+                    </div>
+                {% endif %}
+            </span>
+        </div>
     </div>
-    <div class="card-content">
+    <div class="card-content pt-3 pb-2">
         <div class="media">
             <div class="media-left">
-                <figure class="image is-96x96">
-                    <img src="{% static "img/report_placeholder.png" %}" alt="report image" />
+                <figure class="image is-128x128">
+                    <picture>
+                        <source srcset="{% static 'img/report_placeholder_128x128.webp' %}"
+                                type="image/webp"
+                                loading="lazy"/>
+                        <img title="placeholder"
+                             src="{% static 'img/report_placeholder_128x128.png' %}"
+                             alt="placeholder image"
+                             width="128"
+                             height="128"
+                             loading="lazy"/>
+                    </picture>
                 </figure>
             </div>
-            <div class="media-content">
-                {{ term|snippet|markdown|safe }}
-                <br>
-                <p class="subtitle is-6">
-                    blank
-                </p>
+            <!-- extra wrap if to fix IE11 bug https://github.com/philipwalton/flexbugs#flexbug-3 -->
+            <div class="is-flex is-flex-direction-column is-flex-grow-1">
+                <a title="open term"
+                   class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96  has-text-dark"
+                   href="{{ term.get_absolute_url }}">
+                    <p>
+                        {% if term|snippet %}
+                            {{ term|snippet|markdown|unwrap }}
+                            <span class="has-text-link">read more</span>
+                        {% else %}
+                            <span class="has-text-link">Open to view details.</span>
+                        {% endif %}
+                    </p>
+                </a>
             </div>
         </div>
     </div>
     <footer class="card-footer">
-        <a href="{{ term.get_absolute_url }}" class="card-footer-item">Open</a>
+        <a title="star this term"
+           href="#"
+           class="card-footer-item star"
+           data-href="{% url 'user:stars_edit' %}?type=term&id={{ term.term_id }}">
+            <span class="icon-text">
+                {% if term.term_id in user.get_starred_terms %}
+                    <span class="icon has-text-gold">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <span>Starred <span class="tag is-rounded star-count">{{ term.starred.all.count }}</span></span>
+                {% else %}
+                    <span class="icon ">
+                        <i class="far fa-star"></i>
+                    </span>
+                    <span>Star <span class="tag is-rounded">{{ term.starred.all.count }}</span></span>
+                {% endif %}
+            </span>
+        </a>
+        <div class="card-footer-item">
+            <a title="open term profile"
+               href="#"
+               class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+               data-target="term-profile-{{ term.term_id }}"
+               data-tooltip="Open Profile">
+                <span class="icon has-text-grey">
+                    <i class="fas fa-chart-bar"></i>
+                </span>
+            </a>
+            {% if settings.ENABLE_SHARING %}
+                <a title="share this term"
+                   href="#"
+                   class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+                   data-tooltip="Share"
+                   data-target="term-share-{{ term.term_id }}"
+                   data-name="{{ term }}"
+                   data-type="term">
+                    <span class="icon has-text-grey">
+                        <i class="fas fa-share"></i>
+                    </span>
+                </a>
+            {% endif %}
+        </div>
     </footer>
 </div>
+{% include "term/modals.html.dj" %}

@@ -1,0 +1,40 @@
+{% load static %}
+
+<div class="card">
+    <div class="card-header">
+        <div class="card-header-title is-justify-content-space-between py-2">
+            <a class="has-text-dark" href="{{ group.get_absolute_url }}">{{ group }}</a>
+            <span class="tags">
+                <span class="tag">group</span>
+                {% if matched_field %}
+                    <div class="tags has-addons mb-0">
+                        <span class="tag is-info is-light">Matched</span>
+                        <span class="tag is-info">{{ matched_field }}</span>
+                    </div>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+    <div class="card-content pt-3 pb-2">
+        <a class="media" href="{{ group.get_absolute_url }}">
+            <div class="media-left">
+                <figure class="image is-128x128">
+                    <picture>
+                        <source srcset="{% static 'img/report_placeholder_128x128.webp' %}"
+                                type="image/webp"
+                                loading="lazy">
+                        <img title="placeholder"
+                             src="{% static 'img/report_placeholder_128x128.png' %}"
+                             alt="placeholder image"
+                             loading="lazy"
+                             height="128"
+                             width="128"/>
+                    </picture>
+                </figure>
+            </div>
+            <div class="media-content is-min-h-96 is-flex is-justify-content-space-between is-flex-direction-column">
+                View group profile.
+            </div>
+        </a>
+    </div>
+</div>

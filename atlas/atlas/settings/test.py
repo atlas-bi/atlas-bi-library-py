@@ -1,8 +1,9 @@
 """Atlas Settings for Test."""
 
+import contextlib
 import os
 
-from .settings import *
+from .base import *
 
 
 class DisableMigrations:
@@ -17,7 +18,7 @@ class DisableMigrations:
         return None
 
 
-AUTHENTICATION_BACKENDS = ("atlas.no_pass_auth.Backend",)
+AUTHENTICATION_BACKENDS = ("atlas.no_pass_auth.Backend",)  # type: ignore[assignment]
 
 LOGIN_URL = "/accounts/login/"
 
@@ -28,7 +29,7 @@ docker run --name postgresql-container -p 5432:5432 -e POSTGRES_HOST_AUTH_METHOD
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "atlas",
+        "NAME": os.environ.get("POSTGRES_DB", "atlas"),
         "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
         "USER": "postgres",
         "PASSWORD": os.environ.get("PGPASSWORD", ""),
@@ -40,12 +41,18 @@ LOGIN_REDIRECT_URL = "/"
 
 COMPRESS_ENABLED = False
 
-DATABASE_ROUTERS: list = []
+DATABASE_ROUTERS: list = []  # type: ignore[no-redef]
 
 # make celery tasks run as blocking
 CELERY_BROKER_URL = "memory://"
 CELERY_RESULT_BACKEND = "cache+memory://"
 CELERY_ALWAYS_EAGER = True
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.dummy.DummyCache",  # for debug
+    }
+}
 
 LOGGING = {
     "version": 1,
@@ -68,7 +75,5 @@ LOGGING = {
 MIGRATION_MODULES = DisableMigrations()
 
 # import custom overrides
-try:
+with contextlib.suppress(ImportError):
     from .test_cust import *
-except ImportError:
-    pass

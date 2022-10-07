@@ -1,64 +1,77 @@
-<h2 class="title is-2">Query</h2>
-{% if "Trident" not in request.META.HTTP_USER_AGENT %}
-    {% for query in report.queries.all %}
-        <button class="query-copy" onclick="copyQuery(event,{{ query.query_id }})">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                <path d="M433.941 65.941l-51.882-51.882A48 48 0 0 0 348.118 0H176c-26.51 0-48 21.49-48 48v48H48c-26.51 0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51 0 48-21.49 48-48v-48h80c26.51 0 48-21.49 48-48V99.882a48 48 0 0 0-14.059-33.941zM266 464H54a6 6 0 0 1-6-6V150a6 6 0 0 1 6-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 0 1-6 6zm128-96H182a6 6 0 0 1-6-6V54a6 6 0 0 1 6-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 0 1-6 6zm6-256h-64V48h9.632c1.591 0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 0 1 1.757 4.243V112z"/>
-            </svg>
-        </button>
-        <div class="query-box">
-            <div class="query-box-inner light ss-preview"
-                 id="query-{{ query.query_id }} ss-container">
-                <pre>
-                    <code class="sql" id="{{ query.query_id }}">{{ query }}</code></pre>
+<nav id="query" class="panel">
+    <p class="panel-heading is-flex is-justify-content-space-between"
+       data-action="collapse"
+       data-target="query-data">
+        <span>Queries</span>
+        <span class="icon">
+            <i class="fas fa-chevron-down"></i>
+        </span>
+    </p>
+    <div class="panel-block is-collapsible is-block py-0" id="query-data">
+        {% for query in report.queries.all %}
+            <div class="is-flex is-justify-content-space-between m-3 mb-0 mt-5">
+                <h3 class="title is-3 mb-0">Query {{ forloop.counter }} | {{ query.name }}</h3>
+                <button class="button" onclick="copyQuery(event,{{ query.query_id }})">
+                    <span class="icon">
+                        <i class="far fa-copy"></i>
+                    </span>
+                    <span>Copy Query</span>
+                </button>
             </div>
-        </div>
-    {% endfor %}
-    <!-- metric queries
-        @if (Model.ComponentQuery.Count > 0)
-        {
-            @foreach(var t in Model.ComponentQuery)
-            {
-                <h4>@t.Name (@if(t.Url != "" && t.Url != null){<a href="@t.Url">@t.EpicName</a>}else {@t.EpicName})</h4>
-                <p>@t.Description</p>
-<button class="query-copy " onclick="copyQuery(event,@t.Id)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 0 0 348.118 0H176c-26.51 0-48 21.49-48 48v48H48c-26.51 0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51 0 48-21.49 48-48v-48h80c26.51 0 48-21.49 48-48V99.882a48 48 0 0 0-14.059-33.941zM266 464H54a6 6 0 0 1-6-6V150a6 6 0 0 1 6-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 0 1-6 6zm128-96H182a6 6 0 0 1-6-6V54a6 6 0 0 1 6-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 0 1-6 6zm6-256h-64V48h9.632c1.591 0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 0 1 1.757 4.243V112z"/></svg>
-</button>
-<div class="query-box">
-<div class="query-box-inner light @if(!Context.Request.Headers[">
-    ss-preview</text>}" id='query-@t.Id' @if(!Context.Request.Headers["User-Agent"].ToString().Contains("Trident")){<text >}>
-<pre>
-<code class="sql" id="@t.Id">@t.Query</code>
-    </pre>
-</div>
-</div>
-}
-} -->
-<script>
-          if(document.readyState === 'complete') {
-            document.dispatchEvent(new CustomEvent("code-highlight"));
-            document.dispatchEvent(new CustomEvent('ss-load'));
-          }
-
-            var copyQuery = function (e, id) {
+            <div class="query-box m-3">
+                <div class="query-box-inner light ss-preview"
+                     id="query-{{ query.query_id }}"
+                     ss-container="ss-container">
+                    <pre><code class="language-@t.Language" id="{{ query.query_id }}">{{ query }}</code></pre>
+                </div>
+            </div>
+        {% endfor %}
+        {% for query in component_queries %}
+            {# metric queries #}
+            <div class="is-flex is-justify-content-space-between m-3 mb-0 mt-4">
+                <h3 class="title is-3 mb-0">
+                    <a title="open this report" href="{{ query.report.get_absolute_url }}">{{ query.name }} ({{ query.report.system_identifier }} {{ query.report.system_id }})</a>
+                </h3>
+                <button class="button m-3 mb-0"
+                        onclick="copyQuery(event,query-{{ query.query_id }})">
+                    <span class="icon">
+                        <i class="far fa-copy"></i>
+                    </span>
+                    <span>Copy Query</span>
+                </button>
+            </div>
+            <p>{{ query.report.description }}</p>
+            <div class="query-box m-3">
+                <div class="query-box-inner light ss-preview"
+                     id="query-{{ query.report_id }}"
+                     ss-container="ss-container">
+                    <pre><code class="language-sql" id="{{ query.report_id }}">{{ query }}</code></pre>
+                </div>
+            </div>
+        {% endfor %}
+        <script>
+            if (document.readyState === 'complete') {
+                document.dispatchEvent(new CustomEvent("code-highlight"));
+                document.dispatchEvent(new CustomEvent('ss-load'));
+            }
+            var copyQuery = function(e, id) {
                 var code = document.getElementById(id).innerText;
-            var txt = document.createElement('textarea');
-            txt.value = code;
-            txt.setAttribute('readonly', '');
-            txt.style = {
-              position: 'absolute',
-              left: '-9999px'
+                var txt = document.createElement('textarea');
+                txt.value = code;
+                txt.setAttribute('readonly', '');
+                txt.style = {
+                    position: 'absolute',
+                    left: '-9999px'
+                };
+                document.body.appendChild(txt);
+                txt.select();
+                document.execCommand('copy');
+                document.body.removeChild(txt);
             };
-            document.body.appendChild(txt);
-            txt.select();
-            document.execCommand('copy');
-            document.body.removeChild(txt);
-          };
-
-          window.addEventListener('load',function(){
-            document.dispatchEvent(new CustomEvent('ss-load'));
-            document.dispatchEvent(new CustomEvent("code-highlight"));
-          });
-</script>
-{% else %}
-<text>Open in chrome to view query.</text>
-{% endif %}
+            window.addEventListener('load', function() {
+                document.dispatchEvent(new CustomEvent('ss-load'));
+                document.dispatchEvent(new CustomEvent("code-highlight"));
+            });
+        </script>
+    </div>
+</nav>

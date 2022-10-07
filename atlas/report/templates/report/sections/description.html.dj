@@ -1,25 +1,77 @@
 {% load markdown %}
 
-<h2 class="title is-2">Description</h2>
-{% if report.docs.description %}
-    <h3 class="title is-3">Developer Description</h3>
-    <div class="content">{{ report.docs.description|markdown|safe }}</div>
-{% endif %}
-{% if report.docs.assumptions %}
-    <h3 class="title is-3">Key Assumptions</h3>
-    <div class="content">{{ report.docs.assumptions|markdown|safe }}</div>
-{% endif %}
-{% if report.description %}
-    <h3 class="title is-3">System Description</h3>
-    <div class="content">{{ report.description|markdown|safe }}</div>
-{% endif %}
-{% if report.detailed_description %}
-    <h3 class="title is-3">System Detailed Description</h3>
-    <div class="content">{{ report.detailed_description|markdown|safe }}</div>
-{% endif %}
-{% if report.system_description %}
-    <h2 class="title is-2">Repository Description</h2>
-    <div class="content">
-        <div class="box">{{ report.system_description|markdown|safe }}</div>
-    </div>
+<h2 id="description" class="title is-2">Description</h2>
+<div class="content">
+    {% if report.docs.description %}
+        <h3 class="title is-3">Developer Description</h3>
+        <div class="content">{{ report.docs.description|markdown }}</div>
+    {% endif %}
+    {% if report.docs.assumptions %}
+        <h3 class="title is-3">Key Assumptions</h3>
+        <div class="content">{{ report.docs.assumptions|markdown }}</div>
+    {% endif %}
+    {% if report.description %}
+        <h3 class="title is-3">System Description</h3>
+        <div class="content">{{ report.description|markdown }}</div>
+    {% endif %}
+    {% if report.detailed_description %}
+        <h3 class="title is-3">System Detailed Description</h3>
+        <div class="content">{{ report.detailed_description|markdown }}</div>
+    {% endif %}
+    {% if report.system_description %}
+        <nav id="repository-description" class="panel mt-4">
+            <div class="panel-heading is-flex is-justify-content-space-between"
+                 data-action="collapse"
+                 data-target="collapse-repository-description">
+                <span>Repository Description</span>
+                <span class="icon">
+                    <i class="fas fa-chevron-down"></i>
+                </span>
+            </div>
+            <div id="collapse-repository-description"
+                 class="panel-block is-collapsible {% if not report.docs.description and not report.docs.assumptions and not report.description and not report.detailed_description %} is-active{% endif %}"
+                 role="tabpanel">
+                <div class="markdown p-5">{{ report.system_description|markdown }}</div>
+            </div>
+        </nav>
+    {% endif %}
+</div>
+{% if report.parameters.exists %}
+    {% regroup report.parameters.all by value as values %}
+    <nav id="parameters" class="panel mt-4">
+        <p class="panel-heading is-flex is-justify-content-space-between"
+           data-action="collapse"
+           data-target="parameter-data">
+            <span>Parameters</span>
+            <span class="icon">
+                <i class="fas fa-chevron-down"></i>
+            </span>
+        </p>
+        <div class="panel-block is-collapsible is-block py-0" id="parameter-data">
+            <div class="table-container m-5">
+                <table class="table is-narrow" aria-label="report parameters">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            {% if values|length == 1 and values.0.groups == None %}
+                            {% else %}
+                                <th>Value</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for param in report.parameters.all %}
+                            <tr>
+                                <td>{{ param.name }}</td>
+                                {% if values|length == 1 and values.0.groups == None %}
+                                {% else %}
+                                    <td>{{ param.value }}</td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </nav>
 {% endif %}

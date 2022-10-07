@@ -38,20 +38,13 @@ class AnalyticsTestCase(AtlasTestCase):
         """Test analytics logging."""
         self.login()
         data = {
-            "appCodeName": "Mozilla",
-            "appName": "Netscape",
-            "appVersion": "5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15",  # noqa: E501
-            "cookieEnabled": "true",
             "language": "en-us",
-            "platform": "MacIntel",
             "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15",  # noqa: E501
-            "host": "127.0.0.1:8000",
             "hostname": "127.0.0.1",
             "href": "http: //127.0.0.1:8000/analytics/",
             "protocol": "http: ",
             "search": "",
             "pathname": "/analytics/",
-            "hash": "",
             "screenHeight": 1335,
             "screenWidth": 1998,
             "origin": "http: //127.0.0.1:8000",

@@ -10,25 +10,24 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
 <div class="tab">
     @if(TopUsers)
     {
-    <a class="tab-lnk active" href="#top-users">Top Users</a>
+    <a title="top users" class="tab-lnk active" href="#top-users">Top Users</a>
     }
     @if(RunHistory){
-    <a class="tab-lnk @if(!TopUsers){<text> active</text>}"
+    <a title="run history" class="tab-lnk @if(!TopUsers){<text> active</text>}"
        href="#run-history">Run History</a>
     }
     @if(FailedRuns){
-    <a >
-        active</text>}" href="#failed-runs">Failed Runs
+    <a title="failed runs"  active</text>}" href="#failed-runs">Failed Runs
     </a>
     }
     @if(Subscriptions){
-    <a >
+    <a title="" href="#">
         active</text>}" href="#user-subscriptions">User Subscriptions
     </a>
     }
     @if(Favorites)
     {
-    <a >
+    <a title="" href="#" >
         active</text>}" href="#user-favorites">User Favorites
     </a>
     }
@@ -39,51 +38,63 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
     <div class="tab-dta active" id="top-users">
         <h3>Top Users</h3>
         <div class="tab">
-            <a class="tab-lnk" href="#top-user-chart">Chart</a>
-            <a class="tab-lnk active" href="#top-user-table">Table</a>
+            <a title="view chart" class="tab-lnk" href="#top-user-chart">Chart</a>
+            <a title="view table" class="tab-lnk active" href="#top-user-table">Table</a>
         </div>
         <div class="tab-cnt">
             <div class="tab-dta" id="top-user-chart">
                 <div class="atlas-chart">
                     <div class="ajaxLoader">
-                        <img class="ajaxLoader-img" src="/img/loader.gif"/>
+                        <img title="loader" alt="loader" class="ajaxLoader-img" src="{% static '/img/loader.gif' %}"/>
                     </div>
                     <script type="application/json">
-                                @{
-                                    var TopTen = Model.TopUsers.Take(10);
-                                    var last = TopTen.Last();
+                        @ {
+                            var TopTen = Model.TopUsers.Take(10);
+                            var last = TopTen.Last();
+                        } {
+                            "axis": {
+                                "0": {
+                                    "title": "seconds"
+                                },
+                                "1": {
+                                    "title": "hits"
                                 }
-                                {
-                                    "axis": {
-                                        "0": {"title":"seconds"},
-                                        "1": {"title":"hits"}
-                                    },
-                                    "type": "bar",
-                                    "height":"400",
-                                    "title": "Top Report Users",
-                                    "data": [{
-                                        "title" : "Run Time (s)",
-                                        "axis":"0",
-                                        "type": "line",
-                                        "units": "(s)",
-                                        "data": [
-                                                @foreach (var g in TopTen)
-                                                { 
-                                                    <text>{ "title": "@g.Username", "data": "@g.RunTime"}</text> @if(g != last){<text>,</text>}
-                                                }
-                                            ]
-                                       },{
-                                        "title" : "Runs",
-                                        "type": "bar",
-                                        "axis": "1",
-                                        "data": [
-                                                @foreach (var g in TopTen)
-                                                { 
-                                                    <text>{ "title": "@g.Username", "data": "@g.Hits"}</text> @if(g != last){<text>,</text>}
-                                                }
-                                            ]
-                                       }]
+                            },
+                            "type": "bar",
+                            "height": "400",
+                            "title": "Top Report Users",
+                            "data": [{
+                                    "title": "Run Time (s)",
+                                    "axis": "0",
+                                    "type": "line",
+                                    "units": "(s)",
+                                    "data": [
+                                        @foreach(var g in TopTen) {
+                                            <
+                                            text > {
+                                                "title": "@g.Username",
+                                                "data": "@g.RunTime"
+                                            } < /text> @if(g != last){<text>,</text >
+                                        }
                                     }
+                                ]
+                            },
+                            {
+                                "title": "Runs",
+                                "type": "bar",
+                                "axis": "1",
+                                "data": [
+                                    @foreach(var g in TopTen) {
+                                        <
+                                        text > {
+                                            "title": "@g.Username",
+                                            "data": "@g.Hits"
+                                        } < /text> @if(g != last){<text>,</text >
+                                    }
+                                }
+                            ]
+                        }]
+                        }
                     </script>
                 </div>
             </div>
@@ -104,7 +115,7 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
                             {
                             <tr>
                                 <td>
-                                    <a href="@u.UserUrl">@u.Username</a>
+                                    <a title="open user profile" href="@u.UserUrl">@u.Username</a>
                                 </td>
                                 <td>@u.Hits</td>
                                 <td>@u.RunTime</td>
@@ -124,55 +135,67 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
          id="run-history">
         <h3>Historical Run Time</h3>
         <div class="tab">
-            <a class="tab-lnk" href="#run-time-chart">Chart</a>
-            <a class="tab-lnk active" href="#run-time-table">Table</a>
+            <a title="view chart" class="tab-lnk" href="#run-time-chart">Chart</a>
+            <a title="view table" class="tab-lnk active" href="#run-time-table">Table</a>
         </div>
         <div class="tab-cnt">
             <div class="tab-dta" id="run-time-chart">
                 <div class="atlas-chart">
                     <div class="ajaxLoader">
-                        <img class="ajaxLoader-img"
+                        <img title="loader" class="ajaxLoader-img"
                              src="/img/loader.gif"
                              alt="loader"
                              height="25px"
                              width="25px"/>
                     </div>
                     <script type="application/json">
-                                @{
-                                    var runs = Model.RunTime.Take(25);
-                                    var last = runs.Last();
+                        @ {
+                            var runs = Model.RunTime.Take(25);
+                            var last = runs.Last();
+                        } {
+                            "axis": {
+                                "0": {
+                                    "title": "seconds"
+                                },
+                                "1": {
+                                    "title": "hits"
                                 }
-                                {
-                                    "axis": {
-                                        "0": {"title":"seconds"},
-                                        "1": {"title":"hits"}
-                                    },
-                                    "type": "bar",
-                                    "height":"400",
-                                    "title": "Report Run Time",
-                                    "data": [{
-                                        "title" : "Run Time (s)",
-                                        "axis":"0",
-                                        "type": "line",
-                                        "units": "(s)",
-                                        "data": [
-                                                @foreach (var g in runs)
-                                                {
-                                                    <text>{ "title": "@g.Date", "data": "@g.Avg"}</text> @if(g != last){<text>,</text>}
-                                                }
-                                            ]
-                                       },{
-                                        "title" : "Runs",
-                                        "type": "bar",
-                                        "axis": "1",
-                                        "data": [
-                                                @foreach (var g in runs)
-                                                {
-                                                    <text>{ "title": "@g.Date", "data": "@g.Cnt"}</text> @if(g != last){<text>,</text>}
-                                                }
-                                            ]
-                                       }]
+                            },
+                            "type": "bar",
+                            "height": "400",
+                            "title": "Report Run Time",
+                            "data": [{
+                                    "title": "Run Time (s)",
+                                    "axis": "0",
+                                    "type": "line",
+                                    "units": "(s)",
+                                    "data": [
+                                        @foreach(var g in runs) {
+                                            <
+                                            text > {
+                                                "title": "@g.Date",
+                                                "data": "@g.Avg"
+                                            } < /text> @if(g != last){<text>,</text >
+                                        }
                                     }
+                                ]
+                            },
+                            {
+                                "title": "Runs",
+                                "type": "bar",
+                                "axis": "1",
+                                "data": [
+                                    @foreach(var g in runs) {
+                                        <
+                                        text > {
+                                            "title": "@g.Date",
+                                            "data": "@g.Cnt"
+                                        } < /text> @if(g != last){<text>,</text >
+                                    }
+                                }
+                            ]
+                        }]
+                        }
                     </script>
                     <span class="text-light">Data grouped into weekly buckets.</span>
                 </div>
@@ -286,7 +309,7 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
                             @s.LastStatus
                         </td>
                         <td>
-                            <a href="@s.UserUrl">
+                            <a title="open user profile" href="@s.UserUrl">
                                 @s.User
                             </a>
                         </td>
@@ -320,7 +343,7 @@ var Favorites = Model.ProfileFavorites.Count() > 0;
                         {
                         <tr>
                             <td>
-                                <a href="@s.UserUrl">
+                                <a title="open user profile" href="@s.UserUrl">
                                     @s.User
                                 </a>
                             </td>

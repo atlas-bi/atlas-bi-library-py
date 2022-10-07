@@ -1,86 +1,204 @@
-<div class="mdl" id="editModal" tabindex="-1">
-    <div class="mdl-d editorMdl">
-        <div class="mdl-c editorMdl-inner">
-            <div class="editorMdl-title">
-                <h2 class="editorMdl-titleText">
-                    Editing
-                    <span class="text-green">{{ initiative }}</span>
-                    <button type="button"
-                            class="editorMdl-close"
-                            data-dismiss="mdl"
-                            data-tooltip="Close">&times;</button>
-                </h2>
-                <div id="editorMdl-titleSave">changes saved.</div>
+{% extends "layout.html.dj" %}
+
+{% block body %}
+    <form class="mb-4"
+          action="{{ initiative.get_absolute_edit_url }}"
+          method="post">
+        {% csrf_token %}
+        <h1 class="title is-1">{{ title }}</h1>
+        <p class="buttons is-flex is-justify-content-space-between">
+            <a title="go back"
+               class="button p-5"
+               href="{{ initiative.get_absolute_url }}">
+                <span class="icon">
+                    <i class="fas fa-lg fa-left-long"></i>
+                </span>
+                <span><strong>Cancel</strong>
+                    <br />
+                Go Back</span>
+            </a>
+            <button class="button p-5" type="submit">
+                <span><strong>Save</strong>
+                    <br />
+                and Continue</span>
+                <span class="icon ">
+                    <i class="fas fa-lg fa-right-long"></i>
+                </span>
+            </button>
+        </p>
+        <div class="field">
+            <label class="label">Name</label>
+            <div class="control">
+                <input class="input"
+                       placeholder="e.g Data Sorting"
+                       name="name"
+                       required="required"
+                       value="{{ initiative.name }}"/>
             </div>
-            <div class="editorMdl-cnt" ss-container>
-                <div class="editorMdl-cntLiner">
-                    <form action="{{ initiative.get_absolute_edit_url }}" method="post">
-                        {% csrf_token %}
-                        <h3>Details</h3>
-                        <div class="listDetails">
-                            <label>Name</label>
-                            <input name="name" required value="{{ initiative }}" />
-                            <label>External Contacts</label>
-                            <select type="dynamic-dropdown"
-                                    name="linked_contacts"
-                                    search-area="lookup/initiative_contacts"
-                                    method="fullList">
-                                {% for contact_link in initiative.contact_links.all %}
-                                    <option selected="selected" value="{{ contact_link.contact_id }}">
-                                        {{ contact_link }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                            <label>Operations Owner</label>
-                            <input type="dynamic-dropdown"
-                                   name="ops_owner_id"
-                                   value="{{ initiative.ops_owner_id|default:"" }}"
-                                   visible-value="{{ initiative.ops_owner|default:"" }}"
-                                   search-area="user_lookup"/>
-                            <label>Executive Owner</label>
-                            <input type="dynamic-dropdown"
-                                   name="exec_owner_id"
-                                   value="{{ initiative.exec_owner_id|default:"" }}"
-                                   visible-value="{{ initiative.exec_owner|default:"" }}"
-                                   search-area="user_lookup"/>
-                            <label>Financial Impact</label>
-                            <input type="dynamic-dropdown"
-                                   name="financial_impact_id"
-                                   search-area="lookup/financial_impact"
-                                   method="fullList"
-                                   visible-value="{{ initiative.financial_impact|default:"" }}"
-                                   value="{{ initiative.financial_impact_id|default:"" }}"/>
-                            <label>Strategic Importance</label>
-                            <input type="dynamic-dropdown"
-                                   name="strategic_importance_id"
-                                   search-area="lookup/strategic_importance"
-                                   method="fullList"
-                                   visible-value="{{ initiative.strategic_importance|default:"" }}"
-                                   value="{{ initiative.strategic_importance_id|default:"" }}"/>
-                            <label>Linked Collections</label>
-                            <select type="dynamic-dropdown"
-                                    name="linked_data_collections"
-                                    id="linked-data-collections"
-                                    search-area="collection_lookup">
-                                {% for collection in initiative.collections.all %}
-                                    <option selected="selected" value="{{ collection.collection_id }}">
-                                        {{ collection }}
-                                    </option>
-                                {% endfor %}
-                            </select>
+        </div>
+        <div class="field">
+            <label class="label">Description</label>
+            <div class="editor"
+                 data-inputName="description"
+                 data-inputId="description">
+                <textarea class="textarea">{{ initiative.description|default:""|safe }}</textarea>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Operations Owner</label>
+            <div class="field is-grouped">
+                <div class="control is-relative is-expanded">
+                    <input class="input input-mini"
+                           placeholder="type to search.."
+                           value="{{ initiative.ops_owner|default:"" }}"
+                           search-area="user_lookup"/>
+                    <input type="hidden"
+                           name="ops_owner_id"
+                           value="{{ initiative.ops_owner_id|default:"" }}"/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
                         </div>
-                        <h3>Description</h3>
-                        <div class="editor"
-                             data-inputName="description"
-                             data-inputId="description">
-                            <textarea>{{ initiative.description|default:""|safe }}</textarea>
-                        </div>
-                        <h3>
-                            <button class="editor-save" type="submit">Save</button>
-                        </h3>
-                    </form>
+                    </div>
+                </div>
+                <div class="control">
+                    <a href="#" title="clear" class="button mini-clear">
+                        <span class="icon">
+                            <i class="fas fa-xmark"></i>
+                        </span>
+                    </a>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+        <div class="field">
+            <label class="label">Executive Owner</label>
+            <div class="field is-grouped">
+                <div class="control is-relative is-expanded">
+                    <input class="input input-mini"
+                           placeholder="type to search.."
+                           value="{{ initiative.exec_owner|default:"" }}"
+                           search-area="user_lookup"/>
+                    <input type="hidden"
+                           name="exec_owner_id"
+                           value="{{ initiative.exec_owner_id|default:"" }}"/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="control">
+                    <a href="#" title="clear" class="button mini-clear">
+                        <span class="icon">
+                            <i class="fas fa-xmark"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Financial Impact</label>
+            <div class="field is-grouped">
+                <div class="control is-relative is-expanded">
+                    <input readonly
+                           class="input input-mini"
+                           placeholder="click to select.."
+                           value="{{ initiative.financial_impact|default:"" }}"
+                           lookup-area="financial_impact"/>
+                    <input type="hidden"
+                           name="financial_impact_id"
+                           value="{{ initiative.financial_impact_id|default:"" }}"/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="control">
+                    <a title="clear" href="#" class="button mini-clear">
+                        <span class="icon">
+                            <i class="fas fa-xmark"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Strategic Importance</label>
+            <div class="field is-grouped">
+                <div class="control is-relative is-expanded">
+                    <input readonly
+                           class="input input-mini"
+                           placeholder="click to select.."
+                           value="{{ initiative.strategic_importance|default:"" }}"
+                           lookup-area="strategic_importance"/>
+                    <input type="hidden"
+                           name="strategic_importance_id"
+                           value="{{ initiative.strategic_importance_id|default:"" }}"/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="control">
+                    <a href="#" title="clear" class="button mini-clear">
+                        <span class="icon">
+                            <i class="fas fa-xmark"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="field toggle">
+            <input type="hidden"
+                   name="hidden"
+                   value="{{ initiative.hidden|default:"N" }}"/>
+            <input id="switch-hidden"
+                   type="checkbox"
+                   name="switch-hidden"
+                   class="switch is-rounded is-info"
+                   {% if initiative.hidden == "Y" %} checked="checked"{% endif %}/>
+            <label for="switch-hidden">Hide Initiative?</label>
+        </div>
+        <div class="field">
+            <label class="label">Linked Collections</label>
+            <div class="mini-tags field is-grouped is-grouped-multiline">
+                {% for collection in initiative.collections.all %}
+                    <div class="control">
+                        <div class="tags has-addons">
+                            <span class="tag is-link">{{ collection }}</span>
+                            <input type="hidden"
+                                   name="linked_data_collections"
+                                   value="{{ collection.collection_id }}"/>
+                            <a title="delete" href="#" class="tag is-delete"></a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="field">
+                <div class="control is-relative is-expanded">
+                    <input class="input input-mini multiselect"
+                           placeholder="search for collections.."
+                           search-area="collection_lookup"
+                           data-name="linked_data_collections"/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock body %}

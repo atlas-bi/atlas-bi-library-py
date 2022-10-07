@@ -1,164 +1,106 @@
 {% load compress %}
 {% load static %}
+{% load atlas_static %}
 
-<!DOCTYPE html>
 <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="robots" content="noindex, nofollow">
-{% compress css file font %}
-    <link rel="stylesheet"
-          href="{% static 'css/include/font.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-{% endcompress %}
+<meta name="robots" content="noindex, nofollow" />
+
 {% compress css file theme %}
     <link rel="stylesheet"
-          href="{% static 'css/theme.css' %}"
+          href="{% static 'css/site.min.css' %}"
           type="text/css"
           charset="utf-8"/>
 {% endcompress %}
-{% compress css file main %}
-    <link rel="stylesheet"
-          href="{% static 'css/nav.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static 'css/crumbs.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static 'css/favorite.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static 'css/page.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static 'css/video.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static 'css/search.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static 'css/essential.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static 'css/utility/collapse.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static 'css/utility/modal.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static 'css/utility/tabs.css' %}"
-          type="text/css"
-          charset="utf-8"/>
+
+{# load custom css #}
+
+{% compress css inline %}
+    {% global_css %}
 {% endcompress %}
-{% compress css file differed %}
-    <link rel="stylesheet"
-          href="{% static 'css/page-effects.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static 'css/favorite-effects.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <!--
-<link rel="stylesheet" href="{% static 'css/utility/tooltip.css' %}" type="text/css" charset="utf-8"/>
--->
-    <link rel="stylesheet"
-          href="{% static 'css/utility/drag.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static 'css/utility/progressbar.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static 'css/utility/chart.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static 'css/utility/table.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static 'css/milestone.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static 'css/input.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static 'css/comments.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static 'css/dropdown.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static 'css/markdown.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static 'css/messagebox.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static 'lib/scrollbars/simple-scrollbar.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static 'lib/highlight/rainbow.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static 'css/query.css' %}"
-          type="text/css"
-          charset="utf-8"/>
+
+<link rel="preload"
+      href="{% static_hashed '/font/inter/files/inter-latin-400-normal.woff2' %}"
+      as="font"
+      type="font/woff2"/>
+<link rel="preload"
+      href="{% static_hashed '/font/inter/files/inter-latin-700-normal.woff2' %}"
+      as="font"
+      type="font/woff2"/>
+<link rel="preload"
+      href="{% static_hashed '/font/inter/files/inter-latin-500-normal.woff2' %}"
+      as="font"
+      type="font/woff2"/>
+<link rel="preload"
+      href="{% static_hashed '/font/inter/files/inter-latin-600-normal.woff2' %}"
+      as="font"
+      type="font/woff2"/>
+<link rel="preload"
+      href="{% static_hashed '/font/fontawesome/webfonts/fa-solid-900.woff2' %}"
+      as="font"
+      type="font/woff2"/>
+<link rel="preload"
+      href="{% static_hashed '/font/fontawesome/webfonts/fa-regular-400.woff2' %}"
+      as="font"
+      type="font/woff2"/>
+
+{% compress js file purify %}
+    <link rel="preload"
+          href="{% static '/lib/dompurify/purify.min.js' %}"
+          as="script"/>
 {% endcompress %}
-{% compress js inline %}
-    <script>
-    (function () {
-        // completed loaded print files. used for IE11 to preload css
-        var css = document.querySelectorAll("link[media='print']");
-        for (var x = 0; x < css.length; x++) {
-            css[x].onload = function () {
-                this.onload = null;
-                this.removeAttribute("media")
-            }
-        }
-    })();
-    </script>
+
+{% compress js file main %}
+    <link rel="preload" href="{% static '/js/essential.js' %}" as="script" />
+    <link rel="preload"
+          href="{% static '/lib/scrollbars/simple-scrollbar.js' %}"
+          as="script"/>
 {% endcompress %}
+
+<link rel="preload" href="{% static '/js/polyfill.min.js' %}" as="script" />
+<link rel="preload" href="{% static '/js/shared.min.js' %}" as="script" />
+<link rel="preload" href="{% static '/js/alive.min.js' %}" as="script" />
+<link rel="preload" href="{% static '/js/search.min.js' %}" as="script" />
+<link rel="preload" href="{% static '/js/utility.min.js' %}" as="script" />
+<link rel="preload" href="{% static '/js/editor.min.js' %}" as="script" />
+<link rel="preload" href="{% static '/js/profile.min.js' %}" as="script" />
+
+{% compress js file purify %}
+    <script src="{% static '/lib/dompurify/purify.min.js' %}"></script>
+{% endcompress %}
+
+<script src="{% static '/js/polyfill.min.js' %}"></script>
+
 {% block start_css %}
 {% endblock start_css %}
+
 {% compress js file %}
+
     {% block start_js %}
     {% endblock start_js %}
+
 {% endcompress %}
+
 {% compress js inline %}
+
     {% block start_js_inline %}
     {% endblock start_js_inline %}
+
 {% endcompress %}
-{% compress js file mustache %}
-    <script src="{% static 'vendor/handlebars/handlebars.min.js' %}"></script>
-{% endcompress %}
-{% compress js file markdown %}
-    <script type="text/javascript"
-            src="{% static 'lib/markdown-it/markdown-it.js' %}"></script>
-{% endcompress %}
-<script id="search-template" type="text/x-handlebars-template">{% include "handlebars/search.html" %}</script>
+
 {% if title %}
-    <title>{{ title }} - Atlas</title>
+    <title>{{ title }} | Atlas</title>
 {% else %}
     <title>Atlas BI Library</title>
 {% endif %}
+<script>
+    __jsnlog_configure = function(JL) {
+        JL.setOptions({
+            "defaultAjaxUrl": "/analytics/trace"
+        })
+    };
+    try {
+        __jsnlog_configure(JL);
+    } catch (e) {};
+</script>

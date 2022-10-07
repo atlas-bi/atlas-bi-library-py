@@ -1,44 +1,249 @@
 {% load helpers %}
 {% load static %}
 {% load markdown %}
+{% load url_tags %}
 
-<div class="card {{ report.certification_tag|risk_level }}">
+<div class="card">
     <div class="card-header">
-        <div class="columns is-flex-grow-1">
-            <div class="column is-narrow is-flex is-align-items-center ml-3">{% include "report/run.html.dj" %}</div>
-            <div class="column">
-                <p class="card-header-title pl-0 is-justify-content-space-between">
-                    {{ report }}
-                    <span class="tag {{ report.certification_tag|risk_level }}">{{ report.certification_tag }}</span>
-                </p>
-            </div>
+        <div class="card-header-title py-2 is-justify-content-space-between">
+            <span class="is-flex is-align-items-center">
+                {% run_url report as run_report_url %}
+                {% edit_url report as edit_report_url %}
+                {% manage_url report as manage_report_url %}
+                {% if report.attachments.exists %}
+                    <a title="run report"
+                       href="#"
+                       aria-label="run"
+                       class="is-flex mr-2 has-tooltip-arrow has-tooltip-right js-modal-trigger"
+                       data-target="report-run-{{ report.report_id }}"
+                       data-tooltip="Run Report"
+                       data-runurl="{{ run_report_url }}">
+                        <span class="icon is-large has-text-success">
+                            <i class="far fa-2_3x fa-circle-play"></i>
+                        </span>
+                    </a>
+                {% elif run_report_url %}
+                    <a title="run report"
+                       aria-label="run"
+                       class="is-flex mr-2 has-tooltip-arrow has-tooltip-right"
+                       target="_blank"
+                       data-tooltip="Run Report"
+                       href="{{ run_report_url }}">
+                        <span class="icon is-large has-text-success">
+                            <i class="far fa-2_3x fa-circle-play"></i>
+                        </span>
+                    </a>
+                {% else %}
+                    {% if report.system_identifier == "IDB" %}
+                        <a title="run report"
+                           href="#"
+                           aria-label="run"
+                           class="is-flex mr-2 is-disabled has-tooltip-arrow has-tooltip-right"
+                           data-tooltip="Open a related dashboard that uses this.">
+                            <span class="icon is-large has-text-grey-light">
+                                <i class="far fa-2_3x fa-circle-play"></i>
+                            </span>
+                        </a>
+                    {% elif edit_report_url %}
+                        <a title="run report"
+                           href="#"
+                           aria-label="run"
+                           class="is-flex mr-2 is-disabled has-tooltip-arrow has-tooltip-right"
+                           data-tooltip="Open in report library.">
+                            <span class="icon is-large has-text-grey-light">
+                                <i class="far fa-2_3x fa-circle-play"></i>
+                            </span>
+                        </a>
+                    {% elif report.system_identifier %}
+                        <a title="run report"
+                           href="#"
+                           aria-label="run"
+                           class="is-flex mr-2 is-disabled has-tooltip-arrow has-tooltip-right"
+                           data-tooltip="Run from the Hyperspace report library.">
+                            <span class="icon is-large has-text-grey-light">
+                                <i class="far fa-2_3x fa-circle-play"></i>
+                            </span>
+                        </a>
+                    {% endif %}
+                {% endif %}
+                <a title="open report"
+                   class="has-text-dark"
+                   href="{{ report.get_absolute_url }}">{{ report }}</a>
+                {% if report.is_certified %}
+                    <div class="fa-layers ml-2 fa-lg">
+                        <span class="icon has-text-info "><i class="fas fa-certificate"></i></span>
+                        <span class="icon has-text-white fa-transform"><i class="fas fa-check shrink-5"></i></span>
+                    </div>
+                {% endif %}
+            </span>
+            <span class="tags">
+                <span class="tag">{{ report.type.short }}</span>
+                {% for link in report.tags.all %}
+                    {% if link.show_in_header == "Y" or link.tag.show_in_header == "Y" %}
+                        <span class="tag {{ link.tag|slugify }}">{{ link.tag }}</span>
+                    {% endif %}
+                {% endfor %}
+                {% if matched_field %}
+                    <div class="tags has-addons mb-0">
+                        <span class="tag is-info is-light">Matched</span>
+                        <span class="tag is-info">{{ matched_field }}</span>
+                    </div>
+                {% endif %}
+            </span>
         </div>
     </div>
-    <div class="card-content">
+    <div class="card-content pt-3 pb-2">
         <div class="media">
-            <div class="media-left">
-                <figure class="image is-96x96">
-                    <img data-src="{% if report.imgs.exists %}
-                                       {{ report.imgs.first.get_absolute_url|size:"96x96" }}
-                                   {% else %}
-                                       {% static '/img/report_thumb_placeholder_400x300.png' %}
-                                   {% endif %}"
-                         src="{% static '/img/loader.gif' %}"
-                         alt="report image"/>
+            <div class="media-left js-modal-trigger"
+                 data-target="report-image-{{ report.report_id }}">
+                <figure class="image is-128x128">
+                    <picture>
+                        {% if report.imgs.exists %}
+                            <source data-srcset="{{ report.imgs.first.get_absolute_url }}?size=128x128&format=webp"
+                                    srcset="{% static '/img/report_placeholder_128x128.webp' %}"
+                                    type="image/webp"
+                                    loading="lazy"/>
+                            <source srcset="{{ report.imgs.first.get_absolute_url }}?size=128x128&format=jpeg"
+                                    type="image/jpeg"
+                                    loading="lazy"/>
+                            <img data-src="{{ report.imgs.first.get_absolute_url }}?size=128x128&format=jpeg"
+                                 src="{% static '/img/report_placeholder_128x128.png' %}"
+                                 alt="report image"
+                                 loading="lazy"
+                                 title="report image"
+                                 height="128"
+                                 width="128"/>
+                        {% else %}
+                            <source srcset="{% static '/img/report_placeholder_128x128.webp' %}"
+                                    type="image/webp"
+                                    loading="lazy"/>
+                            <img title="report image"
+                                 src="{% static '/img/report_placeholder_128x128.png' %}"
+                                 alt="report image"
+                                 loading="lazy"
+                                 height="128"
+                                 width="128"/>
+                        {% endif %}
+                    </picture>
                 </figure>
             </div>
-            <div class="media-content">
-                {{ report|snippet|markdown|safe }}
-                <br>
-                <p class="subtitle is-6">
-                    {{ report.type.short }}
-                </p>
+            <div class="modal" id="report-image-{{ report.report_id }}">
+                <div class="modal-background"></div>
+                <div class="modal-content modal-image">
+                    <p class="image">
+                        <picture>
+                            <source srcset="{{ report.imgs.first.get_absolute_url }}?size=1200x1200&type=webp 800w, /{{ report.imgs.first.get_absolute_url }}?size=2000x2000&type=webp 1200w"
+                                    type="image/webp"
+                                    loading="lazy"
+                                    sizes="100vw"/>
+                            {# djlint:off H006 #}
+                            <img title="report image"
+                                 src="{{ report.imgs.first.get_absolute_url }}?size=1200x2000&format=jpeg"
+                                 alt="report image"
+                                 loading="lazy"/>
+                            {# djlint:on #}
+                        </picture>
+                    </p>
+                </div>
+                <button class="modal-close is-large" aria-label="close"></button>
+            </div>
+            <div class="is-flex is-flex-direction-column is-flex-grow-1">
+                <a title="open report"
+                   class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96  has-text-dark"
+                   href="{{ report.get_absolute_url }}">
+                    <p>
+                        {% if report|snippet %}
+                            {{ report|snippet|markdown|unwrap }}
+                            <span class="has-text-link">read more</span>
+                        {% else %}
+                            <span class="has-text-link">Open to view details.</span>
+                        {% endif %}
+                    </p>
+                </a>
             </div>
         </div>
     </div>
     <footer class="card-footer">
-        <a href="{{ report.get_absolute_url }}" class="card-footer-item">Open</a>
-        <a href="#" class="card-footer-item">Edit</a>
-        <a href="#" class="card-footer-item">Manage</a>
+        <a title="star this report"
+           href="#"
+           class="card-footer-item star px-0"
+           data-href="{% url 'user:stars_edit' %}?type=report&id={{ report.report_id }}">
+            <span class="icon-text">
+                {% if report.report_id in user.get_starred_reports %}
+                    <span class="icon has-text-gold">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <span>Starred <span class="tag is-rounded star-count">{{ report.starred.all.count }}</span></span>
+                {% else %}
+                    <span class="icon ">
+                        <i class="far fa-star"></i>
+                    </span>
+                    <span>Star <span class="tag is-rounded star-count">{{ report.starred.all.count }}</span></span>
+                {% endif %}
+            </span>
+        </a>
+        {% if "Open In Editor" in perms %}
+            <a title="edit report"
+               class="card-footer-item px-0"
+               target="_blank"
+               href="{{ edit_report_url }}">
+                <span class="icon-text">
+                    <span class="icon">
+                        <i class="fas fa-pen-to-square"></i>
+                    </span>
+                    <span>Edit</span>
+                </span>
+            </a>
+        {% endif %}
+        {% if "Open In Editor" in perms and manage_report_url %}
+            <a title="manage report"
+               class="card-footer-item px-0"
+               target="_blank"
+               href="{{ manage_report_url }}">
+                <span class="icon-text">
+                    <span class="icon">
+                        <i class="fas fa-gears"></i>
+                    </span>
+                    <span>Manage</span>
+                </span>
+            </a>
+        {% endif %}
+        <div class="card-footer-item px-0">
+            <a title="open report profile"
+               href="#"
+               class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2"
+               data-target="report-profile-{{ report.report_id }}"
+               data-tooltip="Open Report Profile">
+                <span class="icon has-text-grey ">
+                    <i class="fas fa-chart-bar"></i>
+                </span>
+            </a>
+            {% if settings.ENABLE_SHARING %}
+                <a title="share this report"
+                   href="#"
+                   class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2"
+                   data-tooltip="Share"
+                   data-target="report-share-{{ report.report_id }}">
+                    <span class="icon has-text-grey">
+                        <i class="fas fa-share"></i>
+                    </span>
+                </a>
+            {% endif %}
+            {% if settings.ENABLE_REQUEST_ACCESS %}
+                {# also can only request access if the report is currently run-able. #}
+                {% if report.attachements.exists or run_report_url %}
+                    <a title="request access"
+                       href="#"
+                       class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2"
+                       data-tooltip="Request Access"
+                       data-target="request-access-{{ report.report_id }}">
+                        <span class="icon has-text-grey">
+                            <i class="fas fa-universal-access"></i>
+                        </span>
+                    </a>
+                {% endif %}
+            {% endif %}
+        </div>
     </footer>
 </div>
+{% include "report/modals.html.dj" %}

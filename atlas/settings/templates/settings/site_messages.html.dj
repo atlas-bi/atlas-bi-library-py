@@ -1,0 +1,51 @@
+{% load markdown %}
+
+<div>
+    <h2 class="title is-2">URL Based Messages</h2>
+    <p class="content">
+        Url messages are accessed using a url parameter of <em>msg</em>. For example, <em>http://atlas?msg=1</em> will should you message with an ID of 1.
+    </p>
+    {% if "Manage Global Site Settings" in perms %}
+        <form action="{% url "settings:site_messages" %}" method="post">
+            {% csrf_token %}
+            <h3 class="title is-3">Add More</h3>
+            <div class="field">
+                <label class="label">ID</label>
+                <div class="control">
+                    <input type="text"
+                           class="input"
+                           placeholder="12"
+                           name="value"
+                           required="required"/>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Message</label>
+                <div class="control">
+                    <textarea type="text"
+                              class="textarea"
+                              placeholder="Hey, Welcome to Atlas!"
+                              name="description"></textarea>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <button class="button is-info" type="submit">Save</button>
+                </div>
+            </div>
+        </form>
+    {% endif %}
+    {% for message in messages %}
+        <h3 class="title is-3 pt-3 is-flex is-justify-content-space-between">
+            <span>Message {{ message.value }}</span>
+            <form class="is-inline-block"
+                  action="{% url "settings:delete_site_message" pk=message.id %}"
+                  method="post">
+                {% csrf_token %}
+                <button class="is-ghost has-text-link is-clickable is-inline-block">Delete</button>
+            </form>
+        </h3>
+        <label class="label">Preview</label>
+        <div class="notification is-light is-info has-text-centered my-0">{{ message.description|markdown }}</div>
+    {% endfor %}
+</div>

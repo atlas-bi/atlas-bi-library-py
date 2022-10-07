@@ -67,8 +67,8 @@ def load_reports(report_id=None):
         .prefetch_related("docs__created_by")
         .prefetch_related("docs__modified_by")
         .prefetch_related("queries")
-        .prefetch_related("docs__fragility_tags")
-        .prefetch_related("docs__fragility_tags")
+        .prefetch_related("docs__fragility_tags__fragility_tag")
+        .prefetch_related("tags__tag")
         .prefetch_related("docs__terms")
         .prefetch_related("collections")
         .prefetch_related("collections__collection")
@@ -104,10 +104,10 @@ def build_doc(report):
             report.detailed_description,
             report.system_description,
         ],
-        "certification": report.certification_tag,
+        "certification": [tag_link.tag.name for tag_link in report.tags.all()],
         "report_type": report.type.short,
-        "author": str(report.created_by),
-        "report_last_updated_by": str(report.modified_by),
+        "author": str(report.created_by) if report.created_by else "",
+        "report_last_updated_by": str(report.modified_by or ""),
         "report_last_updated": solr_date(report._modified_at),
         "epic_master_file": report.system_identifier,
         "epic_record_id": report.system_id,

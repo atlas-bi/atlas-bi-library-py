@@ -2,40 +2,48 @@
 {% load compress %}
 {% load static %}
 
-{% include "head.html.dj" %}
-{% compress css file extra %}
-    {% block start_css %}
-    {% endblock start_css %}
-{% endcompress %}
-<body>
-    {% include "site_message.html.dj" %}
-    {% include "nav.html.dj" %}
-    {% csrf_token %}
-    {% compress js inline %}
-        <script>
-        const csrftoken = document
-            .querySelector("[name=csrfmiddlewaretoken]")
-            .value;
-        </script>
+<!DOCTYPE html>
+<html lang="EN-US">
+    {% include "head.html.dj" %}
+
+    {% compress css file extra %}
+
+        {% block start_css %}
+        {% endblock start_css %}
+
     {% endcompress %}
-    <section class="level">
-        <div class="container">
-            <div class="columns">
-                <div class="column is-narrow">
+
+    <body class="is-flex is-flex-direction-column has-background-white">
+        {% include "site_message.html.dj" %}
+        {% include "nav.html.dj" %}
+        {% csrf_token %}
+
+        {% compress js inline %}
+            <script>
+                const csrftoken = document
+                    .querySelector("[name=csrfmiddlewaretoken]")
+                    .value;
+            </script>
+        {% endcompress %}
+
+        <section class="is-flex-grow-1 mt-4">
+            <div class="container is-relative mb-5">
+                <div class="columns">
+                    {# djlint:off H021 #}
+                    <div class="column is-narrow side-links" style="z-index: 2;">
+                        {# djlint:on #}
+
+                        {% block side_links %}
+                        {% endblock side_links %}
+
+                    </div>
+                    <div class="column body-mainCtn">
+
+                        {% block body %}
+                        {% endblock body %}
+
+                    </div>
                     <!--
-<nav class="sideNav">
--->
-                    {% block side_links %}
-                    {% endblock side_links %}
-                    <!--
-</nav>
--->
-                </div>
-                <div class="column">
-                    {% block body %}
-                    {% endblock body %}
-                </div>
-                <!--
 <div class="column is-one-third is-hidden-mobile">
                 {% if ads %}
                     <div id="related-reports"></div>
@@ -43,18 +51,14 @@
                 {% endif %}
             </div>
 -->
+                </div>
             </div>
-        </div>
-    </section>
-    <!-- modals -->
-    <section class="modal">
-        {% block modals %}
-            {% include "modals.html.dj" %}
-        {% endblock modals %}
-    </section>
-    <!-- footer -->
-    {% include "footer.html.dj" %}
-    {% include "tail.html.dj" %}
-    {% block js %}
-    {% endblock js %}
-</body>
+        </section>
+        {% include "footer.html.dj" %}
+        {% include "tail.html.dj" %}
+
+        {% block js %}
+        {% endblock js %}
+
+    </body>
+</html>

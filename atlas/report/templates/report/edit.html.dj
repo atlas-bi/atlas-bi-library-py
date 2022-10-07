@@ -1,0 +1,590 @@
+{% extends "layout.html.dj" %}
+
+{% load static %}
+
+{% block body %}
+    <form action="{{ report_doc.report.get_absolute_edit_url }}" method="post">
+        {% csrf_token %}
+        <h1 class="title is-1">{{ title }}</h1>
+        <ul class="steps has-gaps has-content-centered">
+            <li class="steps-segment is-cancel">
+                <a title="go back"
+                   class="has-text-grey-dark"
+                   href="{{ report_doc.report.get_absolute_url }}">
+                    <span class="steps-marker is-hollow">
+                        <span class="icon">
+                            <i class="fa fa-left-long"></i>
+                        </span>
+                    </span>
+                    <div class="steps-content">
+                        <p class="is-size-6">Cancel</p>
+                    </div>
+                </a>
+            </li>
+            <li class="steps-segment is-active">
+                <a title="description"
+                   class="step-tab has-text-grey-dark"
+                   href="#description">
+                    <span class="steps-marker is-hollow">
+                        <span class="icon">
+                            <i class="fa fa-quote-left"></i>
+                        </span>
+                    </span>
+                    <div class="steps-content">
+                        <p class="is-size-6">Description</p>
+                    </div>
+                </a>
+            </li>
+            <li class="steps-segment">
+                <a title="meta" class="step-tab has-text-grey-dark" href="#meta">
+                    <span class="steps-marker is-hollow">
+                        <span class="icon">
+                            <i class="fa fa-info"></i>
+                        </span>
+                    </span>
+                    <div class="steps-content">
+                        <p class="is-size-6">Meta</p>
+                    </div>
+                </a>
+            </li>
+            <li class="steps-segment">
+                <a title="images" class="step-tab has-text-grey-dark" href="#images">
+                    <span class="steps-marker is-hollow">
+                        <span class="icon">
+                            <i class="fa fa-image"></i>
+                        </span>
+                    </span>
+                    <div class="steps-content">
+                        <p class="is-size-6">Images</p>
+                    </div>
+                </a>
+            </li>
+            <li class="steps-segment">
+                <a title="maintenance"
+                   class="step-tab has-text-grey-dark"
+                   href="#maintenance">
+                    <span class="steps-marker is-hollow">
+                        <span class="icon">
+                            <i class="fa fa-wrench"></i>
+                        </span>
+                    </span>
+                    <div class="steps-content">
+                        <p class="is-size-6">Maintenance</p>
+                    </div>
+                </a>
+            </li>
+            <li class="steps-segment is-submit">
+                <button class="has-text-grey-dark is-ghost is-clickable" type="submit">
+                    <span class="steps-marker is-hollow">
+                        <span class="icon">
+                            <i class="fa fa-check"></i>
+                        </span>
+                    </span>
+                    <div class="steps-content">
+                        <p class="is-size-6">Complete</p>
+                    </div>
+                </button>
+            </li>
+        </ul>
+        <div class="step-tab-data is-active" id="description">
+            <div class="field">
+                <label class="label">Description</label>
+                <div class="editor"
+                     data-inputName="description"
+                     data-inputId="description">
+                    <textarea class="textarea">{{ report_doc.description|default:""|safe }}</textarea>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Key Assumptions</label>
+                <div class="editor"
+                     data-inputName="assumptions"
+                     data-inputId="assumptions">
+                    <textarea class="textarea">{{ report_doc.assumptions|default:""|safe }}</textarea>
+                </div>
+            </div>
+        </div>
+        <div class="step-tab-data" id="meta">
+            <div class="field">
+                <label class="label">Operations Owner</label>
+                <div class="field is-grouped">
+                    <div class="control is-relative is-expanded">
+                        <input class="input input-mini"
+                               placeholder="type to search.."
+                               value="{{ report_doc.ops_owner|default:"" }}"
+                               search-area="user_lookup"/>
+                        <input type="hidden"
+                               name="ops_owner_id"
+                               value="{{ report_doc.ops_owner_id|default:"" }}"/>
+                        <div class="mini">
+                            <div class="mini-waiting">
+                                <span class="icon">
+                                    <i class="fas fa-circle-notch fa-spin"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <a title="clear" href="#" class="button mini-clear">
+                            <span class="icon">
+                                <i class="fas fa-xmark"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Requester</label>
+                <div class="field is-grouped">
+                    <div class="control is-relative is-expanded">
+                        <input class="input input-mini"
+                               placeholder="type to search.."
+                               value="{{ report_doc.requester|default:"" }}"
+                               search-area="user_lookup"/>
+                        <input type="hidden"
+                               name="requester_id"
+                               value="{{ report_doc.requester_id|default:"" }}"/>
+                        <div class="mini">
+                            <div class="mini-waiting">
+                                <span class="icon">
+                                    <i class="fas fa-circle-notch fa-spin"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <a title="clear" href="#" class="button mini-clear">
+                            <span class="icon">
+                                <i class="fas fa-xmark"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">GitLab Project Link</label>
+                <div class="control">
+                    <input class="input"
+                           placeholder="e.g https://gitlab.com/my/repo"
+                           name="external_url"
+                           value="{{ report_doc.external_url|default:"" }}"/>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Organizational Value</label>
+                <div class="field is-grouped">
+                    <div class="control is-relative is-expanded">
+                        <input readonly
+                               class="input input-mini"
+                               placeholder="click to select.."
+                               value="{{ report_doc.org_value|default:"" }}"
+                               lookup-area="organizational_value"/>
+                        <input type="hidden"
+                               name="org_value_id"
+                               value="{{ report_doc.org_value_id|default:"" }}"/>
+                        <div class="mini">
+                            <div class="mini-waiting">
+                                <span class="icon">
+                                    <i class="fas fa-circle-notch fa-spin"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <a title="clear" href="#" class="button mini-clear">
+                            <span class="icon">
+                                <i class="fas fa-xmark"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Estimated Run Frequency</label>
+                <div class="field is-grouped">
+                    <div class="control is-relative is-expanded">
+                        <input readonly
+                               class="input input-mini"
+                               placeholder="click to select.."
+                               value="{{ report_doc.frequency|default:"" }}"
+                               lookup-area="run_frequency"/>
+                        <input type="hidden"
+                               name="frequency_id"
+                               value="{{ report_doc.frequency_id|default:"" }}"/>
+                        <div class="mini">
+                            <div class="mini-waiting">
+                                <span class="icon">
+                                    <i class="fas fa-circle-notch fa-spin"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <a title="clear" href="#" class="button mini-clear">
+                            <span class="icon">
+                                <i class="fas fa-xmark"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Fragility</label>
+                <div class="field is-grouped">
+                    <div class="control is-relative is-expanded">
+                        <input readonly
+                               class="input input-mini"
+                               placeholder="click to select.."
+                               value="{{ report_doc.fragility|default:"" }}"
+                               lookup-area="fragility"/>
+                        <input type="hidden"
+                               name="fragility_id"
+                               value="{{ report_doc.fragility_id|default:"" }}"/>
+                        <div class="mini">
+                            <div class="mini-waiting">
+                                <span class="icon">
+                                    <i class="fas fa-circle-notch fa-spin"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <a title="clear" href="#" class="button mini-clear">
+                            <span class="icon">
+                                <i class="fas fa-xmark"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Maintenance Schedule</label>
+                <div class="field is-grouped">
+                    <div class="control is-relative is-expanded">
+                        <input readonly
+                               class="input input-mini"
+                               placeholder="click to select.."
+                               value="{{ report_doc.maintenance_schedule|default:"" }}"
+                               lookup-area="maintenance_schedule"/>
+                        <input type="hidden"
+                               name="maintenance_schedule_id"
+                               value="{{ report_doc.maintenance_schedule_id|default:"" }}"/>
+                        <div class="mini">
+                            <div class="mini-waiting">
+                                <span class="icon">
+                                    <i class="fas fa-circle-notch fa-spin"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <a title="clear" href="#" class="button mini-clear">
+                            <span class="icon">
+                                <i class="fas fa-xmark"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Fragility Tags</label>
+                <div class="mini-tags field is-grouped is-grouped-multiline">
+                    {% for tag_link in report_doc.fragility_tags.all %}
+                        <div class="control">
+                            <div class="tags has-addons">
+                                <span class="tag is-link">{{ tag_link.fragility_tag.name }}</span>
+                                <input type="hidden"
+                                       name="fragility_tag_id"
+                                       value="{{ tag_link.fragility_tag_id }}"/>
+                                <a title="delete" href="#" class="tag is-delete"></a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="field">
+                    <div class="control is-relative is-expanded">
+                        <input class="input input-mini multiselect"
+                               placeholder="search for tags.."
+                               lookup-area="fragility_tag"
+                               data-name="fragility_tag_id"/>
+                        <div class="mini">
+                            <div class="mini-waiting">
+                                <span class="icon">
+                                    <i class="fas fa-circle-notch fa-spin"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Linked Collections</label>
+                <div class="mini-tags field is-grouped is-grouped-multiline reorder">
+                    {% for collection_link in report_doc.report.collections.all %}
+                        <div class="control drg">
+                            <div class="tags has-addons">
+                                <span class="tag is-link drg-hdl">{{ collection_link.collection }}</span>
+                                <input type="hidden"
+                                       name="collection_id"
+                                       value="{{ collection_link.collection_id }}"/>
+                                <a title="clear" href="#" class="tag is-delete"></a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="field">
+                    <div class="control is-relative is-expanded">
+                        <input class="input input-mini multiselect"
+                               placeholder="search for collections.."
+                               search-area="collection_lookup"
+                               data-name="collection_id"/>
+                        <div class="mini">
+                            <div class="mini-waiting">
+                                <span class="icon">
+                                    <i class="fas fa-circle-notch fa-spin"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Linked Terms</label>
+                <div class="mini-tags field is-grouped is-grouped-multiline">
+                    {% for term_link in report_doc.terms.all %}
+                        <div class="control">
+                            <div class="tags has-addons">
+                                <span class="tag is-link">{{ term_link.term }}</span>
+                                <input type="hidden" name="term_id" value="{{ term_link.term_id }}" />
+                                <a title="clear" href="#" class="tag is-delete"></a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="field">
+                    <div class="control is-relative is-expanded">
+                        <input class="input input-mini multiselect"
+                               placeholder="search for terms.."
+                               search-area="term_lookup"
+                               data-name="term_id"/>
+                        <div class="mini">
+                            <div class="mini-waiting">
+                                <span class="icon">
+                                    <i class="fas fa-circle-notch fa-spin"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field toggle">
+                <input type="hidden"
+                       name="executive_report"
+                       value="{{ report_doc.executive_report|default:"N" }}"/>
+                <input id="switch-exec-vis"
+                       type="checkbox"
+                       name="switch-exec-vis"
+                       class="switch is-rounded is-info"
+                       {% if report_doc.executive_report == "Y" %} checked="checked"{% endif %}/>
+                <label for="switch-exec-vis">Executive Visibility?</label>
+            </div>
+            <div class="field toggle">
+                <input type="hidden"
+                       name="do_not_purge"
+                       value="{{ report_doc.do_not_purge|default:"N" }}"/>
+                <input id="switch-purge"
+                       type="checkbox"
+                       name="switch-purge"
+                       class="switch is-rounded is-info"
+                       {% if report_doc.do_not_purge == "Y" %} checked="checked"{% endif %}/>
+                <label for="switch-purge">
+                    Do not purge report?
+                </label>
+            </div>
+            <div class="field toggle">
+                <input type="hidden"
+                       name="hidden"
+                       value="{{ report_doc.hidden|default:"N" }}"/>
+                <input id="switch-hidden"
+                       type="checkbox"
+                       name="switch-hidden"
+                       class="switch is-rounded is-info"
+                       {% if report_doc.hidden == "Y" %} checked="checked"{% endif %}/>
+                <label for="switch-hidden">
+                    Hide Report?
+                </label>
+            </div>
+            {# SSRS reports only #}
+            {% if report_doc.report.type.name == "SSRS Report" or report_doc.report.type.name == "SSRS Linked Report" %}
+                <div class="field toggle">
+                    <input type="hidden"
+                           name="enabled_for_hyperspace"
+                           value="{{ report_doc.enabled_for_hyperspace|default:"N" }}"/>
+                    <input id="switch-hyperspace"
+                           type="checkbox"
+                           name="switch-hyperspace"
+                           class="switch is-rounded is-info"
+                           {% if report_doc.enabled_for_hyperspace == "Y" %} checked="checked"{% endif %}/>
+                    <label for="switch-hyperspace">
+                        Enabled for Hyperspace?
+                    </label>
+                </div>
+            {% endif %}
+        </div>
+        <div class="step-tab-data" id="images">
+            <div class="is-flex images reorder is-flex-wrap-wrap">
+                {% for img in report_doc.report.imgs.all %}
+                    <div class="box p-0 m-3 drg">
+                        <input type="hidden" name="image_id" value="{{ img.image_id }}" />
+                        <div class="has-background-white-ter is-flex is-justify-content-space-between">
+                            <button class="button is-light drg-hdl" type="button">
+                                <span class="icon">
+                                    <i class="fas fa-up-down-left-right"></i>
+                                </span>
+                            </button>
+                            <button class="button is-light action-delete" type="button">
+                                <span class="icon">
+                                    <i class="fas fa-trash"></i>
+                                </span>
+                            </button>
+                        </div>
+                        <figure class="image is-256x256">
+                            <picture>
+                                <source data-srcset="{{ img.get_absolute_url }}?size=256x256&type=webp"
+                                        srcset="{% static '/img/report_placeholder_256x256.webp' %}"
+                                        type="image/webp"
+                                        loading="lazy"/>
+                                <source srcset="{{ img.get_absolute_url }}?size=256x256"
+                                        type="image/jpeg"
+                                        loading="lazy"/>
+                                <img title="report image"
+                                     data-src="{{ img.get_absolute_url }}?size=256x256"
+                                     src="{% static '/img/report_placeholder_256x256.png' %}"
+                                     alt="report image"
+                                     loading="lazy"
+                                     height="265"
+                                     width="256"/>
+                            </picture>
+                        </figure>
+                    </div>
+                {% endfor %}
+                <div class="box p-0 m-3 ">
+                    <div class="new-image file is-white">
+                        <label class="file-label">
+                            <input class="file-input"
+                                   type="file"
+                                   name="image"
+                                   accept="image/gif, image/jpeg, image/png"/>
+                            <span class="file-cta">
+                                <div class="fa-layers fa-3x fa-fw">
+                                    <span class="icon"><i class="far fa-image shrink-7"></i></span>
+                                    <span class="icon has-text-white fa-transform down-5 right-6"><i class="fas fa-circle shrink-5"></i></span>
+                                    <span class="icon fa-transform down-5 right-6"><i class="fas fa-circle-plus shrink-4"></i></span>
+                                </div>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step-tab-data" id="maintenance">
+            {% if report_doc.tickets.exists %}
+                <h3 class="title is-3">
+                    Service Requests
+                </h3>
+                <div class="mini-tags field is-grouped is-grouped-multiline">
+                    {% for ticket in report_doc.tickets.all %}
+                        <div class="control">
+                            <div class="tags has-addons">
+                                <span class="tag is-link">{{ ticket.number }}</span>
+                                <input type="hidden" name="ticket_id" value="{{ ticket.ticket_id }}" />
+                                <a title="delete" href="#" class="tag is-delete"></a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <h3 class="title is-3">
+                New Service Request
+            </h3>
+            <div class="box">
+                <div class="field">
+                    <label class="label">
+                        Ticket Number
+                    </label>
+                    <div class="control">
+                        <input class="input"
+                               type="number"
+                               placeholder="e.g 042791"
+                               name="ticket_number"/>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">
+                        Link
+                    </label>
+                    <div class="control">
+                        <input class="input"
+                               type="text"
+                               placeholder="e.g https://me.com/my/ticket"
+                               name="ticket_url"/>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">
+                        Description
+                    </label>
+                    <div class="control">
+                        <input class="input"
+                               type="text"
+                               placeholder="e.g updated column names"
+                               name="ticket_description"/>
+                    </div>
+                </div>
+            </div>
+            <h3 class="title is-3">
+                New Maintenance Log
+            </h3>
+            <div class="box">
+                <div class="field">
+                    <label class="label">
+                        Log Status
+                    </label>
+                    <div class="field is-grouped">
+                        <div class="control is-relative is-expanded">
+                            <input readonly="readonly"
+                                   class="input input-mini"
+                                   placeholder="click to select.."
+                                   lookup-area="maintenance_log_status"/>
+                            <input type="hidden" name="maintenance_status_id" />
+                            <div class="mini">
+                                <div class="mini-waiting">
+                                    <span class="icon">
+                                        <i class="fas fa-circle-notch fa-spin"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <a title="clear" href="#" class="button mini-clear">
+                                <span class="icon">
+                                    <i class="fas fa-xmark"></i>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">
+                        Notes
+                    </label>
+                    <div class="control">
+                        <input class="input"
+                               placeholder="e.g Absolutely stunning."
+                               name="maintenance_comments"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock body %}

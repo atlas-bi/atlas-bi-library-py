@@ -5,7 +5,9 @@
     email: user@user.user
     username: user-user
     _full_name: user user
+    full_name: user user
     _first_name: user
+    first_name: user
 
 # Admin User
 - model: index.users
@@ -14,7 +16,9 @@
     email: admin@admin.admin
     username: admin-admin
     _full_name: admin admin
+    full_name: admin admin
     _first_name: admin
+    first_name: admin
 
 - model: index.userrolelinks
   pk: 1
@@ -39,14 +43,8 @@
 - model: index.analytics
   pk: 1
   fields:
-    app_code_name: Mozilla
-    app_name: Netscape
-    app_version: 5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15
-    cookie_enabled: 'true'
     language: en-us
-    platform: MacIntel
     useragent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15
-    host: 127.0.0.1:8000
     hostname: 127.0.0.1
     href: 'http: //127.0.0.1:8000/analytics/'
     protocol: 'http: '
@@ -55,7 +53,6 @@
     screen_height: 1335
     screen_width: 1998
     origin: 'http: //127.0.0.1:8000'
-    title: Analytics - Atlas
     referrer: ''
     load_time: 9135
     zoom: 1
@@ -82,7 +79,7 @@
   fields:
     initiative: 1
     name: Test collection to group stuff up
-    description: "#Do\n\n##we\n\n```python\n\nneed one?```\n"
+    description: "# Do\n\n## we\n\n```python\n\nneed one?```\n"
     _modified_at: 2020-01-01 00:00:00+0
     modified_by: 1
 

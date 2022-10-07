@@ -1,0 +1,54 @@
+@page
+@model Atlas_Web.Pages.Analytics.VisitsModel
+@{
+Layout = null;
+}
+{
+"views": "@Model.Views",
+"visitors": "@Model.Visitors",
+"load_time":"@Model.LoadTime",
+"data": {
+"labels": [@foreach (var g in Model.AccessHistory){ <text>"@g.Date"</text> @if(g !=  @Model.AccessHistory.Last()){<text>,</text>} }],
+"datasets": [{
+"label": "Load Time",
+"borderColor":"rgba(38,128,235,0.2)",
+"backgroundColor": "transparent",
+"type": "line",
+"yAxisID": "2",
+"data": [
+@foreach (var g in Model.AccessHistory)
+{
+<text>@g.LoadTime</text> @if(g != @Model.AccessHistory.Last()){<text>,</text>}
+}
+]
+},
+{
+"label": "Views",
+"backgroundColor":"rgba(38,128,235,0.3)",
+"borderColor":"rgba(38,128,235,0.4)",
+"borderWidth":1,
+"stack": "bar",
+"yAxisID": "1",
+"data": [
+@foreach (var g in Model.AccessHistory)
+{
+<text>@g.Pages</text> @if(g !=  @Model.AccessHistory.Last()){<text>,</text>}
+}
+]
+},
+{
+"label": "Visitors",
+"backgroundColor":"rgba(38,128,235,0.5)",
+"borderColor":"rgba(38,128,235,0.6)",
+"borderWidth":1,
+"stack": "bar",
+"yAxisID": "1",
+"data": [
+@foreach (var g in Model.AccessHistory)
+{
+<text>@g.Sessions</text> @if(g != @Model.AccessHistory.Last()){<text>,</text>}
+}
+]
+}]
+}
+}

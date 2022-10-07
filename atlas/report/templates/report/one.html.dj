@@ -1,171 +1,51 @@
 {% extends "layout.html.dj" %}
 
 {% load compress %}
+
 {% load static %}
 {% load helpers %}
 
-{% block start_css %}
-    <link rel="stylesheet"
-          href="{% static '/css/reports.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-    <link rel="stylesheet"
-          href="{% static '/css/utility/carousel.css' %}"
-          type="text/css"
-          charset="utf-8"/>
-{% endblock start_css %}
+{% block side_links %}
+    {% include "report/nav.html.dj" %}
+{% endblock side_links %}
+
 {% block body %}
-    <div class="columns mb-0">
-        <div class="column is-narrow">{% include "report/run.html.dj" %}</div>
-        <div class="column">
-            <h1 class="title is-1">
-                {% spaceless %}
-                    <span>{{ report|strip }}</span>
-                    <!-- cert tag -->
-                    {% if report.certification_tag == "Analytics Certified" %}
-                        <span class="tag is-pulled-right is-success is-large has-tooltip-arrow has-tooltip-left has-tooltip-multiline"
-                              data-tooltip="This report has received the highest level of scrutiny from the Analytics Team and the owning end user. Certified reports are the most reliable and accurate in the system.">
-                            {{ report.certification_tag }}
-                        </span>
-                    {% elif report.certification_tag == "Analytics Reviewed" %}
-                        <span class="tag is-pulled-right is-info is-large has-tooltip-arrow has-tooltip-left has-tooltip-multiline"
-                              data-tooltip="This report has gone through the standard Analytics code review and validation process. Reviewed reports can be trusted for monitoring most operational processes.">
-                            {{ report.certification_tag }}
-                        </span>
-                    {% elif report.certification_tag == "Epic Released" %}
-                        <span class="tag is-pulled-right is-warning is-large has-tooltip-arrow has-tooltip-left has-tooltip-multiline"
-                              data-tooltip="Epic Released Reports are limited to the standard Epic configuration. They cannot be customized to match Riverside’s unique system build and may not always be accurate. Use with caution.">
-                            {{ report.certification_tag }}
-                        </span>
-                    {% elif report.certification_tag == "Legacy" %}
-                        <span class="tag is-pulled-right is-warning is-large has-tooltip-arrow has-tooltip-left has-tooltip-multiline"
-                              data-tooltip="This report has not been validated by the Analytics team for accuracy and reliability. Use with caution.">
-                            {{ report.certification_tag }}
-                        </span>
-                    {% elif report.certification_tag == "High Risk" %}
-                        <span class="tag is-pulled-right is-danger is-large has-tooltip-arrow has-tooltip-left has-tooltip-multiline"
-                              data-tooltip="This report has not been validated by the Analytics Team and does not have a usage track record. It may display inaccurate or misleading information. Use at your own risk.">
-                            {{ report.certification_tag }}
-                        </span>
-                    {% endif %}
-                {% endspaceless %}
-            </h1>
-        </div>
-    </div>
-    {% if 12 in permissions %}
+    <h1 class="title is-1 is-flex is-justify-content-space-between">
+        {{ report|strip }}
+        {% for tag_link in report.tags.all %}
+            {% if tag_link.show_in_header == "Y" or tag_link.tag.show_in_header == "Y" %}
+                <span class="has-tooltip-arrow has-tooltip-multiline has-tooltip-bottom"
+                      data-tooltip="{{ tag_link.tag.description }}">
+                    <span class="pageNav {{ tag_link.tag.name|slugify }} is-nobreak">{{ tag_link.tag.name }}</span>
+                </span>
+            {% endif %}
+        {% endfor %}
+    </h1>
+    {% if "Edit Report Documentation" in perms %}
         <!-- maintenance status alert -->
         <div data-ajax="yes"
              class="no-loader"
-             data-url="/reports/{{ report.report_id }}/maint_status"></div>
+             data-url="{{ report.get_absolute_maint_status_url }}"></div>
     {% endif %}
-    {% include 'report/links.html.dj' %}
-    <div class="columns">
-        <div class="column is-narrow">{% include 'report/nav.html.dj' %}</div>
-        <div class="column">
-            <span class="location" id="images"></span>
-            {% if report.imgs.all %}
-                {% include "report/sections/images.html.dj" %}
-            {% endif %}
-            <span class="location" id="description"></span>
-            {% if report.description or report.detailed_description or report.docs.developer_description or report.docs.assumptions or report.system_description %}
-                {% include 'report/sections/description.html.dj' %}
-            {% endif %}
-            <span class="location" id="terms"></span>
-            {% if terms %}
-                {% include 'report/sections/terms.html.dj' %}
-            {% endif %}
-            <span class="location" id="details"></span>
-            {% include 'report/sections/details.html.dj' %}
-            {% if report.queries.all %}
-                <span class="location" id="query"></span>
-                {% include 'report/sections/query.html.dj' %}
-            {% endif %}
-            {% if parents or children or report.groups.all %}
-                <span class="location" id="relationships"></span>
-                {% include 'report/sections/relationships.html.dj' %}
-            {% endif %}
-            <span class="location" id="maintenance"></span>
-            {% if report.docs.logs.all %}
-                {% include 'report/sections/maintenance_logs.html.dj' %}
-            {% endif %}
-            <span class="location" id="comments"></span>
-            <div class="comments"
-                 data-ajax="yes"
-                 data-url="/reports/{{ report.report_id }}/comments"></div>
-        </div>
-    </div>
-    {% if 12 in permissions %}
-        {% include "report/editor/modal.html.dj" %}
+    {% include "report/links.html.dj" %}
+    {% if report.imgs.exists %}
+        {% include "report/sections/images.html.dj" %}
     {% endif %}
-    <!-- image modal -->
-    <div class="mdl" id="image-modal" tabindex="-1">
-        <div class="mdl-d img-modal-lg" data-dismiss="mdl">
-            <div class="mdl-c">
-                <div class="mdl-h">
-                    <button type="button" class="close" data-dismiss="mdl">&times;</button>
-                    <h2>Image</h2>
-                </div>
-                <div class="mdl-b">
-                    <img src=""
-                         class="imagepreview img-thumbnail"
-                         style="max-width: 100%; max-height:100%"/>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- report profile -->
-    <div class="mdl" id="profile-modal" tabindex="-1">
-        <div class="mdl-d" style="max-width:70%">
-            <div class="mdl-c">
-                <div class="mdl-h">
-                    <button type="button" class="close" data-dismiss="mdl">&times;</button>
-                    <h2>Report Profile</h2>
-                </div>
-                <div class="mdl-b"></div>
-            </div>
-        </div>
-    </div>
+    {% if report.description or report.detailed_description or report.docs.description or report.docs.assumptions or report.system_description %}
+        {% include "report/sections/description.html.dj" %}
+    {% endif %}
+    {% if terms and settings.ENABLE_TERMS %}
+        {% include "report/sections/terms.html.dj" %}
+    {% endif %}
+    {% include "report/sections/details.html.dj" %}
+    {% if report.queries.exists or component_queries %}
+        {% include "report/sections/query.html.dj" %}
+    {% endif %}
+    {% if parents or children or groups or collections %}
+        {% include "report/sections/relationships.html.dj" %}
+    {% endif %}
+    {% if report.docs.maintenance_logs.exists %}
+        {% include "report/sections/maintenance_logs.html.dj" %}
+    {% endif %}
+    {% include "report/modals.html.dj" %}
 {% endblock body %}
-{% block js %}
-    {% compress js file flowchart %}
-        <script src="{% static '/lib/flowchart/raphael.min.js' %}"></script>
-        <script src="{% static '/lib/flowchart/flowchart.min.js' %}"></script>
-        <script src="{% static '/lib/flowchart/custom.js' %}"></script>
-    {% endcompress %}
-    <script>hljs.highlightAll();
-    </script>
-    {% if 12 in permissions %}
-        {% compress js file editor %}
-            <script src="{% static '/lib/codemirror/codemirror.js' %}">
-            </script>
-            <script src="{% static '/lib/codemirror/autorefresh.js' %}">
-            </script>
-            <script src="{% static '/lib/codemirror/overlay.js' %}">
-            </script>
-            <script src="{% static '/lib/codemirror/markdown.js' %}">
-            </script>
-            <script src="{% static '/lib/codemirror/gfm.js' %}">
-            </script>
-            <script src="{% static '/lib/codemirror/python.js' %}">
-            </script>
-            <script src="{% static '/lib/codemirror/r.js' %}">
-            </script>
-            <script src="{% static '/lib/codemirror/shell.js' %}">
-            </script>
-            <script src="{% static '/lib/codemirror/sql.js' %}">
-            </script>
-            <script src="{% static '/js/editor.js' %}">
-            </script>
-            <script src="{% static '/js/utility/checkbox.js' %}">
-            </script>
-        {% endcompress %}
-        {% compress js file report_editor %}
-            <script src="{% static '/js/reportEditor.js' %}" async>
-            </script>
-        {% endcompress %}
-    {% endif %}
-{% endblock js %}
-{% block start_js_inline %}
-    <script src="{% static '/js/reportProfile.js' %}">
-    </script>
-{% endblock start_js_inline %}

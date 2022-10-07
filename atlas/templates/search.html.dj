@@ -1,29 +1,14 @@
-<!-- search -->
-{% if 19 in permissions %}
-    <form id="search-form"
-          class="is-flex is-flex-grow-1 is-align-items-center mx-3 ml-5"
-          style="position: relative;">
-        <div class="field has-addons is-flex-grow-1 mb-0">
-            <div class="control has-icons-left is-flex-grow-1">
-                <input class="input"
-                       id="search"
-                       type="text"
-                       placeholder="search for reports, users, departments, report collections, initiatives, terms .."
-                       value="{{ search_string }}"
-                       maxlength="80"
-                       required="required"/>
-                <span class="icon is-small is-left">
-                    <i class="fas fa-search"></i>
-                </span>
-            </div>
-            <!--<div class="control">
-                <a class="button has-text-grey-light" href="/search">
-                    <span class="icon">
-                        <i class="fas fa-sliders-h"></i>
-                    </span>
-                </a>
-            </div>-->
-        </div>
-        <div id="search-results" class="panel has-background-white"></div>
-    </form>
-{% endif %}
+<form id="search-form"
+      class="is-flex is-flex-grow-1 is-align-items-center mx-3 is-relative">
+    <div id="search-background"></div>
+    <div class="control has-icons-left is-flex-grow-1">
+        <span class="icon is-small is-left has-text-grey-lighter"><i class="fas fa-magnifying-glass"></i></span>
+        <input class="input"
+               type="text"
+               placeholder="search"
+               value="{{ search_string }}"
+               maxlength="80"
+               required="required"/>
+    </div>
+    <!--<div id="search-suggestions"></div>-->
+</form>

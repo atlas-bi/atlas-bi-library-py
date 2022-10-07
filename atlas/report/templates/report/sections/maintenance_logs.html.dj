@@ -1,17 +1,23 @@
 {% load dates %}
 {% load markdown %}
 
-<h2 class="title is-2">Maintenance Logs</h2>
-<nav class="panel">
-    <p class="panel-heading">
-        Logs
-    </p>
-    {% for log in report.docs.logs.all %}
+<nav id="maintenance" class="panel">
+    <div class="panel-heading">Maintenance Logs</div>
+    {% for log in report.docs.maintenance_logs.all %}
         <div class="panel-block">
-            <a href="{{ log.log.maintainer.get_absolute_url }}">{{ log.log.maintainer }}</a>
-            <span class="text-muted">&nbsp;·&nbsp;{{ log.log.maintained_at|relative }}</span>
-            {% if log.log.status %}{{ log.log.status }}{% endif %}
-            {% if log.log.comments %}{{ log.log.comments|markdown|safe }}{% endif %}
+            {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
+                <a title="open user profile"
+                   href="{{ log.maintainer.get_absolute_url }}">{{ log.maintainer }}</a>
+            {% else %}
+                {{ log.maintainer }}
+            {% endif %}
+            <span data-tooltip="{{ log.maintained_at }}">&nbsp;·&nbsp;{{ log.maintained_at|relative }}</span>
+            <span>
+                {% if log.status %}&nbsp;{{ log.status }}&nbsp;{% endif %}
+            </span>
+            <span class="is-flex-shrink-1">
+                {% if log.comments %}{{ log.comments|markdown }}{% endif %}
+            </span>
         </div>
     {% endfor %}
 </nav>

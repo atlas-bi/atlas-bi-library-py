@@ -1,40 +1,37 @@
 <nav class="breadcrumb">
     <ul>
-        {% if report.imgs.all %}
+        {% if report.imgs.exists %}
             <li>
-                <a href="#images">Images</a>
+                <a title="images" href="#images">Images</a>
             </li>
         {% endif %}
         {% if report.description or report.detailed_description or report.docs.developer_description or report.docs.assumptions or report.system_description %}
             <li>
-                <a href="#description">Description</a>
+                <a title="description" href="#description">Description</a>
             </li>
         {% endif %}
-        {% if terms %}
+        {% if terms and settings.ENABLE_TERMS %}
             <li>
-                <a href="#terms">Terms</a>
+                <a title="terms" href="#terms">Terms</a>
             </li>
         {% endif %}
         <li>
-            <a href="#details">Details</a>
+            <a title="details" href="#details">Details</a>
         </li>
-        {% if report.queries.all %}
+        {% if report.queries.exists or component_queries %}
             <li>
-                <a href="#query">Query</a>
+                <a title="query" href="#query">Query</a>
             </li>
         {% endif %}
-        {% if parents or children or groups %}
+        {% if parents or children or groups or collections %}
             <li>
-                <a href="#relationships">Relationships</a>
+                <a title="relationships" href="#relationships">Relationships</a>
             </li>
         {% endif %}
-        {% if report.docs.logs %}
+        {% if report.docs.maintenance_logs.exists %}
             <li>
-                <a href="#maintenance">Maintenance</a>
+                <a title="maintenance" href="#maintenance">Maintenance</a>
             </li>
         {% endif %}
-        <li>
-            <a href="#comments">Comments</a>
-        </li>
     </ul>
 </nav>
