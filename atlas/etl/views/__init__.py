@@ -26,19 +26,36 @@ def build_task_status(task_name, task_function):
     task = TaskResult.objects.filter(task_name=task_function)
 
     if not task.exists():
-        return {"status": task_status["NONE"], "message": "No run history."}
+        return {
+            "status": task_status["NONE"],
+            "active": build_task_active(task_name, task_function),
+            "message": "No run history.",
+        }
 
     # get last task status
     task_details = task.first().as_dict()
 
     return {
         "status": task_status[task_details.get("status", "NONE")],
+        "active": build_task_active(task_name, task_function),
         "message": "Last Status: %s; Last Run: %s"
         % (
             task_details["status"],
             timezone.datetime.strftime(task_details["date_done"], "%m/%d/%Y"),
         ),
     }
+
+
+def build_task_active(task_name, task_function):
+    """Get task status."""
+    task = PeriodicTask.objects.filter(
+        name=task_name,
+        task=task_function,
+    )
+    if task.exists():
+        return task.first().enabled
+
+    return False
 
 
 def toggle_task_status(task_name, task_function, arg):

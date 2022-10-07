@@ -14,7 +14,15 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView
-from index.models import Collections, Initiatives, ReportImages, Reports, Terms
+from index.models import (
+    Collections,
+    Groups,
+    Initiatives,
+    ReportImages,
+    Reports,
+    Terms,
+    Users,
+)
 
 from atlas.decorators import NeverCacheMixin
 
@@ -247,6 +255,7 @@ class Index(NeverCacheMixin, LoginRequiredMixin, TemplateView):
             context["page_index"] = page_index
             context["qtime"] = results.qtime
             context["last_page"] = page_count
+            context["search_string"] = search_string
             context["search_filters"] = build_filter_list(
                 request_dict, self.request.user
             )
@@ -367,7 +376,7 @@ class Index(NeverCacheMixin, LoginRequiredMixin, TemplateView):
                             )[0]
                             if results.highlighting[match["id"]]
                             else None,
-                            "collection": Users.objects.get(pk=match["atlas_id"]),
+                            "user": Users.objects.get(pk=match["atlas_id"]),
                         }
                     )
                 elif match["type"] == "groups":

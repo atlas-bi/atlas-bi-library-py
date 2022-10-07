@@ -342,7 +342,7 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 DJANGO_CELERY_BEAT_TZ_AWARE = True
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
-
+CELERY_RESULT_EXTENDED = True
 CELERY_IMPORTS = ["etl.tasks.search"]
 
 LOGGING = {

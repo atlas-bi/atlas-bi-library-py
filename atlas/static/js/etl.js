@@ -54,13 +54,13 @@ function getAjax(element) {
           '.field input#' + element.getAttribute('data-toggle'),
         )
       ) {
-        const element = document.querySelector(
+        const checkbox = document.querySelector(
           '.field input#' + element.getAttribute('data-toggle'),
         );
-        if (data.status === 'success') {
-          element.setAttribute('checked', 'checked');
+        if (data.active === true) {
+          checkbox.setAttribute('checked', 'checked');
         } else {
-          element.removeAttribute('checked');
+          checkbox.removeAttribute('checked');
         }
       }
 

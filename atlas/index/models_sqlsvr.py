@@ -586,7 +586,7 @@ class Groups(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("group:details", kwargs={"pk": self.pk})
+        return reverse("group:profile", kwargs={"pk": self.pk})
 
     def get_roles(self):
         """Get users roles."""
