@@ -61,9 +61,6 @@
                     <a title="this year" href="#" class="dropdown-item" data-range="8">This year</a>
                     <hr class="dropdown-divider" />
                     <a title="all time" href="#" class="dropdown-item" data-range="9">All time</a>
-                    @*
-                    <hr class="dropdown-divider" />
-                    <a title="custom range" href="#" class="dropdown-item" data-range="10">Custom range</a> *@
                 </div>
             </div>
         </div>
@@ -124,8 +121,7 @@
         <div class="column is-one-third is-half-tablet">
             {% if user_id is not null %}
                 <div class="bar-data-wrapper analytics"
-                     data-url="{% url 'analytics:resolution' %}?user_id={{ user_id }}">
-                </div>
+                     data-url="{% url 'analytics:resolution' %}?user_id={{ user_id }}"></div>
             {% elif group_id is not null %}
                 <div class="bar-data-wrapper analytics"
                      data-url="{% url 'analytics:resolution' %}?group_id={{ group_id }}">

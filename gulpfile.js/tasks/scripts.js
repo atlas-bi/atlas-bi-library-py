@@ -116,10 +116,10 @@ gulp.task('js:analytics', function () {
   return (
     gulp
       .src(['atlas/static/js/analytics.js'])
-      // .pipe(rollup(rollupConfig))
+      .pipe(rollup(rollupConfig))
       .pipe(concat('analytics.min.js'))
       // .pipe(uglify(uglifyConfig))
-      .pipe(swc(swcOptions))
+      // .pipe(swc(swcOptions))
       .pipe(gulp.dest('atlas/static/js/'))
   );
 });
