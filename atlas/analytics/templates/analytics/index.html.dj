@@ -139,7 +139,7 @@
                 <div class="bar-data-wrapper analytics"
                      data-url="{% url 'analytics:users' %}?group_id={{ group_id }}">
                 </div>
-            {% elif user_id is not null %}
+            {% elif user_id is null %}
                 <div class="bar-data-wrapper analytics"
                      data-url="{% url 'analytics:users' %}">
                 </div>

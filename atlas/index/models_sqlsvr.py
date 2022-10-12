@@ -656,6 +656,84 @@ class Analytics(models.Model):
         db_table = "Analytics"
 
 
+class AnalyticsErrors(models.Model):
+    id = models.AutoField(db_column="Id", primary_key=True)
+    user = models.ForeignKey(
+        "Users",
+        models.DO_NOTHING,
+        db_column="UserId",
+        blank=True,
+        null=True,
+        related_name="analytics_errors",
+    )
+
+    status_code = models.IntegerField(db_column="StatusCode", blank=True, null=True)
+    message = models.TextField(db_column="Message", blank=True, null=True)
+    trace = models.TextField(db_column="Trace", blank=True, null=True)
+    access_date = models.DateTimeField(db_column="LogDateTime", blank=True, null=True)
+    handled = models.IntegerField(db_column="Handled", blank=True, null=True)
+    update_time = models.DateTimeField(
+        db_column="UpdateTime", blank=True, null=True
+    )  # Field name made lowercase.
+    useragent = models.TextField(db_column="UserAgent", blank=True, null=True)
+    referer = models.TextField(db_column="Referer", blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = "AnalyticsError"
+
+    def get_absolute_url(self):
+        return reverse("analytics:error", kwargs={"pk": self.pk})
+
+
+class AnalyticsTrace(models.Model):
+    id = models.AutoField(
+        db_column="Id", primary_key=True
+    )  # Field name made lowercase.
+    user = models.ForeignKey(
+        "Users",
+        models.DO_NOTHING,
+        db_column="UserId",
+        blank=True,
+        null=True,
+        related_name="analytics_trace",
+    )
+    level = models.IntegerField(
+        db_column="Level", blank=True, null=True
+    )  # Field name made lowercase.
+    message = models.TextField(
+        db_column="Message", blank=True, null=True
+    )  # Field name made lowercase.
+    logger = models.TextField(
+        db_column="Logger", blank=True, null=True
+    )  # Field name made lowercase.
+    access_date = models.DateTimeField(
+        db_column="LogDateTime", blank=True, null=True
+    )  # Field name made lowercase.
+    log_id = models.TextField(
+        db_column="LogId", blank=True, null=True
+    )  # Field name made lowercase.
+    handled = models.IntegerField(
+        db_column="Handled", blank=True, null=True
+    )  # Field name made lowercase.
+    update_time = models.DateTimeField(
+        db_column="UpdateTime", blank=True, null=True
+    )  # Field name made lowercase.
+    useragent = models.TextField(
+        db_column="UserAgent", blank=True, null=True
+    )  # Field name made lowercase.
+    referer = models.TextField(
+        db_column="Referer", blank=True, null=True
+    )  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = "AnalyticsTrace"
+
+    def get_absolute_url(self):
+        return reverse("analytics:trace", kwargs={"pk": self.pk})
+
+
 class Initiatives(models.Model):
     initiative_id = models.AutoField(db_column="InitiativeID", primary_key=True)
     name = models.TextField(db_column="Name", blank=True, default="")

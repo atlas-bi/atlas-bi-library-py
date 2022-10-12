@@ -1,4 +1,5 @@
-from django.contrib.auth.decorators import login_required, permission_required
+"""Atlas home page."""
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
 

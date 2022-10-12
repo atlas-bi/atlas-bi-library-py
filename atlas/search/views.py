@@ -1,7 +1,6 @@
 """Atlas Search."""
 import contextlib
 import copy
-import functools
 import math
 import re
 
@@ -9,9 +8,9 @@ import pysolr
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Prefetch, Q
+from django.db.models import Prefetch
 from django.http import JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView
 from index.models import (
@@ -55,27 +54,10 @@ class Index(NeverCacheMixin, LoginRequiredMixin, TemplateView):
         search_type = self.request.GET.get("type", "query")
         search_string = self.request.GET.get("query")
         request_dict = dict(self.request.GET)
-        page = request_dict.get("page", [0])[0]
-        page_index = page + 1
+        page = max(int(request_dict.get("page", [1])[0]), 1)
         max_results = 20
         page_slide = 2
 
-        # static IReadOnlyList<HighlightModel> BuildHighlightModels(
-        #         IDictionary<string, SolrNet.Impl.HighlightedSnippets> highlightResults
-        #     )
-        #     {
-        #         return highlightResults
-        #             .Select(
-        #                 f =>
-        #                     new HighlightModel(
-        #                         Key: f.Key,
-        #                         Values: f.Value
-        #                             .Select(v => new HighlightValueModel(v.Key, v.Value.First()))
-        #                             .ToList()
-        #                     )
-        #             )
-        #             .ToList();
-        #     }
         def build_filter_fields(search_type):
             if search_type == "reports":
                 return [
@@ -85,67 +67,6 @@ class Index(NeverCacheMixin, LoginRequiredMixin, TemplateView):
                     {"key": "epic_record_id", "value": "Epic ID"},
                     {"key": "epic_template", "value": "Epic Template ID"},
                 ]
-
-        # static IReadOnlyList<FilterFields> BuildFilterFields(string query)
-        #     {
-        #         List<FilterFields> filters = new();
-
-        #         if (query == "reports")
-        #         {
-        #             filters.Add(new FilterFields("name", "Name"));
-        #             filters.Add(new FilterFields("description", "Description"));
-        #             filters.Add(new FilterFields("query", "Query"));
-        #             filters.Add(new FilterFields("epic_record_id", "Epic ID"));
-        #             filters.Add(new FilterFields("epic_template", "Epic Template ID"));
-        #         }
-
-        #         return filters;
-        #     }
-
-        #     static IReadOnlyList<FacetModel> BuildFacetModels(
-        #         IDictionary<string, ICollection<KeyValuePair<string, int>>> facetResults
-        #     )
-        #     {
-        #         // set the order of some facets. Otherwise solr is count > alpha
-        #         String[] FacetOrder =
-        #         {
-        #             "epic_master_file_text",
-        #             "organizational_value_text",
-        #             "estimated_run_frequency_text",
-        #             "maintenance_schedule_text",
-        #             "fragility_text",
-        #             "executive_visiblity_text",
-        #             "visible_text",
-        #             "certification_text",
-        #             "report_type_text",
-        #             "type"
-        #         };
-        #         return facetResults
-        #             .OrderByDescending(x => Array.IndexOf(FacetOrder, x.Key))
-        #             .Select(
-        #                 f =>
-        #                     new FacetModel(
-        #                         Key: f.Key,
-        #                         Values: f.Value
-        #                             .Select(v => new FacetValueModel(v.Key, v.Value))
-        #                             .ToList()
-        #                     )
-        #             )
-        #             .ToList();
-        #     }
-
-        #     static Dictionary<string, string> BuildFilterDict(
-        #         Microsoft.AspNetCore.Http.IQueryCollection query
-        #     )
-        #     {
-        #         var FilterQuery = new Dictionary<string, string>();
-        #         foreach (string key in query.Keys)
-        #         {
-        #             FilterQuery.Add(key.ToLowerInvariant(), query[key].First());
-        #         }
-
-        #         return FilterQuery;
-        #     }
 
         def build_filter_list(request_dict, user):
             if not request_dict:
@@ -204,11 +125,9 @@ class Index(NeverCacheMixin, LoginRequiredMixin, TemplateView):
                     value = " OR ".join(
                         [f"{{!tag={key}}}{key}:({v.strip()})" for v in value]
                     )
-                    # value = value[0].strip()
-                    # filter_query.append(f"{{!tag={key}}}{key}:({value})")
                     filter_query.append(value)
 
-            return filter_query  # ",".join(filter_query)
+            return filter_query
 
         if search_string:
 
@@ -234,25 +153,26 @@ class Index(NeverCacheMixin, LoginRequiredMixin, TemplateView):
                 rq="{!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=5}",
                 **{"hl.fl": hl, "hl.requiredMatchField": hl_match},
                 rqq='(type:collections^2.8 OR type:reports^2 OR documented:Y^0.1 OR executive_visibility:Y^0.2  OR certification:"Analytics Certified"^0.4 OR certification:"Analytics Reviewed"^0.4)',
-                start=page,
+                start=page - 1,
                 rows=max_results,
             )
 
             # pagination
             page_count = math.ceil(results.hits / max_results)
 
-            page_from = max(1, page_index - page_slide)
-            page_to = min(page_count - 1, page_index + page_slide)
+            page_from = max(1, page - page_slide)
+            page_to = min(page_count - 1, page + page_slide)
 
             page_from = max(1, min(page_to - 2 * page_slide, page_from))
             page_to = min(page_count, max(page_from + 2 * page_slide, page_to))
 
             context["pages"] = range(page_from, page_to - page_from + 1)
 
-            # context["docs"] = results.docs
             context["facets"] = {}
             context["hits"] = results.hits
-            context["page_index"] = page_index
+            context["page_index"] = page
+            context["next_page"] = page + 1
+            context["previous_page"] = page - 1
             context["qtime"] = results.qtime
             context["last_page"] = page_count
             context["search_string"] = search_string
@@ -400,8 +320,10 @@ def clean_dict(my_dict):
     return {attr: value for attr, value in my_dict if value}
 
 
-def build_search_string(search_string, query={}):
+def build_search_string(search_string, query=None):
     """Escape invalid chars."""
+    if query is None:
+        query = {}
     reserved_characters = (
         "\\",
         "+",

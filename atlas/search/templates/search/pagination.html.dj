@@ -1,24 +1,29 @@
+{% load search_tags %}
+
 {% if last_page > 1 %}
     <div>
         <nav aria-label="pagination is-small">
             <ul class="pagination-list">
                 {% if page_index > 1 %}
                     <li>
-                        <a class="pagination-previous"
+                        <a title="previous page"
+                           class="pagination-previous"
                            tabindex="-1"
-                           href="@UrlHelpers.SetSearchPageUrl(ViewContext.HttpContext, Model.SearchResults.Parameters.EffectivePageIndex - 1)">&laquo;</a>
+                           href="{% facet_url "page" previous_page %}">&laquo;</a>
                     </li>
                 {% endif %}
                 {% for page in pages %}
                     <li>
-                        <a class="pagination-link {% if page == page_index %}is-current{% endif %}"
-                           href="@UrlHelpers.SetSearchPageUrl(ViewContext.HttpContext, @p)">{{ page }}</a>
+                        <a title="go to page {{ page }}"
+                           class="pagination-link {% if page == page_index %}is-current{% endif %}"
+                           href="{% facet_url "page" page %}">{{ page }}</a>
                     </li>
                 {% endfor %}
                 {% if page_index != last_page %}
                     <li>
-                        <a class="pagination-next"
-                           href="@UrlHelpers.SetSearchPageUrl(ViewContext.HttpContext, Model.SearchResults.Parameters.EffectivePageIndex + 1)">&raquo;</a>
+                        <a title="next page"
+                           class="pagination-next"
+                           href="{% facet_url "page" next_page %}">&raquo;</a>
                     </li>
                 {% endif %}
             </ul>

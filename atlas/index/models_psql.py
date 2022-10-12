@@ -135,7 +135,6 @@ class ReportAttachments(models.Model):
     report = models.ForeignKey(
         Reports,
         models.DO_NOTHING,
-        db_column="ReportObjectId",
         related_name="attachments",
     )
     name = models.TextField()
@@ -499,6 +498,46 @@ class Analytics(models.Model):
     session_id = models.TextField(blank=True, default="")
     page_time = models.IntegerField(blank=True, null=True)
     update_time = models.DateTimeField(blank=True, null=True)
+
+
+class AnalyticsErrors(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(
+        "Users",
+        models.DO_NOTHING,
+        blank=True,
+        null=True,
+        related_name="analytics_errors",
+    )
+
+    status_code = models.IntegerField(blank=True, null=True)
+    message = models.TextField(blank=True, null=True)
+    trace = models.TextField(blank=True, null=True)
+    access_date = models.DateTimeField(blank=True, null=True)
+    handled = models.IntegerField(blank=True, null=True)
+    update_time = models.DateTimeField(blank=True, null=True)
+    useragent = models.TextField(blank=True, null=True)
+    referer = models.TextField(blank=True, null=True)
+
+
+class AnalyticsTrace(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(
+        "Users",
+        models.DO_NOTHING,
+        blank=True,
+        null=True,
+        related_name="analytics_trace",
+    )
+    level = models.IntegerField(blank=True, null=True)
+    message = models.TextField(blank=True, null=True)
+    logger = models.TextField(blank=True, null=True)
+    access_date = models.DateTimeField(blank=True, null=True)
+    log_id = models.TextField(blank=True, null=True)
+    handled = models.IntegerField(blank=True, null=True)
+    update_time = models.DateTimeField(blank=True, null=True)
+    useragent = models.TextField(blank=True, null=True)
+    referer = models.TextField(blank=True, null=True)
 
 
 class Initiatives(models.Model):

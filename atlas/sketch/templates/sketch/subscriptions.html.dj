@@ -19,7 +19,8 @@
                             <td>
                                 {% if subscription.user %}
                                     {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
-                                        <a href="{{ subscription.user.get_absolute_url }}">{{ subscription.user }}</a>
+                                        <a title="open user profile"
+                                           href="{{ subscription.user.get_absolute_url }}">{{ subscription.user }}</a>
                                     {% else %}
                                         {{ subscription.user }}
                                     {% endif %}

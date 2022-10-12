@@ -5,12 +5,12 @@ from statistics import mean
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Avg, Count, F, Max, Sum
 from django.http import JsonResponse
-from django.shortcuts import HttpResponse, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import TemplateView, View
 from index.models import (
     Collections,
+    Groups,
     ReportRunBridge,
     Reports,
     ReportSubscriptions,
@@ -18,6 +18,7 @@ from index.models import (
     StarredReports,
     StarredTerms,
     Terms,
+    Users,
 )
 
 

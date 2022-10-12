@@ -1,32 +1,38 @@
-# Atlas BI Libarary
+<h1 align="center">
+    <br />
+    <a title="atlas.bi" href="https://www.atlas.bi">
+        <img title="atlas logo" alt="atlas logo" src="https://raw.githubusercontent.com/atlas-bi/atlas-bi-library-py/master/atlas/static/img/atlas-logo-smooth.png" width=420 />
+    </a>
+    <br />
+</h1>
 
-## What is Atlas Py?
+<h4 align="center">Atlas BI Library (py) | The unified report library.</h4>
 
-This is a Python version of the [Atlas BI Library](https://github.com/atlas-bi/atlas-bi-library) DotNet webapp. It is currently under development.
+<p align="center">
+    <a href="https://www.atlas.bi" target="_blank">Website</a> • <a href="https://demo.atlas.bi" target="_blank">Demo</a> • <a href="https://www.atlas.bi/docs/bi-library/" target="_blank">Documentation</a> • <a href="https://discord.gg/hdz2cpygQD" target="_blank">Chat</a>
+</p>
 
-In our love of open source we felt the need for a version of the Atlas BI Library webapp that used completely open source tools. This version of the app will effectively mirror the DotNet version in functionality and appearance, but will be installed on Ubuntu server.
+<p align="center">
+Atlas business intelligence library plugs in to your existing reporting platforms, extracts useful metadata, and displays it in a unified report library where you can easily search for, document, and launch reports.
+</p>
 
-### Advantages of Atlas Py
+<p align="center">
+    <a href="https://www.codacy.com/gh/atlas-bi/atlas-bi-library-py/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=atlas-bi/atlas-bi-library-py&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/74d31f9d9f1840818bc68bb0d26a9dda"/></a>
+    <a href="https://codecov.io/gh/atlas-bi/atlas-bi-library-py" >
+ <img src="https://codecov.io/gh/atlas-bi/atlas-bi-library-py/branch/master/graph/badge.svg?token=2JfEYNRwFl"/>
+ </a>
+<a href="https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/test.yml" target="_blank"><img src="https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/test.yml/badge.svg" /></a>
+<a href="https://discord.gg/hdz2cpygQD"><img alt="discord chat" src="https://badgen.net/discord/online-members/hdz2cpygQD/" /></a>
+<a href="https://github.com/atlas-bi/atlas-bi-library-py/releases"><img alt="latest release" src="https://badgen.net/github/release/atlas-bi/atlas-bi-library-py" /></a>
+</p>
 
-| Feature        | DotNet      | Python               | Discussion                                                                                                                                                                                                 |
-| -------------- | ----------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Authentication | IIS Windows | Saml2                | Saml2 is superior to IISWA in a few areas - primary, it allows users to login on generic workstations, through IOS devices, and it allows 2 factor.                                                        |
-| Speed          | Fast        | Very Fast            | Django ORM database queries outperform DotNet Linq queries, improving site performance. We are also able to do complex image optimization on linux to improve image load times.                            |
-| Database       | Sql Server  | Sql Server, Postgres | Multiple databases are supported.                                                                                                                                                                          |
-| Testing        | Difficult   | Simple               | Code testing is much simpler in Python and we anticipate having a full code base and UI test suite.                                                                                                        |
-| Install        | Manual      | Semi-Automated       | The DotNet version requires quite a bit of manual server setup and work during install, while the python version uses apt installers which configure the server and install or update in a single command. |
+## 🥅 Project Goals?
 
-[![codecov](https://codecov.io/gh/atlas-bi/atlas-bi-library-py/branch/master/graph/badge.svg?token=2JfEYNRwFl)](https://codecov.io/gh/atlas-bi/atlas-bi-library-py) [![codacy](https://app.codacy.com/project/badge/Grade/74d31f9d9f1840818bc68bb0d26a9dda)](https://www.codacy.com/gh/atlas-bi/atlas-bi-library-py/dashboard?utm_source=github.com&utm_medium=referral&utm_content=atlas-bi/atlas-bi-library-py&utm_campaign=Badge_Grade) [![CodeQL](https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/codeql.yml/badge.svg)](https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/codeql.yml) [![Maintainability](https://api.codeclimate.com/v1/badges/5b76a0292bbe56043511/maintainability)](https://codeclimate.com/github/atlas-bi/atlas-bi-library-py/maintainability) [![quality](https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/quality.yml/badge.svg)](https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/quality.yml) [![demo](https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/demo.yml/badge.svg)](https://atlas-py.herokuapp.com) [![browserstack](https://automate.browserstack.com/badge.svg?badge_key=SWVldTlYclVWZEJ5R0NQUFRTMlltSTlNQ2JRaEF1ek9NeWd1L0FjYWt1cz0tLUcyRUhJUGprRDVmTnlyUytOQmpkVWc9PQ==--017a6b444f1f4d88941b98cea65cbce32c651a58)](https://automate.browserstack.com/public-build/SWVldTlYclVWZEJ5R0NQUFRTMlltSTlNQ2JRaEF1ek9NeWd1L0FjYWt1cz0tLUcyRUhJUGprRDVmTnlyUytOQmpkVWc9PQ==--017a6b444f1f4d88941b98cea65cbce32c651a58)
+This is an all-in-one fully open source version of Atlas BI Library.
 
-## Project Goals
-
-Take a look at the [github project](https://github.com/atlas-bi/atlas-bi-library-py/projects/1) to see a list of planned features.
-
-## How can I contribute?
-
--   [Suggest a new feature or idea in our discussion board!](https://github.com/atlas-bi/atlas-bi-library-py/discussions)
--   Try out the [daily build demo](https://demo.atlas.bi/). Please [create an issue](https://github.com/atlas-bi/atlas-bi-library-py/issues) for any bugs you find!
--   Contribute to the code!
+-   Installs on Ubuntu Server
+-   Has dependencies requiring a license to be purchased
+-   Has the ETL's managed from the website with no additional configuration
 
 ## Development
 
@@ -95,7 +101,7 @@ In a separate terminal, start celery beat for scheduled jobs.
 npm run start:beat
 ```
 
-## Running tests
+## 🧪 Testing
 
 Testing uses a local postgres server and redis server. The server names are `postgres` and `redis` to allow them to run as a service in the ci/cd pipelines. The best thing is to add a mapping in your local host file of `127.0.0.1 postgres` and `127.0.0.1 redis`.
 
@@ -120,6 +126,9 @@ See `/solr/readme.rst` for a guide.
 3.  Run code tests directly
 
     ```bash
+    npm run test
+
+    # or through python
     poetry run python manage.py test --no-input --pattern="test_views.py" --settings atlas.settings.test
 
     # or with tox
@@ -139,3 +148,21 @@ See `/solr/readme.rst` for a guide.
     # or with tox
     tox -e clean,browsertest,cov -r
     ```
+
+## 🏆 Credits
+
+Atlas was created by the Riverside Healthcare Analytics team. See the [credits](https://www.atlas.bi/about/) for more details.
+
+## 🔧 Tools
+
+Special thanks to a few other tools used here.
+
+<a href="https://automate.browserstack.com/public-build/bGhJNzFxaXI1MFFONmh2TlQwdW5MQXNyblFtYXorbEQxdU4wNnpqWFYzWT0tLVN1L2l1Mi9ueGFXQ0hIYmUxWll2c2c9PQ==--0a7425816259714011cafee8777c3fe2e15baaba"><img src='https://automate.browserstack.com/badge.svg?badge_key=bGhJNzFxaXI1MFFONmh2TlQwdW5MQXNyblFtYXorbEQxdU4wNnpqWFYzWT0tLVN1L2l1Mi9ueGFXQ0hIYmUxWll2c2c9PQ==--0a7425816259714011cafee8777c3fe2e15baaba'/></a>
+<img src="https://badgen.net/badge/icon/gitguardian?icon=gitguardian&label" alt="gitguardian"> <img src="https://img.shields.io/badge/renovate-configured-green?logo=renovatebot" alt="renovate"> <a href="https://snyk.io/test/github/atlas-bi/atlas-bi-library-py"><img src="https://snyk.io/test/github/atlas-bi/atlas-bi-library-py/badge.svg" alt="snyk" /></a> <a href="https://sonarcloud.io/summary/new_code?id=atlas-bi_atlas-bi-library-py"><img src="https://sonarcloud.io/api/project_badges/measure?project=atlas-bi_atlas-bi-library-py&metric=alert_status" alt="quality gate sonar" /></a> <a href="http://commitizen.github.io/cz-cli/"><a src="https://img.shields.io/badge/commitizen-friendly-brightgreen.svg" alt="commitizen"></a>
+<a href="https://github.com/semantic-release/semantic-release"><img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg" alt="semantic-release" /></a> [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=atlas-bi_atlas-bi-library-py&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=atlas-bi_atlas-bi-library-py) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=atlas-bi_atlas-bi-library-py&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=atlas-bi_atlas-bi-library-py) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=atlas-bi_atlas-bi-library-py&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=atlas-bi_atlas-bi-library-py)
+
+## 🎁 Contributing
+
+Contributions are welcome! Please open an [issue](https://github.com/atlas-bi/atlas-bi-library/issues) describing an issue or feature.
+
+This repository uses commitizen. Commit code changes for pr's with `npm run commit`.

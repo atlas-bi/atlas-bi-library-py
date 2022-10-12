@@ -230,6 +230,7 @@
       event.target.closest('[data-url][data-page]') &&
       event.target.closest('.pagination-link[data-page]')
     ) {
+      event.preventDefault();
       event.target
         .closest('[data-url][data-page]')
         .setAttribute(

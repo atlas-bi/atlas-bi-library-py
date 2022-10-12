@@ -1,18 +1,21 @@
 from django.urls import path
 
-from . import apps, views, visits
+from . import apps
+from .views import errors, trace, views, visits
 
 app_name = apps.AnalyticsConfig.name
 
 urlpatterns = [
-    path("", views.index, name="index"),
+    path("", views.Index.as_view(), name="index"),
     path("log", views.log, name="log"),
-    path("trace", views.trace, name="trace"),
-    path("error", views.error, name="error"),
+    path("trace", trace.Index.as_view(), name="trace"),
+    path("trace/<int:pk>", trace.Index.as_view(), name="trace"),
+    path("error", errors.Index.as_view(), name="error"),
+    path("error/<int:pk>", errors.Index.as_view(), name="error"),
     path("visits", visits.Index.as_view(), name="visits"),
-    path("visits/browsers", visits.browsers, name="browsers"),
-    path("visits/os", visits.os, name="os"),
-    path("visits/resolution", visits.resolution, name="resolution"),
-    path("visits/users", visits.users, name="users"),
-    path("visits/load_time", visits.load_time, name="load_time"),
+    path("visits/browsers", visits.Browsers.as_view(), name="browsers"),
+    path("visits/os", visits.Os.as_view(), name="os"),
+    path("visits/resolution", visits.Resolution.as_view(), name="resolution"),
+    path("visits/users", visits.UserAnalytics.as_view(), name="users"),
+    path("visits/load_time", visits.LoadTime.as_view(), name="load_time"),
 ]

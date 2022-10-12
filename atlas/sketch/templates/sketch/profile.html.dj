@@ -2,21 +2,26 @@
     <nav class="breadcrumb">
         <ul>
             <li>
-                <a class="tab-lnk active"
+                <a title="run analytics"
+                   class="tab-lnk active"
                    href="#runs-{{ profile_type }}-{{ profile_id }}">Run Analytics</a>
             </li>
             {% if profile_type == "report" %}
                 <li>
-                    <a class="tab-lnk"
+                    <a title="report runs"
+                       class="tab-lnk"
                        href="#report-runs-{{ profile_type }}-{{ profile_id }}">Report Runs</a>
                 </li>
             {% endif %}
             <li>
-                <a class="tab-lnk"  href="#stars-{{ profile_type }}-{{ profile_id }}">Stars</a>
+                <a title="stars"
+                   class="tab-lnk"
+                   href="#stars-{{ profile_type }}-{{ profile_id }}">Stars</a>
             </li>
             {% if profile_type == "report" %}
                 <li>
-                    <a class="tab-lnk"
+                    <a title="subscriptions"
+                       class="tab-lnk"
                        href="#subscriptions-{{ profile_type }}-{{ profile_id }}">Subscriptions</a>
                 </li>
             {% endif %}
@@ -44,77 +49,77 @@
                 <div class="is-flex ml-5 is-flex-direction-column">
                     <h1 class="title is-2 mb-0 is-family-sans-serif has-tooltip-arrow has-tooltip-right"
                         data-tooltip="-">
-                        <span id="profile-{{ profile_type }}-{{ profile_id }}-run-time">-</span>s</text>
-                        </h1>
-                        <span>Run Time</span>
-                    </div>
+                        <span id="profile-{{ profile_type }}-{{ profile_id }}-run-time">-</span>s
+                    </h1>
+                    <span>Run Time</span>
                 </div>
-                <div class="dropdown mb-5 is-select is-right"
-                     data-target="profile-{{ profile_type }}-{{ profile_id }}">
-                    <div class="dropdown-trigger ">
-                        <button class="button"
-                                aria-haspopup="true"
-                                aria-controls="views-chart-dropdown">
-                            <span class="select-value">Last 12 Months</span>
-                            <span class="icon is-small">
-                                <i class="fas fa-angle-down" aria-hidden="true"></i>
-                            </span>
-                        </button>
-                    </div>
-                    <div class="dropdown-menu"
-                         id="profile-{{ profile_type }}-{{ profile_id }}"
-                         role="menu">
-                        <div class="dropdown-content">
-                            <a href="#" class="dropdown-item" data-range="1">Yesterday</a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item" data-range="3">This week</a>
-                            <a href="#" class="dropdown-item" data-range="4">Last 7 days</a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item" data-range="5">This month</a>
-                            <a href="#" class="dropdown-item" data-range="6">Last 30 days</a>
-                            <a href="#" class="dropdown-item" data-range="7">Last 90 days</a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item" data-range="8">This year</a>
-                            <a href="#" class="dropdown-item" data-range="11">Last 12 months</a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item" data-range="9">All time</a>
-                        </div>
+            </div>
+            <div class="dropdown mb-5 is-select is-right"
+                 data-target="profile-{{ profile_type }}-{{ profile_id }}">
+                <div class="dropdown-trigger ">
+                    <button class="button"
+                            aria-haspopup="true"
+                            aria-controls="views-chart-dropdown">
+                        <span class="select-value">Last 12 Months</span>
+                        <span class="icon is-small">
+                            <i class="fas fa-angle-down" aria-hidden="true"></i>
+                        </span>
+                    </button>
+                </div>
+                <div class="dropdown-menu"
+                     id="profile-{{ profile_type }}-{{ profile_id }}"
+                     role="menu">
+                    <div class="dropdown-content">
+                        <a title="yesterday" href="#" class="dropdown-item" data-range="1">Yesterday</a>
+                        <hr class="dropdown-divider" />
+                        <a title="this week" href="#" class="dropdown-item" data-range="3">This week</a>
+                        <a title="last 7 days" href="#" class="dropdown-item" data-range="4">Last 7 days</a>
+                        <hr class="dropdown-divider" />
+                        <a title="this month" href="#" class="dropdown-item" data-range="5">This month</a>
+                        <a title="last 30 days" href="#" class="dropdown-item" data-range="6">Last 30 days</a>
+                        <a title="last 90 days" href="#" class="dropdown-item" data-range="7">Last 90 days</a>
+                        <hr class="dropdown-divider" />
+                        <a title="this year" href="#" class="dropdown-item" data-range="8">This year</a>
+                        <a title="last 12 months" href="#" class="dropdown-item" data-range="11">Last 12 months</a>
+                        <hr class="dropdown-divider" />
+                        <a title="all time" href="#" class="dropdown-item" data-range="9">All time</a>
                     </div>
                 </div>
             </div>
-            <div class="chart-wrapper profile"  style="height:400px;">
-                <canvas id="profile-{{ profile_type }}-{{ profile_id }}"
-                        data-url="{% url "sketch:chart" type=profile_type pk=profile_id %}"
-                        data-parameters="{#?@ViewBag.DefaultFilters#}"
-                        width="400"
-                        height="400"></canvas>
-            </div>
-            <div class="columns pt-5 is-multiline">
-                {% if profile_type != "user" %}
-                    <div class="column {% if profile_type == "term" or profile_type == "collection" or profile_type == "report" and profile_id != -1 %}is-one-third-desktop is-half-tablet {% else %} is-half {% endif %}">
-                        <div class="bar-data-wrapper profile"
-                             data-url="{% url "sketch:users" type=profile_type pk=profile_id %}"
-                             data-parameters="{#?@ViewBag.DefaultFilters#}"
-                             data-target="profile-{{ profile_type }}-{{ profile_id }}">
-                    </div>
-                </div>
-            {% endif %}
-            {% if profile_type == "user" or profile_type == "term" or profile_type == "collection" or profile_type == "report" and profile_id == -1 %}
-                <div class="column {% if profile_type == "user" %}is-half {% else %}is-one-third-desktop is-half-tablet{% endif %}">
+        </div>
+        <div class="chart-wrapper profile"  style="height:400px;">
+            <canvas id="profile-{{ profile_type }}-{{ profile_id }}"
+                    data-url="{% url "sketch:chart" type=profile_type pk=profile_id %}"
+                    data-parameters="{#?@ViewBag.DefaultFilters#}"
+                    width="400"
+                    height="400"></canvas>
+        </div>
+        <div class="columns pt-5 is-multiline">
+            {% if profile_type != "user" %}
+                <div class="column {% if profile_type == "term" or profile_type == "collection" or profile_type == "report" and profile_id != -1 %}is-one-third-desktop is-half-tablet {% else %} is-half {% endif %}">
                     <div class="bar-data-wrapper profile"
-                         data-url="{% url "sketch:reports" type=profile_type pk=profile_id %}"
+                         data-url="{% url "sketch:users" type=profile_type pk=profile_id %}"
                          data-parameters="{#?@ViewBag.DefaultFilters#}"
                          data-target="profile-{{ profile_type }}-{{ profile_id }}">
                 </div>
             </div>
         {% endif %}
-        <div class="column {% if profile_type == "term" or profile_type == "collection" or profile_type == "report" and profile_id == -1 %} is-one-third-desktop is-half-tablet {% else %}is-half{% endif %}">
-            <div class="bar-data-wrapper profile"
-                 data-url="{% url "sketch:fails" type=profile_type pk=profile_id %}"
-                 data-parameters="{#?@ViewBag.DefaultFilters#}"
-                 data-target="profile-{{ profile_type }}-{{ profile_id }}">
+        {% if profile_type == "user" or profile_type == "term" or profile_type == "collection" or profile_type == "report" and profile_id == -1 %}
+            <div class="column {% if profile_type == "user" %}is-half {% else %}is-one-third-desktop is-half-tablet{% endif %}">
+                <div class="bar-data-wrapper profile"
+                     data-url="{% url "sketch:reports" type=profile_type pk=profile_id %}"
+                     data-parameters="{#?@ViewBag.DefaultFilters#}"
+                     data-target="profile-{{ profile_type }}-{{ profile_id }}">
+            </div>
         </div>
+    {% endif %}
+    <div class="column {% if profile_type == "term" or profile_type == "collection" or profile_type == "report" and profile_id == -1 %} is-one-third-desktop is-half-tablet {% else %}is-half{% endif %}">
+        <div class="bar-data-wrapper profile"
+             data-url="{% url "sketch:fails" type=profile_type pk=profile_id %}"
+             data-parameters="{#?@ViewBag.DefaultFilters#}"
+             data-target="profile-{{ profile_type }}-{{ profile_id }}">
     </div>
+</div>
 </div>
 </div>
 {% if profile_type == "report" %}

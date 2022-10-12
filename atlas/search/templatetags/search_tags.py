@@ -1,9 +1,8 @@
-"""Custom template tags to render dates."""
+"""Custom template tags for search."""
 import copy
 from urllib.parse import urlencode
 
 from django import template
-from RelativeToNow import relative_to_now
 
 register = template.Library()
 
@@ -65,10 +64,11 @@ def facet_has_checked(context, facet):
 
 
 def set_parameter(query, parameters):
+    """Set a query parameter."""
     query_copy = copy.deepcopy(query)
 
     if "type" in parameters:
-        for key, value in query.items():
+        for key, _ in query.items():
             if (
                 key != "type"
                 and key != "query"
@@ -99,48 +99,3 @@ def set_parameter(query, parameters):
                     query_copy["type"] = "reports"
 
     return query_copy
-
-
-#             var qs = QueryHelpers.ParseQuery(helper.Request.QueryString.Value ?? "");
-#             // if we are changing type, we should remove all other filters.
-#             if (parameters.ContainsKey("type"))
-#                 foreach (var p in qs)
-#                     if (
-#                         p.Key != "type"
-#                         && p.Key != "Query"
-#                         && p.Key != "advanced"
-#                         && !(parameters["type"] == "reports" && p.Key == "report_type_text")
-#                     )
-#                         qs.Remove(p.Key);
-#                 foreach (var p in parameters)
-#                     // if we need an "uncheck" url, the pop the key.
-#                     if (qs.ContainsKey(p.Key) && qs[p.Key] == p.Value)
-#                         qs.Remove(p.Key);
-#                     else
-#                         qs[p.Key] = p.Value;
-#             else
-#             {
-#                 foreach (var p in parameters)
-#                 {
-#                     // remove change page from query
-#                     if (qs.ContainsKey("PageIndex"))
-#                     {
-#                         qs.Remove("PageIndex");
-#                     }
-#                     // if we need an "uncheck" url, the pop the key.
-#                     if (qs.ContainsKey(p.Key) && qs[p.Key] == p.Value)
-#                     {
-#                         qs.Remove(p.Key);
-#                     }
-#                     else
-#                     {
-#                         qs[p.Key] = p.Value;
-#                         if (p.Key == "report_type_text")
-#                         {
-#                             qs["type"] = "reports";
-#                         }
-#                     }
-#                 }
-#             }
-#             return helper.Request.Path + QueryString.Create(qs);
-#         }

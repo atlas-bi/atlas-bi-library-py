@@ -9,7 +9,7 @@
     ":npm",
     "npm:unpublishSafe"
   ],
-  "ignoreDeps": ["@fortawesome/fontawesome-free", "chart.js"],
+  "ignoreDeps": ["chart.js"],
   "baseBranches": ["dev"],
   "assigneesSampleSize": 2,
   "bumpVersion": "patch",

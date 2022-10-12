@@ -7,7 +7,7 @@
                         <tr>
                             <td>
                                 {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
-                                    <a href="{{ star.owner.get_absolute_url }}">{{ star.owner }}</a>
+                                    <a title="open user profile" href="{{ star.owner.get_absolute_url }}">{{ star.owner }}</a>
                                 {% else %}
                                     {{ star.user }}
                                 {% endif %}
