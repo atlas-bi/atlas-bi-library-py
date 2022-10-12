@@ -4,7 +4,7 @@
     {% if search_filters %}
         <a title="filter"
            class="button is-warning is-fullwidth is-outlined has-text-dark"
-           href="/search?query={{ search_string }}">
+           href="{% url "search:index" %}?query={{ search_string }}">
             <span class="icon">
                 <i class="fas fa-xmark"></i>
             </span>

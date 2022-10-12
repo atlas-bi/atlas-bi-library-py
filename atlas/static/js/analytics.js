@@ -344,7 +344,6 @@
       event.target.tagName === 'INPUT'
     ) {
       const i = event.target;
-      let type = 1;
 
       if (i.hasAttribute('checked')) {
         i.removeAttribute('checked');

@@ -710,15 +710,7 @@ class AnalyticsTrace(models.Model):
     access_date = models.DateTimeField(
         db_column="LogDateTime", blank=True, null=True
     )  # Field name made lowercase.
-    log_id = models.TextField(
-        db_column="LogId", blank=True, null=True
-    )  # Field name made lowercase.
-    handled = models.IntegerField(
-        db_column="Handled", blank=True, null=True
-    )  # Field name made lowercase.
-    update_time = models.DateTimeField(
-        db_column="UpdateTime", blank=True, null=True
-    )  # Field name made lowercase.
+    handled = models.IntegerField(db_column="Handled", blank=True, null=True)
     useragent = models.TextField(
         db_column="UserAgent", blank=True, null=True
     )  # Field name made lowercase.

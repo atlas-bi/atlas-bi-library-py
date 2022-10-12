@@ -129,6 +129,8 @@ gulp.task('font:fontawesome', (done) => {
         'diagram-project',
         'caret-up',
         'caret-down',
+        'caret-right',
+        'caret-left',
         'toggle-on',
       ],
     },

@@ -1,11 +1,13 @@
-"""Atlas analytics views."""
-
+"""Atlas analytics trace views."""
+import json
 from datetime import timedelta
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.shortcuts import HttpResponse
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from index.models import AnalyticsTrace, Groups, Users
 
@@ -39,7 +41,7 @@ class Index(NeverCacheMixin, LoginRequiredMixin, TemplateView, PermissionsCheckM
         if group_id > 0 and Groups.objects.filter(group_id=group_id).exists():
             traces = traces.filter(user__group__id=group_id)
 
-        traces = traces.order_by("-update_time").all()
+        traces = traces.order_by("-access_date").all()
         paginator = Paginator(traces, page_size)
 
         context["unresolved"] = len(traces.exclude(handled=1))
@@ -59,3 +61,23 @@ class Index(NeverCacheMixin, LoginRequiredMixin, TemplateView, PermissionsCheckM
             trace.save()
             return HttpResponse("Changes saved.", content_type="text/plain")
         return HttpResponse("No changes to save.", content_type="text/plain")
+
+
+@login_required
+@csrf_exempt
+def log(request):
+    """Create analytics trace."""
+    log_data = json.loads(request.body.decode("utf-8"))
+    for details in log_data["lg"]:
+        trace = AnalyticsTrace(
+            user=request.user,
+            level=details["l"],
+            message=details["m"],
+            logger=details["n"],
+            useragent=request.headers.get("User-Agent"),
+            referer=request.META["HTTP_REFERER"],
+            access_date=timezone.now(),
+        )
+        trace.save()
+
+    return HttpResponse("ok")

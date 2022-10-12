@@ -13,7 +13,14 @@
                             <a data-page="page=1"
                                class="pagination-link"
                                href="#"
-                               title="first page">&laquo; first</a>
+                               title="first page">
+                                <span class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-caret-left"></i>
+                                    </span>
+                                    <span>first</span>
+                                </span>
+                            </a>
                         </li>
                         <li>
                             <a data-page="?page={{ traces.previous_page_number }}"
@@ -33,7 +40,14 @@
                             <a href="#"
                                title="last page"
                                class="pagination-link"
-                               data-page="?page={{ traces.paginator.num_pages }}">last &raquo;</a>
+                               data-page="?page={{ traces.paginator.num_pages }}">
+                                <span class="icon-text">
+                                    <span>last</span>
+                                    <span class="icon">
+                                        <i class="fas fa-caret-right"></i>
+                                    </span>
+                                </span>
+                            </a>
                         </li>
                     {% endif %}
                 </ul>

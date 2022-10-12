@@ -9,6 +9,7 @@ urlpatterns = [
     path("", views.Index.as_view(), name="index"),
     path("log", views.log, name="log"),
     path("trace", trace.Index.as_view(), name="trace"),
+    path("trace/log", trace.log, name="trace_log"),
     path("trace/<int:pk>", trace.Index.as_view(), name="trace"),
     path("error", errors.Index.as_view(), name="error"),
     path("error/<int:pk>", errors.Index.as_view(), name="error"),

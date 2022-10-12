@@ -94,13 +94,18 @@
 {% else %}
     <title>Atlas BI Library</title>
 {% endif %}
+<script src="{% static '/js/alive.min.js' %}"></script>
 <script>
+    /* beautify preserve:start */
     __jsnlog_configure = function(JL) {
         JL.setOptions({
-            "defaultAjaxUrl": "/analytics/trace"
+            "defaultAjaxUrl": "{% url "analytics:trace_log" %}"
         })
     };
+    /* beautify preserve:end */
     try {
         __jsnlog_configure(JL);
-    } catch (e) {};
+    } catch (e) {
+        console.log(e)
+    };
 </script>

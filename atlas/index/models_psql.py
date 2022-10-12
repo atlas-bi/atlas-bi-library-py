@@ -533,9 +533,7 @@ class AnalyticsTrace(models.Model):
     message = models.TextField(blank=True, null=True)
     logger = models.TextField(blank=True, null=True)
     access_date = models.DateTimeField(blank=True, null=True)
-    log_id = models.TextField(blank=True, null=True)
     handled = models.IntegerField(blank=True, null=True)
-    update_time = models.DateTimeField(blank=True, null=True)
     useragent = models.TextField(blank=True, null=True)
     referer = models.TextField(blank=True, null=True)
 

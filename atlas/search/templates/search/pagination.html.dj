@@ -9,7 +9,9 @@
                         <a title="previous page"
                            class="pagination-previous"
                            tabindex="-1"
-                           href="{% facet_url "page" previous_page %}">&laquo;</a>
+                           href="{% facet_url "page" previous_page %}"><span class="icon">
+                            <i class="fas fa-caret-left"></i>
+                        </span></a>
                     </li>
                 {% endif %}
                 {% for page in pages %}
@@ -23,7 +25,9 @@
                     <li>
                         <a title="next page"
                            class="pagination-next"
-                           href="{% facet_url "page" next_page %}">&raquo;</a>
+                           href="{% facet_url "page" next_page %}"><span class="icon">
+                            <i class="fas fa-caret-right"></i>
+                        </span></a>
                     </li>
                 {% endif %}
             </ul>
