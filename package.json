@@ -39,7 +39,7 @@
     "@fontsource/rasa": "4.5.13",
     "@fontsource/source-code-pro": "4.5.12",
     "@fortawesome/fontawesome-free": "6.1.2",
-    "@rollup/plugin-babel": "5.3.1",
+    "@rollup/plugin-babel": "6.0.0",
     "@rollup/plugin-commonjs": "23.0.0",
     "@rollup/plugin-json": "4.1.0",
     "@rollup/plugin-node-resolve": "14.1.0",
