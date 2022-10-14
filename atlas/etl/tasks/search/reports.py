@@ -108,7 +108,7 @@ def build_doc(report):
         "report_type": report.type.short,
         "author": str(report.created_by) if report.created_by else "",
         "report_last_updated_by": str(report.modified_by or ""),
-        "report_last_updated": solr_date(report._modified_at),
+        "report_last_updated": solr_date(report.modified_at),
         "epic_master_file": report.system_identifier,
         "epic_record_id": report.system_id,
         "visible": report.visible,
@@ -138,13 +138,13 @@ def build_report_doc(report, doc):
     doc["description"].extend([report.docs.description, report.docs.assumptions])
     doc["operations_owner"] = str(report.docs.ops_owner)
     doc["requester"] = str(report.docs.requester)
-    doc["created"] = solr_date(report.docs._created_at)
+    doc["created"] = solr_date(report.docs.created_at)
     doc["organizational_value"] = str(report.docs.org_value)
     doc["estimated_run_frequency"] = str(report.docs.frequency)
     doc["fragility"] = str(report.docs.fragility)
     doc["executive_visibility"] = report.docs.executive_report or "N"
     doc["maintenance_schedule"] = str(report.docs.maintenance_schedule)
-    doc["last_updated"] = solr_date(report.docs._modified_at)
+    doc["last_updated"] = solr_date(report.docs.modified_at)
     doc["created_by"] = str(report.docs.created_by)
     doc["updated_by"] = str(report.docs.modified_by)
     doc["enabled_for_hyperspace"] = report.docs.enabled_for_hyperspace

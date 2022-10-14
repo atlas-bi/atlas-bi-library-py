@@ -319,13 +319,14 @@ class MaintenanceStatus(
     required_permissions = ("Edit Report Documentation",)
 
     def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         report_id = self.kwargs["pk"]
         today = timezone.now()
         report = ReportDocs.objects.filter(report_id=report_id).exclude(
             maintenance_schedule__schedule_id=5
         )
 
-        context = {"maint_status": False}
+        context["maint_status"] = False
 
         if (
             not report.exists()

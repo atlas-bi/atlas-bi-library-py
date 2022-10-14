@@ -1,1 +1,36 @@
+{% load dates %}
 
+<div>
+    {% if subscriptions %}
+        <div class="table-container">
+            <table class="table sort" aria-label="subscriptions">
+                <thead>
+                    <tr>
+                        <th>Report</th>
+                        <th>Subscription Description</th>
+                        <th>Last Run</th>
+                        <th>Message</th>
+                        <th>Subscribed As</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subscription in subscriptions %}
+                        <tr>
+                            <td>
+                                <a title="open report" href="{{ subscription.report.get_absolute_url }}">{{ subscription.report }}</a>
+                            </td>
+                            <td>{{ subscription.description }}</td>
+                            <td {% if subscription.last_run %}data-tooltip="{{ subscription.last_run }}"{% endif %}>
+                                {{ subscription.last_run|relative }}
+                            </td>
+                            <td>{{ subscription.status }}</td>
+                            <td>{{ subscription.email }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <strong>No subscriptions to show.</strong>
+    {% endif %}
+</div>

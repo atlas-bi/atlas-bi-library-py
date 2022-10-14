@@ -5,16 +5,17 @@ from . import apps, stars, views
 app_name = apps.UserConfig.name
 
 urlpatterns = [
-    path("", views.index, name="me"),
-    path("<int:pk>", views.index, name="profile"),
-    path("<int:pk>/image", views.image, name="image"),
+    path("", views.Index.as_view(), name="me"),
+    path("<int:pk>", views.Index.as_view(), name="profile"),
     path("stars", stars.index, name="stars"),
     path("<int:pk>/stars", stars.index, name="stars"),
     path("stars/edit", stars.edit, name="stars_edit"),
-    path("groups", views.groups, name="groups"),
-    path("<int:pk>/groups", views.groups, name="groups"),
-    path("subscriptions", views.subscriptions, name="subscriptions"),
-    path("<int:pk>/subscriptions", views.subscriptions, name="subscriptions"),
+    path("groups", views.UserGroups.as_view(), name="groups"),
+    path("<int:pk>/groups", views.UserGroups.as_view(), name="groups"),
+    path("history", views.History.as_view(), name="history"),
+    path("<int:pk>/history", views.History.as_view(), name="history"),
+    path("subscriptions", views.Subscriptions.as_view(), name="subscriptions"),
+    path("<int:pk>/subscriptions", views.Subscriptions.as_view(), name="subscriptions"),
     path(
         "stars/folder/create",
         stars.create_folder,

@@ -1,11 +1,13 @@
 """Custom Atlas Decorators."""
 from functools import wraps
+from typing import Optional, Tuple
 from urllib.parse import urlparse
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.views import redirect_to_login
+from django.core.exceptions import ImproperlyConfigured
 from django.shortcuts import redirect, resolve_url
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
@@ -84,9 +86,21 @@ class NeverCacheMixin:
 class PermissionsCheckMixin:
     """Verify user permissions on class views."""
 
+    required_permissions: Optional[Tuple[str, ...]] = None
+
+    def get_permission_names(self):
+        """Return a list of permissions."""
+        if self.required_permissions is None:
+            raise ImproperlyConfigured(
+                "PermissionsCheckMixin requires either a definition of "
+                "'required_permissions' or an implemenetatino of 'get_permission_names()'"
+            )
+        else:
+            return self.required_permissions
+
     def dispatch(self, request, *args, **kwargs):
         """Wrap function with decorator."""
-        if not self.request.user.has_perms(self.required_permissions):
+        if not self.request.user.has_perms(self.get_permission_names()):
             return redirect(
                 request.META.get("HTTP_REFERER", "/")
                 + "?error=You do not have permission to access that page."

@@ -19,8 +19,8 @@ class AnalyticsFiltered:
     def filtered(self):
         start_at = int(self.request.GET.get("start_at", -86400))
         end_at = int(self.request.GET.get("end_at", 0))
-        user_id = self.request.GET.get("user_id", -1)
-        group_id = self.request.GET.get("group_id", -1)
+        user_id = int(self.request.GET.get("user_id", 0))
+        group_id = int(self.request.GET.get("group_id", 0))
 
         """
         when start - end < 2days, use 1 AM, 2 AM...

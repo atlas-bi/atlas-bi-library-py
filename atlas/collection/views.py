@@ -20,7 +20,7 @@ from atlas.decorators import NeverCacheMixin, PermissionsCheckMixin
 
 class CollectionList(LoginRequiredMixin, ListView):
     queryset = (
-        Collections.objects.prefetch_related("starred").all().order_by("-_modified_at")
+        Collections.objects.prefetch_related("starred").all().order_by("-modified_at")
     )
     context_object_name = "collections"
     template_name = "collection/all.html.dj"

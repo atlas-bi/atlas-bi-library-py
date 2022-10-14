@@ -1,0 +1,88 @@
+{% load user_tags %}
+{% load dates %}
+
+<div>
+    {% if history or report_edits or initiative_edits or collection_edits or term_edits %}
+        {% if report_edits or initiative_edits or collection_edits or term_edits %}
+            <div class="block">
+                <h3 class="title is-3">Recent Edits - Last 30 Days</h3>
+                {% if report_edits %}
+                    <h4 class="title is-4">Reports</h4>
+                    <div class="content">
+                        {% for report in report_edits %}
+                            <a title="open report"
+                               data-tooltip="{{ report.modified_at|relative }}"
+                               href="{{ report.get_absolute_url }}">{{ report }}</a><span class="has-text-grey">· {{ report.modified_at|relative }}</span>
+                            <br />
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if initiative_edits %}
+                    <h4 class="title is-4">Initiatives</h4>
+                    <div class="content">
+                        {% for initiative in initiative_edits %}
+                            <a title="open initiative"
+                               data-tooltip="{{ initiative.modified_at|relative }}"
+                               href="{{ initiative.get_absolute_url }}">{{ initiative }}</a><span class="has-text-grey">· {{ initiative.modified_at|relative }}</span>
+                            <br />
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if collection_edits %}
+                    <h4 class="title is-4">Collections</h4>
+                    <div class="content">
+                        {% for collection in collection_edits %}
+                            <a title="open collection"
+                               data-tooltip="{{ collection.modified_at|relative }}"
+                               href="{{ collection.get_absolute_url }}">{{ collection }}</a><span class="has-text-grey">· {{ collection.modified_at|relative }}</span>
+                            <br />
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if term_edits %}
+                    <h4 class="title is-4">Terms</h4>
+                    <div class="content">
+                        {% for term in term_edits %}
+                            <a title="open term"
+                               data-tooltip="{{ term.modified_at|relative }}"
+                               href="{{ term.get_absolute_url }}">{{ term }}</a><span class="has-text-grey">· {{ term.modified_at|relative }}</span>
+                            <br />
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+        {% if history %}
+            <div class="block">
+                <h3 class="title is-3">Atlas Browsing History - Last 7 Days</h3>
+                <div class="table-responsive">
+                    <table class="table sort" aria-label="browsing history">
+                        <thead>
+                            <tr>
+                                <th>Area</th>
+                                <th>Page</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in history %}
+                                <tr>
+                                    <td>{{ record.pathname|get_type }}</td>
+                                    <td>
+                                        <a title="open page" href="{{ record.href }}">{{ record.href }}</a>
+                                    </td>
+                                    <td data-tooltip="{{ record.access_date }}">{{ record.access_date|relative }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+    {% else %}
+        <p>
+            No activity to show
+            ¯\_(ツ)_/¯
+        </p>
+    {% endif %}
+</div>

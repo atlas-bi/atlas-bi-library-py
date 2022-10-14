@@ -27,19 +27,22 @@ class Index(LoginRequiredMixin, TemplateView):
 
 
 class BaseFilter:
+    request = None
+    kwargs = None
+
     def get_bridge(self):
         # start and end offset from now in seconds
         start_at = int(self.request.GET.get("start_at", -31536000))  # last 12 months
         end_at = int(self.request.GET.get("end_at", 0))  # now
 
         # filters
-        server = self.request.GET.get("server")
-        database = self.request.GET.get("database")
-        system_identifier = self.request.GET.get("system_identifier")
-        visible = self.request.GET.get("visible")
-        certification = self.request.GET.get("certification")
-        availability = self.request.GET.get("availability")
-        report_type = self.request.GET.get("report_type")
+        server = self.request.GET.getlist("server")
+        database = self.request.GET.getlist("database")
+        system_identifier = self.request.GET.getlist("system_identifier")
+        visible = self.request.GET.getlist("visible")
+        certification = self.request.GET.getlist("certification")
+        availability = self.request.GET.getlist("availability")
+        report_type = self.request.GET.getlist("report_type")
         now = timezone.now()
 
         start_absolute = now + timedelta(seconds=start_at)
@@ -116,29 +119,27 @@ class BaseFilter:
                 )
 
             if server:
-                bridges = bridges.filter(report__system_server=server)
+                bridges = bridges.filter(report__system_server__in=server)
 
             if database:
-                bridges = bridges.filter(report__system_db=database)
+                bridges = bridges.filter(report__system_db__in=database)
 
             if system_identifier:
-                bridges = bridges.filter(report__system_identifier=system_identifier)
+                bridges = bridges.filter(
+                    report__system_identifier__in=system_identifier
+                )
 
             if visible:
-                bridges = bridges.filter(report__visible=visible)
+                bridges = bridges.filter(report__visible__in=visible)
 
             if certification:
-                bridges = bridges.filter(report__certification__name=certification)
+                bridges = bridges.filter(report__certification__name__in=certification)
 
             if availability:
-                bridges = bridges.filter(report__availability=availability)
+                bridges = bridges.filter(report__availability__in=availability)
 
             if report_type:
-                bridges = bridges.filter(report__type__name=report_type)
-
-        # users
-        # groups
-        # full library
+                bridges = bridges.filter(report__type__name__in=report_type)
 
         return bridges, date_format
 
@@ -149,13 +150,18 @@ class RunList(LoginRequiredMixin, TemplateView, BaseFilter):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         bridges, date_format = self.get_bridge()
-        bridges = bridges.values(
-            "report_id",
-            name=F("report__name"),
-            title=F("report__title"),
-            type=F("report__type__name"),
-            type_short=F("report__type__short_name"),
-        ).annotate(run_sum=Sum("runs"), last_run=Max("run__runstarttime"))
+        bridges = (
+            bridges.values(
+                "report_id",
+                name=F("report__name"),
+                title=F("report__title"),
+                type=F("report__type__name"),
+                type_short=F("report__type__short_name"),
+            )
+            .annotate(run_sum=Sum("runs"), last_run=Max("run__runstarttime"))
+            .order_by("-last_run")
+        )
+
         context["run_list"] = bridges
         return context
 

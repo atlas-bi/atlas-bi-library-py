@@ -102,7 +102,7 @@ def build_doc(initiative):
         "executive_owner": str(initiative.exec_owner),
         "financial_impact": str(initiative.financial_impact),
         "strategic_importance": str(initiative.strategic_importance),
-        "last_updated": solr_date(initiative._modified_at),
+        "last_updated": solr_date(initiative.modified_at),
         "updated_by": str(initiative.modified_by),
         "related_collections": [],
         "linked_description": [],

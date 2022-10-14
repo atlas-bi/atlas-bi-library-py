@@ -23,7 +23,7 @@ class InitiativeList(LoginRequiredMixin, ListView):
         Initiatives.objects.prefetch_related("collections")
         .prefetch_related("starred")
         .all()
-        .order_by("-_modified_at")
+        .order_by("-modified_at")
     )
     context_object_name = "initiatives"
     template_name = "initiative/all.html.dj"

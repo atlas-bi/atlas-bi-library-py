@@ -90,7 +90,7 @@
         <div class="chart-wrapper profile">
             <canvas id="profile-{{ profile_type }}-{{ profile_id }}"
                     data-url="{% url "sketch:chart" type=profile_type pk=profile_id %}"
-                    data-parameters="{# ?@ViewBag.DefaultFilters #}"
+                    data-parameters="{{ visible_reports }}"
                     width="400"
                     height="400"></canvas>
         </div>
@@ -99,52 +99,52 @@
                 <div class="column {% if profile_type == "term" or profile_type == "collection" or profile_type == "report" and profile_id != -1 %}is-one-third-desktop is-half-tablet {% else %} is-half {% endif %}">
                     <div class="bar-data-wrapper profile"
                          data-url="{% url "sketch:users" type=profile_type pk=profile_id %}"
-                         data-parameters="{# ?@ViewBag.DefaultFilters #}"
+                         data-parameters="{{ visible_reports }}"
                          data-target="profile-{{ profile_type }}-{{ profile_id }}">
+                    </div>
+                </div>
+            {% endif %}
+            {% if profile_type == "user" or profile_type == "term" or profile_type == "collection" or profile_type == "report" and profile_id == -1 %}
+                <div class="column {% if profile_type == "user" %}is-half {% else %}is-one-third-desktop is-half-tablet{% endif %}">
+                    <div class="bar-data-wrapper profile"
+                         data-url="{% url "sketch:reports" type=profile_type pk=profile_id %}"
+                         data-parameters="{{ visible_reports }}"
+                         data-target="profile-{{ profile_type }}-{{ profile_id }}">
+                    </div>
+                </div>
+            {% endif %}
+            <div class="column {% if profile_type == "term" or profile_type == "collection" or profile_type == "report" and profile_id == -1 %} is-one-third-desktop is-half-tablet {% else %}is-half{% endif %}">
+                <div class="bar-data-wrapper profile"
+                     data-url="{% url "sketch:fails" type=profile_type pk=profile_id %}"
+                     data-parameters="{{ visible_reports }}"
+                     data-target="profile-{{ profile_type }}-{{ profile_id }}">
                 </div>
             </div>
-        {% endif %}
-        {% if profile_type == "user" or profile_type == "term" or profile_type == "collection" or profile_type == "report" and profile_id == -1 %}
-            <div class="column {% if profile_type == "user" %}is-half {% else %}is-one-third-desktop is-half-tablet{% endif %}">
-                <div class="bar-data-wrapper profile"
-                     data-url="{% url "sketch:reports" type=profile_type pk=profile_id %}"
-                     data-parameters="{# ?@ViewBag.DefaultFilters #}"
-                     data-target="profile-{{ profile_type }}-{{ profile_id }}">
+        </div>
+    </div>
+    {% if profile_type == "report" %}
+        <div class="tab-dta" id="report-runs-{{ profile_type }}-{{ profile_id }}">
+            <div data-ajax="yes"
+                 data-url="{% url "sketch:run_list" type=profile_type pk=profile_id %}"
+                 data-parameters="{{ visible_reports }}">
             </div>
         </div>
     {% endif %}
-    <div class="column {% if profile_type == "term" or profile_type == "collection" or profile_type == "report" and profile_id == -1 %} is-one-third-desktop is-half-tablet {% else %}is-half{% endif %}">
-        <div class="bar-data-wrapper profile"
-             data-url="{% url "sketch:fails" type=profile_type pk=profile_id %}"
-             data-parameters="{# ?@ViewBag.DefaultFilters #}"
-             data-target="profile-{{ profile_type }}-{{ profile_id }}">
-    </div>
-</div>
-</div>
-</div>
-{% if profile_type == "report" %}
-    <div class="tab-dta" id="report-runs-{{ profile_type }}-{{ profile_id }}">
-        <div data-ajax="yes"
-             data-url="{% url "sketch:run_list" type=profile_type pk=profile_id %}"
-             data-parameters="{# ?@ViewBag.DefaultFilters #}">
-    </div>
-</div>
-{% endif %}
-{% if profile_type != "user" and profile_id != -1 %}
-    <div class="tab-dta" id="stars-{{ profile_type }}-{{ profile_id }}">
-        <div data-ajax="yes"
-             data-url="{% url "sketch:stars" type=profile_type pk=profile_id %}"
-             data-parameters="{# ?@ViewBag.DefaultFilters #}">
-    </div>
-</div>
-{% if profile_type == "report" %}
-    <div class="tab-dta"
-         id="subscriptions-{{ profile_type }}-{{ profile_id }}">
-        <div data-ajax="yes"
-             data-url="{% url "sketch:subscriptions" type=profile_type pk=profile_id %}"
-             data-parameters="{# ?@ViewBag.DefaultFilters #}">
-    </div>
-</div>
-{% endif %}
-{% endif %}
+    {% if profile_type != "user" and profile_id != -1 %}
+        <div class="tab-dta" id="stars-{{ profile_type }}-{{ profile_id }}">
+            <div data-ajax="yes"
+                 data-url="{% url "sketch:stars" type=profile_type pk=profile_id %}"
+                 data-parameters="{{ visible_reports }}">
+            </div>
+        </div>
+        {% if profile_type == "report" %}
+            <div class="tab-dta"
+                 id="subscriptions-{{ profile_type }}-{{ profile_id }}">
+                <div data-ajax="yes"
+                     data-url="{% url "sketch:subscriptions" type=profile_type pk=profile_id %}"
+                     data-parameters="{{ visible_reports }}">
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
 </section>

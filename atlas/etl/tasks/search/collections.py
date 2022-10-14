@@ -108,7 +108,7 @@ def build_doc(collection):
         "orphan": "N",
         "runs": 10,
         "description": [collection.search_summary, collection.description],
-        "last_updated": solr_date(collection._modified_at),
+        "last_updated": solr_date(collection.modified_at),
         "updated_by": str(collection.modified_by),
         "related_initiatives": [],
         "related_terms": [],

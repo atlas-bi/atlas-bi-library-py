@@ -21,7 +21,7 @@ from atlas.decorators import NeverCacheMixin, PermissionsCheckMixin
 
 
 class TermList(LoginRequiredMixin, ListView):
-    queryset = Terms.objects.order_by("-approved", "-_modified_at").prefetch_related(
+    queryset = Terms.objects.order_by("-approved", "-modified_at").prefetch_related(
         "starred"
     )
     context_object_name = "terms"

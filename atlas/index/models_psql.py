@@ -64,7 +64,7 @@ class Reports(models.Model):
         null=True,
         on_delete=models.CASCADE,
     )
-    _modified_at = models.DateTimeField(blank=True, auto_now=True)
+    modified_at = models.DateTimeField(blank=True, auto_now=True)
     system_run_url = models.TextField(blank=True, default="")
     system_identifier = models.CharField(max_length=3, blank=True, default="")
     system_id = models.DecimalField(
@@ -111,12 +111,6 @@ class Reports(models.Model):
 
     def get_absolute_edit_url(self):
         return reverse("report:edit", kwargs={"pk": self.pk})
-
-    @property
-    def modified_at(self):
-        if self._modified_at:
-            return self._modified_at  # datetime.strftime(self._modified_at, "%m/%d/%y")
-        return ""
 
 
 class ReportParameters(models.Model):
@@ -571,7 +565,7 @@ class Initiatives(models.Model):
         on_delete=models.CASCADE,
         related_name="initiatives",
     )
-    _modified_at = models.DateTimeField(blank=True, auto_now=True)
+    modified_at = models.DateTimeField(blank=True, auto_now=True)
     modified_by = models.ForeignKey(
         "Users",
         related_name="initiative_modifier",
@@ -596,12 +590,6 @@ class Initiatives(models.Model):
     def stars(self):
         return self.stars.count()
 
-    @property
-    def modified_at(self):
-        if self._modified_at:
-            return self._modified_at  # datetime.strftime(self._modified_at, "%m/%d/%y")
-        return ""
-
 
 class Collections(models.Model):
     collection_id = models.AutoField(primary_key=True)
@@ -617,7 +605,7 @@ class Collections(models.Model):
     name = models.TextField(blank=True, default="")
     search_summary = models.TextField(blank=True, default="")
     description = models.TextField(blank=True, default="")
-    _modified_at = models.DateTimeField(blank=True, auto_now=True)
+    modified_at = models.DateTimeField(blank=True, auto_now=True)
     modified_by = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
@@ -639,12 +627,6 @@ class Collections(models.Model):
 
     def get_absolute_edit_url(self):
         return reverse("collection:edit", kwargs={"pk": self.pk})
-
-    @property
-    def modified_at(self):
-        if self._modified_at:
-            return self._modified_at  # datetime.strftime(self._modified_at, "%m/%d/%y")
-        return ""
 
 
 class CollectionReports(models.Model):
@@ -1046,8 +1028,8 @@ class ReportDocs(models.Model):
         null=True,
         related_name="report_docs",
     )
-    _modified_at = models.DateTimeField(blank=True, auto_now=True)
-    _created_at = models.DateTimeField(blank=True, auto_now_add=True)
+    modified_at = models.DateTimeField(blank=True, auto_now=True)
+    created_at = models.DateTimeField(blank=True, auto_now_add=True)
     created_by = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
@@ -1072,18 +1054,6 @@ class ReportDocs(models.Model):
         primary_key=True,
         on_delete=models.CASCADE,
     )
-
-    @property
-    def modified_at(self):
-        if self._modified_at:
-            return self._modified_at  # datetime.strftime(self._modified_at, "%m/%d/%y")
-        return ""
-
-    @property
-    def created_at(self):
-        if self._created_at:
-            return self._created_at  # datetime.strftime(self._created_at, "%m/%d/%y")
-        return ""
 
 
 class ReportTickets(models.Model):
@@ -1159,7 +1129,7 @@ class Terms(models.Model):
     summary = models.TextField(blank=True, default="")
     technical_definition = models.TextField(blank=True, default="")
     approved = models.CharField(max_length=1, blank=True, default="")
-    _approved_at = models.DateTimeField(blank=True, null=True)
+    approved_at = models.DateTimeField(blank=True, null=True)
     approved_by = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
@@ -1169,8 +1139,8 @@ class Terms(models.Model):
     )
     has_external_standard = models.CharField(max_length=1, blank=True, default="")
     external_standard_url = models.TextField(blank=True, default="")
-    _valid_from = models.DateTimeField(blank=True, null=True)
-    _valid_to = models.DateTimeField(blank=True, null=True)
+    valid_from = models.DateTimeField(blank=True, null=True)
+    valid_to = models.DateTimeField(blank=True, null=True)
     modified_by = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
@@ -1178,7 +1148,7 @@ class Terms(models.Model):
         blank=True,
         null=True,
     )
-    _modified_at = models.DateTimeField(blank=True, auto_now=True)
+    modified_at = models.DateTimeField(blank=True, auto_now=True)
 
     def __str__(self):
         return self.name
@@ -1191,30 +1161,6 @@ class Terms(models.Model):
 
     def get_absolute_edit_url(self):
         return reverse("term:edit", kwargs={"pk": self.pk})
-
-    @property
-    def approved_at(self):
-        if self._approved_at:
-            return datetime.strftime(self._approved_at, "%-m/%-d/%y")
-        return ""
-
-    @property
-    def valid_from(self):
-        if self._valid_from:
-            return datetime.strftime(self._valid_from, "%-m/%-d/%y")
-        return ""
-
-    @property
-    def valid_to(self):
-        if self._valid_to:
-            return datetime.strftime(self._valid_to, "%-m/%-d/%y")
-        return ""
-
-    @property
-    def modified_at(self):
-        if self._modified_at:
-            return datetime.strftime(self._modified_at, "%-m/%-d/%y")
-        return ""
 
 
 class FavoriteFolders(models.Model):
