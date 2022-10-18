@@ -1,5 +1,7 @@
 """Atlas Group views."""
 
+from typing import Any, Dict
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DetailView
 from index.models import Groups
@@ -15,7 +17,7 @@ class GroupDetails(LoginRequiredMixin, PermissionsCheckMixin, DetailView):
         "user_memberships", "user_memberships__user"
     ).prefetch_related("starred")
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
         """Add additional items to the context."""
         context = super().get_context_data(**kwargs)
 

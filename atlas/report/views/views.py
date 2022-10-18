@@ -1,14 +1,15 @@
 """Django views for Atlas Reports."""
+# pylint: disable=C0115, C0116, W0613, R0912, R0914, R0915
 import io
 from pathlib import Path
-from typing import List
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import regex as re
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Prefetch
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 from django.utils import timezone
 from django.views.generic import DetailView, TemplateView, UpdateView, View
@@ -33,7 +34,9 @@ from atlas.decorators import NeverCacheMixin, PermissionsCheckMixin
 
 
 class Attachment(LoginRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
+    def get(
+        self, request: HttpRequest, *args: Tuple[Any], **kwargs: Dict[Any, Any]
+    ) -> HttpResponse:
         pk = self.kwargs["pk"]
 
         attachment = (
@@ -47,11 +50,11 @@ class Attachment(LoginRequiredMixin, View):
             response["Location"] = f"file:{attachment.path}"
             return response
             # return HttpResponseRedirect(attachment.path)
-        else:
-            return redirect(
-                reverse("report:item", kwargs={"pk": attachment.report_id})
-                + "?error=You are not authorized to view that report."
-            )
+
+        return redirect(
+            reverse("report:item", kwargs={"pk": attachment.report_id})
+            + "?error=You are not authorized to view that report."
+        )
 
 
 class ReportDetails(LoginRequiredMixin, DetailView):
@@ -86,7 +89,7 @@ class ReportDetails(LoginRequiredMixin, DetailView):
         )
     )
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
         """Add additional items to the context."""
         context = super().get_context_data(**kwargs)
 
@@ -197,13 +200,15 @@ class ReportEdit(
     )
     fields: List[str] = []
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
         context = super().get_context_data(**kwargs)
         context["title"] = f"Editing {self.object.report}"
 
         return context
 
-    def post(self, request, *args, **kwargs):
+    def post(
+        self, request: HttpRequest, *args: Tuple[Any], **kwargs: Dict[Any, Any]
+    ) -> HttpResponse:
         report_doc, _ = ReportDocs.objects.get_or_create(report_id=self.kwargs["pk"])
 
         report_doc.description = request.POST.get("description", "")
@@ -295,7 +300,7 @@ class ReportEdit(
 
 
 @login_required
-def profile(request, pk):
+def profile(request: HttpRequest, pk: int) -> HttpResponse:
     # report_id = pk
     return render(
         request,
@@ -318,7 +323,7 @@ class MaintenanceStatus(
     template_name = "report/sections/maint_status.html.dj"
     required_permissions = ("Edit Report Documentation",)
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
         context = super().get_context_data(**kwargs)
         report_id = self.kwargs["pk"]
         today = timezone.now()
@@ -367,9 +372,10 @@ class MaintenanceStatus(
 
 
 @login_required
-def image(request, report_id, pk=None):
+def image(
+    request: HttpRequest, report_id: int, pk: Optional[Union[int, str]] = None
+) -> HttpResponse:
     if request.method == "POST":
-        # todo: add image file name
 
         if request.FILES["File"].content_type not in [
             "image/jpeg",
@@ -462,10 +468,7 @@ def image(request, report_id, pk=None):
         out.save(buf, format=image_format)
 
         response = HttpResponse(buf.getvalue(), content_type="application/octet-stream")
-        response["Content-Disposition"] = 'attachment; filename="{}.{}"'.format(
-            pk,
-            image_format,
-        )
+        response["Content-Disposition"] = f'attachment; filename="{pk}.{image_format}"'
 
         return response
 

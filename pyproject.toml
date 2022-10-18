@@ -138,10 +138,10 @@ sections="FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
 
 
 [tool.pylint.master]
-ignore="solr,migrations,mail,task,models*.py,apps.py,__init__.py,apps.py,urls.py"
+ignore="solr,migrations,mail,task,models-dev-dbo.py,models-dev.py,models_psql.py,models_sqlsrvr.py,apps.py,__init__.py,apps.py,urls.py"
 
 [tool.pylint.messages_control]
-disable = "R0903, E0401, C0415, F0401"
+disable = "R0903, E0401, C0415, F0401, C0301, E1101, R0901, W0221"
 
 
 [tool.pylint.format]
@@ -149,7 +149,7 @@ max-line-length = 99
 max-module-lines=1000
 
 [tool.pylint.basic]
-good-names = "i,j,k,ex,Run,x,id,e,me,l,_,pk"
+good-names = "i,j,k,ex,Run,x,id,e,me,l,_,pk,im,hl"
 include-naming-hint="no"
 
 [tool.djangodoctor]
@@ -176,12 +176,20 @@ extend_exclude = 'atlas/templates/handlebars/search.html,atlas/report/templates/
 
 [tool.mypy]
 ignore_missing_imports = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+
 
 [[tool.mypy.overrides]]
 module = '*.migrations.*'
 ignore_errors = true
 
 [[tool.mypy.overrides]]
-module = '*.settings.*'
+module = '*.atlas.atlas.settings.*'
 ignore_errors = true
 
+[[tool.mypy.overrides]]
+module = '*.tests.*'
+ignore_errors = true

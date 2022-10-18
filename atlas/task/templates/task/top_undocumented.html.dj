@@ -1,0 +1,33 @@
+{% load dates %}
+
+<div>
+    <span class="has-text-grey">Top 60 Undocumented Reports (Workbench, SSRS, Dashboard, and Crystal)</span>
+    <div class="table-responsive">
+        <table class="table sort" aria-label="top undocumented reports">
+            <thead>
+                <tr>
+                    <th>Report Name</th>
+                    <th>Report Type</th>
+                    <th>Last Modified By</th>
+                    <th>Runs</th>
+                    <th>Last Modified</th>
+                    <th>Last Run</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in reports %}
+                    <tr>
+                        <td>
+                            <a title="open report" href="{{ report.get_absolute_url }}">{{ report }}</a>
+                        </td>
+                        <td>{{ report.type }}</td>
+                        <td>{{ report.modified_by }}</td>
+                        <td>{{ reports.total_runs }}</td>
+                        <td data-tooltip="{{ report.modified_at }}">{{ report.modified_at|relative }}</td>
+                        <td data-tooltip="{{ report.last_run }}">{{ report.last_run|relative }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

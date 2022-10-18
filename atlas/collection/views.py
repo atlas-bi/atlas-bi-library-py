@@ -1,9 +1,10 @@
 """Atlas Collection views."""
-# pylint: disable=C0116,C0115,W0613,W0212,R0201
+# pylint: disable=C0116,C0115,W0613,W0212
 
-from typing import List
+from typing import Any, Dict, List, Tuple
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.urls import resolve, reverse
 from django.views.generic import (
@@ -26,7 +27,7 @@ class CollectionList(LoginRequiredMixin, ListView):
     template_name = "collection/all.html.dj"
     extra_context = {"title": "Collections"}
 
-    def get(self, request, **kwargs):
+    def get(self, request: HttpRequest, **kwargs: Dict[Any, Any]) -> HttpResponse:
         # maintain compatibility with .net urls: collection?id=1
         if request.GET.get("id"):
             return redirect("collection:item", pk=request.GET.get("id"))
@@ -48,7 +49,7 @@ class CollectionDetails(LoginRequiredMixin, DetailView):
         .prefetch_related("terms", "terms__term", "terms__term__starred")
     )
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
         context = super().get_context_data(**kwargs)
 
         context["title"] = self.object
@@ -69,13 +70,15 @@ class CollectionEdit(
     )
     fields: List[str] = []
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
         context = super().get_context_data(**kwargs)
         context["title"] = f"Editing {self.object}"
 
         return context
 
-    def post(self, request, *args, **kwargs):
+    def post(
+        self, request: HttpRequest, *args: Tuple[Any], **kwargs: Dict[Any, Any]
+    ) -> HttpResponse:
 
         collection = Collections.objects.get(collection_id=self.kwargs["pk"])
         collection.name = request.POST.get("name", "")
@@ -105,7 +108,7 @@ class CollectionNew(LoginRequiredMixin, PermissionsCheckMixin, TemplateView):
     template_name = "collection/new.html.dj"
     extra_context = {"title": "New Collection"}
 
-    def post(self, request):
+    def post(self, request: HttpRequest) -> HttpResponse:
         collection = Collections(
             name=request.POST.get("name", ""),
             search_summary=request.POST.get("search_summary", ""),
@@ -123,7 +126,7 @@ class CollectionNew(LoginRequiredMixin, PermissionsCheckMixin, TemplateView):
         for term_id in request.POST.getlist("linked_terms"):
             CollectionTerms(collection=collection, term_id=term_id).save()
 
-        return redirect(collection.get_absolute_url() + "?success=Changes saved.")
+        return redirect(collection.get_absolute_url() + "?success=Changes saved.")  # type: ignore[no-untyped-call]
 
 
 class CollectionDelete(LoginRequiredMixin, PermissionsCheckMixin, DeleteView):
@@ -131,16 +134,16 @@ class CollectionDelete(LoginRequiredMixin, PermissionsCheckMixin, DeleteView):
     model = Collections
     template_name = "collection/new.html.dj"
 
-    def get_success_url(self):
+    def get_success_url(self) -> str:
         return reverse("collection:list") + "?success=Collection successfully deleted."
 
-    def get(self, *args, **kwargs):
+    def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
         return redirect(
             resolve("collection:list")
             + "?error=You are not authorized to access that page."
         )
 
-    def post(self, *args, **kwargs):
+    def post(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
         pk = self.kwargs["pk"]
 
         CollectionTerms.objects.filter(collection_id=pk).delete()

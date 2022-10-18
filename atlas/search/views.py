@@ -1,15 +1,17 @@
 """Atlas Search."""
+# pylint: disable=R0914, R0915, W0613
 import contextlib
 import copy
 import math
 import re
+from typing import Any, Dict, List, Optional
 
 import pysolr
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Prefetch
-from django.http import JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView
@@ -43,13 +45,12 @@ class Index(NeverCacheMixin, LoginRequiredMixin, TemplateView):
     # if request.method == "GET":
     #     return render(request, "search.html.dj")
 
-    def get_template_names(self):
+    def get_template_names(self) -> List[str]:
         if self.request.headers.get("x-requested-with") == "XMLHttpRequest":
             return ["search/ajax.html.dj"]
-        else:
-            return ["search/index.html.dj"]
+        return ["search/index.html.dj"]
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
         context = super().get_context_data(**kwargs)
         search_type = self.request.GET.get("type", "query")
         search_string = self.request.GET.get("query")
@@ -58,7 +59,7 @@ class Index(NeverCacheMixin, LoginRequiredMixin, TemplateView):
         max_results = 20
         page_slide = 2
 
-        def build_filter_fields(search_type):
+        def build_filter_fields(search_type: str) -> Optional[List[Dict[str, str]]]:
             if search_type == "reports":
                 return [
                     {"key": "name", "value": "Name"},
@@ -67,10 +68,11 @@ class Index(NeverCacheMixin, LoginRequiredMixin, TemplateView):
                     {"key": "epic_record_id", "value": "Epic ID"},
                     {"key": "epic_template", "value": "Epic Template ID"},
                 ]
+            return None
 
-        def build_filter_list(request_dict, user):
+        def build_filter_list(request_dict: Dict[Any, Any]) -> List[Dict[Any, Any]]:
             if not request_dict:
-                return request_dict
+                return []
 
             filter_list = []
 
@@ -91,15 +93,15 @@ class Index(NeverCacheMixin, LoginRequiredMixin, TemplateView):
 
             return filter_list
 
-        def build_filter_query(request_dict, user):
+        def build_filter_query(request_dict: Dict[Any, Any], user: Users) -> List[str]:
             """Build filter query from items."""
             if not request_dict:
-                return request_dict
+                return []
 
             filter_query = []
 
             if (
-                not user.has_perm("Show Advanced Search")
+                not user.has_perm("Show Advanced Search")  # type: ignore[no-untyped-call]
                 or "advanced" not in request_dict
                 or "advanced" in request_dict
                 and request_dict["advanced"] != "Y"
@@ -176,9 +178,7 @@ class Index(NeverCacheMixin, LoginRequiredMixin, TemplateView):
             context["qtime"] = results.qtime
             context["last_page"] = page_count
             context["search_string"] = search_string
-            context["search_filters"] = build_filter_list(
-                request_dict, self.request.user
-            )
+            context["search_filters"] = build_filter_list(request_dict)
             context["filter_fields"] = build_filter_fields(search_type)
             context["advanced"] = (
                 "Y"
@@ -221,7 +221,7 @@ class Index(NeverCacheMixin, LoginRequiredMixin, TemplateView):
 
                 context["facets"]["facet_fields"] = sorted(
                     facet_fields,
-                    key=lambda item: facet_order.index(item.get("key"))
+                    key=lambda item: facet_order.index(item.get("key"))  # type: ignore[arg-type]
                     if item.get("key") in facet_order
                     else 999,
                 )
@@ -312,15 +312,17 @@ class Index(NeverCacheMixin, LoginRequiredMixin, TemplateView):
                         }
                     )
             context["results"] = result_set
-            return context
+        return context
 
 
-def clean_dict(my_dict):
+def clean_dict(my_dict: Dict[Any, Any]) -> Dict[Any, Any]:
     """Remove none values from dict."""
     return {attr: value for attr, value in my_dict if value}
 
 
-def build_search_string(search_string, query=None):
+def build_search_string(
+    search_string: str, query: Optional[Dict[Any, Any]] = None
+) -> str:
     """Escape invalid chars."""
     if query is None:
         query = {}
@@ -350,9 +352,9 @@ def build_search_string(search_string, query=None):
 
     # clean search string
     for char in reserved_characters:
-        search_string = search_string.replace(char, "\\%s" % char)
+        search_string = search_string.replace(char, f"\\{char}")
 
-    def special_to_lower(match):
+    def special_to_lower(match: re.Match) -> str:
         return match.group(0).lower()
 
     search_string = re.sub(r"\b(OR|AND|NOT)\b", special_to_lower, search_string)
@@ -366,31 +368,33 @@ def build_search_string(search_string, query=None):
 
         else:
             exact_matches.append(
-                " ".Join(
-                    f'name:"{literal.groups(2)}"^8 OR',
-                    f'description: "{literal.groups(2)}"^5 OR',
-                    f'email: "{literal.groups(2)}" OR',
-                    f'external_url: "{literal.groups(2)}" OR',
-                    f'financial_impact: "{literal.groups(2)}" OR',
-                    f'fragility_tags: "{literal.groups(2)}" OR',
-                    f'group_type: "{literal.groups(2)}" OR',
-                    f'linked_description: "{literal.groups(2)}" OR',
-                    f'maintenance_schedule: "{literal.groups(2)}" OR',
-                    f'operations_owner: "{literal.groups(2)}" OR',
-                    f'organizational_value: "{literal.groups(2)}" OR',
-                    f'related_collections: "{literal.groups(2)}" OR',
-                    f'related_initiatives: "{literal.groups(2)}" OR',
-                    f'related_reports: "{literal.groups(2)}" OR',
-                    f'related_terms: "{literal.groups(2)}" OR',
-                    f'report_last_updated_by: "{literal.groups(2)}" OR',
-                    f'report_type: "{literal.groups(2)}" OR',
-                    f'requester: "{literal.groups(2)}" OR',
-                    f'source_database: "{literal.groups(2)}" OR',
-                    f'strategic_importance: "{literal.groups(2)}" OR',
-                    f'updated_by: "{literal.groups(2)}" OR',
-                    f'user_groups: "{literal.groups(2)}" OR',
-                    f'user_roles: "{literal.groups(2)}" OR',
-                    f'source_database: "{literal.groups(2)}"',
+                " ".join(
+                    (
+                        f'name:"{literal.groups(2)}"^8 OR',
+                        f'description: "{literal.groups(2)}"^5 OR',
+                        f'email: "{literal.groups(2)}" OR',
+                        f'external_url: "{literal.groups(2)}" OR',
+                        f'financial_impact: "{literal.groups(2)}" OR',
+                        f'fragility_tags: "{literal.groups(2)}" OR',
+                        f'group_type: "{literal.groups(2)}" OR',
+                        f'linked_description: "{literal.groups(2)}" OR',
+                        f'maintenance_schedule: "{literal.groups(2)}" OR',
+                        f'operations_owner: "{literal.groups(2)}" OR',
+                        f'organizational_value: "{literal.groups(2)}" OR',
+                        f'related_collections: "{literal.groups(2)}" OR',
+                        f'related_initiatives: "{literal.groups(2)}" OR',
+                        f'related_reports: "{literal.groups(2)}" OR',
+                        f'related_terms: "{literal.groups(2)}" OR',
+                        f'report_last_updated_by: "{literal.groups(2)}" OR',
+                        f'report_type: "{literal.groups(2)}" OR',
+                        f'requester: "{literal.groups(2)}" OR',
+                        f'source_database: "{literal.groups(2)}" OR',
+                        f'strategic_importance: "{literal.groups(2)}" OR',
+                        f'updated_by: "{literal.groups(2)}" OR',
+                        f'user_groups: "{literal.groups(2)}" OR',
+                        f'user_roles: "{literal.groups(2)}" OR',
+                        f'source_database: "{literal.groups(2)}"',
+                    )
                 )
             )
 
@@ -399,7 +403,7 @@ def build_search_string(search_string, query=None):
     # clean up remaining quotes
     search_string = re.sub(r"\"", '\\\\"', search_string)
 
-    def build_exact(wild, exact) -> str:
+    def build_exact(wild: str, exact: List[str]) -> str:
         if len(exact) == 0:
             return wild
 
@@ -445,13 +449,13 @@ def build_search_string(search_string, query=None):
 
 @never_cache
 @login_required
-def user_lookup(request, role=None):
+def user_lookup(request: HttpRequest, role: str = None) -> JsonResponse:
     """User lookup."""
     solr = pysolr.Solr(settings.SOLR_URL, search_handler="users")
 
     results = solr.search(
-        build_search_string(request.GET.get("s"), search_type="fuzzy"),
-        fq=("user_roles:%s" % role if role else "*:*"),
+        build_search_string(request.GET.get("s")),
+        fq=(f"user_roles:{role}" if role else "*:*"),
         **{"rows": 20},
     )
 
@@ -463,13 +467,13 @@ def user_lookup(request, role=None):
 
 @never_cache
 @login_required
-def group_lookup(request, role=None):
+def group_lookup(request: HttpRequest, role: str = None) -> JsonResponse:
     """User lookup."""
     solr = pysolr.Solr(settings.SOLR_URL, search_handler="groups")
 
     results = solr.search(
-        build_search_string(request.GET.get("s"), search_type="fuzzy"),
-        fq=("user_roles:%s" % role if role else "*:*"),
+        build_search_string(request.GET.get("s")),
+        fq=(f"user_roles:{role}" if role else "*:*"),
         **{"rows": 20},
     )
 
@@ -481,16 +485,16 @@ def group_lookup(request, role=None):
 
 @never_cache
 @login_required
-def director_lookup(request):
+def director_lookup(request: HttpRequest) -> HttpResponse:
     """Director lookup."""
     return redirect(user_lookup, role="Director")
 
 
 @never_cache
 @login_required
-def collection_lookup(request):
+def collection_lookup(request: HttpRequest) -> JsonResponse:
     """Dropdown lookup for collections."""
-    search_string = build_search_string(request.GET.get("s"), search_type="fuzzy")
+    search_string = build_search_string(request.GET.get("s"))
 
     solr = pysolr.Solr(settings.SOLR_URL, search_handler="collections")
 
@@ -504,9 +508,9 @@ def collection_lookup(request):
 
 @never_cache
 @login_required
-def report_lookup(request):
+def report_lookup(request: HttpRequest) -> JsonResponse:
     """Report lookup."""
-    search_string = build_search_string(request.GET.get("s"), search_type="fuzzy")
+    search_string = build_search_string(request.GET.get("s"))
 
     solr = pysolr.Solr(settings.SOLR_URL, search_handler="reports")
 
@@ -520,9 +524,9 @@ def report_lookup(request):
 
 @never_cache
 @login_required
-def term_lookup(request):
+def term_lookup(request: HttpRequest) -> JsonResponse:
     """Term lookup."""
-    search_string = build_search_string(request.GET.get("s"), search_type="fuzzy")
+    search_string = build_search_string(request.GET.get("s"))
 
     solr = pysolr.Solr(settings.SOLR_URL, search_handler="aterms")
 
@@ -536,7 +540,7 @@ def term_lookup(request):
 
 @never_cache
 @login_required
-def dropdown_lookup(request, lookup):
+def dropdown_lookup(request: HttpRequest, lookup: str) -> JsonResponse:
     """Mini search for dropdowns."""
     solr = pysolr.Solr(settings.SOLR_LOOKUP_URL)
 

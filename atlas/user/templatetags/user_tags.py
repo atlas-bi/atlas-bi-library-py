@@ -5,22 +5,22 @@ register = template.Library()
 
 
 @register.filter(name="get_type")
-def get_type(pathname):
+def get_type(pathname: str) -> str:
     """Get page type from path."""
     if pathname.lower().startswith("/search"):
         return "Search"
 
-    elif pathname.lower().startswith("/report"):
+    if pathname.lower().startswith("/report"):
         return "Reports"
-    elif pathname.lower().startswith("/initiative"):
+    if pathname.lower().startswith("/initiative"):
         return "Initiatives"
-    elif pathname.lower().startswith("/collection"):
+    if pathname.lower().startswith("/collection"):
         return "Collections"
-    elif pathname.lower().startswith("/term"):
+    if pathname.lower().startswith("/term"):
         return "Terms"
-    elif pathname.lower().startswith("/group"):
+    if pathname.lower().startswith("/group"):
         return "Groups"
-    elif pathname.lower().startswith("/user"):
+    if pathname.lower().startswith("/user"):
         return "Users"
 
     return "Other"

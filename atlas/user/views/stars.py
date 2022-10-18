@@ -1,10 +1,11 @@
 """Atlas User views."""
 
 import json
+from typing import Optional
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
-from django.http import JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.cache import never_cache
 from index.models import (
@@ -22,7 +23,7 @@ from index.models import (
 
 @login_required
 @never_cache
-def index(request, pk=None):
+def index(request: HttpRequest, pk: Optional[int] = None) -> HttpResponse:
     """Get users stars."""
     if pk:
         user = get_object_or_404(Users, pk=pk)
@@ -94,7 +95,7 @@ def index(request, pk=None):
 
 @login_required
 @never_cache
-def edit(request):
+def edit(request: HttpRequest) -> JsonResponse:
     """Add or remove a star."""
     star_id = request.GET.get("id", None)
 
@@ -219,7 +220,7 @@ def edit(request):
 
 
 @login_required
-def create_folder(request):
+def create_folder(request: HttpRequest) -> JsonResponse:
     """Add a new folder for favorites."""
     name = request.GET.get("name", None)
 
@@ -234,7 +235,7 @@ def create_folder(request):
 
 
 @login_required
-def edit_folder(request, pk):
+def edit_folder(request: HttpRequest, pk: int) -> JsonResponse:
     """Add a new folder for favorites."""
     name = request.GET.get("name", None)
     folder = get_object_or_404(FavoriteFolders, pk=pk, user=request.user)
@@ -248,7 +249,7 @@ def edit_folder(request, pk):
 
 
 @login_required
-def delete_folder(request, pk: int):
+def delete_folder(request: HttpRequest, pk: int) -> JsonResponse:
     """Delete a favorites folder."""
     if request.method == "POST":
         folder = FavoriteFolders.objects.get(folder_id=pk)
@@ -267,7 +268,7 @@ def delete_folder(request, pk: int):
 
 
 @login_required
-def reorder_folder(request):
+def reorder_folder(request: HttpRequest) -> JsonResponse:
     """Change the order of a users favorites."""
     data = json.loads(request.body.decode("UTF-8"))
 
@@ -282,7 +283,7 @@ def reorder_folder(request):
 
 
 @login_required
-def reorder(request):
+def reorder(request: HttpRequest) -> JsonResponse:
     """Change the order of favorites."""
     data = json.loads(request.body.decode("UTF-8"))
 
@@ -323,7 +324,7 @@ def reorder(request):
 
 
 @login_required
-def change_folder(request):
+def change_folder(request: HttpRequest) -> JsonResponse:
     """Move a favorite between folders."""
     data = json.loads(request.body.decode("UTF-8"))
 

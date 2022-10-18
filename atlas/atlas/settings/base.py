@@ -153,6 +153,7 @@ INSTALLED_APPS = [
     "settings.apps.SettingsConfig",
     "group.apps.GroupConfig",
     "sketch.apps.SketchConfig",
+    "task.apps.TaskConfig",
 ]
 
 MIDDLEWARE = [

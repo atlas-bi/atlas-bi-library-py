@@ -1,0 +1,29 @@
+{% load dates %}
+
+<div>
+    <span class="has-text-grey">New (edited) Undocumented Visible Reports.</span>
+    <div class="table-responsive">
+        <table class="table sort" aria-label="new undocumented reports">
+            <thead>
+                <tr>
+                    <th>Report Name</th>
+                    <th>Report Type</th>
+                    <th>Last Modified By</th>
+                    <th>Last Modified</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in reports %}
+                    <tr>
+                        <td>
+                            <a title="open report" href="{{ report.get_absolute_url }}">{{ report }}</a>
+                        </td>
+                        <td>{{ report.type }}</td>
+                        <td>{{ report.modified_by }}</td>
+                        <td data-tooltip="{{ report.modified_at }}">{{ report.modified_at|relative }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,10 +1,11 @@
 """Atlas analytics views."""
-
+# pylint: disable=W0613,C0115,C0116
 import json
+from typing import Any, Dict
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
@@ -17,10 +18,15 @@ class Index(LoginRequiredMixin, TemplateView, PermissionsCheckMixin):
     template_name = "analytics/index.html.dj"
     required_permissions = ("View Site Analytics",)
 
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Analytics"
+        return context
+
 
 @login_required
 @csrf_exempt
-def log(request):
+def log(request: HttpRequest) -> HttpResponse:
     """Create analytics log.
 
     1. check if session + page exists

@@ -12,9 +12,6 @@
 # for the user. run command for each schema.
 #
 
-import re
-from datetime import datetime
-
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
@@ -421,6 +418,20 @@ class Users(AbstractUser):
     @property
     def first_initial(self):
         return self.full_name[0]
+
+
+class UserSettings(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(
+        "Users",
+        models.DO_NOTHING,
+        blank=True,
+        null=True,
+        related_name="settings",
+    )
+    name = models.CharField(max_length=450, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    value = models.TextField(blank=True, null=True)
 
 
 class Groups(models.Model):

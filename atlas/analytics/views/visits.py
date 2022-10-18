@@ -1,12 +1,15 @@
 """Atlas analytics views."""
+# pylint: disable=W0613,C0115,C0116, W0105
 import collections
 from datetime import datetime, timedelta
 from statistics import mean
+from typing import Any, Dict, Tuple
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import models
 from django.db.models import Avg, Count, F
 from django.db.models.functions import Trunc
-from django.http import JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.utils import timezone
 from django.views.generic import View
 from index.models import Analytics, Groups, Users
@@ -16,12 +19,13 @@ from atlas.decorators import PermissionsCheckMixin
 
 
 class AnalyticsFiltered:
-    def filtered(self):
+    request: HttpRequest = None
+
+    def filtered(self) -> Tuple[models.Model, int, int]:
         start_at = int(self.request.GET.get("start_at", -86400))
         end_at = int(self.request.GET.get("end_at", 0))
         user_id = int(self.request.GET.get("user_id", 0))
         group_id = int(self.request.GET.get("group_id", 0))
-
         """
         when start - end < 2days, use 1 AM, 2 AM...
         when start - end < 8 days use  Sun 3/20, Mon 3/21...
@@ -42,7 +46,7 @@ class AnalyticsFiltered:
             subquery = subquery.filter(user_id=user_id)
 
         if group_id > 0 and Groups.objects.filter(group_id=group_id).exists():
-            subquery = subquery.filter(user__group__id=group_id)
+            subquery = subquery.filter(user__group_links__group_id=group_id)
 
         return subquery, start_at, end_at
 
@@ -50,7 +54,7 @@ class AnalyticsFiltered:
 class Index(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsCheckMixin):
     required_permissions = ("View Site Analytics",)
 
-    def get(self, *args, **kwargs):
+    def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
 
         subquery, start_at, end_at = self.filtered()
 
@@ -104,8 +108,8 @@ class Index(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsCheckMixin):
 
         return JsonResponse(
             {
-                "views": sum([x["pages"] for x in access_history]),
-                "visitors": sum([x["sessions"] for x in access_history]),
+                "views": sum(x["pages"] for x in access_history),
+                "visitors": sum(x["sessions"] for x in access_history),
                 "load_time": round(
                     mean([x["load_time"] / 1000 for x in access_history] or [0]), 2
                 ),
@@ -152,7 +156,7 @@ class Index(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsCheckMixin):
 class Browsers(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsCheckMixin):
     required_permissions = ("View Site Analytics",)
 
-    def get(self, *args, **kwargs):
+    def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
 
         subquery, _, _ = self.filtered()
 
@@ -160,11 +164,11 @@ class Browsers(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsCheckMixi
 
         browsers = subquery.values("useragent").annotate(count=Count("useragent"))
 
-        def get_browser(agent):
+        def get_browser(agent: str) -> str:
             parsed = user_agent_parser.ParseUserAgent(agent)
             return (parsed["family"] or "other") + " " + (parsed["major"] or "")
 
-        counter = collections.Counter()
+        counter: collections.Counter = collections.Counter()
         for this_browser in browsers:
             parsed_browser = {
                 get_browser(this_browser["useragent"]): this_browser["count"]
@@ -191,7 +195,7 @@ class Browsers(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsCheckMixi
 class Os(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsCheckMixin):
     required_permissions = ("View Site Analytics",)
 
-    def get(self, *args, **kwargs):
+    def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
 
         subquery, _, _ = self.filtered()
 
@@ -199,7 +203,7 @@ class Os(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsCheckMixin):
 
         oss = subquery.values("useragent").annotate(count=Count("useragent"))
 
-        def get_os(agent):
+        def get_os(agent: str) -> str:
             parsed = user_agent_parser.ParseOS(agent)
             return (
                 (parsed["family"] or "other")
@@ -209,7 +213,7 @@ class Os(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsCheckMixin):
                 + (parsed["minor"] or "0")
             )
 
-        counter = collections.Counter()
+        counter: collections.Counter = collections.Counter()
         for this_os in oss:
             parsed_os = {get_os(this_os["useragent"]): this_os["count"]}
             counter.update(parsed_os)
@@ -217,12 +221,12 @@ class Os(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsCheckMixin):
         oss = counter.most_common()
 
         data = []
-        for os in oss[:10]:
+        for operating_system in oss[:10]:
             data.append(
                 {
-                    "key": os[0],
-                    "count": os[1],
-                    "percent": os[1] / total,
+                    "key": operating_system[0],
+                    "count": operating_system[1],
+                    "percent": operating_system[1] / total,
                     "title_one": "Operating System",
                     "title_two": "Views",
                 }
@@ -234,7 +238,7 @@ class Os(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsCheckMixin):
 class Resolution(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsCheckMixin):
     required_permissions = ("View Site Analytics",)
 
-    def get(self, *args, **kwargs):
+    def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
 
         subquery, _, _ = self.filtered()
 
@@ -266,7 +270,7 @@ class Resolution(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsCheckMi
 class UserAnalytics(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsCheckMixin):
     required_permissions = ("View Site Analytics",)
 
-    def get(self, *args, **kwargs):
+    def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
 
         subquery, _, _ = self.filtered()
 
@@ -296,7 +300,7 @@ class UserAnalytics(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsChec
 class LoadTime(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsCheckMixin):
     required_permissions = ("View Site Analytics",)
 
-    def get(self, *args, **kwargs):
+    def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
 
         subquery, _, _ = self.filtered()
 

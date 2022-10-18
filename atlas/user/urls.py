@@ -1,21 +1,26 @@
 from django.urls import path
 
-from . import apps, stars, views
+from . import apps
+from .views import admin, profile, settings, stars
 
 app_name = apps.UserConfig.name
 
 urlpatterns = [
-    path("", views.Index.as_view(), name="me"),
-    path("<int:pk>", views.Index.as_view(), name="profile"),
+    path("", profile.Index.as_view(), name="me"),
+    path("<int:pk>", profile.Index.as_view(), name="profile"),
     path("stars", stars.index, name="stars"),
     path("<int:pk>/stars", stars.index, name="stars"),
+    path("settings", settings.Index.as_view(), name="settings"),
+    path("settings/toggle", settings.Toggle.as_view(), name="toggle"),
     path("stars/edit", stars.edit, name="stars_edit"),
-    path("groups", views.UserGroups.as_view(), name="groups"),
-    path("<int:pk>/groups", views.UserGroups.as_view(), name="groups"),
-    path("history", views.History.as_view(), name="history"),
-    path("<int:pk>/history", views.History.as_view(), name="history"),
-    path("subscriptions", views.Subscriptions.as_view(), name="subscriptions"),
-    path("<int:pk>/subscriptions", views.Subscriptions.as_view(), name="subscriptions"),
+    path("groups", profile.UserGroups.as_view(), name="groups"),
+    path("<int:pk>/groups", profile.UserGroups.as_view(), name="groups"),
+    path("history", profile.History.as_view(), name="history"),
+    path("<int:pk>/history", profile.History.as_view(), name="history"),
+    path("subscriptions", profile.Subscriptions.as_view(), name="subscriptions"),
+    path(
+        "<int:pk>/subscriptions", profile.Subscriptions.as_view(), name="subscriptions"
+    ),
     path(
         "stars/folder/create",
         stars.create_folder,
@@ -42,6 +47,6 @@ urlpatterns = [
         stars.change_folder,
         name="stars_change_folder",
     ),
-    path("roles", views.roles, name="roles"),
-    path("settings/disable_admin", views.disable_admin, name="disable_admin"),
+    path("roles", admin.roles, name="roles"),
+    path("settings/disable_admin", admin.disable_admin, name="disable_admin"),
 ]

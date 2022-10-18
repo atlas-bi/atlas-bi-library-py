@@ -1,14 +1,12 @@
 """Atlas User views."""
-
+# pylint: disable=C0115, C0116
 from datetime import timedelta
+from typing import Any, Dict
 
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.generic import TemplateView
 from index.models import (
     Analytics,
@@ -18,19 +16,17 @@ from index.models import (
     Reports,
     ReportSubscriptions,
     Terms,
-    UserPreferences,
-    UserRoles,
     Users,
 )
 
-from atlas.decorators import PermissionsCheckMixin, admin_required
+from atlas.decorators import PermissionsCheckMixin
 
 
 class Index(LoginRequiredMixin, PermissionsCheckMixin, TemplateView):
     template_name = "user/index.html.dj"
 
-    def get_permission_names(self):
-        pk = self.kwargs["pk"]
+    def get_permission_names(self) -> Any:
+        pk = self.kwargs.get("pk")
         if pk != self.request.user.user_id:
             self.required_permissions = ("View Other User",)
         else:
@@ -38,45 +34,23 @@ class Index(LoginRequiredMixin, PermissionsCheckMixin, TemplateView):
 
         return super().get_permission_names()
 
-    def get_context_data(self, **kwargs):
-        pk = self.kwargs["pk"]
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
+        pk = self.kwargs.get("pk")
         context = super().get_context_data(**kwargs)
         context["user"] = get_object_or_404(Users, pk=pk) if pk else self.request.user
         context["is_me"] = pk is None or pk == self.request.user.user_id
+        context["title"] = str(
+            get_object_or_404(Users, pk=pk) if pk else self.request.user
+        )
 
         return context
-
-
-@admin_required
-@login_required
-def roles(request):
-    """Get list of user roles."""
-    return JsonResponse(list(UserRoles.objects.all().values()), safe=False)
-
-
-@admin_required
-@login_required
-def disable_admin(request):
-    """Change user role."""
-    next_url = request.GET.get("url", "/")
-
-    if not url_has_allowed_host_and_scheme(next_url, request.get_host()):
-        next_url = "/"
-
-    if UserPreferences.objects.filter(key="AdminDisabled", user=request.user).exists():
-        UserPreferences.objects.filter(key="AdminDisabled", user=request.user).delete()
-    else:
-        pref = UserPreferences(key="AdminDisabled", user=request.user)
-        pref.save()
-
-    return redirect(next_url)
 
 
 class Subscriptions(LoginRequiredMixin, PermissionsCheckMixin, TemplateView):
     template_name = "user/subscriptions.html.dj"
 
-    def get_permission_names(self):
-        pk = self.kwargs["pk"]
+    def get_permission_names(self) -> Any:
+        pk = self.kwargs.get("pk")
         if pk != self.request.user.user_id:
             self.required_permissions = ("View Other User",)
         else:
@@ -84,8 +58,8 @@ class Subscriptions(LoginRequiredMixin, PermissionsCheckMixin, TemplateView):
 
         return super().get_permission_names()
 
-    def get_context_data(self, **kwargs):
-        pk = self.kwargs["pk"] or self.request.user.user_id
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
+        pk = self.kwargs.get("pk") or self.request.user.user_id
         context = super().get_context_data(**kwargs)
         context["subscriptions"] = ReportSubscriptions.objects.filter(
             Q(user_id=pk)
@@ -102,8 +76,8 @@ class Subscriptions(LoginRequiredMixin, PermissionsCheckMixin, TemplateView):
 class UserGroups(LoginRequiredMixin, PermissionsCheckMixin, TemplateView):
     template_name = "user/groups.html.dj"
 
-    def get_permission_names(self):
-        pk = self.kwargs["pk"]
+    def get_permission_names(self) -> Any:
+        pk = self.kwargs.get("pk")
         if pk != self.request.user.user_id:
             self.required_permissions = ("View Other User",)
         else:
@@ -111,8 +85,8 @@ class UserGroups(LoginRequiredMixin, PermissionsCheckMixin, TemplateView):
 
         return super().get_permission_names()
 
-    def get_context_data(self, **kwargs):
-        pk = self.kwargs["pk"] or self.request.user.user_id
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
+        pk = self.kwargs.get("pk") or self.request.user.user_id
         context = super().get_context_data(**kwargs)
         context["groups"] = Groups.objects.filter(user_memberships__user_id=pk)
 
@@ -122,8 +96,8 @@ class UserGroups(LoginRequiredMixin, PermissionsCheckMixin, TemplateView):
 class History(LoginRequiredMixin, PermissionsCheckMixin, TemplateView):
     template_name = "user/history.html.dj"
 
-    def get_permission_names(self):
-        pk = self.kwargs["pk"]
+    def get_permission_names(self) -> Any:
+        pk = self.kwargs.get("pk")
         if pk != self.request.user.user_id:
             self.required_permissions = ("View Other User",)
         else:
@@ -131,8 +105,8 @@ class History(LoginRequiredMixin, PermissionsCheckMixin, TemplateView):
 
         return super().get_permission_names()
 
-    def get_context_data(self, **kwargs):
-        pk = self.kwargs["pk"] or self.request.user.user_id
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
+        pk = self.kwargs.get("pk") or self.request.user.user_id
         context = super().get_context_data(**kwargs)
 
         seven_days_ago = timezone.now() + timedelta(days=-7)

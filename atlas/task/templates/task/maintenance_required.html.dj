@@ -1,0 +1,15 @@
+<div>
+    <span class="has-text-grey">Reports with red outline have maintenance that is past due.</span>
+    {% if reports|length == 0 %}
+        <p>
+            <br />
+            No reports to show.
+        </p>
+    {% else %}
+        {% for report in reports %}
+            <div>
+                <a title="open report" href="{{ report.get_absolute_url }}">{{ report }}</a>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>

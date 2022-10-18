@@ -1,10 +1,11 @@
 """Atlas Term views."""
-# pylint: disable=C0116,C0115,W0613,W0212
+# pylint: disable=C0116,C0115,W0613,W0212, E1131
 
-from typing import List
+from typing import Any, Dict, List, Tuple
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, reverse
 from django.urls import resolve
 from django.utils import timezone
@@ -28,7 +29,7 @@ class TermList(LoginRequiredMixin, ListView):
     template_name = "term/all.html.dj"
     extra_context = {"title": "Terms"}
 
-    def get(self, request, **kwargs):
+    def get(self, request: HttpRequest, **kwargs: Dict[Any, Any]) -> HttpResponse:
         # maintain compatibility with .net urls: term?id=1
         if request.GET.get("id"):
             return redirect("term:item", pk=request.GET.get("id"))
@@ -45,7 +46,7 @@ class TermDetails(LoginRequiredMixin, DetailView):
         .prefetch_related("starred")
     )
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
         """Add additional items to the context."""
         context = super().get_context_data(**kwargs)
 
@@ -89,7 +90,7 @@ class TermEdit(NeverCacheMixin, LoginRequiredMixin, UpdateView):
 
     queryset = Terms.objects.select_related("approved_by").select_related("modified_by")
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
         """Add additional items to the context."""
         context = super().get_context_data(**kwargs)
 
@@ -97,7 +98,7 @@ class TermEdit(NeverCacheMixin, LoginRequiredMixin, UpdateView):
 
         return context
 
-    def post(self, request, **kwargs):
+    def post(self, request: HttpRequest, **kwargs: Dict[Any, Any]) -> HttpResponse:
         term = Terms.objects.get(term_id=self.kwargs["pk"])
 
         if term.approved == "Y" and not request.user.has_perm("Edit Approved Terms"):
@@ -144,7 +145,7 @@ class TermNew(LoginRequiredMixin, PermissionsCheckMixin, TemplateView):
     template_name = "term/new.html.dj"
     extra_context = {"title": "New Term"}
 
-    def post(self, request):
+    def post(self, request: HttpRequest) -> HttpResponse:
         term = Terms(
             name=request.POST.get("name", ""),
             summary=request.POST.get("summary", ""),
@@ -170,15 +171,17 @@ class TermDelete(LoginRequiredMixin, DeleteView):
     model = Terms
     template_name = "term/new.html.dj"
 
-    def get_success_url(self):
+    def get_success_url(self) -> str:
         return reverse("term:list") + "?success=Term successfully deleted."
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
         return redirect(
             resolve("term:list") + "?error=You are not authorized to access that page."
         )
 
-    def post(self, request, *args, **kwargs):
+    def post(
+        self, request, *args: Tuple[Any], **kwargs: Dict[Any, Any]
+    ) -> HttpResponse:
         pk = self.kwargs["pk"]
 
         term = self.get_object()

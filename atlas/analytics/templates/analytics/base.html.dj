@@ -83,7 +83,7 @@
             </div>
         {% elif group_id is not null %}
             <div class="bar-data-wrapper analytics"
-                 data-url="{% url 'analytics:browsers' %}group_id={{ group_id }}"
+                 data-url="{% url 'analytics:browsers' %}?group_id={{ group_id }}"
                  data-callback="browser">
             </div>
         {% else %}

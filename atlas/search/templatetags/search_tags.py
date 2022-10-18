@@ -1,5 +1,6 @@
 """Custom template tags for search."""
 import copy
+from typing import Any, Dict
 from urllib.parse import urlencode
 
 from django import template
@@ -8,7 +9,7 @@ register = template.Library()
 
 
 @register.filter(name="friendly_name")
-def friendly_name(value):
+def friendly_name(value: str) -> str:
     """Convert filter name to friendly name.
 
     :param value: input date
@@ -26,44 +27,44 @@ def friendly_name(value):
 
 
 @register.simple_tag(takes_context=True)
-def facet_url(context, facet, value):
+def facet_url(context: Dict[Any, Any], facet: str, value: str) -> str:
     """Convert filter name to friendly name.
 
     :param value: input date
     :returns: string
     """
     return (
-        context.request.path
+        context.request.path  # type: ignore[attr-defined]
         + "?"
-        + urlencode(set_parameter(context.request.GET, {facet: value}))
+        + urlencode(set_parameter(context.request.GET, {facet: value}))  # type: ignore[attr-defined]
     )
 
 
 @register.simple_tag(takes_context=True)
-def facet_checked(context, facet, value):
+def facet_checked(context: Dict[Any, Any], facet: str, value: str) -> bool:
     """Convert filter name to friendly name.
 
     :param value: input date
     :returns: string
     """
-    if context.request.GET.get(facet, None) == value:
+    if context.request.GET.get(facet, None) == value:  # type: ignore[attr-defined]
         return True
     return False
 
 
 @register.simple_tag(takes_context=True)
-def facet_has_checked(context, facet):
+def facet_has_checked(context: Dict[Any, Any], facet: str) -> bool:
     """Convert filter name to friendly name.
 
     :param value: input date
     :returns: string
     """
-    if context.request.GET.get(facet, None):
+    if context.request.GET.get(facet, None):  # type: ignore[attr-defined]
         return True
     return False
 
 
-def set_parameter(query, parameters):
+def set_parameter(query: Dict[Any, Any], parameters: Dict[Any, Any]) -> Dict[Any, Any]:
     """Set a query parameter."""
     query_copy = copy.deepcopy(query)
 

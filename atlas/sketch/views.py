@@ -1,10 +1,12 @@
 """Atlas Profiles."""
+# pylint: disable=C0115, C0116, R0912, R0914, R0915, R0916, W0613
 from datetime import datetime, timedelta
 from statistics import mean
+from typing import Any, Dict, Tuple
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Avg, Count, F, Max, Sum
-from django.http import JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import TemplateView, View
@@ -25,12 +27,17 @@ from index.models import (
 class Index(LoginRequiredMixin, TemplateView):
     template_name = "sketch/index.html.dj"
 
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Profile"
+        return context
+
 
 class BaseFilter:
-    request = None
-    kwargs = None
+    request: HttpRequest = None
+    kwargs: Dict[Any, Any] = {}
 
-    def get_bridge(self):
+    def get_bridge(self) -> Tuple[ReportRunBridge, str]:
         # start and end offset from now in seconds
         start_at = int(self.request.GET.get("start_at", -31536000))  # last 12 months
         end_at = int(self.request.GET.get("end_at", 0))  # now
@@ -107,7 +114,7 @@ class BaseFilter:
             self.kwargs["type"] == "user"
             and Users.objects.filter(user_id=self.kwargs["pk"]).exists()
             or self.kwargs["type"] == "group"
-            and Groups.objects.filter(user_id=self.kwargs["pk"]).exists()
+            and Groups.objects.filter(group_id=self.kwargs["pk"]).exists()
             or self.kwargs["type"] == "report"
             and self.kwargs["pk"] == 0
         ):
@@ -147,9 +154,9 @@ class BaseFilter:
 class RunList(LoginRequiredMixin, TemplateView, BaseFilter):
     template_name = "sketch/run_list.html.dj"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
         context = super().get_context_data(**kwargs)
-        bridges, date_format = self.get_bridge()
+        bridges, _ = self.get_bridge()
         bridges = (
             bridges.values(
                 "report_id",
@@ -167,7 +174,7 @@ class RunList(LoginRequiredMixin, TemplateView, BaseFilter):
 
 
 class Chart(LoginRequiredMixin, View, BaseFilter):
-    def get(self, *args, **kwargs):
+    def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
 
         bridges, date_format = self.get_bridge()
 
@@ -179,8 +186,8 @@ class Chart(LoginRequiredMixin, View, BaseFilter):
 
         return JsonResponse(
             {
-                "runs": sum([x["runs"] for x in bridges]),
-                "users": sum([x["user_count"] for x in bridges]),
+                "runs": sum(x["runs"] for x in bridges),
+                "users": sum(x["user_count"] for x in bridges),
                 "run_time": round(mean([x["run_time"] for x in bridges] or [0]), 2),
                 "data": {
                     "labels": [
@@ -220,7 +227,7 @@ class Chart(LoginRequiredMixin, View, BaseFilter):
 
 
 class UserList(LoginRequiredMixin, View, BaseFilter):
-    def get(self, *args, **kwargs):
+    def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
 
         bridges, _ = self.get_bridge()
         bridges = (
@@ -236,7 +243,7 @@ class UserList(LoginRequiredMixin, View, BaseFilter):
                     {
                         "key": x["run__user__full_name"],
                         "count": x["run_sum"],
-                        "percent": x["run_sum"] / sum([x["run_sum"] for x in bridges]),
+                        "percent": x["run_sum"] / sum(x["run_sum"] for x in bridges),
                         "href": reverse(
                             "user:profile", kwargs={"pk": x["run__user_id"]}
                         )
@@ -254,7 +261,7 @@ class UserList(LoginRequiredMixin, View, BaseFilter):
 
 
 class Fails(LoginRequiredMixin, View, BaseFilter):
-    def get(self, *args, **kwargs):
+    def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
 
         bridges, _ = self.get_bridge()
         bridges = (
@@ -274,7 +281,7 @@ class Fails(LoginRequiredMixin, View, BaseFilter):
                     {
                         "key": x["run__status"],
                         "count": x["run_sum"],
-                        "percent": x["run_sum"] / sum([x["run_sum"] for x in bridges]),
+                        "percent": x["run_sum"] / sum(x["run_sum"] for x in bridges),
                         "title_one": "Failed Runs",
                         "title_two": "Fails",
                     }
@@ -285,7 +292,7 @@ class Fails(LoginRequiredMixin, View, BaseFilter):
 
 
 class ReportList(LoginRequiredMixin, View, BaseFilter):
-    def get(self, *args, **kwargs):
+    def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
 
         bridges, _ = self.get_bridge()
         bridges = (
@@ -305,7 +312,7 @@ class ReportList(LoginRequiredMixin, View, BaseFilter):
                     {
                         "key": x["title"] or x["name"],
                         "count": x["run_sum"],
-                        "percent": x["run_sum"] / sum([x["run_sum"] for x in bridges]),
+                        "percent": x["run_sum"] / sum(x["run_sum"] for x in bridges),
                         "href": reverse("report:item", kwargs={"pk": x["report_id"]}),
                         "title_one": "Top Reports",
                         "date": datetime.strftime(x["rundate"], "%m/%d/%y"),
@@ -321,7 +328,7 @@ class ReportList(LoginRequiredMixin, View, BaseFilter):
 class Subscriptions(LoginRequiredMixin, TemplateView):
     template_name = "sketch/subscriptions.html.dj"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
         """Add context to request."""
         context = super().get_context_data(**kwargs)
         if (
@@ -340,7 +347,7 @@ class Subscriptions(LoginRequiredMixin, TemplateView):
 class Stars(LoginRequiredMixin, TemplateView):
     template_name = "sketch/stars.html.dj"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
         """Add context to request."""
         context = super().get_context_data(**kwargs)
         if (

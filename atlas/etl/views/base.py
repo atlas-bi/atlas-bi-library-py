@@ -4,7 +4,7 @@ import logging
 
 import pysolr
 from django.conf import settings
-from django.http import JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.cache import never_cache
 from django_celery_beat.models import PeriodicTask
@@ -14,7 +14,7 @@ from atlas.celery import app as celery_app
 
 
 @never_cache
-def solr_health(request):
+def solr_health(request: HttpRequest) -> JsonResponse:
     """Solr Search health check."""
     try:
         solr = pysolr.Solr(settings.SOLR_URL)
@@ -37,7 +37,7 @@ def solr_health(request):
 
 
 @never_cache
-def celery_health(request):
+def celery_health(request: HttpRequest) -> JsonResponse:
     """Celery worker health check."""
     try:
         insp = celery_app.control.inspect()
@@ -52,10 +52,11 @@ def celery_health(request):
         return JsonResponse({"message": "Offline", "status": "error"})
 
 
-def index(request):
+def index(request: HttpRequest) -> JsonResponse:
     """Atlas ETL Dashboard."""
     context = {
         "history": [result.as_dict() for result in TaskResult.objects.all()[:10]],
+        "title": "ETL",
         "search_etls": [
             "reports",
             "collections",
@@ -71,7 +72,7 @@ def index(request):
 
 
 @never_cache
-def job_delete(request, job_id):
+def job_delete(request: HttpRequest, job_id: int) -> HttpResponse:
     """View for deleting jobs.
 
     Currently will only delete a job.
@@ -85,7 +86,7 @@ def job_delete(request, job_id):
 
 
 @never_cache
-def job_schedule(request):
+def job_schedule(request: HttpRequest) -> HttpResponse:
     """Get scheduled jobs."""
     context = {
         "scheduled_jobs": PeriodicTask.objects.filter(enabled=True),

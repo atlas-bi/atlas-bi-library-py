@@ -1,21 +1,10 @@
-# This is an auto-generated Django model module.
-# You'll have to do the following manually to clean this up:
-#   * Rearrange models' order
-#   * Make sure each model has one field with primary_key=True
-#   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
-#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
-# Feel free to rename the models, but don't rename db_table values or field names.
-#
-# create with "poetry run python manage.py inspectdb --database=dg_db > index/models-dev.py"
-#
-# to import from various schemas = make sure user owns the schema, and then change it to default
-# for the user. run command for each schema.
-#
-import re
-from datetime import datetime
+"""Atlas Sqlserver Models."""
+# pylint: disable=C0115,C0116,E0307
+from typing import Any, Dict, List, Optional, Tuple
 
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.db import models
+from django.db.models.query import QuerySet
 from django.urls import reverse
 from django.utils.functional import cached_property
 
@@ -122,33 +111,33 @@ class Reports(models.Model):
         managed = False
         db_table = "ReportObject"
 
-    def __str__(self):
-        return self.title or self.name
+    def __str__(self) -> str:
+        return self.title or self.name or ""
 
     @cached_property
-    def is_certified(self):
+    def is_certified(self) -> bool:
         return self.tags.filter(
             tag__name__in=["Analytics Certified", "Analytics Reviewed"]
         ).exists()
 
-    def has_docs(self):
+    def has_docs(self) -> bool:
         return hasattr(self, "docs")
 
     @cached_property
-    def get_group_ids(self):
+    def get_group_ids(self) -> Tuple[int]:
         return self.groups.all().values_list("group__group_id", flat=True)
 
     @property
-    def friendly_name(self):
-        return self.title or self.name
+    def friendly_name(self) -> str:
+        return self.title or self.name or ""
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("report:item", kwargs={"pk": self.pk})
 
-    def get_absolute_maint_status_url(self):
+    def get_absolute_maint_status_url(self) -> str:
         return reverse("report:maint_status", kwargs={"pk": self.pk})
 
-    def get_absolute_edit_url(self):
+    def get_absolute_edit_url(self) -> str:
         return reverse("report:edit", kwargs={"pk": self.pk})
 
 
@@ -223,10 +212,10 @@ class Tags(models.Model):
         managed = False
         db_table = "Tags"
 
-    def __str__(self):
-        return self.name
+    def __str__(self) -> str:
+        return self.name or ""
 
-    def usage(self):
+    def usage(self) -> int:
         return self.reports.count()
 
 
@@ -329,36 +318,8 @@ class ReportQueries(models.Model):
         managed = False
         db_table = "ReportObjectQuery"
 
-    def __str__(self):
-        return self.query
-
-
-# class ReportRuns(models.Model):
-#     report_id = models.OneToOneField(
-#         Reports, models.DO_NOTHING, db_column="ReportObjectID", primary_key=True
-#     )
-#     run_id = models.IntegerField(db_column="RunID")
-#     user = models.ForeignKey(
-#         "Users",
-#         models.DO_NOTHING,
-#         db_column="RunUserID",
-#         blank=True,
-#         default="",
-#         related_name="report_runs",
-#     )
-#     start_time = models.DateTimeField(db_column="RunStartTime", blank=True, null=True)
-#     duration_seconds = models.IntegerField(
-#         db_column="RunDurationSeconds", blank=True, null=True
-#     )
-#     status = models.CharField(
-#         db_column="RunStatus", max_length=100, blank=True, default=""
-#     )
-#     etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
-
-#     class Meta:
-#         managed = False
-#         db_table = "ReportObjectRunData"
-#         unique_together = (("report_id", "run_id"),)
+    def __str__(self) -> str:
+        return self.query or ""
 
 
 class ReportSubscriptions(models.Model):
@@ -407,11 +368,11 @@ class ReportTypes(models.Model):
         managed = False
         db_table = "ReportObjectType"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
     @property
-    def short(self):
+    def short(self) -> str:
         return self.short_name or self.name
 
 
@@ -443,11 +404,11 @@ class Users(AbstractUser, PermissionsMixin):
         managed = False
         db_table = "User"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.full_name or self._full_name or ""
 
     @cached_property
-    def is_superuser(self):
+    def is_superuser(self) -> bool:
         # either an admin, or in a group that is an admin.
         return (
             self.role_links.filter(role__name="Administrator").exists()
@@ -456,7 +417,7 @@ class Users(AbstractUser, PermissionsMixin):
             ).exists()
         )
 
-    def get_user_permissions(self, obj=None):
+    def get_user_permissions(self, obj: Optional[Any] = None) -> List[str]:
         # if an active admin, return all permissions
         if (
             not self.user_preferences.filter(key="AdminDisabled").exists()
@@ -475,7 +436,7 @@ class Users(AbstractUser, PermissionsMixin):
             )
         )
 
-    def get_group_permissions(self, obj=None):
+    def get_group_permissions(self, obj: Optional[Any] = None) -> QuerySet:
         # don't need to get admin or user permissions here, they are passed from the user permissions check.
         return (
             UserRoles.objects.filter(
@@ -488,29 +449,28 @@ class Users(AbstractUser, PermissionsMixin):
         )
 
     @cached_property
-    def get_group_ids(self):
+    def get_group_ids(self) -> List[int]:
         return self.group_links.all().values_list("group__group_id", flat=True)
 
     @cached_property
-    def get_all_permissions(self, obj=None):
+    def get_all_permissions(self, obj: Optional[Any] = None) -> QuerySet:
         return self.get_user_permissions().union(self.get_group_permissions())
 
-    def has_perm(self, perm, obj=None):
+    def has_perm(self, perm: str, obj: Optional[Any] = None) -> bool:
         return perm in self.get_all_permissions
 
-    def has_perms(self, perms, obj=None):
+    def has_perms(self, perms: Tuple[str, ...], obj: Optional[Any] = None) -> bool:
         return set(perms) < set(self.get_all_permissions)
-        pass
 
-    def get_roles(self):
+    def get_roles(self) -> QuerySet:
         """Get users roles."""
         return list(self.role_links.values_list("role__name"))
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("user:profile", kwargs={"pk": self.pk})
 
     @cached_property
-    def get_preferences(self):
+    def get_preferences(self) -> Dict[Any, Any]:
         # return users preferences as queriable object
         return dict(self.user_preferences.values_list("key", "value"))
 
@@ -560,6 +520,25 @@ class Users(AbstractUser, PermissionsMixin):
     @property
     def first_initial(self):
         return self.full_name[0]
+
+
+class UserSettings(models.Model):
+    id = models.AutoField(db_column="Id", primary_key=True)
+    user = models.ForeignKey(
+        "Users",
+        models.DO_NOTHING,
+        db_column="UserId",
+        blank=True,
+        null=True,
+        related_name="settings",
+    )
+    name = models.CharField(db_column="Name", max_length=450, blank=True, null=True)
+    description = models.TextField(db_column="Description", blank=True, null=True)
+    value = models.TextField(db_column="Value", blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = "UserSettings"
 
 
 class Groups(models.Model):
@@ -1161,7 +1140,7 @@ class MaintenanceLogs(models.Model):
         related_name="logs",
     )
 
-    report = models.ForeignKey(
+    report_doc = models.ForeignKey(
         "ReportDocs",
         models.DO_NOTHING,
         db_column="ReportId",

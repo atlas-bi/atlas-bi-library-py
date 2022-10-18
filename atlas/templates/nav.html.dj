@@ -107,7 +107,7 @@
                         <hr class="dropdown-divider" />
                         <a title="your settings"
                            class="navbar-item"
-                           href="{{ request.user.get_absolute_url }}/settings">Settings</a>
+                           href="{% url "user:settings" %}">Settings</a>
                     </div>
                 </div>
                 {% if user.is_superuser %}
