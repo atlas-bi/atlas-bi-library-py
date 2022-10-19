@@ -82,7 +82,7 @@ def log(request: HttpRequest) -> HttpResponse:
             message=details["m"],
             logger=details["n"],
             useragent=request.headers.get("User-Agent"),
-            referer=request.META["HTTP_REFERER"],
+            referer=request.META.get("HTTP_REFERER"),
             access_date=timezone.now(),
         )
         trace.save()

@@ -220,24 +220,6 @@ class ReportQueries(models.Model):
         return self.query
 
 
-class ReportRuns(models.Model):
-    report_id = models.OneToOneField(
-        Reports, primary_key=True, on_delete=models.CASCADE
-    )
-    run_id = models.IntegerField()
-    user = models.ForeignKey(
-        "Users",
-        blank=True,
-        default="",
-        on_delete=models.CASCADE,
-        related_name="report_runs",
-    )
-    start_time = models.DateTimeField(blank=True, null=True)
-    duration_seconds = models.IntegerField(blank=True, null=True)
-    status = models.CharField(max_length=100, blank=True, default="")
-    etl_date = models.DateTimeField(blank=True, null=True)
-
-
 class ReportSubscriptions(models.Model):
     subscriptions_id = models.AutoField(primary_key=True)
     report = models.ForeignKey(
@@ -436,18 +418,18 @@ class UserSettings(models.Model):
 class Groups(models.Model):
     group_id = models.AutoField(primary_key=True)
     account_name = models.TextField(blank=True, default="")
-    group_name = models.TextField(blank=True, default="")
-    group_email = models.TextField(blank=True, default="")
-    group_type = models.TextField(blank=True, default="")
-    group_source = models.TextField(blank=True, default="")
+    name = models.TextField(blank=True, default="")
+    email = models.TextField(blank=True, default="")
+    type = models.TextField(blank=True, default="")
+    source = models.TextField(blank=True, default="")
     etl_date = models.DateTimeField(blank=True, null=True)
     epic_id = models.TextField(blank=True, default="")
 
     def __str__(self) -> str:
-        return self.group_name
+        return self.name
 
     def get_absolute_url(self) -> str:
-        return reverse("group:details", kwargs={"pk": self.pk})
+        return reverse("group:profile", kwargs={"pk": self.pk})
 
     def get_roles(self) -> List[str]:
         """Get users roles."""
@@ -868,7 +850,7 @@ class MaintenanceLogs(models.Model):
         null=True,
         related_name="logs",
     )
-    report = models.ForeignKey(
+    report_doc = models.ForeignKey(
         "ReportDocs",
         models.DO_NOTHING,
         related_name="maintenance_logs",
@@ -960,35 +942,47 @@ class ReportImages(models.Model):
         )
 
 
-class Reportobjectruntime(models.Model):
-    id = models.AutoField(primary_key=True)
-    runuserid = models.IntegerField(blank=True, null=True)
-    runs = models.IntegerField(blank=True, null=True)
-    runtime = models.DecimalField(
-        max_digits=10, decimal_places=2, blank=True, null=True
+class ReportRunDetails(models.Model):
+    run_id = models.AutoField(db_column="RunId", primary_key=True)
+
+    user = models.ForeignKey(
+        "Users",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="report_runs",
     )
-    runweek = models.DateTimeField(blank=True, null=True)
-    runweekstring = models.TextField(blank=True, default="")
+
+    etl_date = models.DateTimeField()
+    rundurationseconds = models.IntegerField(blank=True, null=True)
+    runstarttime = models.DateTimeField(db_column="RunStartTime")
+    status = models.CharField(max_length=100, blank=True, null=True)
+
+    rundataid = models.CharField(unique=True, max_length=450)
+    runstarttime_day = models.DateTimeField()
+    runstarttime_hour = models.DateTimeField()
+    runstarttime_month = models.DateTimeField()
+    runstarttime_year = models.DateTimeField()
 
 
-class Reportobjecttopruns(models.Model):
-    id = models.AutoField(primary_key=True)
-    reportobjectid = models.IntegerField(blank=True, null=True)
-    name = models.TextField(blank=True, default="")
-    runuserid = models.IntegerField(blank=True, null=True)
-    runs = models.IntegerField(blank=True, null=True)
-    runtime = models.DecimalField(
-        max_digits=10, decimal_places=2, blank=True, null=True
+class ReportRunBridge(models.Model):
+    bridge_id = models.AutoField(primary_key=True)
+
+    report = models.OneToOneField(
+        "Reports",
+        models.DO_NOTHING,
+        related_name="runs",
     )
-    lastrun = models.TextField(blank=True, default="")
-    reportobjecttypeid = models.IntegerField(blank=True, null=True)
 
-
-class Reportobjectweightedrunrank(models.Model):
-    reportobjectid = models.IntegerField()
-    weighted_run_rank = models.DecimalField(
-        max_digits=12, decimal_places=4, blank=True, null=True
+    run = models.OneToOneField(
+        "ReportRunDetails",
+        models.DO_NOTHING,
+        related_name="runs",
+        to_field="rundataid",
     )
+
+    runs = models.IntegerField()
+    inherited = models.IntegerField()
 
 
 class ReportDocs(models.Model):

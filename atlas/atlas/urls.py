@@ -19,7 +19,10 @@ from typing import Any, Dict
 import djangosaml2
 from django.conf import settings as django_settings
 from django.http import HttpRequest, HttpResponse
+from django.shortcuts import render
 from django.urls import include, path, re_path
+from django.utils import timezone
+from index.models import AnalyticsErrors
 
 logger = logging.getLogger(__name__)
 
@@ -111,18 +114,45 @@ def full_stack() -> str:
 
 def custom_error_view(request: HttpRequest, exception: Any = None) -> HttpResponse:
     """Log 500 errors."""
+    AnalyticsErrors(
+        user=request.user,
+        status_code=404,
+        referer=request.META.get("HTTP_REFERER"),
+        useragent=request.headers.get("User-Agent"),
+        message=exception,
+        access_date=timezone.now(),
+        trace=full_stack(),
+    ).save()
     logger.error(full_stack())
     logger.warning(exception)
-    return HttpResponse(
-        "Ops, there was an error. Please try again in a few minutes.", status=500
+    return render(
+        request,
+        "error.html.dj",
+        context={"message": "Sorry an error occurred while accessing that page."},
+        status=200,
     )
 
 
 def custom_warning_view(request: HttpRequest, exception: Any = None) -> HttpResponse:
     """Log 400 errors."""
+    AnalyticsErrors(
+        user=request.user,
+        status_code=404,
+        referer=request.META.get("HTTP_REFERER"),
+        useragent=request.headers.get("User-Agent"),
+        message=exception,
+        access_date=timezone.now(),
+    ).save()
+
     logger.warning(full_stack())
     logger.warning(exception)
-    return HttpResponse("Ops, that page doesn't exist!", status=404)
+
+    return render(
+        request,
+        "error.html.dj",
+        context={"message": "Sorry that page could not be found."},
+        status=200,
+    )
 
 
 handler500 = custom_error_view

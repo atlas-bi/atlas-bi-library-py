@@ -397,7 +397,7 @@ def image(
 
     # Browsers (IE11) that do not support webp
     # if "HTTP_USER_AGENT" in request.META:
-    #     user_agent = request.META["HTTP_USER_AGENT"].lower()
+    #     user_agent = request.META.get("HTTP_USER_AGENT").lower()
     #     if "trident" in user_agent or "msie" in user_agent:
     #         image_format = "jpeg"
 
