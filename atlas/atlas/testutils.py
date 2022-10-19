@@ -1,3 +1,4 @@
+# type: ignore
 """Atlas test utils."""
 # pylint: disable=C0103,C0412,W0201,E0213,C0202,R1725,W0106
 

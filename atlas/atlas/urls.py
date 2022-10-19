@@ -14,10 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 import logging
+from typing import Any, Dict
 
 import djangosaml2
 from django.conf import settings as django_settings
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.urls import include, path, re_path
 
 logger = logging.getLogger(__name__)
@@ -64,7 +65,12 @@ if getattr(django_settings, "TESTING", False):
     from django.http import Http404
     from django.views import static
 
-    def serve(request, path, insecure=False, **kwargs):
+    def serve(
+        request: HttpRequest,
+        path: str,
+        insecure: bool = False,
+        **kwargs: Dict[Any, Any]
+    ) -> Any:
         """Custom static file serve to ignore debug flag."""
         normalized_path = posixpath.normpath(path).lstrip("/")
         absolute_path = finders.find(normalized_path)
@@ -84,17 +90,17 @@ import sys
 import traceback
 
 
-def full_stack():
+def full_stack() -> str:
     """Return full stack trace of an exception.
 
     :returns: full stack trace of an exception.
     """
     exc = sys.exc_info()[0]
     if exc is not None:
-        frame = sys.exc_info()[-1].tb_frame.f_back
+        frame = sys.exc_info()[-1].tb_frame.f_back  # type: ignore[union-attr]
         stack = traceback.extract_stack(frame)
     else:
-        stack = traceback.extract_stack()[:-1]  # last one would be full_stack()
+        stack = traceback.extract_stack()[:-1]  # type: ignore[assignment]  # last one would be full_stack()
     trc = "Traceback (most recent call last):\n"
     stackstr = trc + "".join(traceback.format_list(stack))
     if exc is not None:
@@ -103,7 +109,7 @@ def full_stack():
     return stackstr
 
 
-def custom_error_view(request, exception=None):
+def custom_error_view(request: HttpRequest, exception: Any = None) -> HttpResponse:
     """Log 500 errors."""
     logger.error(full_stack())
     logger.warning(exception)
@@ -112,7 +118,7 @@ def custom_error_view(request, exception=None):
     )
 
 
-def custom_warning_view(request, exception=None):
+def custom_warning_view(request: HttpRequest, exception: Any = None) -> HttpResponse:
     """Log 400 errors."""
     logger.warning(full_stack())
     logger.warning(exception)

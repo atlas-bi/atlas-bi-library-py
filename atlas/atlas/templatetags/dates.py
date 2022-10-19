@@ -6,7 +6,7 @@ register = template.Library()
 
 
 @register.filter(name="relative")
-def relative(value):
+def relative(value: str) -> str:
     """Convert date to relative string.
 
     :param value: input date

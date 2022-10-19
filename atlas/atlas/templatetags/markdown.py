@@ -23,7 +23,7 @@ To do:
 
 
 @register.filter(name="markdown")
-def markdown(value):
+def markdown(value: str) -> str:
     """Convert value to markdown.
 
     :param value: input html
@@ -44,6 +44,6 @@ def markdown(value):
 
 
 @register.filter(name="unwrap")
-def unwrap(html):
+def unwrap(html: str) -> str:
     """Remove outer <p></p> tag from html."""
     return re.sub(r"^<p>|</p>$", "", html)

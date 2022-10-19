@@ -12,8 +12,11 @@
 # for the user. run command for each schema.
 #
 
+from typing import Any, Dict, List, Optional
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models.query import QuerySet
 from django.urls import reverse
 from django.utils.functional import cached_property
 
@@ -80,33 +83,33 @@ class Reports(models.Model):
     etl_date = models.DateTimeField(blank=True, null=True)
     availability = models.TextField(blank=True, null=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title or self.name
 
     @cached_property
-    def is_certified(self):
+    def is_certified(self) -> bool:
         return self.tags.filter(
             tag__name__in=["Analytics Certified", "Analytics Reviewed"]
         ).exists()
 
-    def has_docs(self):
+    def has_docs(self) -> bool:
         return hasattr(self, "docs")
 
     @cached_property
-    def get_group_ids(self):
+    def get_group_ids(self) -> QuerySet:
         return self.groups.all().values_list("group__group_id", flat=True)
 
     @property
-    def friendly_name(self):
+    def friendly_name(self) -> str:
         return self.title or self.name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("report:item", kwargs={"pk": self.pk})
 
-    def get_absolute_maint_status_url(self):
+    def get_absolute_maint_status_url(self) -> str:
         return reverse("report:maint_status", kwargs={"pk": self.pk})
 
-    def get_absolute_edit_url(self):
+    def get_absolute_edit_url(self) -> str:
         return reverse("report:edit", kwargs={"pk": self.pk})
 
 
@@ -151,10 +154,10 @@ class Tags(models.Model):
     priority = models.IntegerField(blank=True, null=True)
     show_in_header = models.TextField(blank=True, null=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def usage(self):
+    def usage(self) -> int:
         return self.reports.count()
 
 
@@ -213,7 +216,7 @@ class ReportQueries(models.Model):
     language = models.TextField(blank=True, null=True)
     name = models.TextField(blank=True, null=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.query
 
 
@@ -269,11 +272,11 @@ class ReportTypes(models.Model):
     etl_date = models.DateTimeField(blank=True, null=True)
     visible = models.CharField(max_length=1, blank=True, null=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
     @property
-    def short(self):
+    def short(self) -> str:
         return self.short_name or self.name
 
 
@@ -301,11 +304,11 @@ class Users(AbstractUser):
 
     is_staff = True
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.full_name or self._full_name
 
     @cached_property
-    def is_superuser(self):
+    def is_superuser(self) -> bool:
         # either an admin, or in a group that is an admin.
         return (
             self.role_links.filter(role__name="Administrator").exists()
@@ -314,7 +317,7 @@ class Users(AbstractUser):
             ).exists()
         )
 
-    def get_user_permissions(self, obj=None):
+    def get_user_permissions(self, obj: Optional[Any] = None) -> QuerySet:
         # if an active admin, return all permissions
         if (
             not self.user_preferences.filter(key="AdminDisabled").exists()
@@ -333,7 +336,7 @@ class Users(AbstractUser):
             )
         )
 
-    def get_group_permissions(self, obj=None):
+    def get_group_permissions(self, obj: Optional[Any] = None) -> QuerySet:
         # don't need to get admin or user permissions here, they are passed from the user permissions check.
         return (
             UserRoles.objects.filter(
@@ -346,78 +349,74 @@ class Users(AbstractUser):
         )
 
     @cached_property
-    def get_group_ids(self):
+    def get_group_ids(self) -> QuerySet:
         return self.group_links.all().values_list("group__group_id", flat=True)
 
     @cached_property
-    def get_all_permissions(self, obj=None):
+    def get_all_permissions(self, obj: Optional[Any] = None) -> QuerySet:
         return self.get_user_permissions().union(self.get_group_permissions())
 
-    def has_perm(self, perm, obj=None):
+    def has_perm(self, perm: str, obj: Optional[Any] = None) -> bool:
         return perm in self.get_all_permissions
 
-    def has_perms(self, perms, obj=None):
+    def has_perms(self, perms: List[str], obj: Optional[Any] = None) -> bool:
         return set(perms) < set(self.get_all_permissions)
         pass
 
-    def get_roles(self):
+    def get_roles(self) -> List[str]:
         """Get users roles."""
         return list(self.role_links.values_list("role__name"))
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("user:profile", kwargs={"pk": self.pk})
 
     @cached_property
-    def get_preferences(self):
+    def get_preferences(self) -> Dict[str, str]:
         # return users preferences as queriable object
         return dict(self.user_preferences.values_list("key", "value"))
 
     @cached_property
-    def get_starred_reports(self):
+    def get_starred_reports(self) -> List[int]:
         # return all favorites
         return list(self.starred_reports.values_list("report__report_id", flat=True))
 
     @cached_property
-    def get_starred_initiatives(self):
+    def get_starred_initiatives(self) -> List[int]:
         # return all favorites
         return list(
             self.starred_initiatives.values_list("initiative__initiative_id", flat=True)
         )
 
     @cached_property
-    def get_starred_collections(self):
+    def get_starred_collections(self) -> List[int]:
         # return all favorites
         return list(
             self.starred_collections.values_list("collection__collection_id", flat=True)
         )
 
     @cached_property
-    def get_starred_terms(self):
+    def get_starred_terms(self) -> List[int]:
         # return all favorites
         return list(self.starred_terms.values_list("term__term_id", flat=True))
 
     @cached_property
-    def get_starred_users(self):
+    def get_starred_users(self) -> List[int]:
         # return all favorites
         return list(self.starred_users.values_list("user__user_id", flat=True))
 
     @cached_property
-    def get_starred_groups(self):
+    def get_starred_groups(self) -> List[int]:
         # return all favorites
         return list(self.starred_groups.values_list("group__group_id", flat=True))
 
     @cached_property
-    def get_starred_searches(self):
+    def get_starred_searches(self) -> List[int]:
         # return all favorites
         return list(self.starred_searches.values_list("search__search_id", flat=True))
 
     @property
-    def password(self):
+    def password(self) -> int:
         return 123
-
-    @property
-    def first_initial(self):
-        return self.full_name[0]
 
 
 class UserSettings(models.Model):
@@ -444,13 +443,13 @@ class Groups(models.Model):
     etl_date = models.DateTimeField(blank=True, null=True)
     epic_id = models.TextField(blank=True, default="")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.group_name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("group:details", kwargs={"pk": self.pk})
 
-    def get_roles(self):
+    def get_roles(self) -> List[str]:
         """Get users roles."""
         return list(self.role_links.values_list("role__name"))
 
@@ -586,20 +585,20 @@ class Initiatives(models.Model):
     )
     hidden = models.CharField(max_length=1, blank=True, null=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("initiative:item", kwargs={"pk": self.pk})
 
-    def get_absolute_delete_url(self):
+    def get_absolute_delete_url(self) -> str:
         return reverse("initiative:delete", kwargs={"pk": self.pk})
 
-    def get_absolute_edit_url(self):
+    def get_absolute_edit_url(self) -> str:
         return reverse("initiative:edit", kwargs={"pk": self.pk})
 
-    def stars(self):
-        return self.stars.count()
+    def stars(self) -> int:
+        return self.stars.count()  # type: ignore[attr-defined]
 
 
 class Collections(models.Model):
@@ -627,16 +626,16 @@ class Collections(models.Model):
 
     hidden = models.CharField(max_length=1, blank=True, default="")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("collection:item", kwargs={"pk": self.pk})
 
-    def get_absolute_delete_url(self):
+    def get_absolute_delete_url(self) -> str:
         return reverse("collection:delete", kwargs={"pk": self.pk})
 
-    def get_absolute_edit_url(self):
+    def get_absolute_edit_url(self) -> str:
         return reverse("collection:edit", kwargs={"pk": self.pk})
 
 
@@ -658,16 +657,16 @@ class CollectionReports(models.Model):
     )
     rank = models.IntegerField(blank=True, null=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.report.friendly_name
 
-    def get_absolute_delete_url(self):
+    def get_absolute_delete_url(self) -> str:
         return reverse(
             "collection:report_delete",
             kwargs={"pk": self.pk, "collection_id": self.collection_id},
         )
 
-    def get_absolute_edit_url(self):
+    def get_absolute_edit_url(self) -> str:
         return reverse(
             "collection:report_edit",
             kwargs={"pk": self.pk, "collection_id": self.collection_id},
@@ -692,16 +691,16 @@ class CollectionTerms(models.Model):
     )
     rank = models.IntegerField(blank=True, null=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.term.name
 
-    def get_absolute_delete_url(self):
+    def get_absolute_delete_url(self) -> str:
         return reverse(
             "collection:term_delete",
             kwargs={"pk": self.pk, "collection_id": self.collection_id},
         )
 
-    def get_absolute_edit_url(self):
+    def get_absolute_edit_url(self) -> str:
         return reverse(
             "collection:term_edit",
             kwargs={"pk": self.pk, "collection_id": self.collection_id},
@@ -712,10 +711,10 @@ class RunFrequency(models.Model):
     frequency_id = models.AutoField(primary_key=True)
     name = models.TextField(blank=True, default="")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def usage(self):
+    def usage(self) -> int:
         return self.report_docs.count()
 
 
@@ -723,10 +722,10 @@ class FinancialImpact(models.Model):
     impact_id = models.AutoField(primary_key=True)
     name = models.TextField(blank=True, default="")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def usage(self):
+    def usage(self) -> int:
         return self.initiatives.count()
 
 
@@ -734,10 +733,10 @@ class Fragility(models.Model):
     fragility_id = models.AutoField(primary_key=True)
     name = models.TextField(blank=True, default="")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def usage(self):
+    def usage(self) -> int:
         return self.report_docs.count()
 
 
@@ -745,10 +744,10 @@ class FragilityTag(models.Model):
     tag_id = models.AutoField(primary_key=True)
     name = models.TextField(blank=True, default="")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def usage(self):
+    def usage(self) -> int:
         return self.report_docs.count()
 
 
@@ -883,10 +882,10 @@ class MaintenanceLogStatus(models.Model):
     status_id = models.AutoField(primary_key=True)
     name = models.TextField()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def usage(self):
+    def usage(self) -> int:
         return self.logs.count()
 
 
@@ -894,10 +893,10 @@ class MaintenanceSchedule(models.Model):
     schedule_id = models.AutoField(primary_key=True)
     name = models.TextField()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def usage(self):
+    def usage(self) -> int:
         return self.report_docs.count()
 
 
@@ -905,10 +904,10 @@ class OrganizationalValue(models.Model):
     value_id = models.AutoField(primary_key=True)
     name = models.TextField(blank=True, default="")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def usage(self):
+    def usage(self) -> int:
         return self.report_docs.count()
 
 
@@ -955,7 +954,7 @@ class ReportImages(models.Model):
     data = models.BinaryField()
     source = models.TextField(blank=True, default="")
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse(
             "report:image", kwargs={"pk": self.pk, "report_id": self.report.report_id}
         )
@@ -1080,8 +1079,8 @@ class ReportTickets(models.Model):
     )
     url = models.TextField(blank=True, default="")
 
-    def __str__(self):
-        return self.number
+    def __str__(self) -> str:
+        return str(self.number)
 
 
 class RolePermissionLinks(models.Model):
@@ -1101,7 +1100,7 @@ class RolePermissionLinks(models.Model):
         related_name="role_permission_links",
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.permission.name
 
 
@@ -1110,7 +1109,7 @@ class RolePermissions(models.Model):
     name = models.TextField(blank=True, default="")
     description = models.TextField(blank=True, default="")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -1127,10 +1126,10 @@ class StrategicImportance(models.Model):
     importance_id = models.AutoField(primary_key=True)
     name = models.TextField(blank=True, default="")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def usage(self):
+    def usage(self) -> int:
         return self.initiatives.count()
 
 
@@ -1161,16 +1160,16 @@ class Terms(models.Model):
     )
     modified_at = models.DateTimeField(blank=True, auto_now=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("term:item", kwargs={"pk": self.pk})
 
-    def get_absolute_delete_url(self):
+    def get_absolute_delete_url(self) -> str:
         return reverse("term:delete", kwargs={"pk": self.pk})
 
-    def get_absolute_edit_url(self):
+    def get_absolute_edit_url(self) -> str:
         return reverse("term:edit", kwargs={"pk": self.pk})
 
 
@@ -1187,7 +1186,7 @@ class FavoriteFolders(models.Model):
     rank = models.IntegerField(blank=True, null=True)
 
     @property
-    def total(self):
+    def total(self) -> int:
         return (
             self.starred_reports.count()
             + self.starred_collections.count()
@@ -1258,7 +1257,7 @@ class StarredReports(models.Model):
     class Meta:
         ordering = ["rank"]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.report)
 
 
@@ -1450,7 +1449,7 @@ class UserRoles(models.Model):
     name = models.TextField(blank=True, default="")
     description = models.TextField(blank=True, default="")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 

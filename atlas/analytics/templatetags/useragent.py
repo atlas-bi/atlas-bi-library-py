@@ -6,7 +6,7 @@ register = template.Library()
 
 
 @register.simple_tag()
-def agent_os(useragent):
+def agent_os(useragent: str) -> str:
     """Parse os useragent."""
     parsed = user_agent_parser.ParseOS(useragent)
     return (
@@ -19,7 +19,7 @@ def agent_os(useragent):
 
 
 @register.simple_tag()
-def agent_browser(useragent):
+def agent_browser(useragent: str) -> str:
     """Parse browser from useragent."""
     parsed = user_agent_parser.ParseUserAgent(useragent)
     return (parsed["family"] or "other") + " " + (parsed["major"] or "")

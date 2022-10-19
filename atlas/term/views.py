@@ -174,13 +174,15 @@ class TermDelete(LoginRequiredMixin, DeleteView):
     def get_success_url(self) -> str:
         return reverse("term:list") + "?success=Term successfully deleted."
 
-    def get(self, request, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
+    def get(
+        self, request: HttpRequest, *args: Tuple[Any], **kwargs: Dict[Any, Any]
+    ) -> HttpResponse:
         return redirect(
             resolve("term:list") + "?error=You are not authorized to access that page."
         )
 
     def post(
-        self, request, *args: Tuple[Any], **kwargs: Dict[Any, Any]
+        self, request: HttpRequest, *args: Tuple[Any], **kwargs: Dict[Any, Any]
     ) -> HttpResponse:
         pk = self.kwargs["pk"]
 

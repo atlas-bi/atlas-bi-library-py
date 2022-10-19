@@ -1,5 +1,6 @@
 """Atlas Demo Settings."""
-import os
+
+from typing import Any
 from urllib.parse import urlparse
 
 import dj_database_url
@@ -33,9 +34,9 @@ parsed_redis_url = urlparse(REDIS_URL)  # noqa: F405
 
 
 SESSION_REDIS = {
-    "host": parsed_redis_url.hostname,
-    "port": parsed_redis_url.port,
-    "password": parsed_redis_url.password,
+    "host": parsed_redis_url.hostname or "",
+    "port": str(parsed_redis_url.port or ""),
+    "password": parsed_redis_url.password or "",
     "db": 0,
     "prefix": "atlas_session",
     "socket_timeout": 1,
@@ -50,11 +51,11 @@ DEMO = True
 class DisableMigrations:
     """Disable migrations to force a fresh db load."""
 
-    def __contains__(self, item):
+    def __contains__(self, item: Any) -> bool:
         """Return true for all keys."""
         return True
 
-    def __getitem__(self, item):
+    def __getitem__(self, item: Any) -> None:
         """Return none for all values."""
         return None
 

@@ -1,5 +1,7 @@
 """Celery tasks to keep report search up to date."""
+# pylint: disable=W0613
 import contextlib
+from typing import Any, Dict, Iterator, Optional
 
 import pysolr
 from celery import shared_task
@@ -8,17 +10,19 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django_chunked_iterator import batch_iterator
 from etl.tasks.functions import clean_doc, solr_date
-from index.models import Reports
+from index.models import CollectionReports, Reports
 
 
 @receiver(post_save, sender=Reports)
-def updated_report(sender, instance, **kwargs):
+def updated_report(
+    sender: Reports, instance: Reports, **kwargs: Dict[Any, Any]
+) -> None:
     """When report is updated, add it to search."""
     load_report.delay(instance.report_id)
 
 
 @shared_task
-def delete_report(report_id):
+def delete_report(report_id: int) -> None:
     """Celery task to remove a report from search."""
     solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
 
@@ -26,13 +30,13 @@ def delete_report(report_id):
 
 
 @shared_task
-def load_report(report_id):
+def load_report(report_id: int) -> None:
     """Celery task to reload a report in search."""
     load_reports(report_id)
 
 
 @shared_task
-def reset_reports():
+def reset_reports() -> None:
     """Reset report group in solr.
 
     1. Delete all reports from Solr
@@ -47,7 +51,7 @@ def reset_reports():
     load_reports()
 
 
-def load_reports(report_id=None):
+def load_reports(report_id: Optional[int] = None) -> None:
     """Load a group of reports to solr database.
 
     1. Convert the objects to list of dicts
@@ -83,17 +87,17 @@ def load_reports(report_id=None):
     list(map(solr_load_batch, batch_iterator(reports.all(), batch_size=1000)))
 
 
-def solr_load_batch(batch):
+def solr_load_batch(batch: Iterator) -> None:
     """Process batch."""
     solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
 
     solr.add(list(map(build_doc, batch)))
 
 
-def build_doc(report):
+def build_doc(report: Reports) -> Dict[Any, Any]:
     """Build a report doc."""
     doc = {
-        "id": "/reports/%s" % report.report_id,
+        "id": f"/reports/{report.report_id}",
         "atlas_id": report.report_id,
         "type": "reports",
         "source_server": report.system_server,
@@ -133,7 +137,7 @@ def build_doc(report):
     return clean_doc(doc)
 
 
-def build_report_doc(report, doc):
+def build_report_doc(report: Reports, doc: Dict[Any, Any]) -> Dict[Any, Any]:
     """Build doc from report docs."""
     doc["description"].extend([report.docs.description, report.docs.assumptions])
     doc["operations_owner"] = str(report.docs.ops_owner)
@@ -163,7 +167,9 @@ def build_report_doc(report, doc):
     return doc
 
 
-def build_report_collection_docs(collection_link, doc):
+def build_report_collection_docs(
+    collection_link: CollectionReports, doc: Dict[Any, Any]
+) -> Dict[Any, Any]:
     """Build report collection docs."""
     doc["related_collections"].append(str(collection_link.collection))
     doc["linked_description"].extend(

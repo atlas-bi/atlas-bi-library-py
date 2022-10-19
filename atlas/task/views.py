@@ -1,12 +1,11 @@
 """Atlas tasks."""
 from datetime import timedelta
-from typing import Any, Dict
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Max, Q, Sum
 from django.utils import timezone
 from django.views.generic import ListView, TemplateView
-from index.models import MaintenanceLogs, ReportDocs, Reports
+from index.models import MaintenanceLogs, Reports
 
 from atlas.decorators import NeverCacheMixin
 

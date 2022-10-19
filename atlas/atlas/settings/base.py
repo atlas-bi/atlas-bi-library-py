@@ -13,7 +13,7 @@ import contextlib
 import logging
 import os
 from pathlib import Path
-from typing import Optional
+from typing import Any, Dict, Optional, Tuple
 
 import saml2
 import saml2.saml
@@ -172,7 +172,7 @@ MIDDLEWARE = [
     "djangosaml2.middleware.SamlSessionMiddleware",
 ]
 
-AUTHENTICATION_BACKENDS = (
+AUTHENTICATION_BACKENDS: Tuple[str, ...] = (
     "django.contrib.auth.backends.ModelBackend",
     "djangosaml2.backends.Saml2Backend",
 )
@@ -211,7 +211,7 @@ WSGI_APPLICATION = "atlas.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
+DATABASES: Dict[Any, Any] = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "atlas",

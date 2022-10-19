@@ -1,6 +1,6 @@
 """Atlas analytics views."""
 # pylint: disable=W0613,C0115,C0116, W0105
-import collections
+from collections import Counter  # type: ignore
 from datetime import datetime, timedelta
 from statistics import mean
 from typing import Any, Dict, Tuple
@@ -168,7 +168,7 @@ class Browsers(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsCheckMixi
             parsed = user_agent_parser.ParseUserAgent(agent)
             return (parsed["family"] or "other") + " " + (parsed["major"] or "")
 
-        counter: collections.Counter = collections.Counter()
+        counter: Counter = Counter()
         for this_browser in browsers:
             parsed_browser = {
                 get_browser(this_browser["useragent"]): this_browser["count"]
@@ -213,7 +213,7 @@ class Os(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsCheckMixin):
                 + (parsed["minor"] or "0")
             )
 
-        counter: collections.Counter = collections.Counter()
+        counter: Counter = Counter()
         for this_os in oss:
             parsed_os = {get_os(this_os["useragent"]): this_os["count"]}
             counter.update(parsed_os)

@@ -270,4 +270,5 @@
                   font-size:15px;">
             Data has been validated but content produced via self-service is the responsibility of the end user.
         </p>
-    {% endblock body %}
+    </p>
+{% endblock body %}

@@ -144,19 +144,15 @@ class Reports(models.Model):
 class ReportParameters(models.Model):
     parameter_id = models.AutoField(
         db_column="ReportObjectParameterId", primary_key=True
-    )  # Field name made lowercase.
+    )
     report = models.ForeignKey(
         Reports,
         models.DO_NOTHING,
         db_column="ReportObjectId",
         related_name="parameters",
     )
-    name = models.TextField(
-        db_column="ParameterName", blank=True, null=True
-    )  # Field name made lowercase.
-    value = models.TextField(
-        db_column="ParameterValue", blank=True, null=True
-    )  # Field name made lowercase.
+    name = models.TextField(db_column="ParameterName", blank=True, null=True)
+    value = models.TextField(db_column="ParameterValue", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -166,15 +162,15 @@ class ReportParameters(models.Model):
 class ReportAttachments(models.Model):
     attachment_id = models.AutoField(
         db_column="ReportObjectAttachmentId", primary_key=True
-    )  # Field name made lowercase.
+    )
     report = models.ForeignKey(
         Reports,
         models.DO_NOTHING,
         db_column="ReportObjectId",
         related_name="attachments",
     )
-    name = models.TextField(db_column="Name")  # Field name made lowercase.
-    path = models.TextField(db_column="Path")  # Field name made lowercase.
+    name = models.TextField(db_column="Name")
+    path = models.TextField(db_column="Path")
     created_at = models.DateTimeField(db_column="CreationDate", blank=True, null=True)
     source = models.TextField(db_column="Source", blank=True, null=True)
     type = models.TextField(db_column="Type", blank=True, null=True)
@@ -186,15 +182,11 @@ class ReportAttachments(models.Model):
 
 
 class ReportTags(models.Model):
-    tag_id = models.AutoField(
-        db_column="TagID", primary_key=True
-    )  # Field name made lowercase.
+    tag_id = models.AutoField(db_column="TagID", primary_key=True)
     system_id = models.DecimalField(
         db_column="EpicTagID", max_digits=18, decimal_places=0, blank=True, null=True
-    )  # Field name made lowercase.
-    name = models.CharField(
-        db_column="TagName", max_length=200, blank=True, null=True
-    )  # Field name made lowercase.
+    )
+    name = models.CharField(db_column="TagName", max_length=200, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -220,9 +212,7 @@ class Tags(models.Model):
 
 
 class ReportSystemTagLinks(models.Model):
-    link_id = models.AutoField(
-        db_column="TagMembershipID", primary_key=True
-    )  # Field name made lowercase.
+    link_id = models.AutoField(db_column="TagMembershipID", primary_key=True)
     report = models.ForeignKey(
         Reports,
         models.DO_NOTHING,
@@ -238,9 +228,7 @@ class ReportSystemTagLinks(models.Model):
         db_column="TagID",
         related_name="system_report_links",
     )
-    line = models.IntegerField(
-        db_column="Line", blank=True, null=True
-    )  # Field name made lowercase.
+    line = models.IntegerField(db_column="Line", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -248,9 +236,7 @@ class ReportSystemTagLinks(models.Model):
 
 
 class ReportTagLinks(models.Model):
-    link_id = models.AutoField(
-        db_column="ReportTagLinkId", primary_key=True
-    )  # Field name made lowercase.
+    link_id = models.AutoField(db_column="ReportTagLinkId", primary_key=True)
     report = models.ForeignKey(
         Reports,
         models.DO_NOTHING,
@@ -304,15 +290,9 @@ class ReportQueries(models.Model):
     )
     query = models.TextField(db_column="Query", blank=True, default="")
     etl_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
-    sourceserver = models.TextField(
-        db_column="SourceServer", blank=True, null=True
-    )  # Field name made lowercase.
-    language = models.TextField(
-        db_column="Language", blank=True, null=True
-    )  # Field name made lowercase.
-    name = models.TextField(
-        db_column="Name", blank=True, null=True
-    )  # Field name made lowercase.
+    sourceserver = models.TextField(db_column="SourceServer", blank=True, null=True)
+    language = models.TextField(db_column="Language", blank=True, null=True)
+    name = models.TextField(db_column="Name", blank=True, null=True)
 
     class Meta:
         managed = False
@@ -417,7 +397,7 @@ class Users(AbstractUser, PermissionsMixin):
             ).exists()
         )
 
-    def get_user_permissions(self, obj: Optional[Any] = None) -> List[str]:
+    def get_user_permissions(self, obj: Optional[Any] = None) -> QuerySet:
         # if an active admin, return all permissions
         if (
             not self.user_preferences.filter(key="AdminDisabled").exists()
@@ -475,51 +455,47 @@ class Users(AbstractUser, PermissionsMixin):
         return dict(self.user_preferences.values_list("key", "value"))
 
     @cached_property
-    def get_starred_reports(self):
+    def get_starred_reports(self) -> List[int]:
         # return all favorites
         return list(self.starred_reports.values_list("report__report_id", flat=True))
 
     @cached_property
-    def get_starred_initiatives(self):
+    def get_starred_initiatives(self) -> List[int]:
         # return all favorites
         return list(
             self.starred_initiatives.values_list("initiative__initiative_id", flat=True)
         )
 
     @cached_property
-    def get_starred_collections(self):
+    def get_starred_collections(self) -> List[int]:
         # return all favorites
         return list(
             self.starred_collections.values_list("collection__collection_id", flat=True)
         )
 
     @cached_property
-    def get_starred_terms(self):
+    def get_starred_terms(self) -> List[int]:
         # return all favorites
         return list(self.starred_terms.values_list("term__term_id", flat=True))
 
     @cached_property
-    def get_starred_users(self):
+    def get_starred_users(self) -> List[int]:
         # return all favorites
         return list(self.starred_users.values_list("user__user_id", flat=True))
 
     @cached_property
-    def get_starred_groups(self):
+    def get_starred_groups(self) -> List[int]:
         # return all favorites
         return list(self.starred_groups.values_list("group__group_id", flat=True))
 
     @cached_property
-    def get_starred_searches(self):
+    def get_starred_searches(self) -> List[int]:
         # return all favorites
         return list(self.starred_searches.values_list("search__search_id", flat=True))
 
     @property
-    def password(self):
+    def password(self) -> int:
         return 123
-
-    @property
-    def first_initial(self):
-        return self.full_name[0]
 
 
 class UserSettings(models.Model):
@@ -555,13 +531,13 @@ class Groups(models.Model):
         managed = False
         db_table = "UserGroups"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("group:profile", kwargs={"pk": self.pk})
 
-    def get_roles(self):
+    def get_roles(self) -> List[str]:
         """Get users roles."""
         return list(self.role_links.values_list("role__name"))
 
@@ -645,9 +621,7 @@ class AnalyticsErrors(models.Model):
     trace = models.TextField(db_column="Trace", blank=True, null=True)
     access_date = models.DateTimeField(db_column="LogDateTime", blank=True, null=True)
     handled = models.IntegerField(db_column="Handled", blank=True, null=True)
-    update_time = models.DateTimeField(
-        db_column="UpdateTime", blank=True, null=True
-    )  # Field name made lowercase.
+    update_time = models.DateTimeField(db_column="UpdateTime", blank=True, null=True)
     useragent = models.TextField(db_column="UserAgent", blank=True, null=True)
     referer = models.TextField(db_column="Referer", blank=True, null=True)
 
@@ -655,14 +629,12 @@ class AnalyticsErrors(models.Model):
         managed = False
         db_table = "AnalyticsError"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("analytics:error", kwargs={"pk": self.pk})
 
 
 class AnalyticsTrace(models.Model):
-    id = models.AutoField(
-        db_column="Id", primary_key=True
-    )  # Field name made lowercase.
+    id = models.AutoField(db_column="Id", primary_key=True)
     user = models.ForeignKey(
         "Users",
         models.DO_NOTHING,
@@ -671,31 +643,19 @@ class AnalyticsTrace(models.Model):
         null=True,
         related_name="analytics_trace",
     )
-    level = models.IntegerField(
-        db_column="Level", blank=True, null=True
-    )  # Field name made lowercase.
-    message = models.TextField(
-        db_column="Message", blank=True, null=True
-    )  # Field name made lowercase.
-    logger = models.TextField(
-        db_column="Logger", blank=True, null=True
-    )  # Field name made lowercase.
-    access_date = models.DateTimeField(
-        db_column="LogDateTime", blank=True, null=True
-    )  # Field name made lowercase.
+    level = models.IntegerField(db_column="Level", blank=True, null=True)
+    message = models.TextField(db_column="Message", blank=True, null=True)
+    logger = models.TextField(db_column="Logger", blank=True, null=True)
+    access_date = models.DateTimeField(db_column="LogDateTime", blank=True, null=True)
     handled = models.IntegerField(db_column="Handled", blank=True, null=True)
-    useragent = models.TextField(
-        db_column="UserAgent", blank=True, null=True
-    )  # Field name made lowercase.
-    referer = models.TextField(
-        db_column="Referer", blank=True, null=True
-    )  # Field name made lowercase.
+    useragent = models.TextField(db_column="UserAgent", blank=True, null=True)
+    referer = models.TextField(db_column="Referer", blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = "AnalyticsTrace"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("analytics:trace", kwargs={"pk": self.pk})
 
 
@@ -753,20 +713,20 @@ class Initiatives(models.Model):
         managed = False
         db_table = "Initiative"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("initiative:item", kwargs={"pk": self.pk})
 
-    def get_absolute_delete_url(self):
+    def get_absolute_delete_url(self) -> str:
         return reverse("initiative:delete", kwargs={"pk": self.pk})
 
-    def get_absolute_edit_url(self):
+    def get_absolute_edit_url(self) -> str:
         return reverse("initiative:edit", kwargs={"pk": self.pk})
 
-    def stars(self):
-        return self.stars.count()
+    def stars(self) -> int:
+        return self.stars.count()  # type: ignore[attr-defined]
 
 
 class Collections(models.Model):
@@ -807,16 +767,16 @@ class Collections(models.Model):
         managed = False
         db_table = "Collection"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("collection:item", kwargs={"pk": self.pk})
 
-    def get_absolute_delete_url(self):
+    def get_absolute_delete_url(self) -> str:
         return reverse("collection:delete", kwargs={"pk": self.pk})
 
-    def get_absolute_edit_url(self):
+    def get_absolute_edit_url(self) -> str:
         return reverse("collection:edit", kwargs={"pk": self.pk})
 
 
@@ -844,16 +804,16 @@ class CollectionReports(models.Model):
         managed = False
         db_table = "CollectionReport"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.report.friendly_name
 
-    def get_absolute_delete_url(self):
+    def get_absolute_delete_url(self) -> str:
         return reverse(
             "collection:report_delete",
             kwargs={"pk": self.pk, "collection_id": self.collection_id},
         )
 
-    def get_absolute_edit_url(self):
+    def get_absolute_edit_url(self) -> str:
         return reverse(
             "collection:report_edit",
             kwargs={"pk": self.pk, "collection_id": self.collection_id},
@@ -884,16 +844,16 @@ class CollectionTerms(models.Model):
         managed = False
         db_table = "CollectionTerm"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.term.name
 
-    def get_absolute_delete_url(self):
+    def get_absolute_delete_url(self) -> str:
         return reverse(
             "collection:term_delete",
             kwargs={"pk": self.pk, "collection_id": self.collection_id},
         )
 
-    def get_absolute_edit_url(self):
+    def get_absolute_edit_url(self) -> str:
         return reverse(
             "collection:term_edit",
             kwargs={"pk": self.pk, "collection_id": self.collection_id},
@@ -908,10 +868,10 @@ class RunFrequency(models.Model):
         managed = False
         db_table = "EstimatedRunFrequency"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def usage(self):
+    def usage(self) -> int:
         return self.report_docs.count()
 
 
@@ -923,10 +883,10 @@ class FinancialImpact(models.Model):
         managed = False
         db_table = "FinancialImpact"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def usage(self):
+    def usage(self) -> int:
         return self.initiatives.count()
 
 
@@ -938,10 +898,10 @@ class Fragility(models.Model):
         managed = False
         db_table = "Fragility"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def usage(self):
+    def usage(self) -> int:
         return self.report_docs.count()
 
 
@@ -953,10 +913,10 @@ class FragilityTag(models.Model):
         managed = False
         db_table = "FragilityTag"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def usage(self):
+    def usage(self) -> int:
         return self.report_docs.count()
 
 
@@ -1161,10 +1121,10 @@ class MaintenanceLogStatus(models.Model):
         managed = False
         db_table = "MaintenanceLogStatus"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def usage(self):
+    def usage(self) -> int:
         return self.logs.count()
 
 
@@ -1176,10 +1136,10 @@ class MaintenanceSchedule(models.Model):
         managed = False
         db_table = "MaintenanceSchedule"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def usage(self):
+    def usage(self) -> int:
         return self.report_docs.count()
 
 
@@ -1191,10 +1151,10 @@ class OrganizationalValue(models.Model):
         managed = False
         db_table = "OrganizationalValue"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def usage(self):
+    def usage(self) -> int:
         return self.report_docs.count()
 
 
@@ -1255,7 +1215,7 @@ class ReportImages(models.Model):
         managed = False
         db_table = "ReportObjectImages_doc"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse(
             "report:image", kwargs={"pk": self.pk, "report_id": self.report.report_id}
         )
@@ -1276,27 +1236,17 @@ class ReportRunDetails(models.Model):
     etl_date = models.DateTimeField(db_column="LastLoadDate")
     rundurationseconds = models.IntegerField(
         db_column="RunDurationSeconds", blank=True, null=True
-    )  # Field name made lowercase.
-    runstarttime = models.DateTimeField(
-        db_column="RunStartTime"
-    )  # Field name made lowercase.
+    )
+    runstarttime = models.DateTimeField(db_column="RunStartTime")
     status = models.CharField(
         db_column="RunStatus", max_length=100, blank=True, null=True
-    )  # Field name made lowercase.
+    )
 
     rundataid = models.CharField(db_column="RunDataId", unique=True, max_length=450)
-    runstarttime_day = models.DateTimeField(
-        db_column="RunStartTime_Day"
-    )  # Field name made lowercase.
-    runstarttime_hour = models.DateTimeField(
-        db_column="RunStartTime_Hour"
-    )  # Field name made lowercase.
-    runstarttime_month = models.DateTimeField(
-        db_column="RunStartTime_Month"
-    )  # Field name made lowercase.
-    runstarttime_year = models.DateTimeField(
-        db_column="RunStartTime_Year"
-    )  # Field name made lowercase.
+    runstarttime_day = models.DateTimeField(db_column="RunStartTime_Day")
+    runstarttime_hour = models.DateTimeField(db_column="RunStartTime_Hour")
+    runstarttime_month = models.DateTimeField(db_column="RunStartTime_Month")
+    runstarttime_year = models.DateTimeField(db_column="RunStartTime_Year")
 
     class Meta:
         managed = False
@@ -1432,15 +1382,9 @@ class ReportDocs(models.Model):
 
 
 class ReportTickets(models.Model):
-    ticket_id = models.AutoField(
-        db_column="ServiceRequestId", primary_key=True
-    )  # Field name made lowercase.
-    number = models.TextField(
-        db_column="TicketNumber", blank=True, null=True
-    )  # Field name made lowercase.
-    description = models.TextField(
-        db_column="Description", blank=True, null=True
-    )  # Field name made lowercase.
+    ticket_id = models.AutoField(db_column="ServiceRequestId", primary_key=True)
+    number = models.TextField(db_column="TicketNumber", blank=True, null=True)
+    description = models.TextField(db_column="Description", blank=True, null=True)
     report_doc = models.ForeignKey(
         "ReportDocs",
         on_delete=models.CASCADE,
@@ -1449,16 +1393,14 @@ class ReportTickets(models.Model):
         null=True,
         related_name="tickets",
     )
-    url = models.TextField(
-        db_column="TicketUrl", blank=True, null=True
-    )  # Field name made lowercase.
+    url = models.TextField(db_column="TicketUrl", blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = "ReportServiceRequests"
 
-    def __str__(self):
-        return self.number
+    def __str__(self) -> str:
+        return str(self.number)
 
 
 class RolePermissionLinks(models.Model):
@@ -1486,7 +1428,7 @@ class RolePermissionLinks(models.Model):
         managed = False
         db_table = "RolePermissionLinks"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.permission.name
 
 
@@ -1499,7 +1441,7 @@ class RolePermissions(models.Model):
         managed = False
         db_table = "RolePermissions"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -1546,10 +1488,10 @@ class StrategicImportance(models.Model):
         managed = False
         db_table = "StrategicImportance"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def usage(self):
+    def usage(self) -> int:
         return self.initiatives.count()
 
 
@@ -1600,16 +1542,16 @@ class Terms(models.Model):
         managed = False
         db_table = "Term"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("term:item", kwargs={"pk": self.pk})
 
-    def get_absolute_delete_url(self):
+    def get_absolute_delete_url(self) -> str:
         return reverse("term:delete", kwargs={"pk": self.pk})
 
-    def get_absolute_edit_url(self):
+    def get_absolute_edit_url(self) -> str:
         return reverse("term:edit", kwargs={"pk": self.pk})
 
 
@@ -1627,7 +1569,7 @@ class FavoriteFolders(models.Model):
     rank = models.IntegerField(db_column="FolderRank", blank=True, null=True)
 
     @property
-    def total(self):
+    def total(self) -> int:
         return (
             self.starred_reports.count()
             + self.starred_collections.count()
@@ -1710,7 +1652,7 @@ class StarredReports(models.Model):
         managed = False
         db_table = "StarredReports"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.report)
 
 
@@ -1889,9 +1831,7 @@ class UserPreferences(models.Model):
 
 
 class GroupRoleLinks(models.Model):
-    rolelinks_id = models.AutoField(
-        db_column="GroupRoleLinksId", primary_key=True
-    )  # Field name made lowercase.
+    rolelinks_id = models.AutoField(db_column="GroupRoleLinksId", primary_key=True)
     group = models.ForeignKey(
         "Groups",
         models.DO_NOTHING,
@@ -1943,7 +1883,7 @@ class UserRoles(models.Model):
     name = models.TextField(db_column="Name", blank=True, default="")
     description = models.TextField(db_column="Description", blank=True, default="")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
     class Meta:

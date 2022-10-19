@@ -1,6 +1,8 @@
 """Celery tasks to keep group search up to date."""
 # disable qa until fixing group reload.
 # flake8: noqa
+from typing import Any, Dict, Iterator, Optional
+
 import pysolr
 from celery import shared_task
 from django.conf import settings
@@ -18,7 +20,7 @@ from index.models import Groups
 
 
 @shared_task
-def delete_group(group_id):
+def delete_group(group_id: int) -> None:
     """Celery task to remove a group from search."""
     solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
 
@@ -26,13 +28,13 @@ def delete_group(group_id):
 
 
 @shared_task
-def load_group(group_id):
+def load_group(group_id: int) -> None:
     """Celery task to reload a group in search."""
     load_groups(group_id)
 
 
 @shared_task
-def reset_groups():
+def reset_groups() -> None:
     """Reset group group in solr.
 
     1. Delete all groups from Solr
@@ -47,7 +49,7 @@ def reset_groups():
     load_groups()
 
 
-def load_groups(group_id=None):
+def load_groups(group_id: Optional[int] = None) -> None:
     """Load a group of groups to solr database.
 
     1. Convert the objects to list of dicts
@@ -63,14 +65,14 @@ def load_groups(group_id=None):
     list(map(solr_load_batch, batch_iterator(groups.all(), batch_size=1000)))
 
 
-def solr_load_batch(batch):
+def solr_load_batch(batch: Iterator) -> None:
     """Process batch."""
     solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
 
     solr.add(list(map(build_doc, batch)))
 
 
-def build_doc(group):
+def build_doc(group: Groups) -> Dict[Any, Any]:
     """Build group doc."""
     doc = {
         "id": "/groups/%s" % group.group_id,

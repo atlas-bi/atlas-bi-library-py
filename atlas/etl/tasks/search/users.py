@@ -1,6 +1,8 @@
 """Celery tasks to keep user search up to date."""
 # disable qa until fixing user reload.
 # flake8: noqa
+from typing import Any, Dict, Iterator, Optional
+
 import pysolr
 from celery import shared_task
 from django.conf import settings
@@ -18,21 +20,21 @@ from index.models import Users
 
 
 @shared_task
-def delete_user(user_id):
+def delete_user(user_id: int) -> None:
     """Celery task to remove a user from search."""
     solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
 
-    solr.delete(q="type:users AND atlas_id:%s" % user_id)
+    solr.delete(q=f"type:users AND atlas_id:{user_id}")
 
 
 @shared_task
-def load_user(user_id):
+def load_user(user_id: int) -> None:
     """Celery task to reload a user in search."""
     load_users(user_id)
 
 
 @shared_task
-def reset_users():
+def reset_users() -> None:
     """Reset user group in solr.
 
     1. Delete all users from Solr
@@ -47,7 +49,7 @@ def reset_users():
     load_users()
 
 
-def load_users(user_id=None):
+def load_users(user_id: Optional[int] = None) -> None:
     """Load a group of users to solr database.
 
     1. Convert the objects to list of dicts
@@ -63,17 +65,17 @@ def load_users(user_id=None):
     list(map(solr_load_batch, batch_iterator(users.all(), batch_size=1000)))
 
 
-def solr_load_batch(batch):
+def solr_load_batch(batch: Iterator) -> None:
     """Process batch."""
     solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
 
     solr.add(list(map(build_doc, batch)))
 
 
-def build_doc(user):
+def build_doc(user: Users) -> Dict[Any, Any]:
     """Build user doc."""
     doc = {
-        "id": "/users/%s" % user.user_id,
+        "id": f"/users/{user.user_id}",
         "atlas_id": user.user_id,
         "type": "users",
         "name": str(user),

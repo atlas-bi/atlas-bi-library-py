@@ -1,11 +1,12 @@
 """Miscellaneous helper tags."""
 from django import template
+from django.db.models import Model
 
 register = template.Library()
 
 
 @register.filter(name="strip")
-def strip_space(value):
+def strip_space(value: str) -> str:
     """Strip whitespace from string.
 
     :param value: string
@@ -15,13 +16,13 @@ def strip_space(value):
 
 
 @register.filter(name="size")
-def size(value, arg):
+def size(value: str, arg: str) -> str:
     """Add size to image url."""
     return value + "?size=" + arg
 
 
 @register.filter(name="snippet")
-def snippet(model):
+def snippet(model: Model) -> str:
     """Create code snippet."""
     if model._meta.model.__name__ == "Reports":
         if model.has_docs() and model.docs.description:
@@ -44,7 +45,7 @@ def snippet(model):
 
 
 @register.filter(name="possessive")
-def possessive(value):
+def possessive(value: str) -> str:
     """Add size to image url."""
     if value[-1].lower() == "s":
         return value + "'"

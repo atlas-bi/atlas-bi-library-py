@@ -1,11 +1,13 @@
 """Custom processer to enable access to settings in templates."""
+from typing import Any, Dict
 from urllib.parse import quote_plus
 
 from django.conf import settings as django_settings
+from django.http import HttpRequest
 from index.models import ReportTypes
 
 
-def user(request):
+def user(request: HttpRequest) -> Dict[Any, Any]:
     """Context processor for user information."""
     if not request.user.is_anonymous:
         visible_reports = [

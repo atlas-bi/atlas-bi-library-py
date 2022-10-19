@@ -9,7 +9,7 @@ register = template.Library()
 
 
 @register.simple_tag
-def static_hashed(path):
+def static_hashed(path: str) -> str:
     """Return versioned static file.
 
     :param value: string
@@ -19,12 +19,12 @@ def static_hashed(path):
 
 
 @register.simple_tag
-def global_css():
+def global_css() -> str:
     """Return global css overrides.
 
     :returns: string
     """
-    global_css = GlobalSettings.objects.filter(name="global_css").first()
-    if global_css:
-        return mark_safe(f"<style>{global_css.value}</style>")
+    global_css_record = GlobalSettings.objects.filter(name="global_css").first()
+    if global_css_record:
+        return mark_safe(f"<style>{global_css_record.value}</style>")
     return ""
