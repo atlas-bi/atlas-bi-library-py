@@ -460,7 +460,12 @@ def user_lookup(request: HttpRequest, role: str = None) -> JsonResponse:
     )
 
     output = [
-        {"ObjectId": item.get("atlas_id"), "Name": item.get("name")} for item in results
+        {
+            "ObjectId": item.get("atlas_id"),
+            "Name": item.get("name")
+            + (" (" + item["email"] + ")" if item.get("email") else ""),
+        }
+        for item in results
     ]
     return JsonResponse(output, safe=False)
 
@@ -478,7 +483,12 @@ def group_lookup(request: HttpRequest, role: str = None) -> JsonResponse:
     )
 
     output = [
-        {"ObjectId": item.get("atlas_id"), "Name": item.get("name")} for item in results
+        {
+            "ObjectId": item.get("atlas_id"),
+            "Name": item.get("name")
+            + (" (" + item["email"] + ")" if item.get("email") else ""),
+        }
+        for item in results
     ]
     return JsonResponse(output, safe=False)
 

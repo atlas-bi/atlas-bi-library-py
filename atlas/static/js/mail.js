@@ -18,8 +18,8 @@
           for (let x = 0; x < recp.length; x++) {
             const g = recp[x].classList.contains('group') ? 'g' : '';
             to.push({
-              UserId: recp[x].value,
-              Type: g,
+              userId: recp[x].value,
+              type: g,
             });
           }
         } else {
@@ -42,13 +42,13 @@
         ).value;
 
         const data = {
-          To: JSON.stringify(to),
-          Subject: form.querySelector('input.share-subject').value,
-          Message: message,
-          Text: message,
-          Share: 1,
-          ShareName: form.querySelector('input.share-name').value,
-          ShareUrl: form.querySelector('input.share-url').value,
+          recipient: JSON.stringify(to),
+          subject: form.querySelector('input.share-subject').value,
+          message: message,
+          text: message,
+          share: 1,
+          shareName: form.querySelector('input.share-name').value,
+          shareUrl: form.querySelector('input.share-url').value,
         };
 
         sendMes = new XMLHttpRequest();

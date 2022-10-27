@@ -1445,35 +1445,27 @@ class RolePermissions(models.Model):
         return self.name
 
 
-class Searchtable(models.Model):
+class SharedItems(models.Model):
     id = models.AutoField(db_column="Id", primary_key=True)
-    itemid = models.IntegerField(db_column="ItemId", blank=True, null=True)
-    typeid = models.IntegerField(db_column="TypeId", blank=True, null=True)
-    itemtype = models.CharField(
-        db_column="ItemType", max_length=100, blank=True, default=""
+    sender = models.ForeignKey(
+        "Users",
+        models.DO_NOTHING,
+        related_name="sent_shares",
+        db_column="SharedFromUserId",
+        blank=True,
+        null=True,
     )
-    itemrank = models.IntegerField(db_column="ItemRank", blank=True, null=True)
-    searchfielddescription = models.CharField(
-        db_column="SearchFieldDescription", max_length=100, blank=True, default=""
-    )
-    searchfield = models.TextField(db_column="SearchField", blank=True, default="")
-
-    class Meta:
-        managed = False
-        db_table = "SearchTable"
-
-
-class Shareditems(models.Model):
-    id = models.AutoField(db_column="Id", primary_key=True)
-    sharedfromuserid = models.IntegerField(
-        db_column="SharedFromUserId", blank=True, null=True
-    )
-    sharedtouserid = models.IntegerField(
-        db_column="SharedToUserId", blank=True, null=True
+    recipient = models.ForeignKey(
+        "Users",
+        models.DO_NOTHING,
+        related_name="recieved_shares",
+        db_column="SharedToUserId",
+        blank=True,
+        null=True,
     )
     url = models.TextField(db_column="Url", blank=True, default="")
     name = models.TextField(db_column="Name", blank=True, default="")
-    sharedate = models.DateTimeField(db_column="ShareDate", blank=True, null=True)
+    share_date = models.DateTimeField(db_column="ShareDate", blank=True, null=True)
 
     class Meta:
         managed = False

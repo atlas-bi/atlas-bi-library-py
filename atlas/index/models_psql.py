@@ -1107,13 +1107,25 @@ class RolePermissions(models.Model):
         return self.name
 
 
-class Shareditems(models.Model):
+class SharedItems(models.Model):
     id = models.AutoField(primary_key=True)
-    sharedfromuserid = models.IntegerField(blank=True, null=True)
-    sharedtouserid = models.IntegerField(blank=True, null=True)
+    sender = models.ForeignKey(
+        "Users",
+        models.DO_NOTHING,
+        related_name="sent_shares",
+        blank=True,
+        null=True,
+    )
+    recipient = models.ForeignKey(
+        "Users",
+        models.DO_NOTHING,
+        related_name="recieved_shares",
+        blank=True,
+        null=True,
+    )
     url = models.TextField(blank=True, default="")
     name = models.TextField(blank=True, default="")
-    sharedate = models.DateTimeField(blank=True, null=True)
+    share_date = models.DateTimeField(blank=True, null=True)
 
 
 class StrategicImportance(models.Model):

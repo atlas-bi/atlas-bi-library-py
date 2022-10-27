@@ -403,7 +403,7 @@ FOOTER = {
         }
     },
 }
-SITE_MESSAGE = "Welcom to Atlas"
+SITE_MESSAGE = "Welcome to Atlas"
 LOGO = "img/thinking-face-text-266x80.png"
 
 ENABLE_INITIATIVES = True
@@ -412,6 +412,16 @@ ENABLE_SHARING = True
 ENABLE_TERMS = True
 ENABLE_USER_PROFILES = True
 ENABLE_BREADCRUMBS = True
+
+EMAIL_HOST = ""
+EMAIL_PORT = 25
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = None
+EMAIL_HOST_PASSWORD = None
+EMAIL_SENDER_NAME = f"Atlas | {ORG_NAME} Analytics"
+EMAIL_SENDER_EMAIL = "me@example.com"
+EMAIL_DEFAULT_REPLY_ADDRESS = "me@example.com"
 
 # import custom overrides
 with contextlib.suppress(ImportError):

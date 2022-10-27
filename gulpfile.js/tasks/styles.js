@@ -14,7 +14,7 @@ gulp.task('css:email', function () {
     .pipe(cssnano()) // Running this first to strip comments
     .pipe(
       purgecss({
-        content: ['web/Pages/Shared/_EmailTemplate.cshtml'],
+        content: ['atlas/mail/templates/mail/email.html.dj'],
         safelist: [],
         fontFace: true,
         keyframes: true,

@@ -3,8 +3,23 @@
 {% load static %}
 
 {% block body %}
-    <h2 class="title is-2">Hi, {{ user.first_name }}!</h2>
-    {% include "index/links.html.dj" %}
+    <h1 class="title is-1">Hi, {{ user }}!</h1>
+    <nav class="breadcrumb">
+        <ul>
+            <li>
+                <a title="stars" class="tab-lnk active" href="#stars">Stars</a>
+            </li>
+            <li>
+                <a title="subscriptions" class="tab-lnk" href="#subscriptions">Subscriptions</a>
+            </li>
+            <li>
+                <a title="report runs" class="tab-lnk " href="#run-list">Report Runs</a>
+            </li>
+            <li>
+                <a title="groups" class="tab-lnk" href="#groups">Groups</a>
+            </li>
+        </ul>
+    </nav>
     <section class="tab-cnt">
         <div class="tab-dta active" id="stars">
             <div data-ajax="yes" data-url="{% url 'user:stars' %}"></div>
@@ -12,20 +27,10 @@
         <div class="tab-dta" id="subscriptions">
             <div data-ajax="yes" data-url="{% url 'user:subscriptions' %}"></div>
         </div>
-        {% comment %} @{
-                ViewBag.ProfileType = "user";
-                ViewBag.ProfileId = User.GetUserId();
-                if(ViewBag.DefaultReportTypes.Count > 0)
-                {
-                    foreach (var item in ViewBag.DefaultReportTypes){
-                        ViewBag.DefaultFilters += "&reportType=" + @item;
-                    }
-                }
-        } {% endcomment %}
         <div class="tab-dta" id="run-list">
             <div data-ajax="yes"
-                 data-url="{% url 'sketch:index' %}"
-                 data-parameters="handler=RunList&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters">
+                 data-url="{% url "sketch:run_list" type="user" pk=user.user_id %}"
+                 data-parameters="{{ visible_reports }}">
             </div>
         </div>
         <div class="tab-dta" id="groups">

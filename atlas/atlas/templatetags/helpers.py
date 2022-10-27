@@ -15,6 +15,16 @@ def strip_space(value: str) -> str:
     return str(value).strip()
 
 
+@register.filter(name="remove_slash")
+def remove_slash(value: str) -> str:
+    """Strip whitespace from string.
+
+    :param value: string
+    :returns: string
+    """
+    return value[:1] if value[-1] == "/" else value
+
+
 @register.filter(name="size")
 def size(value: str, arg: str) -> str:
     """Add size to image url."""
