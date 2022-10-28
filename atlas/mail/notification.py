@@ -29,15 +29,15 @@ def notification(request, subject, recipient, sender, message, url=None):
 
     msg = EmailMultiAlternatives(
         subject,
-        msg_text,
+        msg_html,
         from_email=f"{settings.EMAIL_SENDER_NAME} <{settings.EMAIL_SENDER_EMAIL}>",
         reply_to=reply_to,
         to=[recipient.email],
     )
 
-    # msg.mixed_subtype = "related"
+    msg.mixed_subtype = "related"
     msg.content_subtype = "html"
-    msg.attach_alternative(msg_html, "text/html")
+    msg.attach_alternative(msg_text, "text/plain")
     img_dir = "static"
     image = "img/atlas-logo.png"
     file_path = os.path.join(img_dir, image)
