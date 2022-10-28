@@ -44,7 +44,7 @@
         const data = {
           recipient: JSON.stringify(to),
           subject: form.querySelector('input.share-subject').value,
-          message: message,
+          message,
           text: message,
           share: 1,
           shareName: form.querySelector('input.share-name').value,

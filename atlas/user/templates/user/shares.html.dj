@@ -5,14 +5,15 @@
             <div class="has-tooltip-arrow has-tooltip-left is-flex is-align-items-center"
                  data-tooltip="Shared by {{ share.sender }} on {{ share.share_date }}">
                 <form class="remove-shared-object"
-                      asp-page-handler="RemoveSharedObject"
+                      action="{% url "mail:remove_share" pk=share.id %}"
                       method="post">
-                    <input type="hidden" name="id" value="{{ share.id }}" />
                     <button class="button is-ghost py-0">
                         <i class="fas fa-xmark"></i>
                     </button>
                 </form>
-                <a href="{{ share.url }}" aria-label="{{ share.name }}">{{ share.name }}</a>
+                <a title="{{ share.name }}"
+                   href="{{ share.url }}"
+                   aria-label="{{ share.name }}">{{ share.name }}</a>
             </div>
         {% endfor %}
         <script>
@@ -26,13 +27,13 @@
             
                 function load() {
                     if (typeof window.removeShared == 'undefined') {
-            
                         window.removeShared = function() {
                             document.addEventListener('submit', function(e) {
                                 if (e.target.closest('.remove-shared-object')) {
                                     e.preventDefault();
                                     var s = new XMLHttpRequest();
-                                    s.open('post', e.target.closest('.remove-shared-object').getAttribute('action') + "&" + serialize(e.target.closest('.remove-shared-object')), true);
+                                    s.open('post', e.target.closest('.remove-shared-object').getAttribute('action'), true);
+                                    s.setRequestHeader('X-CSRFToken', csrftoken);
                                     s.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
                                     s.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
                                     s.send();
@@ -40,7 +41,6 @@
                                 }
                             });
                         };
-            
                         window.removeShared();
                     }
                 }

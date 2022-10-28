@@ -11,7 +11,9 @@
       lang="en">
     <head>
         <title>Atlas Notification | {{ subject }}</title>
-        <meta charset="utf-8">
+        <meta charset="utf-8" />
+        <meta name="description" content="Atlas Notification" />
+        <meta name="keywords" content="atlas" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -29,6 +31,10 @@
 
     </head>
     <body class="m-0 p-0">
+        <div class="preheader"
+             style="display: none;
+                    max-height: 0;
+                    overflow: hidden;">{{ message|markdown|text }}</div>
         <table width="100%">
             <tr>
                 <td>
@@ -43,14 +49,17 @@
                                     <tr>
                                         <td align="center">
                                             <nav class="navbar has-shadow">
-                                                <a class="navbar-item mx-auto"
-                                                   href='{{ request.scheme }}://{{ request.get_host }}'
+                                                <a title="Atlas BI Library"
+                                                   class="navbar-item mx-auto"
+                                                   href="{{ request.scheme }}://{{ request.get_host }}"
                                                    align="center">
                                                     <img src="cid:atlas_logo"
                                                          width="133"
+                                                         height="auto"
                                                          alt="site logo"
                                                          style="width:133px;"
-                                                         class="mx-auto"/>
+                                                         class="mx-auto"
+                                                         title="atlas logo"/>
                                                 </a>
                                             </nav>
                                         </td>
@@ -69,7 +78,8 @@
                                     <tr>
                                         <td>
                                             {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
-                                                <a href='{{ request.scheme }}://{{ request.get_host|remove_slash }}{% url "user:profile" pk=user.user_id %}'>{{ sender }}</a>
+                                                <a title="open user profile"
+                                                   href="{{ request.scheme }}://{{ request.get_host|remove_slash }}{% url 'user:profile' pk=user.user_id %}">{{ sender }}</a>
                                             {% else %}
                                                 {{ sender }}
                                             {% endif %}
@@ -104,7 +114,8 @@
                         </tr>
                         <tr>
                             <td align="center">
-                                <small class="has-text-grey">You can manage your notifications <a href="{{ request.scheme }}://{{ request.get_host|remove_slash }}{% url 'user:settings' %}">here</a>.</small>
+                                <small class="has-text-grey">You can manage your notifications <a title="atlas notifications"
+    href="{{ request.scheme }}://{{ request.get_host|remove_slash }}{% url 'user:settings' %}">here</a>.</small>
                             </td>
                         </tr>
                         <tr>

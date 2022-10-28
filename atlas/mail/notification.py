@@ -1,13 +1,23 @@
 import os
 from email.mime.image import MIMEImage
+from typing import Optional
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
+from django.db import models
+from django.http import HttpRequest
 from django.template.loader import render_to_string
 from htmlmin.minify import html_minify
 
 
-def notification(request, subject, recipient, sender, message, url=None):
+def notification(
+    request: HttpRequest,
+    subject: str,
+    recipient: models.Model,
+    sender: models.Model,
+    message: str,
+    url: Optional[str] = None,
+) -> None:
     context = {
         "subject": subject,
         "recipient": recipient,
@@ -29,15 +39,14 @@ def notification(request, subject, recipient, sender, message, url=None):
 
     msg = EmailMultiAlternatives(
         subject,
-        msg_html,
+        msg_text,
         from_email=f"{settings.EMAIL_SENDER_NAME} <{settings.EMAIL_SENDER_EMAIL}>",
         reply_to=reply_to,
         to=[recipient.email],
     )
 
     msg.mixed_subtype = "related"
-    msg.content_subtype = "html"
-    msg.attach_alternative(msg_text, "text/plain")
+    msg.attach_alternative(msg_html, "text/html")
     img_dir = "static"
     image = "img/atlas-logo.png"
     file_path = os.path.join(img_dir, image)
@@ -48,5 +57,3 @@ def notification(request, subject, recipient, sender, message, url=None):
     msg.attach(img)
 
     msg.send()
-    # return "success"
-    # return msg_html

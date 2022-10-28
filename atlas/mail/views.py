@@ -13,30 +13,18 @@ from index.models import Groups, SharedItems, Users, UserSettings
 from . import notification
 
 
-# Create your views here.
-@login_required
-def index(request: HttpRequest) -> HttpResponse:
+class RemoveShare(LoginRequiredMixin, View):
+    def post(
+        self, request: HttpRequest, *args: Tuple[Any], **kwargs: Dict[Any, Any]
+    ) -> HttpResponse:
+        pk = self.kwargs["pk"]
 
-    return HttpResponse("<div></div>")
+        SharedItems.objects.filter(recipient_id=request.user.user_id, pk=pk).delete()
 
-
-@login_required
-def check(request: HttpRequest) -> HttpResponse:
-
-    return HttpResponse("<div></div>")
+        return HttpResponse("Share removed.", content_type="text")
 
 
-@login_required
-def mailbox(request: HttpRequest) -> HttpResponse:
-    return HttpResponse("<div></div>")
-
-
-@login_required
-def send(request: HttpRequest) -> HttpResponse:
-    return HttpResponse("<div></div>")
-
-
-class Send(LoginRequiredMixin, View):
+class Share(LoginRequiredMixin, View):
     def post(
         self, request: HttpRequest, *args: Tuple[Any], **kwargs: Dict[Any, Any]
     ) -> HttpResponse:

@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from django.views.generic import DetailView, TemplateView
+from django.views.generic import TemplateView
 from index.models import (
     Analytics,
     Collections,

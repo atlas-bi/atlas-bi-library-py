@@ -161,7 +161,7 @@ blank_line_before_tag = "extends, load, compress, block"
 profile = "django"
 format_css = true
 format_js = true
-extend_exclude = 'atlas/templates/handlebars/search.html,atlas/report/templates/report/profile.html.dj'
+extend_exclude = 'atlas/templates/handlebars/search.html,atlas/report/templates/report/profile.html.dj, atlas/mail/tesmplates/mail/email_text.html.dj'
 
 [tool.djlint.per-file-ignores]
 "atlas/analytics/templates/analytics/index.html.dj" = "H021"
@@ -170,7 +170,7 @@ extend_exclude = 'atlas/templates/handlebars/search.html,atlas/report/templates/
 "atlas/templates/handlebars/search.html" = "D018"
 "atlas/templates/handlebars/search_pagination.html" = "H021"
 "atlas/report/templates/report/sections/details.html.dj" = "H023"
-"atlas/templates/layout.html.dj" = "H016,H030,H031"
+"atlas/templates/layout.html.dj" = "H016,H030,H031,H021"
 "atlas/templates/registration/login.html" = "H030,H031"
 "atlas/search/templates/search/ajax.html.dj" = "H021"
 "atlas/index/templates/index/about.html.dj" = "H021, H023"

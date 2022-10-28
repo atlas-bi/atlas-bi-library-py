@@ -6,8 +6,7 @@
 
 Atlas Notification | {{ subject }}
 {{ request.scheme }}://{{ request.get_host }}
-Hi {{ recipient }},
-{{ sender }} shared
+Hi {{ recipient }}, {{ sender }} shared
 {% if url %}
     {{ url }}
 {% else %}
