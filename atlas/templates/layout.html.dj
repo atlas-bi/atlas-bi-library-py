@@ -13,19 +13,16 @@
 
     {% endcompress %}
 
+    {% compress js inline %}
+    {% endcompress %}
+
     <body class="is-flex is-flex-direction-column has-background-white">
+        {% csrf_token %}
+        <script>
+            const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+        </script>
         {% include "site_message.html.dj" %}
         {% include "nav.html.dj" %}
-        {% csrf_token %}
-
-        {% compress js inline %}
-            <script>
-                const csrftoken = document
-                    .querySelector("[name=csrfmiddlewaretoken]")
-                    .value;
-            </script>
-        {% endcompress %}
-
         <section class="is-flex-grow-1 mt-4">
             <div class="container is-relative mb-5">
                 <div class="columns">
@@ -43,14 +40,19 @@
                         {% endblock body %}
 
                     </div>
-                    <!--
-<div class="column is-one-third is-hidden-mobile">
-                {% if ads %}
-                    <div id="related-reports"></div>
-                    {% for ad in ads %}<div class="col" data-ajax="yes" data-url="{{ ad.url }}"></div>{% endfor %}
-                {% endif %}
-            </div>
--->
+
+                    {% block adbar %}
+                        <div class="column is-narrow-tablet is-hidden-mobile"
+                             id="AdColTwo"
+                             style="max-width:20%;">
+                            <!-- sidebar -->
+                            {% if ads %}
+                                <div id="related-reports"></div>
+                                {% for ad in ads %}<div class="col" data-ajax="yes" data-url="{{ ad.url }}"></div>{% endfor %}
+                            {% endif %}
+                        </div>
+                    {% endblock adbar %}
+
                 </div>
             </div>
         </section>

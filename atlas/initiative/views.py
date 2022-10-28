@@ -6,7 +6,6 @@ from typing import Any, Dict, List, Tuple
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, reverse
-from django.urls import resolve
 from django.views.generic import (
     DeleteView,
     DetailView,
@@ -143,7 +142,7 @@ class InitiativeDelete(LoginRequiredMixin, PermissionsCheckMixin, DeleteView):
 
     def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
         return redirect(
-            resolve("initiative:list")
+            reverse("initiative:list")
             + "?error=You are not authorized to access that page."
         )
 

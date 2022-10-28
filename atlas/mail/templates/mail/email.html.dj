@@ -44,7 +44,7 @@
                                         <td align="center">
                                             <nav class="navbar has-shadow">
                                                 <a class="navbar-item mx-auto"
-                                                   href='{{ request.get_host }}'
+                                                   href='{{ request.scheme }}://{{ request.get_host }}'
                                                    align="center">
                                                     <img src="cid:atlas_logo"
                                                          width="133"
@@ -69,7 +69,7 @@
                                     <tr>
                                         <td>
                                             {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
-                                                <a href='{{ request.get_host|remove_slash }}{% url "user:profile" pk=user.user_id %}'>{{ sender }}</a>
+                                                <a href='{{ request.scheme }}://{{ request.get_host|remove_slash }}{% url "user:profile" pk=user.user_id %}'>{{ sender }}</a>
                                             {% else %}
                                                 {{ sender }}
                                             {% endif %}
@@ -104,7 +104,7 @@
                         </tr>
                         <tr>
                             <td align="center">
-                                <small class="has-text-grey">You can manage your notifications <a href="{{ request.get_host|remove_slash }}{% url 'user:settings' %}">here</a>.</small>
+                                <small class="has-text-grey">You can manage your notifications <a href="{{ request.scheme }}://{{ request.get_host|remove_slash }}{% url 'user:settings' %}">here</a>.</small>
                             </td>
                         </tr>
                         <tr>

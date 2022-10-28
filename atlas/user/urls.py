@@ -11,6 +11,7 @@ urlpatterns = [
     path("stars", stars.index, name="stars"),
     path("<int:pk>/stars", stars.index, name="stars"),
     path("settings", settings.Index.as_view(), name="settings"),
+    path("shares", profile.Shares.as_view(), name="shares"),
     path("settings/toggle", settings.Toggle.as_view(), name="toggle"),
     path("stars/edit", stars.edit, name="stars_edit"),
     path("groups", profile.UserGroups.as_view(), name="groups"),

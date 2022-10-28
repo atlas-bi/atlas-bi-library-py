@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from django.views.generic import TemplateView
+from django.views.generic import DetailView, TemplateView
 from index.models import (
     Analytics,
     Collections,
@@ -15,11 +15,23 @@ from index.models import (
     Initiatives,
     Reports,
     ReportSubscriptions,
+    SharedItems,
     Terms,
     Users,
 )
 
 from atlas.decorators import PermissionsCheckMixin
+
+
+class Shares(LoginRequiredMixin, TemplateView):
+    template_name = "user/shares.html.dj"
+
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
+        context = super().get_context_data(**kwargs)
+        context["shares"] = SharedItems.objects.filter(
+            recipient_id=self.request.user.user_id
+        ).order_by("-share_date")
+        return context
 
 
 class Index(LoginRequiredMixin, PermissionsCheckMixin, TemplateView):

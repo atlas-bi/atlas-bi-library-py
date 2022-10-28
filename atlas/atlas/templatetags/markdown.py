@@ -2,6 +2,7 @@
 import re
 
 import bleach
+from bs4 import BeautifulSoup
 from django import template
 from django.conf import settings as django_settings
 from django.utils.safestring import mark_safe
@@ -47,3 +48,10 @@ def markdown(value: str) -> str:
 def unwrap(html: str) -> str:
     """Remove outer <p></p> tag from html."""
     return re.sub(r"^<p>|</p>$", "", html)
+
+
+@register.filter(name="text")
+def text(html: str) -> str:
+    """Get text from html."""
+    soup = BeautifulSoup(html, "html5lib")
+    return soup.get_text()
