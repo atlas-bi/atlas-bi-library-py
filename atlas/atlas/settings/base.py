@@ -139,6 +139,7 @@ INSTALLED_APPS = [
     "django_celery_results",
     "django_celery_beat",
     "fullurl",
+    "django_extensions",
     # Atlas specific
     "index.apps.IndexConfig",
     "mail.apps.MailConfig",
@@ -190,7 +191,6 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                # "atlas.context_processors.settings",
                 "atlas.context_processors.user",
                 "django_settings_export.settings_export",
             ],
@@ -326,7 +326,7 @@ SAML_ATTRIBUTE_MAPPING = {
 }
 
 ORG_NAME = "Riverside Healthcare"
-
+ENABLE_LOGOUT = False
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 SOLR_URL = "http://localhost:8983/solr/atlas/"
@@ -383,13 +383,12 @@ def find_pyproject(root: Path) -> Optional[Path]:
 
 
 pyproject_file = find_pyproject(find_project_root(Path(__file__)))
-
+VERSION = ""
 if pyproject_file:
     content = tomllib.load(pyproject_file.open("rb"))
     try:
         VERSION = content["tool"]["poetry"]["version"]  # type: ignore
     except KeyError:
-        VERSION = ""
         logging.info("No pyproject.toml found.")
 
 
@@ -439,6 +438,7 @@ SETTINGS_EXPORT = [
     "ENABLE_TERMS",
     "ENABLE_USER_PROFILES",
     "ENABLE_BREADCRUMBS",
+    "ENABLE_LOGOUT"
 ]
 
 SAFE_HTML_TAGS = [

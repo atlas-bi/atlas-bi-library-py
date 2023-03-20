@@ -16,6 +16,7 @@ def user(request: HttpRequest) -> Dict[Any, Any]:
             .values_list("name", flat=True)
             .all()
         ]
+
         return {
             # "permissions": request.user.get_permissions(),
             "user": request.user,

@@ -13,13 +13,13 @@ class ReportGroupMemberships(models.Model):
     membership_id = models.AutoField(db_column="MembershipId", primary_key=True)
     group = models.ForeignKey(
         "Groups",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="GroupId",
         related_name="reports",
     )
     report = models.ForeignKey(
         "Reports",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="ReportId",
         related_name="groups",
     )
@@ -37,7 +37,7 @@ class Reports(models.Model):
     )
     type = models.ForeignKey(
         "ReportTypes",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="ReportObjectTypeID",
         blank=True,
         null=True,
@@ -57,7 +57,7 @@ class Reports(models.Model):
     system_table = models.CharField(db_column="SourceTable", max_length=255)
     created_by = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="report_creator",
         db_column="AuthorUserID",
         blank=True,
@@ -65,7 +65,7 @@ class Reports(models.Model):
     )
     modified_by = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="report_modifier",
         db_column="LastModifiedByUserID",
         blank=True,
@@ -147,7 +147,7 @@ class ReportParameters(models.Model):
     )
     report = models.ForeignKey(
         Reports,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="ReportObjectId",
         related_name="parameters",
     )
@@ -165,7 +165,7 @@ class ReportAttachments(models.Model):
     )
     report = models.ForeignKey(
         Reports,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="ReportObjectId",
         related_name="attachments",
     )
@@ -215,7 +215,7 @@ class ReportSystemTagLinks(models.Model):
     link_id = models.AutoField(db_column="TagMembershipID", primary_key=True)
     report = models.ForeignKey(
         Reports,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="ReportObjectId",
         blank=True,
         default="",
@@ -224,7 +224,7 @@ class ReportSystemTagLinks(models.Model):
 
     tag = models.ForeignKey(
         ReportTags,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="TagID",
         related_name="system_report_links",
     )
@@ -239,14 +239,14 @@ class ReportTagLinks(models.Model):
     link_id = models.AutoField(db_column="ReportTagLinkId", primary_key=True)
     report = models.ForeignKey(
         Reports,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="ReportId",
         blank=True,
         default="",
         related_name="tags",
     )
     tag = models.ForeignKey(
-        Tags, models.DO_NOTHING, db_column="TagId", related_name="reports"
+        Tags, on_delete=models.CASCADE, db_column="TagId", related_name="reports"
     )
     show_in_header = models.TextField(db_column="ShowInHeader", blank=True, null=True)
 
@@ -258,14 +258,14 @@ class ReportTagLinks(models.Model):
 class ReportHierarchies(models.Model):
     parent = models.OneToOneField(
         "Reports",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="parent",
         db_column="ParentReportObjectID",
         primary_key=True,
     )
     child = models.ForeignKey(
         "Reports",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="child",
         db_column="ChildReportObjectID",
     )
@@ -282,7 +282,7 @@ class ReportQueries(models.Model):
     query_id = models.AutoField(db_column="ReportObjectQueryId", primary_key=True)
     report_id = models.ForeignKey(
         Reports,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="ReportObjectId",
         blank=True,
         default="",
@@ -308,7 +308,7 @@ class ReportSubscriptions(models.Model):
     )
     report = models.ForeignKey(
         Reports,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="ReportObjectId",
         blank=True,
         default="",
@@ -316,7 +316,7 @@ class ReportSubscriptions(models.Model):
     )
     user = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="UserId",
         blank=True,
         default="",
@@ -377,7 +377,6 @@ class Users(AbstractUser, PermissionsMixin):
     last_login = models.DateTimeField(db_column="LastLogin", blank=True, null=True)
     is_active = True
     date_joined = None
-    # is_superuser = True  # check permissions for admin
     is_staff = True
 
     class Meta:
@@ -502,7 +501,7 @@ class UserSettings(models.Model):
     id = models.AutoField(db_column="Id", primary_key=True)
     user = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="UserId",
         blank=True,
         null=True,
@@ -546,7 +545,7 @@ class UserGroupMemberships(models.Model):
     membership_id = models.AutoField(db_column="MembershipId", primary_key=True)
     user = models.ForeignKey(
         Users,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="UserId",
         blank=True,
         default="",
@@ -554,7 +553,7 @@ class UserGroupMemberships(models.Model):
     )
     group = models.ForeignKey(
         Groups,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="GroupId",
         blank=True,
         default="",
@@ -587,7 +586,7 @@ class Analytics(models.Model):
     referrer = models.TextField(blank=True, default="")
     user = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="UserId",
         blank=True,
         null=True,
@@ -609,7 +608,7 @@ class AnalyticsErrors(models.Model):
     id = models.AutoField(db_column="Id", primary_key=True)
     user = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="UserId",
         blank=True,
         null=True,
@@ -637,7 +636,7 @@ class AnalyticsTrace(models.Model):
     id = models.AutoField(db_column="Id", primary_key=True)
     user = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="UserId",
         blank=True,
         null=True,
@@ -665,7 +664,7 @@ class Initiatives(models.Model):
     description = models.TextField(db_column="Description", blank=True, default="")
     ops_owner = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="OperationOwnerID",
         blank=True,
         null=True,
@@ -673,7 +672,7 @@ class Initiatives(models.Model):
     )
     exec_owner = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="ExecutiveOwnerID",
         blank=True,
         null=True,
@@ -682,7 +681,7 @@ class Initiatives(models.Model):
 
     financial_impact = models.ForeignKey(
         "Financialimpact",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="FinancialImpact",
         blank=True,
         null=True,
@@ -690,7 +689,7 @@ class Initiatives(models.Model):
     )
     strategic_importance = models.ForeignKey(
         "Strategicimportance",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="StrategicImportance",
         blank=True,
         null=True,
@@ -701,7 +700,7 @@ class Initiatives(models.Model):
     )
     modified_by = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="initiative_modifier",
         db_column="LastUpdateUser",
         blank=True,
@@ -734,7 +733,7 @@ class Collections(models.Model):
 
     initiative = models.ForeignKey(
         "Initiatives",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="InitiativeId",
         blank=True,
         null=True,
@@ -749,7 +748,7 @@ class Collections(models.Model):
     )
     modified_by = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="collection_modifier",
         db_column="LastUpdateUser",
         blank=True,
@@ -784,7 +783,7 @@ class CollectionReports(models.Model):
     link_id = models.AutoField(db_column="LinkId", primary_key=True)
     report = models.ForeignKey(
         "Reports",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="ReportId",
         related_name="collections",
         blank=True,
@@ -792,7 +791,7 @@ class CollectionReports(models.Model):
     )
     collection = models.ForeignKey(
         Collections,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="CollectionId",
         blank=True,
         null=True,
@@ -824,7 +823,7 @@ class CollectionTerms(models.Model):
     link_id = models.AutoField(db_column="LinkId", primary_key=True)
     term = models.ForeignKey(
         "Terms",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="TermId",
         related_name="collections",
         blank=True,
@@ -832,7 +831,7 @@ class CollectionTerms(models.Model):
     )
     collection = models.ForeignKey(
         Collections,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="CollectionId",
         blank=True,
         null=True,
@@ -935,7 +934,7 @@ class MailConversations(models.Model):
     conversation_id = models.AutoField(db_column="ConversationId", primary_key=True)
     message = models.ForeignKey(
         "MailMessages",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="MessageId",
         related_name="conversations",
     )
@@ -974,7 +973,7 @@ class MailFoldermessages(models.Model):
     folder_message_id = models.AutoField(db_column="Id", primary_key=True)
     folder = models.ForeignKey(
         "MailFolders",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="FolderId",
         blank=True,
         null=True,
@@ -982,7 +981,7 @@ class MailFoldermessages(models.Model):
     )
     message = models.ForeignKey(
         "MailMessages",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="MessageId",
         blank=True,
         null=True,
@@ -1024,7 +1023,7 @@ class MailMessages(models.Model):
     senddate = models.DateTimeField(db_column="SendDate", blank=True, null=True)
     message_type = models.ForeignKey(
         MailMessagetype,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="MessageTypeId",
         blank=True,
         null=True,
@@ -1044,7 +1043,7 @@ class MailRecipients(models.Model):
     recipient_id = models.AutoField(db_column="Id", primary_key=True)
     message = models.ForeignKey(
         MailMessages,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="MessageId",
         blank=True,
         null=True,
@@ -1081,7 +1080,7 @@ class MaintenanceLogs(models.Model):
     log_id = models.AutoField(db_column="MaintenanceLogID", primary_key=True)
     maintainer = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="MaintainerID",
         blank=True,
         null=True,
@@ -1093,7 +1092,7 @@ class MaintenanceLogs(models.Model):
     comments = models.TextField(db_column="Comment", blank=True, default="")
     status = models.ForeignKey(
         "MaintenancelogStatus",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="MaintenanceLogStatusID",
         blank=True,
         null=True,
@@ -1102,7 +1101,7 @@ class MaintenanceLogs(models.Model):
 
     report_doc = models.ForeignKey(
         "ReportDocs",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="ReportId",
         related_name="maintenance_logs",
     )
@@ -1162,13 +1161,13 @@ class ReportFragilityTags(models.Model):
     link_id = models.AutoField(db_column="LinkId", primary_key=True)
     report_doc = models.ForeignKey(
         "ReportDocs",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="ReportObjectID",
         related_name="fragility_tags",
     )
     fragility_tag = models.ForeignKey(
         FragilityTag,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="FragilityTagID",
         related_name="report_docs",
     )
@@ -1183,12 +1182,12 @@ class ReportTerms(models.Model):
     link_id = models.AutoField(db_column="LinkId", primary_key=True)
     report_doc = models.ForeignKey(
         "ReportDocs",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="ReportObjectID",
         related_name="terms",
     )
     term = models.ForeignKey(
-        "Terms", models.DO_NOTHING, db_column="TermId", related_name="report_docs"
+        "Terms", on_delete=models.CASCADE, db_column="TermId", related_name="report_docs"
     )
 
     class Meta:
@@ -1258,14 +1257,14 @@ class ReportRunBridge(models.Model):
 
     report = models.OneToOneField(
         "Reports",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="ReportObjectID",
         related_name="runs",
     )
 
     run = models.OneToOneField(
         "ReportRunDetails",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="RunId",
         related_name="runs",
         to_field="rundataid",
@@ -1282,7 +1281,7 @@ class ReportRunBridge(models.Model):
 class ReportDocs(models.Model):
     ops_owner = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="report_doc_ops_owner",
         db_column="OperationalOwnerUserID",
         blank=True,
@@ -1290,7 +1289,7 @@ class ReportDocs(models.Model):
     )
     requester = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="report_doc_requester",
         db_column="Requester",
         blank=True,
@@ -1305,7 +1304,7 @@ class ReportDocs(models.Model):
     assumptions = models.TextField(db_column="KeyAssumptions", blank=True, default="")
     org_value = models.ForeignKey(
         OrganizationalValue,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="OrganizationalValueID",
         blank=True,
         null=True,
@@ -1313,7 +1312,7 @@ class ReportDocs(models.Model):
     )
     frequency = models.ForeignKey(
         RunFrequency,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="EstimatedRunFrequencyID",
         blank=True,
         null=True,
@@ -1321,7 +1320,7 @@ class ReportDocs(models.Model):
     )
     fragility = models.ForeignKey(
         Fragility,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="FragilityID",
         blank=True,
         null=True,
@@ -1332,7 +1331,7 @@ class ReportDocs(models.Model):
     )
     maintenance_schedule = models.ForeignKey(
         MaintenanceSchedule,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="MaintenanceScheduleID",
         blank=True,
         null=True,
@@ -1346,7 +1345,7 @@ class ReportDocs(models.Model):
     )
     created_by = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="report_doc_creator",
         db_column="CreatedBy",
         blank=True,
@@ -1354,7 +1353,7 @@ class ReportDocs(models.Model):
     )
     modified_by = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="report_doc_modifier",
         db_column="UpdatedBy",
         blank=True,
@@ -1370,7 +1369,7 @@ class ReportDocs(models.Model):
 
     report = models.OneToOneField(
         "Reports",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="ReportObjectID",
         related_name="docs",
         primary_key=True,
@@ -1409,7 +1408,7 @@ class RolePermissionLinks(models.Model):
     )
     role = models.ForeignKey(
         "UserRoles",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="RoleId",
         blank=True,
         null=True,
@@ -1417,7 +1416,7 @@ class RolePermissionLinks(models.Model):
     )
     permission = models.ForeignKey(
         "RolePermissions",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="RolePermissionsId",
         blank=True,
         null=True,
@@ -1449,7 +1448,7 @@ class SharedItems(models.Model):
     id = models.AutoField(db_column="Id", primary_key=True)
     sender = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="sent_shares",
         db_column="SharedFromUserId",
         blank=True,
@@ -1457,7 +1456,7 @@ class SharedItems(models.Model):
     )
     recipient = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="recieved_shares",
         db_column="SharedToUserId",
         blank=True,
@@ -1502,7 +1501,7 @@ class Terms(models.Model):
     )
     approved_by = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="term_approve_user",
         db_column="ApprovedByUserId",
         blank=True,
@@ -1520,7 +1519,7 @@ class Terms(models.Model):
     valid_to = models.DateTimeField(db_column="ValidToDateTime", blank=True, null=True)
     modified_by = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="term_modifier",
         db_column="UpdatedByUserId",
         blank=True,
@@ -1552,7 +1551,7 @@ class FavoriteFolders(models.Model):
     name = models.TextField(db_column="FolderName", blank=True, default="")
     user = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="UserId",
         blank=True,
         null=True,
@@ -1810,7 +1809,7 @@ class UserPreferences(models.Model):
     item_id = models.IntegerField(db_column="ItemId", blank=True, null=True)
     user = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="UserId",
         blank=True,
         null=True,
@@ -1826,7 +1825,7 @@ class GroupRoleLinks(models.Model):
     rolelinks_id = models.AutoField(db_column="GroupRoleLinksId", primary_key=True)
     group = models.ForeignKey(
         "Groups",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="GroupId",
         blank=True,
         null=True,
@@ -1834,7 +1833,7 @@ class GroupRoleLinks(models.Model):
     )
     role = models.ForeignKey(
         "UserRoles",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="UserRolesId",
         blank=True,
         null=True,
@@ -1850,7 +1849,7 @@ class UserRolelinks(models.Model):
     rolelinks_id = models.AutoField(db_column="UserRoleLinksId", primary_key=True)
     user = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="UserId",
         blank=True,
         null=True,
@@ -1858,7 +1857,7 @@ class UserRolelinks(models.Model):
     )
     role = models.ForeignKey(
         "UserRoles",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_column="UserRolesId",
         blank=True,
         null=True,

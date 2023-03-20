@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "atlas-of-information-management"
+name = "atlas-bi-library"
 version = "0.1.0"
 description = ""
 authors = [
@@ -8,9 +8,9 @@ authors = [
     "Dee Anna Hillebrand",
     "Scott Manley",
     "Madeline Matz",
-    "Christopher Pickering <cpickering@rhc.net>",
+    "Christopher Pickering <christopher@atlas.bi>",
     "Sean Pickering <spickering@rhc.net>",
-    "Dan Ryan",
+    "Dan Ryan <dan@atlas.bi>",
     "Richard Schissler",
     "Eric Shultz"
 ]
@@ -21,7 +21,7 @@ classifiers=[
     "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     "Operating System :: OS Independent",
     "Development Status :: 5 - Production/Stable",
-    "Framework :: Flask",
+    "Framework :: django",
     "Intended Audience :: Healthcare Industry",
     "Natural Language :: English",
 ]
@@ -34,9 +34,9 @@ keywords = [
 packages = [
     { include = "atlas" }
 ]
-homepage = "https://atlas-py.herokuapp.com"
-repository = "https://github.com/Riverside-Healthcare/Atlas-Py"
-documentation = "https://riverside-healthcare.github.io/Atlas-Py/"
+homepage = "https://atlas.bi"
+repository = "https://github.com/atlas-bi/atlas-bi-library-py"
+documentation = "https://atlas.bi/docs"
 
 
 [tool.poetry.dependencies]
@@ -66,13 +66,16 @@ gunicorn = "^20.1.0"
 dj-database-url = "^0.5.0"
 pysolr = "^3.9.0"
 mssql-django = "^1.1.3"
-django-gulp = "^4.1.0"
 django-settings-export = "^1.2.1"
 tomli = "^2.0.1"
 bleach = "^5.0.1"
 pymemcache = "^3.5.2"
 django-fullurl = "^1.3"
 ua-parser = "^0.16.1"
+whitenoise = "^6.2.0"
+Brotli = "^1.0.9"
+django-extensions = "^3.2.1"
+PyYAML = "^6.0"
 
 
 
@@ -101,6 +104,7 @@ flake8-bandit = "^4.1.1"
 flake8-eradicate = "^1.4.0"
 coverage = "^6.4.4"
 selenium = "^4.5.0"
+django-gulp = "^4.1.0"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"

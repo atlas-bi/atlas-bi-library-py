@@ -54,7 +54,7 @@ if (
 ):
     urlpatterns.append(path("accounts/", include("django.contrib.auth.urls")))
 
-if hasattr(django_settings, "DEBUG") and getattr(django_settings, "DEBUG"):
+if getattr(django_settings, "DEBUG", False):
     import debug_toolbar
 
     urlpatterns += (path("__debug__/", include(debug_toolbar.urls)),)
@@ -114,8 +114,9 @@ def full_stack() -> str:
 
 def custom_error_view(request: HttpRequest, exception: Any = None) -> HttpResponse:
     """Log 500 errors."""
+
     AnalyticsErrors(
-        user=request.user,
+        user=request.user if not request.user.is_anonymous else None,
         status_code=404,
         referer=request.META.get("HTTP_REFERER"),
         useragent=request.headers.get("User-Agent"),
@@ -136,7 +137,7 @@ def custom_error_view(request: HttpRequest, exception: Any = None) -> HttpRespon
 def custom_warning_view(request: HttpRequest, exception: Any = None) -> HttpResponse:
     """Log 400 errors."""
     AnalyticsErrors(
-        user=request.user,
+        user=request.user if not request.user.is_anonymous else None,
         status_code=404,
         referer=request.META.get("HTTP_REFERER"),
         useragent=request.headers.get("User-Agent"),

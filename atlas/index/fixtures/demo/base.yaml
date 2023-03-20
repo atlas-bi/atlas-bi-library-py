@@ -1,0 +1,100 @@
+# Basic User
+- model: index.users
+  pk: 1
+  fields:
+    email: user@user.user
+    username: user@user.user
+    _full_name: Basic User
+    full_name: Basic User
+    _first_name: Basic
+    first_name: Basic
+
+# Admin User
+- model: index.users
+  pk: 2
+  fields:
+    email: admin@admin.admin
+    username: admin@admin.admin
+    _full_name: Admin User
+    full_name: Admin User
+    _first_name: Admin
+    first_name: Admin
+
+- model: index.userrolelinks
+  pk: 1
+  fields:
+    role_id: 1
+    user_id: 2
+
+# Term
+- model: index.terms
+  pk: 1
+  fields:
+    name: LOS Length of Stay
+    summary: "# LOS \n calculation ```sql\nselect *\n```"
+    technical_definition: "# LOS \n calculation ```sql\nselect *\n```"
+    approved: Y
+    approved_at: 2020-01-01 00:00:00+0
+    approved_by: 2
+    modified_by: 2
+    modified_at: 2020-01-01 00:00:00+0
+
+# Analytics
+- model: index.analytics
+  pk: 1
+  fields:
+    language: en-us
+    useragent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15
+    hostname: 127.0.0.1
+    href: 'http: //127.0.0.1:8000/analytics/'
+    protocol: 'http: '
+    search: ''
+    pathname: /analytics/
+    screen_height: 1335
+    screen_width: 1998
+    origin: 'http: //127.0.0.1:8000'
+    referrer: ''
+    load_time: 9135
+    zoom: 1
+    session_id: V2VkIEFwciAyOCAyMDIxIDEwOjIzOjEwIEdNVC0wNTAwIChDRFQp
+    page_id: V2VkIEFwciAyOCAyMDIxIDEwOjIzOjEwIEdNVC0wNTAwIChDRFQp
+    page_time: 46
+
+# Initiative
+- model: index.initiatives
+  pk: 1
+  fields:
+    name: Test Initiative to Do Something Cool
+    description: "This is a nice *description* about `nothing`. \n ```sql\n select something;\n```"
+    ops_owner: 1
+    exec_owner: 1
+    financial_impact: 1
+    strategic_importance: 1
+    modified_by: 1
+    modified_at: 2020-01-01 00:00:00+0
+
+# Collection
+- model: index.collections
+  pk: 1
+  fields:
+    initiative: 1
+    name: Test collection to group stuff up
+    description: "# Do\n\n## we\n\n```python\n\nneed one?```\n"
+    modified_at: 2020-01-01 00:00:00+0
+    modified_by: 1
+
+# Report
+- model: index.reports
+  pk: 1
+  fields:
+    name: Test report
+    modified_at: 2020-01-01 00:00:00+0
+    type: 1
+
+# Report docs
+- model: index.reportdocs
+  pk: 1
+  fields:
+    report_id: 1
+    modified_at: 2020-01-01 00:00:00+0
+    created_at: 2020-01-01 00:00:00+0

@@ -1,0 +1,30 @@
+- model: index.favoritefolders
+  fields:
+    user_id: 1
+    name: Top Reports
+    rank: 1
+- model: index.favoritefolders
+  fields:
+    user_id: 1
+    name: Old Reports
+    rank: 2
+- model: index.favoritefolders
+  fields:
+    user_id: 1
+    name: Folder 3
+    rank: 3
+- model: index.favoritefolders
+  fields:
+    user_id: 2
+    name: Top Reports
+    rank: 1
+- model: index.favoritefolders
+  fields:
+    user_id: 2
+    name: Old Reports
+    rank: 2
+- model: index.favoritefolders
+  fields:
+    user_id: 2
+    name: Folder 3
+    rank: 3

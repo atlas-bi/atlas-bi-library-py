@@ -1,20 +1,9 @@
-# This is an auto-generated Django model module.
-# You'll have to do the following manually to clean this up:
-#   * Rearrange models' order
-#   * Make sure each model has one field with primary_key=True
-#   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
-#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
-# Feel free to rename the models, but don't rename db_table values or field names.
-#
-# create with "poetry run python manage.py inspectdb --database=dg_db > index/models-dev.py"
-#
-# to import from various schemas = make sure user owns the schema, and then change it to default
-# for the user. run command for each schema.
-#
+"""Atlas Postgres Models."""
+# pylint: disable=C0115,C0116,E0307
 
 from typing import Any, Dict, List, Optional
 
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.db import models
 from django.db.models.query import QuerySet
 from django.urls import reverse
@@ -117,7 +106,7 @@ class ReportParameters(models.Model):
     parameter_id = models.AutoField(primary_key=True)
     report = models.ForeignKey(
         Reports,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="parameters",
     )
     name = models.TextField(blank=True, null=True)
@@ -128,7 +117,7 @@ class ReportAttachments(models.Model):
     attachment_id = models.AutoField(primary_key=True)
     report = models.ForeignKey(
         Reports,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="attachments",
     )
     name = models.TextField()
@@ -165,7 +154,7 @@ class ReportSystemTagLinks(models.Model):
     link_id = models.AutoField(primary_key=True)
     report = models.ForeignKey(
         Reports,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         blank=True,
         default="",
         related_name="system_tag_links",
@@ -173,7 +162,7 @@ class ReportSystemTagLinks(models.Model):
 
     tag = models.ForeignKey(
         ReportTags,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="system_report_links",
     )
     line = models.IntegerField(blank=True, null=True)
@@ -183,12 +172,12 @@ class ReportTagLinks(models.Model):
     link_id = models.AutoField(primary_key=True)
     report = models.ForeignKey(
         Reports,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         blank=True,
         default="",
         related_name="tags",
     )
-    tag = models.ForeignKey(Tags, models.DO_NOTHING, related_name="reports")
+    tag = models.ForeignKey(Tags, on_delete=models.CASCADE, related_name="reports")
     show_in_header = models.TextField(blank=True, null=True)
 
 
@@ -262,7 +251,7 @@ class ReportTypes(models.Model):
         return self.short_name or self.name
 
 
-class Users(AbstractUser):
+class Users(AbstractUser, PermissionsMixin):
     user_id = models.AutoField(primary_key=True)
     username = models.TextField()
     employee_id = models.TextField(blank=True, default="")
@@ -405,7 +394,7 @@ class UserSettings(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         blank=True,
         null=True,
         related_name="settings",
@@ -490,7 +479,7 @@ class AnalyticsErrors(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         blank=True,
         null=True,
         related_name="analytics_errors",
@@ -510,7 +499,7 @@ class AnalyticsTrace(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         blank=True,
         null=True,
         related_name="analytics_trace",
@@ -852,7 +841,7 @@ class MaintenanceLogs(models.Model):
     )
     report_doc = models.ForeignKey(
         "ReportDocs",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="maintenance_logs",
     )
 
@@ -895,7 +884,7 @@ class OrganizationalValue(models.Model):
 
 class ReportFragilityTags(models.Model):
     link_id = models.AutoField(primary_key=True)
-    report = models.ForeignKey(
+    report_doc = models.ForeignKey(
         "ReportDocs", on_delete=models.CASCADE, related_name="fragility_tags"
     )
     fragility_tag = models.ForeignKey(
@@ -903,7 +892,7 @@ class ReportFragilityTags(models.Model):
     )
 
     class Meta:
-        unique_together = (("report", "fragility_tag"),)
+        unique_together = (("report_doc", "fragility_tag"),)
 
 
 class ReportTerms(models.Model):
@@ -943,7 +932,7 @@ class ReportImages(models.Model):
 
 
 class ReportRunDetails(models.Model):
-    run_id = models.AutoField(db_column="RunId", primary_key=True)
+    run_id = models.AutoField(primary_key=True)
 
     user = models.ForeignKey(
         "Users",
@@ -955,7 +944,7 @@ class ReportRunDetails(models.Model):
 
     etl_date = models.DateTimeField()
     rundurationseconds = models.IntegerField(blank=True, null=True)
-    runstarttime = models.DateTimeField(db_column="RunStartTime")
+    runstarttime = models.DateTimeField()
     status = models.CharField(max_length=100, blank=True, null=True)
 
     rundataid = models.CharField(unique=True, max_length=450)
@@ -970,13 +959,13 @@ class ReportRunBridge(models.Model):
 
     report = models.OneToOneField(
         "Reports",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="runs",
     )
 
     run = models.OneToOneField(
         "ReportRunDetails",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="runs",
         to_field="rundataid",
     )
@@ -1111,14 +1100,14 @@ class SharedItems(models.Model):
     id = models.AutoField(primary_key=True)
     sender = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="sent_shares",
         blank=True,
         null=True,
     )
     recipient = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="recieved_shares",
         blank=True,
         null=True,
@@ -1184,7 +1173,7 @@ class FavoriteFolders(models.Model):
     name = models.TextField(blank=True, default="")
     user = models.ForeignKey(
         "Users",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         blank=True,
         null=True,
         related_name="favorite_folders",
@@ -1257,7 +1246,7 @@ class StarredReports(models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        related_name="favorites",
+        related_name="starred_reports",
     )
 
     class Meta:
@@ -1405,7 +1394,7 @@ class UserPreferences(models.Model):
     key = models.TextField(blank=True, default="")
     value = models.IntegerField(blank=True, null=True)
     item_id = models.IntegerField(blank=True, null=True)
-    user_id = models.ForeignKey(
+    user = models.ForeignKey(
         "Users",
         on_delete=models.CASCADE,
         blank=True,
@@ -1418,14 +1407,14 @@ class GroupRoleLinks(models.Model):
     rolelinks_id = models.AutoField(primary_key=True)
     group = models.ForeignKey(
         "Groups",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         blank=True,
         null=True,
         related_name="role_links",
     )
     role = models.ForeignKey(
         "UserRoles",
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         blank=True,
         null=True,
         related_name="role_groups",

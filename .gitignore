@@ -1,8 +1,6 @@
 packages/atlas-bi_*.*
 packages/atlas-bi-[0-9]*.[0-9]*.[0-9]*
 BrowserStackLocal
-package-lock.json
-poetry.lock
 .rejected
 .env
 .config

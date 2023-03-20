@@ -32,75 +32,89 @@
           href="{% static_hashed '/font/fontawesome/webfonts/fa-regular-400.woff2' %}"
           as="font"
           type="font/woff2"/>
-    <section class="hero is-fullheight">
-        <div class="hero-body">
-            <div class="container">
-                <div class="columns is-centered">
-                    <div class="column is-5-tablet is-4-desktop is-3-widescreen">
-                        <form class="box" action="" method="post" autocomplete="off">
-                            {% csrf_token %}
-                            <figure class="image container is-133x40 mb-5">
-                                <img src="{% static 'img/thinking-face-text-266x80.png' %}"
-                                     width="162"
-                                     height="50"
-                                     alt="atlas logo"
-                                     title="atlas logo"/>
-                            </figure>
-                            {% if settings.DEMO %}
-                                <div class="notification">
-                                    <h4 class="title is-4 has-text-centered">Demo Login Information</h4>
-                                    User: user@user.user, pass: 123
-                                    Admin: admin@admin.admin, pass: 123
+    <body>
+        <section class="hero is-fullheight">
+            <div class="hero-body">
+                <div class="container">
+                    <div class="columns is-centered">
+                        <div class="column is-5-tablet is-4-desktop is-3-widescreen">
+                            <form class="box" action="" method="post" autocomplete="off">
+                                {% csrf_token %}
+                                <figure class="image container is-133x40 mb-5">
+                                    <img src="{% static 'img/thinking-face-text-266x80.png' %}"
+                                         width="162"
+                                         height="50"
+                                         alt="atlas logo"
+                                         title="atlas logo"/>
+                                </figure>
+                                {% if settings.DEMO %}
+                                    <div class="notification">
+                                        <h4 class="title is-4">Demo Login Information</h4>
+                                        <p>
+                                            To login as an <strong>Admin</strong>:
+                                            <br />
+                                            email: <em>admin@admin.admin</em>
+                                            <br />
+                                            password: <em>123</em>
+                                            <br />
+                                            <br />
+                                            To login as a <strong>User</strong>:
+                                            <br />
+                                            email: <em>user@user.user</em>
+                                            <br />
+                                            password: <em>123</em>
+                                        </p>
+                                    </div>
+                                {% endif %}
+                                <div class="field">
+                                    <label class="label has-text-grey">Email Address</label>
+                                    <div class="control has-icons-left">
+                                        <input class="input"
+                                               autocapitalize="none"
+                                               autocomplete="username"
+                                               autofocus=""
+                                               id="id_username"
+                                               maxlength="254"
+                                               name="username"
+                                               required=""
+                                               type="text"/>
+                                        <span class="icon is-small is-left">
+                                            <i class="fa-solid fa-envelope"></i>
+                                        </span>
+                                    </div>
                                 </div>
-                            {% endif %}
-                            <div class="field">
-                                <label class="label has-text-grey">Email Address</label>
-                                <div class="control has-icons-left">
-                                    <input class="input"
-                                           autocapitalize="none"
-                                           autocomplete="username"
-                                           autofocus=""
-                                           id="id_username"
-                                           maxlength="254"
-                                           name="username"
-                                           required=""
-                                           type="text"/>
-                                    <span class="icon is-small is-left">
-                                        <i class="fa-solid fa-envelope"></i>
-                                    </span>
+                                <div class="field">
+                                    <label class="label has-text-grey">Password</label>
+                                    <div class="control has-icons-left">
+                                        <input class="input"
+                                               autocomplete="current-password"
+                                               id="id_password"
+                                               name="password"
+                                               required=""
+                                               type="password"
+                                               value="123"/>
+                                        <span class="icon is-small is-left">
+                                            <i class="fa-solid fa-lock"></i>
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="field">
-                                <label class="label has-text-grey">Password</label>
-                                <div class="control has-icons-left">
-                                    <input class="input"
-                                           autocomplete="current-password"
-                                           id="id_password"
-                                           name="password"
-                                           required=""
-                                           type="password"
-                                           value="123"/>
-                                    <span class="icon is-small is-left">
-                                        <i class="fa-solid fa-lock"></i>
-                                    </span>
+                                <div class="field mt-5 ">
+                                    <button class="button is-info is-light is-fullwidth"
+                                            type="submit"
+                                            value="Submit">Log In</button>
                                 </div>
+                                {% for error in form.username.errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
+                                {% if form.non_field_errors %}
+                                    {% for error in form.non_field_errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
+                                {% endif %}
+                            </form>
+                            <div class="has-text-centered">
+                                <small class="has-text-grey">©{% now "Y" %} | {{ settings.ORG_NAME }}</small>
                             </div>
-                            <div class="field mt-5 ">
-                                <button class="button is-info is-light is-fullwidth"
-                                        type="submit"
-                                        value="Submit">Log In</button>
-                            </div>
-                            {% for error in form.username.errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
-                            {% if form.non_field_errors %}
-                                {% for error in form.non_field_errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
-                            {% endif %}
-                        </form>
-                        <div class="has-text-centered">
-                            <small class="has-text-grey">©{% now "Y" %} | {{ settings.ORG_NAME }}</small>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </body>
 </html>

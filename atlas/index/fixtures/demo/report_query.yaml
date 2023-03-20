@@ -1,0 +1,791 @@
+- model: index.reportqueries
+  fields:
+    report_id: 10
+    query: |
+      select lpad( ,level*3, )||ename name,SYS_CONNECT_BY_PATH(ename,/) boss
+      from Employee_M
+      connect by prior employee_id = manager_id
+      start with manager_id is null;
+- model: index.reportqueries
+  fields:
+    report_id: 23
+    query: |
+      select t.name table_name, t.object_id, c.name column_name,c.column_id, i.name index_name, i.type, i.type_desc from sys.tables t, sys.columns c, sys.indexes i, sys.index_columns ic where t.object_id=c.object_id and c.object_id=i.object_id and ic.index_id=i.index_id and ic.column_id=c.column_id and t.name=tutorials;
+- model: index.reportqueries
+  fields:
+    report_id: 48
+    query: |
+      USE model;
+      GO DECLARE Student_Cursor CURSOR FOR
+       SELECT id, first_name, last_name, country FROM dbo.students WHERE country != US;
+        OPEN Student_Cursor;
+        FETCH NEXT FROM Student_Cursor;
+        WHILE @@FETCH_STATUS = 0
+          BEGIN
+          FETCH NEXT FROM Student_Cursor;
+           END;
+           CLOSE Student_Cursor;
+        DEALLOCATE Student_Cursor;
+        GO
+- model: index.reportqueries
+  fields:
+    report_id: 19
+    query: |
+      USE model;
+      GO CREATE TABLE varcharTable ( a varchar(10) );
+      GO INSERT INTO varcharTable VALUES (abcdefghij);
+      GO SELECT a FROM varcharTable;
+      GO
+- model: index.reportqueries
+  fields:
+    report_id: 2
+    query: |
+      select avg(price) from courses;
+      select name, price from courses group by name, price having avg(price) > 70;
+- model: index.reportqueries
+  fields:
+    report_id: 21
+    query: |
+      select sum(price) from courses;
+      select sum(price) from courses where price > 50;
+- model: index.reportqueries
+  fields:
+    report_id: 27
+    query: |
+      select c.*, FIRST_VALUE(c.name) OVER (ORDER BY c.price ASC) AS FirstValue_Asc from courses c order by c.price;
+      select c.*, FIRST_VALUE(c.name) OVER (ORDER BY c.price DESC) AS FirstValue_Desc from courses c where c.price < 100 and exists (select * from register_course rc where rc.course_id=c.id) order by c.price;
+- model: index.reportqueries
+  fields:
+    report_id: 13
+    query: |
+      USE model;
+      GO DECLARE @string AS varchar(100);
+      DECLARE @number AS int;
+      SET @string = 5500;
+      SET @number = CAST(@string AS INT);
+      PRINT @number;
+      GO
+- model: index.reportqueries
+  fields:
+    report_id: 20
+    query: |
+      IF OBJECT_ID (MyDepartment,U) IS NOT NULL
+      DROP TABLE MyDepartment;GO
+      SET ANSI_NULLS ONGO SET QUOTED_IDENTIFIER ONGO CREATE TABLE [dbo].[MyDepartment](
+       [DepartmentID] [smallint] NOT NULL,
+       [DepartmentName] [nvarchar](30) NOT NULL,
+       [ParentID] [nvarchar](40) NULL,   CONSTRAINT [PK_DepartmentID] PRIMARY KEY CLUSTERED ( [DepartmentID] ASC )
+       WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]) ON [PRIMARY] GO
+- model: index.reportqueries
+  fields:
+    report_id: 43
+    query: |
+      WITH OrgTree (DepartmentID, DepartmentName, ParentID, Tree)AS(
+       SELECT DepartmentID, DepartmentName, ParentID , 0 AS Tree
+        FROM MyDepartment
+       WHERE ParentID IS NULL
+       UNION ALL
+       SELECT MyDepartment.DepartmentID, MyDepartment.DepartmentName, MyDepartment.ParentID , OrgTree.Tree + 1
+       FROM MyDepartment
+       JOIN OrgTree ON MyDepartment.ParentID = OrgTree.DepartmentID) SELECT * FROM OrgTree ORDER BY Tree
+- model: index.reportqueries
+  fields:
+    report_id: 7
+    query: |
+      -- return everyone under Program Manager (ParentID = 8)
+      WITH OrgTree (DepartmentID, DepartmentName, ParentID, Tree)AS(
+         SELECT DepartmentID, DepartmentName, ParentID , 0 AS Tree
+          FROM MyDepartment
+         WHERE ParentID = 8
+         UNION ALL
+         SELECT MyDepartment.DepartmentID, MyDepartment.DepartmentName, MyDepartment.ParentID , OrgTree.Tree + 1
+         FROM MyDepartment
+         JOIN OrgTree ON MyDepartment.ParentID = OrgTree.DepartmentID)SELECT * FROM OrgTree;
+      -- return Vice President (DepartmentID = 4) and direct reports (ParentID = 4)
+      WITH OrgTree (DepartmentID, DepartmentName, ParentID, Tree)AS(
+         SELECT DepartmentID, DepartmentName, ParentID , 0 AS Tree
+          FROM MyDepartment
+         WHERE DepartmentID = 4
+         UNION ALL
+         SELECT MyDepartment.DepartmentID, MyDepartment.DepartmentName, MyDepartment.ParentID , OrgTree.Tree + 1
+         FROM MyDepartment
+         JOIN OrgTree ON MyDepartment.ParentID = OrgTree.DepartmentID
+         WHERE MyDepartment.ParentID = 4)SELECT * FROM OrgTree;
+           -- return everyone above Senior Manager (DepartmentID = 6)
+      WITH OrgTree(DepartmentName,ParentID,ReportsTo)AS(
+         SELECT T1.DepartmentName,T2.DepartmentID,T2.DepartmentName
+          FROM MyDepartment T1
+         INNER JOIN MyDepartment T2 ON T1.ParentID=T2.DepartmentID
+          WHERE T1.DepartmentID=6
+         UNION ALL
+         SELECT OT.ReportsTo,T2.DepartmentID,T2.DepartmentName
+         FROM OrgTree OT
+         INNER JOIN MyDepartment T1 ON OT.ParentID=T1.DepartmentID
+         INNER JOIN MyDepartment T2 ON T1.ParentID=T2.DepartmentID)SELECT * FROM OrgTree;
+      -- return list with of people with no direct reportsWITH OrgTree(ParentID, DepartmentID, DepartmentName, DepartmentLevel) AS (
+          SELECT ParentID, DepartmentID, DepartmentName, 0 AS DepartmentLevell
+          FROM MyDepartment
+           WHERE ParentID IS NULL
+          UNION ALL
+          SELECT e.ParentID, e.DepartmentID, e.DepartmentName,  DepartmentLevel + 1
+          FROM MyDepartment AS e
+          INNER JOIN OrgTree AS d ON e.ParentID = d.DepartmentID )SELECT * FROM OrgTree WHERE DepartmentLevel = 5;
+- model: index.reportqueries
+  fields:
+    report_id: 23
+    query: |
+      select lpad( ,level*3, )||ename name,SYS_CONNECT_BY_PATH(ename,/) bossfrom Employee_Mconnect by prior employee_id = manager_idstart with manager_id is null;
+- model: index.reportqueries
+  fields:
+    report_id: 29
+    query: |
+      select t.name table_name, t.object_id, c.name column_name,c.column_id, i.name index_name, i.type, i.type_desc from sys.tables t, sys.columns c, sys.indexes i, sys.index_columns ic where t.object_id=c.object_id and c.object_id=i.object_id and ic.index_id=i.index_id and ic.column_id=c.column_id and t.name=tutorials;
+- model: index.reportqueries
+  fields:
+    report_id: 16
+    query: |
+      USE model;
+      GO DECLARE Student_Cursor CURSOR FOR
+       SELECT id, first_name, last_name, country FROM dbo.students WHERE country != US;
+        OPEN Student_Cursor;
+        FETCH NEXT FROM Student_Cursor;
+        WHILE @@FETCH_STATUS = 0
+          BEGIN
+          FETCH NEXT FROM Student_Cursor;
+           END;
+           CLOSE Student_Cursor;
+        DEALLOCATE Student_Cursor;
+        GO
+- model: index.reportqueries
+  fields:
+    report_id: 44
+    query: |
+      USE model;
+      GO CREATE TABLE varcharTable ( a varchar(10) );
+      GO INSERT INTO varcharTable VALUES (abcdefghij);
+      GO SELECT a FROM varcharTable;
+      GO
+- model: index.reportqueries
+  fields:
+    report_id: 36
+    query: |
+      select avg(price) from courses;
+      select name, price from courses group by name, price having avg(price) > 70;
+- model: index.reportqueries
+  fields:
+    report_id: 28
+    query: |
+      select sum(price) from courses;
+      select sum(price) from courses where price > 50;
+- model: index.reportqueries
+  fields:
+    report_id: 23
+    query: |
+      select c.*, FIRST_VALUE(c.name) OVER (ORDER BY c.price ASC) AS FirstValue_Asc from courses c order by c.price;
+      select c.*, FIRST_VALUE(c.name) OVER (ORDER BY c.price DESC) AS FirstValue_Desc from courses c where c.price < 100 and exists (select * from register_course rc where rc.course_id=c.id) order by c.price;
+- model: index.reportqueries
+  fields:
+    report_id: 8
+    query: |
+      USE model;
+      GO DECLARE @string AS varchar(100);
+      DECLARE @number AS int;
+      SET @string = 5500;
+      SET @number = CAST(@string AS INT);
+      PRINT @number;
+      GO
+- model: index.reportqueries
+  fields:
+    report_id: 27
+    query: |
+      IF OBJECT_ID (MyDepartment,U) IS NOT NULL
+      DROP TABLE MyDepartment;GO
+      SET ANSI_NULLS ONGO SET QUOTED_IDENTIFIER ONGO CREATE TABLE [dbo].[MyDepartment](
+       [DepartmentID] [smallint] NOT NULL,
+       [DepartmentName] [nvarchar](30) NOT NULL,
+       [ParentID] [nvarchar](40) NULL,   CONSTRAINT [PK_DepartmentID] PRIMARY KEY CLUSTERED ( [DepartmentID] ASC )
+       WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]) ON [PRIMARY] GO
+- model: index.reportqueries
+  fields:
+    report_id: 30
+    query: |
+      WITH OrgTree (DepartmentID, DepartmentName, ParentID, Tree)AS(
+       SELECT DepartmentID, DepartmentName, ParentID , 0 AS Tree
+        FROM MyDepartment
+       WHERE ParentID IS NULL
+       UNION ALL
+       SELECT MyDepartment.DepartmentID, MyDepartment.DepartmentName, MyDepartment.ParentID , OrgTree.Tree + 1
+       FROM MyDepartment
+       JOIN OrgTree ON MyDepartment.ParentID = OrgTree.DepartmentID) SELECT * FROM OrgTree ORDER BY Tree
+- model: index.reportqueries
+  fields:
+    report_id: 3
+    query: |
+      -- return everyone under Program Manager (ParentID = 8)
+      WITH OrgTree (DepartmentID, DepartmentName, ParentID, Tree)AS(
+         SELECT DepartmentID, DepartmentName, ParentID , 0 AS Tree
+          FROM MyDepartment
+         WHERE ParentID = 8
+         UNION ALL
+         SELECT MyDepartment.DepartmentID, MyDepartment.DepartmentName, MyDepartment.ParentID , OrgTree.Tree + 1
+         FROM MyDepartment
+         JOIN OrgTree ON MyDepartment.ParentID = OrgTree.DepartmentID)SELECT * FROM OrgTree;
+      -- return Vice President (DepartmentID = 4) and direct reports (ParentID = 4)
+      WITH OrgTree (DepartmentID, DepartmentName, ParentID, Tree)AS(
+         SELECT DepartmentID, DepartmentName, ParentID , 0 AS Tree
+          FROM MyDepartment
+         WHERE DepartmentID = 4
+         UNION ALL
+         SELECT MyDepartment.DepartmentID, MyDepartment.DepartmentName, MyDepartment.ParentID , OrgTree.Tree + 1
+         FROM MyDepartment
+         JOIN OrgTree ON MyDepartment.ParentID = OrgTree.DepartmentID
+         WHERE MyDepartment.ParentID = 4)SELECT * FROM OrgTree;
+           -- return everyone above Senior Manager (DepartmentID = 6)
+      WITH OrgTree(DepartmentName,ParentID,ReportsTo)AS(
+         SELECT T1.DepartmentName,T2.DepartmentID,T2.DepartmentName
+          FROM MyDepartment T1
+         INNER JOIN MyDepartment T2 ON T1.ParentID=T2.DepartmentID
+          WHERE T1.DepartmentID=6
+         UNION ALL
+         SELECT OT.ReportsTo,T2.DepartmentID,T2.DepartmentName
+         FROM OrgTree OT
+         INNER JOIN MyDepartment T1 ON OT.ParentID=T1.DepartmentID
+         INNER JOIN MyDepartment T2 ON T1.ParentID=T2.DepartmentID)SELECT * FROM OrgTree;
+      -- return list with of people with no direct reportsWITH OrgTree(ParentID, DepartmentID, DepartmentName, DepartmentLevel) AS (
+          SELECT ParentID, DepartmentID, DepartmentName, 0 AS DepartmentLevell
+          FROM MyDepartment
+           WHERE ParentID IS NULL
+          UNION ALL
+          SELECT e.ParentID, e.DepartmentID, e.DepartmentName,  DepartmentLevel + 1
+          FROM MyDepartment AS e
+          INNER JOIN OrgTree AS d ON e.ParentID = d.DepartmentID )SELECT * FROM OrgTree WHERE DepartmentLevel = 5;
+- model: index.reportqueries
+  fields:
+    report_id: 21
+    query: |
+      select lpad( ,level*3, )||ename name,SYS_CONNECT_BY_PATH(ename,/) bossfrom Employee_Mconnect by prior employee_id = manager_idstart with manager_id is null;
+- model: index.reportqueries
+  fields:
+    report_id: 46
+    query: |
+      select t.name table_name, t.object_id, c.name column_name,c.column_id, i.name index_name, i.type, i.type_desc from sys.tables t, sys.columns c, sys.indexes i, sys.index_columns ic where t.object_id=c.object_id and c.object_id=i.object_id and ic.index_id=i.index_id and ic.column_id=c.column_id and t.name=tutorials;
+- model: index.reportqueries
+  fields:
+    report_id: 41
+    query: |
+      USE model;
+      GO DECLARE Student_Cursor CURSOR FOR
+       SELECT id, first_name, last_name, country FROM dbo.students WHERE country != US;
+        OPEN Student_Cursor;
+        FETCH NEXT FROM Student_Cursor;
+        WHILE @@FETCH_STATUS = 0
+          BEGIN
+          FETCH NEXT FROM Student_Cursor;
+           END;
+           CLOSE Student_Cursor;
+        DEALLOCATE Student_Cursor;
+        GO
+- model: index.reportqueries
+  fields:
+    report_id: 50
+    query: |
+      USE model;
+      GO CREATE TABLE varcharTable ( a varchar(10) );
+      GO INSERT INTO varcharTable VALUES (abcdefghij);
+      GO SELECT a FROM varcharTable;
+      GO
+- model: index.reportqueries
+  fields:
+    report_id: 20
+    query: |
+      select avg(price) from courses;
+      select name, price from courses group by name, price having avg(price) > 70;
+- model: index.reportqueries
+  fields:
+    report_id: 44
+    query: |
+      select sum(price) from courses;
+      select sum(price) from courses where price > 50;
+- model: index.reportqueries
+  fields:
+    report_id: 30
+    query: |
+      select c.*, FIRST_VALUE(c.name) OVER (ORDER BY c.price ASC) AS FirstValue_Asc from courses c order by c.price;
+      select c.*, FIRST_VALUE(c.name) OVER (ORDER BY c.price DESC) AS FirstValue_Desc from courses c where c.price < 100 and exists (select * from register_course rc where rc.course_id=c.id) order by c.price;
+- model: index.reportqueries
+  fields:
+    report_id: 26
+    query: |
+      USE model;
+      GO DECLARE @string AS varchar(100);
+      DECLARE @number AS int;
+      SET @string = 5500;
+      SET @number = CAST(@string AS INT);
+      PRINT @number;
+      GO
+- model: index.reportqueries
+  fields:
+    report_id: 18
+    query: |
+      IF OBJECT_ID (MyDepartment,U) IS NOT NULL
+      DROP TABLE MyDepartment;GO
+      SET ANSI_NULLS ONGO SET QUOTED_IDENTIFIER ONGO CREATE TABLE [dbo].[MyDepartment](
+       [DepartmentID] [smallint] NOT NULL,
+       [DepartmentName] [nvarchar](30) NOT NULL,
+       [ParentID] [nvarchar](40) NULL,   CONSTRAINT [PK_DepartmentID] PRIMARY KEY CLUSTERED ( [DepartmentID] ASC )
+       WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]) ON [PRIMARY] GO
+- model: index.reportqueries
+  fields:
+    report_id: 46
+    query: |
+      WITH OrgTree (DepartmentID, DepartmentName, ParentID, Tree)AS(
+       SELECT DepartmentID, DepartmentName, ParentID , 0 AS Tree
+        FROM MyDepartment
+       WHERE ParentID IS NULL
+       UNION ALL
+       SELECT MyDepartment.DepartmentID, MyDepartment.DepartmentName, MyDepartment.ParentID , OrgTree.Tree + 1
+       FROM MyDepartment
+       JOIN OrgTree ON MyDepartment.ParentID = OrgTree.DepartmentID) SELECT * FROM OrgTree ORDER BY Tree
+- model: index.reportqueries
+  fields:
+    report_id: 27
+    query: |
+      -- return everyone under Program Manager (ParentID = 8)
+      WITH OrgTree (DepartmentID, DepartmentName, ParentID, Tree)AS(
+         SELECT DepartmentID, DepartmentName, ParentID , 0 AS Tree
+          FROM MyDepartment
+         WHERE ParentID = 8
+         UNION ALL
+         SELECT MyDepartment.DepartmentID, MyDepartment.DepartmentName, MyDepartment.ParentID , OrgTree.Tree + 1
+         FROM MyDepartment
+         JOIN OrgTree ON MyDepartment.ParentID = OrgTree.DepartmentID)SELECT * FROM OrgTree;
+      -- return Vice President (DepartmentID = 4) and direct reports (ParentID = 4)
+      WITH OrgTree (DepartmentID, DepartmentName, ParentID, Tree)AS(
+         SELECT DepartmentID, DepartmentName, ParentID , 0 AS Tree
+          FROM MyDepartment
+         WHERE DepartmentID = 4
+         UNION ALL
+         SELECT MyDepartment.DepartmentID, MyDepartment.DepartmentName, MyDepartment.ParentID , OrgTree.Tree + 1
+         FROM MyDepartment
+         JOIN OrgTree ON MyDepartment.ParentID = OrgTree.DepartmentID
+         WHERE MyDepartment.ParentID = 4)SELECT * FROM OrgTree;
+           -- return everyone above Senior Manager (DepartmentID = 6)
+      WITH OrgTree(DepartmentName,ParentID,ReportsTo)AS(
+         SELECT T1.DepartmentName,T2.DepartmentID,T2.DepartmentName
+          FROM MyDepartment T1
+         INNER JOIN MyDepartment T2 ON T1.ParentID=T2.DepartmentID
+          WHERE T1.DepartmentID=6
+         UNION ALL
+         SELECT OT.ReportsTo,T2.DepartmentID,T2.DepartmentName
+         FROM OrgTree OT
+         INNER JOIN MyDepartment T1 ON OT.ParentID=T1.DepartmentID
+         INNER JOIN MyDepartment T2 ON T1.ParentID=T2.DepartmentID)SELECT * FROM OrgTree;
+      -- return list with of people with no direct reportsWITH OrgTree(ParentID, DepartmentID, DepartmentName, DepartmentLevel) AS (
+          SELECT ParentID, DepartmentID, DepartmentName, 0 AS DepartmentLevell
+          FROM MyDepartment
+           WHERE ParentID IS NULL
+          UNION ALL
+          SELECT e.ParentID, e.DepartmentID, e.DepartmentName,  DepartmentLevel + 1
+          FROM MyDepartment AS e
+          INNER JOIN OrgTree AS d ON e.ParentID = d.DepartmentID )SELECT * FROM OrgTree WHERE DepartmentLevel = 5;
+- model: index.reportqueries
+  fields:
+    report_id: 47
+    query: |
+      select lpad( ,level*3, )||ename name,SYS_CONNECT_BY_PATH(ename,/) bossfrom Employee_Mconnect by prior employee_id = manager_idstart with manager_id is null;
+- model: index.reportqueries
+  fields:
+    report_id: 29
+    query: |
+      select t.name table_name, t.object_id, c.name column_name,c.column_id, i.name index_name, i.type, i.type_desc from sys.tables t, sys.columns c, sys.indexes i, sys.index_columns ic where t.object_id=c.object_id and c.object_id=i.object_id and ic.index_id=i.index_id and ic.column_id=c.column_id and t.name=tutorials;
+- model: index.reportqueries
+  fields:
+    report_id: 37
+    query: |
+      USE model;
+      GO DECLARE Student_Cursor CURSOR FOR
+       SELECT id, first_name, last_name, country FROM dbo.students WHERE country != US;
+        OPEN Student_Cursor;
+        FETCH NEXT FROM Student_Cursor;
+        WHILE @@FETCH_STATUS = 0
+          BEGIN
+          FETCH NEXT FROM Student_Cursor;
+           END;
+           CLOSE Student_Cursor;
+        DEALLOCATE Student_Cursor;
+        GO
+- model: index.reportqueries
+  fields:
+    report_id: 17
+    query: |
+      USE model;
+      GO CREATE TABLE varcharTable ( a varchar(10) );
+      GO INSERT INTO varcharTable VALUES (abcdefghij);
+      GO SELECT a FROM varcharTable;
+      GO
+- model: index.reportqueries
+  fields:
+    report_id: 10
+    query: |
+      select avg(price) from courses;
+      select name, price from courses group by name, price having avg(price) > 70;
+- model: index.reportqueries
+  fields:
+    report_id: 21
+    query: |
+      select sum(price) from courses;
+      select sum(price) from courses where price > 50;
+- model: index.reportqueries
+  fields:
+    report_id: 8
+    query: |
+      select c.*, FIRST_VALUE(c.name) OVER (ORDER BY c.price ASC) AS FirstValue_Asc from courses c order by c.price;
+      select c.*, FIRST_VALUE(c.name) OVER (ORDER BY c.price DESC) AS FirstValue_Desc from courses c where c.price < 100 and exists (select * from register_course rc where rc.course_id=c.id) order by c.price;
+- model: index.reportqueries
+  fields:
+    report_id: 13
+    query: |
+      USE model;
+      GO DECLARE @string AS varchar(100);
+      DECLARE @number AS int;
+      SET @string = 5500;
+      SET @number = CAST(@string AS INT);
+      PRINT @number;
+      GO
+- model: index.reportqueries
+  fields:
+    report_id: 49
+    query: |
+      IF OBJECT_ID (MyDepartment,U) IS NOT NULL
+      DROP TABLE MyDepartment;GO
+      SET ANSI_NULLS ONGO SET QUOTED_IDENTIFIER ONGO CREATE TABLE [dbo].[MyDepartment](
+       [DepartmentID] [smallint] NOT NULL,
+       [DepartmentName] [nvarchar](30) NOT NULL,
+       [ParentID] [nvarchar](40) NULL,   CONSTRAINT [PK_DepartmentID] PRIMARY KEY CLUSTERED ( [DepartmentID] ASC )
+       WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]) ON [PRIMARY] GO
+- model: index.reportqueries
+  fields:
+    report_id: 5
+    query: |
+      WITH OrgTree (DepartmentID, DepartmentName, ParentID, Tree)AS(
+       SELECT DepartmentID, DepartmentName, ParentID , 0 AS Tree
+        FROM MyDepartment
+       WHERE ParentID IS NULL
+       UNION ALL
+       SELECT MyDepartment.DepartmentID, MyDepartment.DepartmentName, MyDepartment.ParentID , OrgTree.Tree + 1
+       FROM MyDepartment
+       JOIN OrgTree ON MyDepartment.ParentID = OrgTree.DepartmentID) SELECT * FROM OrgTree ORDER BY Tree
+- model: index.reportqueries
+  fields:
+    report_id: 12
+    query: |
+      -- return everyone under Program Manager (ParentID = 8)
+      WITH OrgTree (DepartmentID, DepartmentName, ParentID, Tree)AS(
+         SELECT DepartmentID, DepartmentName, ParentID , 0 AS Tree
+          FROM MyDepartment
+         WHERE ParentID = 8
+         UNION ALL
+         SELECT MyDepartment.DepartmentID, MyDepartment.DepartmentName, MyDepartment.ParentID , OrgTree.Tree + 1
+         FROM MyDepartment
+         JOIN OrgTree ON MyDepartment.ParentID = OrgTree.DepartmentID)SELECT * FROM OrgTree;
+      -- return Vice President (DepartmentID = 4) and direct reports (ParentID = 4)
+      WITH OrgTree (DepartmentID, DepartmentName, ParentID, Tree)AS(
+         SELECT DepartmentID, DepartmentName, ParentID , 0 AS Tree
+          FROM MyDepartment
+         WHERE DepartmentID = 4
+         UNION ALL
+         SELECT MyDepartment.DepartmentID, MyDepartment.DepartmentName, MyDepartment.ParentID , OrgTree.Tree + 1
+         FROM MyDepartment
+         JOIN OrgTree ON MyDepartment.ParentID = OrgTree.DepartmentID
+         WHERE MyDepartment.ParentID = 4)SELECT * FROM OrgTree;
+           -- return everyone above Senior Manager (DepartmentID = 6)
+      WITH OrgTree(DepartmentName,ParentID,ReportsTo)AS(
+         SELECT T1.DepartmentName,T2.DepartmentID,T2.DepartmentName
+          FROM MyDepartment T1
+         INNER JOIN MyDepartment T2 ON T1.ParentID=T2.DepartmentID
+          WHERE T1.DepartmentID=6
+         UNION ALL
+         SELECT OT.ReportsTo,T2.DepartmentID,T2.DepartmentName
+         FROM OrgTree OT
+         INNER JOIN MyDepartment T1 ON OT.ParentID=T1.DepartmentID
+         INNER JOIN MyDepartment T2 ON T1.ParentID=T2.DepartmentID)SELECT * FROM OrgTree;
+      -- return list with of people with no direct reportsWITH OrgTree(ParentID, DepartmentID, DepartmentName, DepartmentLevel) AS (
+          SELECT ParentID, DepartmentID, DepartmentName, 0 AS DepartmentLevell
+          FROM MyDepartment
+           WHERE ParentID IS NULL
+          UNION ALL
+          SELECT e.ParentID, e.DepartmentID, e.DepartmentName,  DepartmentLevel + 1
+          FROM MyDepartment AS e
+          INNER JOIN OrgTree AS d ON e.ParentID = d.DepartmentID )SELECT * FROM OrgTree WHERE DepartmentLevel = 5;
+- model: index.reportqueries
+  fields:
+    report_id: 8
+    query: |
+      select lpad( ,level*3, )||ename name,SYS_CONNECT_BY_PATH(ename,/) bossfrom Employee_Mconnect by prior employee_id = manager_idstart with manager_id is null;
+- model: index.reportqueries
+  fields:
+    report_id: 23
+    query: |
+      select t.name table_name, t.object_id, c.name column_name,c.column_id, i.name index_name, i.type, i.type_desc from sys.tables t, sys.columns c, sys.indexes i, sys.index_columns ic where t.object_id=c.object_id and c.object_id=i.object_id and ic.index_id=i.index_id and ic.column_id=c.column_id and t.name=tutorials;
+- model: index.reportqueries
+  fields:
+    report_id: 21
+    query: |
+      USE model;
+      GO DECLARE Student_Cursor CURSOR FOR
+       SELECT id, first_name, last_name, country FROM dbo.students WHERE country != US;
+        OPEN Student_Cursor;
+        FETCH NEXT FROM Student_Cursor;
+        WHILE @@FETCH_STATUS = 0
+          BEGIN
+          FETCH NEXT FROM Student_Cursor;
+           END;
+           CLOSE Student_Cursor;
+        DEALLOCATE Student_Cursor;
+        GO
+- model: index.reportqueries
+  fields:
+    report_id: 41
+    query: |
+      USE model;
+      GO CREATE TABLE varcharTable ( a varchar(10) );
+      GO INSERT INTO varcharTable VALUES (abcdefghij);
+      GO SELECT a FROM varcharTable;
+      GO
+- model: index.reportqueries
+  fields:
+    report_id: 17
+    query: |
+      select avg(price) from courses;
+      select name, price from courses group by name, price having avg(price) > 70;
+- model: index.reportqueries
+  fields:
+    report_id: 41
+    query: |
+      select sum(price) from courses;
+      select sum(price) from courses where price > 50;
+- model: index.reportqueries
+  fields:
+    report_id: 49
+    query: |
+      select c.*, FIRST_VALUE(c.name) OVER (ORDER BY c.price ASC) AS FirstValue_Asc from courses c order by c.price;
+      select c.*, FIRST_VALUE(c.name) OVER (ORDER BY c.price DESC) AS FirstValue_Desc from courses c where c.price < 100 and exists (select * from register_course rc where rc.course_id=c.id) order by c.price;
+- model: index.reportqueries
+  fields:
+    report_id: 1
+    query: |
+      USE model;
+      GO DECLARE @string AS varchar(100);
+      DECLARE @number AS int;
+      SET @string = 5500;
+      SET @number = CAST(@string AS INT);
+      PRINT @number;
+      GO
+- model: index.reportqueries
+  fields:
+    report_id: 30
+    query: |
+      IF OBJECT_ID (MyDepartment,U) IS NOT NULL
+      DROP TABLE MyDepartment;GO
+      SET ANSI_NULLS ONGO SET QUOTED_IDENTIFIER ONGO CREATE TABLE [dbo].[MyDepartment](
+       [DepartmentID] [smallint] NOT NULL,
+       [DepartmentName] [nvarchar](30) NOT NULL,
+       [ParentID] [nvarchar](40) NULL,   CONSTRAINT [PK_DepartmentID] PRIMARY KEY CLUSTERED ( [DepartmentID] ASC )
+       WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]) ON [PRIMARY] GO
+- model: index.reportqueries
+  fields:
+    report_id: 6
+    query: |
+      WITH OrgTree (DepartmentID, DepartmentName, ParentID, Tree)AS(
+       SELECT DepartmentID, DepartmentName, ParentID , 0 AS Tree
+        FROM MyDepartment
+       WHERE ParentID IS NULL
+       UNION ALL
+       SELECT MyDepartment.DepartmentID, MyDepartment.DepartmentName, MyDepartment.ParentID , OrgTree.Tree + 1
+       FROM MyDepartment
+       JOIN OrgTree ON MyDepartment.ParentID = OrgTree.DepartmentID) SELECT * FROM OrgTree ORDER BY Tree
+- model: index.reportqueries
+  fields:
+    report_id: 1
+    query: |
+      -- return everyone under Program Manager (ParentID = 8)
+      WITH OrgTree (DepartmentID, DepartmentName, ParentID, Tree)AS(
+         SELECT DepartmentID, DepartmentName, ParentID , 0 AS Tree
+          FROM MyDepartment
+         WHERE ParentID = 8
+         UNION ALL
+         SELECT MyDepartment.DepartmentID, MyDepartment.DepartmentName, MyDepartment.ParentID , OrgTree.Tree + 1
+         FROM MyDepartment
+         JOIN OrgTree ON MyDepartment.ParentID = OrgTree.DepartmentID)SELECT * FROM OrgTree;
+      -- return Vice President (DepartmentID = 4) and direct reports (ParentID = 4)
+      WITH OrgTree (DepartmentID, DepartmentName, ParentID, Tree)AS(
+         SELECT DepartmentID, DepartmentName, ParentID , 0 AS Tree
+          FROM MyDepartment
+         WHERE DepartmentID = 4
+         UNION ALL
+         SELECT MyDepartment.DepartmentID, MyDepartment.DepartmentName, MyDepartment.ParentID , OrgTree.Tree + 1
+         FROM MyDepartment
+         JOIN OrgTree ON MyDepartment.ParentID = OrgTree.DepartmentID
+         WHERE MyDepartment.ParentID = 4)SELECT * FROM OrgTree;
+           -- return everyone above Senior Manager (DepartmentID = 6)
+      WITH OrgTree(DepartmentName,ParentID,ReportsTo)AS(
+         SELECT T1.DepartmentName,T2.DepartmentID,T2.DepartmentName
+          FROM MyDepartment T1
+         INNER JOIN MyDepartment T2 ON T1.ParentID=T2.DepartmentID
+          WHERE T1.DepartmentID=6
+         UNION ALL
+         SELECT OT.ReportsTo,T2.DepartmentID,T2.DepartmentName
+         FROM OrgTree OT
+         INNER JOIN MyDepartment T1 ON OT.ParentID=T1.DepartmentID
+         INNER JOIN MyDepartment T2 ON T1.ParentID=T2.DepartmentID)SELECT * FROM OrgTree;
+      -- return list with of people with no direct reportsWITH OrgTree(ParentID, DepartmentID, DepartmentName, DepartmentLevel) AS (
+          SELECT ParentID, DepartmentID, DepartmentName, 0 AS DepartmentLevell
+          FROM MyDepartment
+           WHERE ParentID IS NULL
+          UNION ALL
+          SELECT e.ParentID, e.DepartmentID, e.DepartmentName,  DepartmentLevel + 1
+          FROM MyDepartment AS e
+          INNER JOIN OrgTree AS d ON e.ParentID = d.DepartmentID )SELECT * FROM OrgTree WHERE DepartmentLevel = 5;
+- model: index.reportqueries
+  fields:
+    report_id: 33
+    query: |
+      select lpad( ,level*3, )||ename name,SYS_CONNECT_BY_PATH(ename,/) bossfrom Employee_Mconnect by prior employee_id = manager_idstart with manager_id is null;
+- model: index.reportqueries
+  fields:
+    report_id: 42
+    query: |
+      select t.name table_name, t.object_id, c.name column_name,c.column_id, i.name index_name, i.type, i.type_desc from sys.tables t, sys.columns c, sys.indexes i, sys.index_columns ic where t.object_id=c.object_id and c.object_id=i.object_id and ic.index_id=i.index_id and ic.column_id=c.column_id and t.name=tutorials;
+- model: index.reportqueries
+  fields:
+    report_id: 26
+    query: |
+      USE model;
+      GO DECLARE Student_Cursor CURSOR FOR
+       SELECT id, first_name, last_name, country FROM dbo.students WHERE country != US;
+        OPEN Student_Cursor;
+        FETCH NEXT FROM Student_Cursor;
+        WHILE @@FETCH_STATUS = 0
+          BEGIN
+          FETCH NEXT FROM Student_Cursor;
+           END;
+           CLOSE Student_Cursor;
+        DEALLOCATE Student_Cursor;
+        GO
+- model: index.reportqueries
+  fields:
+    report_id: 27
+    query: |
+      USE model;
+      GO CREATE TABLE varcharTable ( a varchar(10) );
+      GO INSERT INTO varcharTable VALUES (abcdefghij);
+      GO SELECT a FROM varcharTable;
+      GO
+- model: index.reportqueries
+  fields:
+    report_id: 43
+    query: |
+      select avg(price) from courses;
+      select name, price from courses group by name, price having avg(price) > 70;
+- model: index.reportqueries
+  fields:
+    report_id: 38
+    query: |
+      select sum(price) from courses;
+      select sum(price) from courses where price > 50;
+- model: index.reportqueries
+  fields:
+    report_id: 10
+    query: |
+      select c.*, FIRST_VALUE(c.name) OVER (ORDER BY c.price ASC) AS FirstValue_Asc from courses c order by c.price;
+      select c.*, FIRST_VALUE(c.name) OVER (ORDER BY c.price DESC) AS FirstValue_Desc from courses c where c.price < 100 and exists (select * from register_course rc where rc.course_id=c.id) order by c.price;
+- model: index.reportqueries
+  fields:
+    report_id: 20
+    query: |
+      USE model;
+      GO DECLARE @string AS varchar(100);
+      DECLARE @number AS int;
+      SET @string = 5500;
+      SET @number = CAST(@string AS INT);
+      PRINT @number;
+      GO
+- model: index.reportqueries
+  fields:
+    report_id: 48
+    query: |
+      IF OBJECT_ID (MyDepartment,U) IS NOT NULL
+      DROP TABLE MyDepartment;GO
+      SET ANSI_NULLS ONGO SET QUOTED_IDENTIFIER ONGO CREATE TABLE [dbo].[MyDepartment](
+       [DepartmentID] [smallint] NOT NULL,
+       [DepartmentName] [nvarchar](30) NOT NULL,
+       [ParentID] [nvarchar](40) NULL,   CONSTRAINT [PK_DepartmentID] PRIMARY KEY CLUSTERED ( [DepartmentID] ASC )
+       WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]) ON [PRIMARY] GO
+- model: index.reportqueries
+  fields:
+    report_id: 44
+    query: |
+      WITH OrgTree (DepartmentID, DepartmentName, ParentID, Tree)AS(
+       SELECT DepartmentID, DepartmentName, ParentID , 0 AS Tree
+          FROM MyDepartment
+         WHERE ParentID IS NULL
+         UNION ALL
+         SELECT MyDepartment.DepartmentID, MyDepartment.DepartmentName, MyDepartment.ParentID , OrgTree.Tree + 1
+         FROM MyDepartment
+         JOIN OrgTree ON MyDepartment.ParentID = OrgTree.DepartmentID)
+       SELECT * FROM OrgTree ORDER BY Tree
+- model: index.reportqueries
+  fields:
+    report_id: 9
+    query: |
+      -- return everyone under Program Manager (ParentID = 8)
+      WITH OrgTree (DepartmentID, DepartmentName, ParentID, Tree)AS(
+        SELECT DepartmentID, DepartmentName, ParentID , 0 AS Tree
+          FROM MyDepartment
+          WHERE ParentID = 8
+        UNION ALL
+      SELECT MyDepartment.DepartmentID, MyDepartment.DepartmentName, MyDepartment.ParentID , OrgTree.Tree + 1
+      FROM MyDepartment
+      JOIN OrgTree ON MyDepartment.ParentID = OrgTree.DepartmentID)
+
+      SELECT * FROM OrgTree;
+
+      -- return Vice President (DepartmentID = 4) and direct reports (ParentID = 4)
+
+      WITH OrgTree (DepartmentID, DepartmentName, ParentID, Tree)
+       AS(
+        SELECT DepartmentID, DepartmentName, ParentID , 0 AS Tree
+          FROM MyDepartment
+         WHERE DepartmentID = 4
+         UNION ALL
+         SELECT MyDepartment.DepartmentID, MyDepartment.DepartmentName, MyDepartment.ParentID , OrgTree.Tree + 1
+         FROM MyDepartment
+         JOIN OrgTree ON MyDepartment.ParentID = OrgTree.DepartmentID
+         WHERE MyDepartment.ParentID = 4)SELECT * FROM OrgTree;
+
+      -- return everyone above Senior Manager (DepartmentID = 6)
+      WITH OrgTree(DepartmentName,ParentID,ReportsTo)AS(
+        SELECT T1.DepartmentName,T2.DepartmentID,T2.DepartmentName
+          FROM MyDepartment T1
+         INNER JOIN MyDepartment T2 ON T1.ParentID=T2.DepartmentID
+          WHERE T1.DepartmentID=6
+         UNION ALL
+         SELECT OT.ReportsTo,T2.DepartmentID,T2.DepartmentName
+         FROM OrgTree OT
+         INNER JOIN MyDepartment T1 ON OT.ParentID=T1.DepartmentID
+         INNER JOIN MyDepartment T2 ON T1.ParentID=T2.DepartmentID)
+
+         SELECT * FROM OrgTree;
+
+         -- return list with of people with no direct reports
+         WITH OrgTree(ParentID, DepartmentID, DepartmentName, DepartmentLevel) AS (
+          SELECT ParentID, DepartmentID, DepartmentName, 0 AS DepartmentLevell
+          FROM MyDepartment
+           WHERE ParentID IS NULL
+          UNION ALL
+          SELECT e.ParentID, e.DepartmentID, e.DepartmentName,  DepartmentLevel + 1
+          FROM MyDepartment AS e
+          INNER JOIN OrgTree AS d ON e.ParentID = d.DepartmentID )
+
+          SELECT * FROM OrgTree WHERE DepartmentLevel = 5;
+      GO

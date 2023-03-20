@@ -1,0 +1,861 @@
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 11
+    report_doc_id: 1
+    maintained_at: 2019-11-25 10:57:31.925+0
+    comments: Report looks good.
+    status_id: 1
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 84
+    report_doc_id: 2
+    maintained_at: 2020-02-27 06:37:04.856+0
+    comments: Report looks good.
+    status_id: 1
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 19
+    report_doc_id: 3
+    maintained_at: 2020-07-30 21:06:43.467+0
+    comments: Report looks good.
+    status_id: 1
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 37
+    report_doc_id: 4
+    maintained_at: 2019-05-27 13:21:07.329+0
+    comments: Report looks good.
+    status_id: 1
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 5
+    report_doc_id: 5
+    maintained_at: 2020-07-05 13:11:46.575+0
+    comments: Report looks good.
+    status_id: 1
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 26
+    report_doc_id: 6
+    maintained_at: 2020-05-10 09:39:17.471+0
+    comments: Report looks good.
+    status_id: 1
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 83
+    report_doc_id: 7
+    maintained_at: 2019-09-13 03:50:30.689+0
+    comments: Report looks good.
+    status_id: 1
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 59
+    report_doc_id: 8
+    maintained_at: 2020-01-13 07:10:02.531+0
+    comments: Report looks good.
+    status_id: 1
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 6
+    report_doc_id: 9
+    maintained_at: 2019-07-18 13:03:22.354+0
+    comments: Report looks good.
+    status_id: 1
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 73
+    report_doc_id: 10
+    maintained_at: 2020-04-24 15:03:21.339+0
+    comments: Report looks good.
+    status_id: 1
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 19
+    report_doc_id: 11
+    maintained_at: 2020-05-18 15:04:23.747+0
+    comments: Report looks good.
+    status_id: 1
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 87
+    report_doc_id: 12
+    maintained_at: 2020-01-19 05:25:32.505+0
+    comments: Report looks good.
+    status_id: 1
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 83
+    report_doc_id: 13
+    maintained_at: 2020-05-05 13:43:20.781+0
+    comments: Report looks good.
+    status_id: 1
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 97
+    report_doc_id: 14
+    maintained_at: 2020-03-16 08:33:34.273+0
+    comments: Report looks good.
+    status_id: 1
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 94
+    report_doc_id: 15
+    maintained_at: 2019-09-21 07:09:27.489+0
+    comments: Report looks good.
+    status_id: 1
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 74
+    report_doc_id: 16
+    maintained_at: 2020-06-02 04:34:47.581+0
+    comments: Report looks good.
+    status_id: 1
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 33
+    report_doc_id: 17
+    maintained_at: 2019-11-14 19:20:40.650+0
+    comments: Report looks good.
+    status_id: 1
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 35
+    report_doc_id: 18
+    maintained_at: 2020-08-03 04:01:13.593+0
+    comments: Report looks good.
+    status_id: 1
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 7
+    report_doc_id: 19
+    maintained_at: 2020-05-11 08:58:46.650+0
+    comments: Report looks good.
+    status_id: 1
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 19
+    report_doc_id: 20
+    maintained_at: 2020-03-03 23:37:11.722+0
+    comments: Report looks good.
+    status_id: 1
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 43
+    report_doc_id: 21
+    maintained_at: 2019-05-16 13:46:16.936+0
+    comments: Report looks good.
+    status_id: 1
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 17
+    report_doc_id: 22
+    maintained_at: 2019-07-14 07:05:47.637+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 40
+    report_doc_id: 23
+    maintained_at: 2020-07-27 19:31:32.505+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 31
+    report_doc_id: 24
+    maintained_at: 2020-07-27 12:57:33.391+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 59
+    report_doc_id: 25
+    maintained_at: 2019-04-25 23:11:09.119+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 80
+    report_doc_id: 26
+    maintained_at: 2020-03-10 11:46:28.240+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 49
+    report_doc_id: 1
+    maintained_at: 2020-02-16 01:46:36.757+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 86
+    report_doc_id: 2
+    maintained_at: 2020-08-09 16:53:44.462+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 85
+    report_doc_id: 3
+    maintained_at: 2020-05-13 05:11:08.218+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 81
+    report_doc_id: 4
+    maintained_at: 2020-07-28 19:12:02.851+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 94
+    report_doc_id: 5
+    maintained_at: 2019-09-14 22:56:06.008+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 72
+    report_doc_id: 6
+    maintained_at: 2020-03-28 01:04:21.146+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 11
+    report_doc_id: 7
+    maintained_at: 2020-03-10 06:54:53.337+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 36
+    report_doc_id: 8
+    maintained_at: 2020-08-11 12:09:54.323+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 25
+    report_doc_id: 9
+    maintained_at: 2020-05-24 06:43:03.331+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 17
+    report_doc_id: 10
+    maintained_at: 2019-12-24 21:48:25.352+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 37
+    report_doc_id: 11
+    maintained_at: 2020-02-22 11:35:06.099+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 38
+    report_doc_id: 12
+    maintained_at: 2019-06-08 09:12:52.630+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 82
+    report_doc_id: 13
+    maintained_at: 2019-08-06 04:39:41.096+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 17
+    report_doc_id: 14
+    maintained_at: 2020-04-07 21:24:24.902+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 41
+    report_doc_id: 15
+    maintained_at: 2019-12-13 04:52:27.026+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 84
+    report_doc_id: 16
+    maintained_at: 2019-06-23 19:45:52.400+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 69
+    report_doc_id: 17
+    maintained_at: 2020-08-10 23:34:34.147+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 32
+    report_doc_id: 18
+    maintained_at: 2019-07-12 02:53:54.127+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 98
+    report_doc_id: 19
+    maintained_at: 2020-04-06 04:58:20.531+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 68
+    report_doc_id: 20
+    maintained_at: 2020-06-05 01:40:37.936+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 57
+    report_doc_id: 21
+    maintained_at: 2019-06-03 08:17:37.112+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 27
+    report_doc_id: 22
+    maintained_at: 2019-07-23 10:12:46.975+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 47
+    report_doc_id: 23
+    maintained_at: 2019-04-08 01:23:04.071+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 6
+    report_doc_id: 24
+    maintained_at: 2020-01-05 06:14:13.177+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 61
+    report_doc_id: 25
+    maintained_at: 2019-12-30 11:25:16.243+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 60
+    report_doc_id: 26
+    maintained_at: 2020-02-01 07:11:31.607+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 93
+    report_doc_id: 27
+    maintained_at: 2020-05-19 10:35:29.800+0
+    comments: Report has been replace with another.
+    status_id: 3
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 93
+    report_doc_id: 28
+    maintained_at: 2020-04-12 14:01:35.818+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 75
+    report_doc_id: 29
+    maintained_at: 2020-01-18 10:51:21.689+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 62
+    report_doc_id: 31
+    maintained_at: 2020-04-03 06:17:33.645+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 51
+    report_doc_id: 32
+    maintained_at: 2019-12-10 07:43:39.351+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 61
+    report_doc_id: 33
+    maintained_at: 2019-12-23 15:11:45.815+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 37
+    report_doc_id: 34
+    maintained_at: 2020-07-11 14:45:41.163+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 100
+    report_doc_id: 35
+    maintained_at: 2019-08-05 08:36:30.600+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 13
+    report_doc_id: 36
+    maintained_at: 2019-08-11 05:48:56.724+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 60
+    report_doc_id: 37
+    maintained_at: 2020-01-17 16:22:06.115+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 12
+    report_doc_id: 1
+    maintained_at: 2020-06-13 12:41:52.455+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 56
+    report_doc_id: 2
+    maintained_at: 2020-08-02 03:28:22.485+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 39
+    report_doc_id: 3
+    maintained_at: 2019-09-13 04:58:20.943+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 77
+    report_doc_id: 4
+    maintained_at: 2019-07-24 08:30:31.254+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 40
+    report_doc_id: 5
+    maintained_at: 2019-04-29 06:49:32.219+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 90
+    report_doc_id: 6
+    maintained_at: 2020-06-18 17:30:09.662+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 3
+    report_doc_id: 7
+    maintained_at: 2020-04-02 14:19:55.700+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 79
+    report_doc_id: 8
+    maintained_at: 2019-12-17 10:13:14.509+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 83
+    report_doc_id: 9
+    maintained_at: 2019-07-13 00:30:53.571+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 30
+    report_doc_id: 10
+    maintained_at: 2019-09-10 06:18:51.448+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 85
+    report_doc_id: 11
+    maintained_at: 2020-05-09 18:39:56.662+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 19
+    report_doc_id: 12
+    maintained_at: 2020-03-31 23:15:53.651+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 9
+    report_doc_id: 13
+    maintained_at: 2019-10-07 09:02:30.054+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 91
+    report_doc_id: 14
+    maintained_at: 2019-07-26 17:05:31.543+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 88
+    report_doc_id: 15
+    maintained_at: 2020-03-13 04:25:18.166+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 93
+    report_doc_id: 16
+    maintained_at: 2019-08-10 09:12:50.780+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 90
+    report_doc_id: 17
+    maintained_at: 2019-06-05 11:19:21.608+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 81
+    report_doc_id: 18
+    maintained_at: 2020-02-18 04:39:36.806+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 96
+    report_doc_id: 19
+    maintained_at: 2020-01-22 16:35:19.120+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 61
+    report_doc_id: 20
+    maintained_at: 2020-02-04 05:56:07.076+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 24
+    report_doc_id: 21
+    maintained_at: 2019-10-25 19:53:28.836+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 24
+    report_doc_id: 22
+    maintained_at: 2020-02-17 09:39:12.678+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 83
+    report_doc_id: 23
+    maintained_at: 2020-07-06 17:46:18.385+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 37
+    report_doc_id: 24
+    maintained_at: 2019-04-28 10:05:04.144+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 28
+    report_doc_id: 25
+    maintained_at: 2020-06-16 04:40:49.855+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 50
+    report_doc_id: 26
+    maintained_at: 2020-01-07 22:04:39.238+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 2
+    report_doc_id: 27
+    maintained_at: 2019-11-05 16:11:36.652+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 53
+    report_doc_id: 28
+    maintained_at: 2019-08-31 23:34:59.385+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 64
+    report_doc_id: 29
+    maintained_at: 2019-04-20 06:31:52.332+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 71
+    report_doc_id: 30
+    maintained_at: 2019-08-22 19:13:02.300+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 45
+    report_doc_id: 31
+    maintained_at: 2019-10-22 00:29:44.734+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 11
+    report_doc_id: 32
+    maintained_at: 2020-06-13 22:45:17.212+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 90
+    report_doc_id: 33
+    maintained_at: 2020-04-18 01:55:52.228+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 43
+    report_doc_id: 34
+    maintained_at: 2020-03-18 03:26:22.164+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 67
+    report_doc_id: 35
+    maintained_at: 2019-11-21 06:33:57.929+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 15
+    report_doc_id: 1
+    maintained_at: 2019-05-07 03:00:19.455+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 39
+    report_doc_id: 2
+    maintained_at: 2019-08-31 03:07:30.694+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 52
+    report_doc_id: 3
+    maintained_at: 2019-04-10 01:28:15.038+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 11
+    report_doc_id: 4
+    maintained_at: 2020-05-06 05:06:32.205+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 15
+    report_doc_id: 5
+    maintained_at: 2019-04-17 18:10:36.395+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 61
+    report_doc_id: 6
+    maintained_at: 2019-11-01 08:04:30.663+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 67
+    report_doc_id: 7
+    maintained_at: 2020-03-22 23:21:12.347+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 70
+    report_doc_id: 8
+    maintained_at: 2020-08-02 10:10:09.279+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 97
+    report_doc_id: 9
+    maintained_at: 2020-05-12 14:16:54.540+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 58
+    report_doc_id: 10
+    maintained_at: 2019-11-12 13:48:46.995+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 1
+    report_doc_id: 11
+    maintained_at: 2020-06-15 13:18:22.016+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 58
+    report_doc_id: 12
+    maintained_at: 2019-11-09 12:50:21.752+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 91
+    report_doc_id: 13
+    maintained_at: 2019-09-22 09:15:48.655+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 5
+    report_doc_id: 14
+    maintained_at: 2019-04-17 15:12:23.942+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 68
+    report_doc_id: 15
+    maintained_at: 2019-11-24 23:00:10.444+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 76
+    report_doc_id: 16
+    maintained_at: 2020-07-13 08:28:04.676+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 22
+    report_doc_id: 17
+    maintained_at: 2019-12-02 05:21:52.347+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 49
+    report_doc_id: 18
+    maintained_at: 2019-08-13 03:36:39.622+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 87
+    report_doc_id: 19
+    maintained_at: 2019-12-30 11:50:03.254+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 42
+    report_doc_id: 20
+    maintained_at: 2019-07-14 17:08:09.975+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 78
+    report_doc_id: 21
+    maintained_at: 2020-02-21 18:22:50.347+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 56
+    report_doc_id: 22
+    maintained_at: 2020-01-29 16:06:05.669+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 84
+    report_doc_id: 23
+    maintained_at: 2020-02-18 22:31:21.376+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 24
+    report_doc_id: 24
+    maintained_at: 2019-09-17 20:06:28.113+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 23
+    report_doc_id: 25
+    maintained_at: 2019-07-18 23:30:41.107+0
+    comments: Report updated to current standard.
+    status_id: 2
+- model: index.maintenancelogs
+  fields:
+    maintainer_id: 47
+    report_doc_id: 26
+    maintained_at: 2019-11-28 17:32:55.783+0
+    comments: Report updated to current standard.
+    status_id: 2

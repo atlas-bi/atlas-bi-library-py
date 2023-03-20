@@ -1,0 +1,12 @@
+atlas/atlas/settings/*.cust.py
+__pycache__
+.mypy_cache
+atlas/static/scss
+.coverage
+.coverage*
+.pythong-version
+BrowserStackLocal
+celerybeat-schedule
+coverage.xml
+db.sqlite3
+report.xml
