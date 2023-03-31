@@ -106,13 +106,11 @@ class Delete(NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, DeleteV
     template_name = "settings/user_roles.html.dj"
 
     def get_success_url(self) -> str:
-
         return (
             reverse("settings:index") + "?success=Tag successfully deleted.#meta-fields"
         )
 
     def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
-
         return redirect(
             resolve("settings:index")
             + "?error=You are not authorized to access that page.#meta-fields"

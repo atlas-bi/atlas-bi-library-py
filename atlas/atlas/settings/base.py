@@ -364,7 +364,6 @@ LOGGING = {
 def find_project_root(src: Path) -> Path:
     """Attempt to get the project root."""
     for directory in [src, *src.resolve().parents]:
-
         if (directory / "pyproject.toml").is_file():
             return directory
 
@@ -438,7 +437,7 @@ SETTINGS_EXPORT = [
     "ENABLE_TERMS",
     "ENABLE_USER_PROFILES",
     "ENABLE_BREADCRUMBS",
-    "ENABLE_LOGOUT"
+    "ENABLE_LOGOUT",
 ]
 
 SAFE_HTML_TAGS = [

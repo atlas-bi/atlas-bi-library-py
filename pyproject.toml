@@ -38,7 +38,6 @@ homepage = "https://atlas.bi"
 repository = "https://github.com/atlas-bi/atlas-bi-library-py"
 documentation = "https://atlas.bi/docs"
 
-
 [tool.poetry.dependencies]
 python = "^3.8"
 django-compressor = "^4.0"
@@ -78,33 +77,22 @@ django-extensions = "^3.2.1"
 PyYAML = "^6.0"
 
 
-
-[tool.poetry.dev-dependencies]
-djlint = "^1.9.2"
-django-debug-toolbar = "^3.5.0"
-tox = "^3.26.0"
-isort = "^5.10.1"
-black = "^22.8.0"
-types-requests = "^2.28.11"
-types-pytz = "^2022.2.1"
-types-bleach = "^5.0.3"
-types-python-dateutil = "^2.8.19"
-mypy = "^0.982"
-pylint = "^2.15.3"
-flake8 = "^5.0.4"
-flake8-variables-names = "^0.0.5"
-flake8-print = "^5.0.0"
-flake8-docstrings = "^1.6.0"
-flake8-simplify = "^0.19.3"
-flake8-bugbear = "^22.9.23"
-flake8-builtins = "^1.5.3"
-pep8-naming = "^0.13.2"
-flake8-comprehensions = "^3.10.0"
-flake8-bandit = "^4.1.1"
-flake8-eradicate = "^1.4.0"
-coverage = "^6.4.4"
-selenium = "^4.5.0"
+[tool.poetry.group.dev.dependencies]
+djlint = "^1.19.16"
+django-debug-toolbar = "^3.8.1"
+tox = "^4.4.8"
+isort = "^5.12.0"
+black = "^23.3.0"
+types-requests = "^2.28.11.17"
+types-pytz = "^2023.3.0.0"
+types-bleach = "^6.0.0.2"
+types-python-dateutil = "^2.8.19.11"
+mypy = "^1.1.1"
+coverage = "^7.2.2"
+selenium = "^4.8.3"
 django-gulp = "^4.1.0"
+ruff = "^0.0.260"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
@@ -140,21 +128,18 @@ exclude = '''
 profile = "black"
 sections="FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
 
+[tool.ruff]
+extend-exclude = ['*/tests/', 'migrations', 'solr', 'mail', 'settings']
+ignore = ['E501', 'D101', 'D102', 'D104', 'D106', 'D103', 'ERA001', 'D100', 'PLR0911', 'PLR0912', 'PLR0915', 'D105', 'D211', 'D213']
+select = ['F', 'E', 'W', 'C4', 'T20', 'Q',  'ERA']
+# 'SIM', 'RUF', 'D', 'N', 'B', 'S', 'PL'
 
-[tool.pylint.master]
-ignore="solr,migrations,mail,models-dev-dbo.py,models-dev.py,models_psql.py,models_sqlsrvr.py,apps.py,__init__.py,apps.py,urls.py"
 
-[tool.pylint.messages_control]
-disable = "R0903, E0401, C0415, F0401, C0301, E1101, R0901, W0221"
+[tool.ruff.per-file-ignores]
+'atlas/atlas/urls.py'=["E402"]
+'atlas/atlas/browserstack_runner.py'=["T201"]
+'atlas/atlas/testutils.py'=["T201"]
 
-
-[tool.pylint.format]
-max-line-length = 99
-max-module-lines=1000
-
-[tool.pylint.basic]
-good-names = "i,j,k,ex,Run,x,id,e,me,l,_,pk,im,hl"
-include-naming-hint="no"
 
 [tool.djangodoctor]
 directories = ["atlas"]

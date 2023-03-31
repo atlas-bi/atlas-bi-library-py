@@ -3,7 +3,9 @@
 {% load static %}
 
 {% block js %}
-    <script src="{% static '/js/user-settings.min.js' %}" defer="defer" async="async"></script>
+    <script src="{% static '/js/user-settings.min.js' %}"
+            defer="defer"
+            async="async"></script>
 {% endblock js %}
 
 {% block body %}

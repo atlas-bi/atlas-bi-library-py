@@ -24,7 +24,7 @@
                 window.addEventListener('load', function() {
                     load();
                 });
-            
+
                 function load() {
                     if (typeof window.removeShared == 'undefined') {
                         window.removeShared = function() {

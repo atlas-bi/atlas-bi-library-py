@@ -87,7 +87,6 @@ def run_url(context: Dict[Any, Any], report: Reports) -> Optional[Union[bool, st
             and context["is_hyperspace"]
         )
     ) and report.type.name not in ["Epic-Crystal Report", "Crystal Report"]:
-
         if (
             report.system_identifier == "HRX"
             and report.type.name != "SlicerDicer Session"
@@ -104,7 +103,6 @@ def run_url(context: Dict[Any, Any], report: Reports) -> Optional[Union[bool, st
             report.type.name in ["SSRS Report", "SSRS File"]
             and context["is_hyperspace"]
         ):
-
             if enabled_for_hyperspace:
                 return f"EpicAct:AC_RW_WEB_BROWSER,LaunchOptions:2,runparams:{report.system_run_url}&EPIC=1|FormCaption={nice_name}|ActivityName={nice_name}"
 

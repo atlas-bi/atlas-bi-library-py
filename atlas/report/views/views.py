@@ -376,7 +376,6 @@ def image(
     request: HttpRequest, report_id: int, pk: Optional[Union[int, str]] = None
 ) -> HttpResponse:
     if request.method == "POST":
-
         if request.FILES["File"].content_type not in [
             "image/jpeg",
             "image/png",
@@ -422,7 +421,6 @@ def image(
         pk = "report_placeholder"
 
     if re.match(r"^\d+x\d+$", size):
-
         width, height = (int(x) for x in size.split("x"))
 
         # image must be a perfect ratio, without distortion.
@@ -431,7 +429,6 @@ def image(
         max_ratio = max((width / float(im.size[0])), (height / float(im.size[1])))
         out = im
         if max_ratio < 1:
-
             hsize = int(float(im.size[1]) * float(max_ratio))
             wsize = int(float(im.size[0]) * float(max_ratio))
 

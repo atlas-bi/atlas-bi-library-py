@@ -28,7 +28,6 @@ class Share(LoginRequiredMixin, View):
     def post(
         self, request: HttpRequest, *args: Tuple[Any], **kwargs: Dict[Any, Any]
     ) -> HttpResponse:
-
         data = json.loads(request.body)
 
         subject = data.get("subject")

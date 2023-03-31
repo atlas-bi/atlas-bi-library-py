@@ -5,7 +5,6 @@ from urllib.parse import urlparse
 
 import dj_database_url
 
-
 from .base import *
 
 AUTHENTICATION_BACKENDS = ("atlas.no_pass_auth.Backend",)
@@ -18,17 +17,21 @@ LOGIN_REDIRECT_URL = "/"
 COMPRESS_ENABLED = True
 
 DEFAULT_DB = BASE_DIR / "db.sqlite"
-DATABASES = {"default": dj_database_url.config(default=f"sqlite:///{DEFAULT_DB}", conn_max_age=600)}
+DATABASES = {
+    "default": dj_database_url.config(
+        default=f"sqlite:///{DEFAULT_DB}", conn_max_age=600
+    )
+}
 
 # use whitenoise for demo as we are not using nginx
 DEBUG = False
 
 MIDDLEWARE.append("whitenoise.middleware.WhiteNoiseMiddleware")
-#COMPRESS_ROOT = BASE_DIR / "static" / "CACHE"
-COMPRESS_STORAGE = 'compressor.storage.BrotliCompressorFileStorage'
-#STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# COMPRESS_ROOT = BASE_DIR / "static" / "CACHE"
+COMPRESS_STORAGE = "compressor.storage.BrotliCompressorFileStorage"
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
-#WHITENOISE_MANIFEST_STRICT =False
+# WHITENOISE_MANIFEST_STRICT =False
 
 ALLOWED_HOSTS = ["*"]
 DATABASE_ROUTERS: list = []  # type: ignore[no-redef]
@@ -47,7 +50,7 @@ SESSION_REDIS = {
 }
 
 CELERY_BROKER_URL = REDIS_URL  # noqa: F405
-#COMPRESS_OFFLINE=True
+# COMPRESS_OFFLINE=True
 DEMO = True
 
 

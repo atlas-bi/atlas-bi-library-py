@@ -132,7 +132,6 @@ class Index(NeverCacheMixin, LoginRequiredMixin, TemplateView):
             return filter_query
 
         if search_string:
-
             hl = "*"
             hl_match = "false"
 
@@ -449,7 +448,7 @@ def build_search_string(
 
 @never_cache
 @login_required
-def user_lookup(request: HttpRequest, role: str = None) -> JsonResponse:
+def user_lookup(request: HttpRequest, role: Optional[str] = None) -> JsonResponse:
     """User lookup."""
     solr = pysolr.Solr(settings.SOLR_URL, search_handler="users")
 
@@ -472,7 +471,7 @@ def user_lookup(request: HttpRequest, role: str = None) -> JsonResponse:
 
 @never_cache
 @login_required
-def group_lookup(request: HttpRequest, role: str = None) -> JsonResponse:
+def group_lookup(request: HttpRequest, role: Optional[str] = None) -> JsonResponse:
     """User lookup."""
     solr = pysolr.Solr(settings.SOLR_URL, search_handler="groups")
 

@@ -5,7 +5,10 @@
         <div class="field">
             <label class="label">Global CSS Styles</label>
             <div class="control">
-                <textarea class="textarea" id="global_css" name="global_css" placeholder="div { background: pink; }">{{ global_css.value|default:""|safe }}</textarea>
+                <textarea class="textarea"
+                          id="global_css"
+                          name="global_css"
+                          placeholder="div { background: pink; }">{{ global_css.value|default:""|safe }}</textarea>
             </div>
         </div>
         <div class="control">

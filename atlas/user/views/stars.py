@@ -225,7 +225,6 @@ def create_folder(request: HttpRequest) -> JsonResponse:
     name = request.GET.get("name", None)
 
     if name:
-
         folder = FavoriteFolders(name=name, user=request.user)
         folder.save()
 
@@ -288,7 +287,6 @@ def reorder(request: HttpRequest) -> JsonResponse:
     data = json.loads(request.body.decode("UTF-8"))
 
     if request.method == "POST":
-
         for favorite in data:
             if favorite["type"] == "report":
                 StarredReports.objects.filter(owner=request.user).filter(

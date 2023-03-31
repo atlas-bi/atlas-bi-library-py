@@ -89,7 +89,6 @@ def set_parameter(query: Dict[Any, Any], parameters: Dict[Any, Any]) -> Dict[Any
             query_copy.pop("page")
 
         for key, value in parameters.items():
-
             if key in query and value == query[key]:
                 query_copy.pop(key)
 

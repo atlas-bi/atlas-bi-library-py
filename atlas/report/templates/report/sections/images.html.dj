@@ -7,7 +7,8 @@
          data-target="report-image-{{ report.imgs.first.image_id }}">
         <figure class="image">
             <picture>
-                <source srcset="{{ report.imgs.first.get_absolute_url }}?size=1200x400&type=webp 800w, {{ report.imgs.first.get_absolute_url }}?size=2000x400&type=webp 1200w"
+                <source srcset="{{ report.imgs.first.get_absolute_url }}?size=1200x400&type=webp 800w,
+                                {{ report.imgs.first.get_absolute_url }}?size=2000x400&type=webp 1200w"
                         type="image/webp"
                         sizes="100vw"/>
                 <img src="{{ report.imgs.first.get_absolute_url }}?size=1200x400"
@@ -23,7 +24,8 @@
         <div class="modal-content modal-image">
             <p class="image">
                 <picture>
-                    <source srcset="{{ report.imgs.first.get_absolute_url }}?size=1200x1200&type=webp 800w, {{ report.imgs.first.get_absolute_url }}?size=2000x2000&type=webp 1200w"
+                    <source srcset="{{ report.imgs.first.get_absolute_url }}?size=1200x1200&type=webp 800w,
+                                    {{ report.imgs.first.get_absolute_url }}?size=2000x2000&type=webp 1200w"
                             type="image/webp"
                             sizes="100vw"/>
                     <img title="report image"
@@ -43,7 +45,8 @@
                  data-target="report-image-{{ img.image_id }}">
                 <figure class="image">
                     <picture>
-                        <source srcset="{{ img.get_absolute_url }}?size=1200x400&type=webp 800w, {{ img.get_absolute_url }}?size=2000x400&type=webp 1200w"
+                        <source srcset="{{ img.get_absolute_url }}?size=1200x400&type=webp 800w,
+                                        {{ img.get_absolute_url }}?size=2000x400&type=webp 1200w"
                                 type="image/webp"
                                 sizes="100vw"/>
                         <img title="report image"
@@ -59,7 +62,8 @@
                 <div class="modal-content modal-image">
                     <p class="image">
                         <picture>
-                            <source srcset="{{ img.get_absolute_url }}?size=1200x1200&type=webp 800w, {{ img.get_absolute_url }}?size=2000x2000&type=webp 1200w"
+                            <source srcset="{{ img.get_absolute_url }}?size=1200x1200&type=webp 800w,
+                                            {{ img.get_absolute_url }}?size=2000x2000&type=webp 1200w"
                                     type="image/webp"
                                     sizes="100vw"/>
                             {# djlint:off H006 #}

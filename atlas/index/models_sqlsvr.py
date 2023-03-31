@@ -1187,7 +1187,10 @@ class ReportTerms(models.Model):
         related_name="terms",
     )
     term = models.ForeignKey(
-        "Terms", on_delete=models.CASCADE, db_column="TermId", related_name="report_docs"
+        "Terms",
+        on_delete=models.CASCADE,
+        db_column="TermId",
+        related_name="report_docs",
     )
 
     class Meta:

@@ -57,7 +57,6 @@ class Delete(NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, DeleteV
     template_name = "settings/user_roles.html.dj"
 
     def get_success_url(self) -> str:
-
         return (
             reverse("settings:index") + "?success=Role successfully deleted.#user-roles"
         )

@@ -34,7 +34,7 @@
         <div class="preheader"
              style="display: none;
                     max-height: 0;
-                    overflow: hidden;">{{ message|markdown|text }}</div>
+                    overflow: hidden">{{ message|markdown|text }}</div>
         <table width="100%">
             <tr>
                 <td>
@@ -57,7 +57,7 @@
                                                          width="133"
                                                          height="auto"
                                                          alt="site logo"
-                                                         style="width:133px;"
+                                                         style="width:133px"
                                                          class="mx-auto"
                                                          title="atlas logo"/>
                                                 </a>

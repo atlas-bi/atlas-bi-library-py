@@ -44,7 +44,6 @@ class Index(NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, Template
         report_type_id = self.kwargs["id"]
 
         if search_type == "reports":
-
             report_type = ReportTypes.objects.filter(type_id=report_type_id).first()
 
             if report_type.visible == "Y":
@@ -55,7 +54,6 @@ class Index(NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, Template
             report_type.save()
 
         else:
-
             fields = {
                 "users": "users_search_visibility",
                 "groups": "groups_search_visibility",

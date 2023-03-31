@@ -55,7 +55,6 @@ class Index(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsCheckMixin):
     required_permissions = ("View Site Analytics",)
 
     def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
-
         subquery, start_at, end_at = self.filtered()
 
         dif = end_at - start_at
@@ -157,7 +156,6 @@ class Browsers(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsCheckMixi
     required_permissions = ("View Site Analytics",)
 
     def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
-
         subquery, _, _ = self.filtered()
 
         total = subquery.count()
@@ -196,7 +194,6 @@ class Os(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsCheckMixin):
     required_permissions = ("View Site Analytics",)
 
     def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
-
         subquery, _, _ = self.filtered()
 
         total = subquery.count()
@@ -239,7 +236,6 @@ class Resolution(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsCheckMi
     required_permissions = ("View Site Analytics",)
 
     def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
-
         subquery, _, _ = self.filtered()
 
         total = subquery.count()
@@ -271,7 +267,6 @@ class UserAnalytics(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsChec
     required_permissions = ("View Site Analytics",)
 
     def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
-
         subquery, _, _ = self.filtered()
 
         total = subquery.count()
@@ -301,7 +296,6 @@ class LoadTime(LoginRequiredMixin, View, AnalyticsFiltered, PermissionsCheckMixi
     required_permissions = ("View Site Analytics",)
 
     def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
-
         subquery, _, _ = self.filtered()
 
         load_times = (

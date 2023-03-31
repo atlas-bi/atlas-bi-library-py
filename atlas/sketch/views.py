@@ -175,7 +175,6 @@ class RunList(LoginRequiredMixin, TemplateView, BaseFilter):
 
 class Chart(LoginRequiredMixin, View, BaseFilter):
     def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
-
         bridges, date_format = self.get_bridge()
 
         bridges = bridges.annotate(
@@ -228,7 +227,6 @@ class Chart(LoginRequiredMixin, View, BaseFilter):
 
 class UserList(LoginRequiredMixin, View, BaseFilter):
     def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
-
         bridges, _ = self.get_bridge()
         bridges = (
             bridges.values("run__user__full_name", "run__user_id")
@@ -262,7 +260,6 @@ class UserList(LoginRequiredMixin, View, BaseFilter):
 
 class Fails(LoginRequiredMixin, View, BaseFilter):
     def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
-
         bridges, _ = self.get_bridge()
         bridges = (
             bridges.values(
@@ -293,7 +290,6 @@ class Fails(LoginRequiredMixin, View, BaseFilter):
 
 class ReportList(LoginRequiredMixin, View, BaseFilter):
     def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
-
         bridges, _ = self.get_bridge()
         bridges = (
             bridges.values(
@@ -335,7 +331,6 @@ class Subscriptions(LoginRequiredMixin, TemplateView):
             self.kwargs["type"] == "report"
             and Reports.objects.filter(report_id=self.kwargs["pk"]).exists()
         ):
-
             context["subscriptions"] = (
                 ReportSubscriptions.objects.filter(report_id=self.kwargs["pk"])
                 .select_related("user")
@@ -354,7 +349,6 @@ class Stars(LoginRequiredMixin, TemplateView):
             self.kwargs["type"] == "report"
             and Reports.objects.filter(report_id=self.kwargs["pk"]).exists()
         ):
-
             context["stars"] = (
                 StarredReports.objects.filter(report_id=self.kwargs["pk"])
                 .select_related("owner")
@@ -366,7 +360,6 @@ class Stars(LoginRequiredMixin, TemplateView):
             self.kwargs["type"] == "term"
             and Terms.objects.filter(term_id=self.kwargs["pk"]).exists()
         ):
-
             context["stars"] = (
                 StarredTerms.objects.filter(term_id=self.kwargs["pk"])
                 .select_related("owner")
@@ -377,7 +370,6 @@ class Stars(LoginRequiredMixin, TemplateView):
             self.kwargs["type"] == "collection"
             and Collections.objects.filter(collection_id=self.kwargs["pk"]).exists()
         ):
-
             context["stars"] = (
                 StarredCollections.objects.filter(collection_id=self.kwargs["pk"])
                 .select_related("owner")

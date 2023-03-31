@@ -37,7 +37,8 @@
 </section>
 <div class="columns">
     <div class="column is-one-quarter is-sticky is-align-self-flex-start"
-         style="max-height:calc(100vh - 137px); overflow-Y:auto">
+         style="max-height:calc(100vh - 137px);
+                overflow-Y:auto">
         {% include "search/filters.html.dj" %}
     </div>
     <div class="column" id="results">

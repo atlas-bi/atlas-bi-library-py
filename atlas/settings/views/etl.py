@@ -28,7 +28,6 @@ class Index(NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, Template
     def post(
         self, request: HttpRequest, *args: Tuple[Any], **kwargs: Dict[Any, Any]
     ) -> HttpResponse:
-
         setting, _ = GlobalSettings.objects.get_or_create(name="report_tag_etl")
         setting.value = request.POST.get("value", None)
         setting.save()

@@ -79,7 +79,6 @@ class CollectionEdit(
     def post(
         self, request: HttpRequest, *args: Tuple[Any], **kwargs: Dict[Any, Any]
     ) -> HttpResponse:
-
         collection = Collections.objects.get(collection_id=self.kwargs["pk"])
         collection.name = request.POST.get("name", "")
         collection.search_summary = request.POST.get("search_summary", "")
