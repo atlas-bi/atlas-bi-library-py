@@ -78,5 +78,5 @@ jobs:
     - name: upload cov
       uses: codecov/codecov-action@v3
       with:
-        files: ./atlas/coverage.xml
+        files: ./coverage.xml
         verbose: true
