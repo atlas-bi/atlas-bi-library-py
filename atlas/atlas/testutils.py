@@ -30,7 +30,7 @@ class AtlasTestCase(TestCase):
         # "rolepermissions.yaml",
         # "strategicimportance.yaml",
         # "userroles.yaml",
-        "initial.yml",
+        "initial.yaml",
         "test.yaml",
     ]
 
