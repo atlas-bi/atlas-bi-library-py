@@ -14,7 +14,7 @@ from index.models import Analytics
 from atlas.decorators import PermissionsCheckMixin
 
 
-class Index(LoginRequiredMixin, TemplateView, PermissionsCheckMixin):
+class Index(LoginRequiredMixin, PermissionsCheckMixin, TemplateView):
     template_name = "analytics/index.html.dj"
     required_permissions = ("View Site Analytics",)
 

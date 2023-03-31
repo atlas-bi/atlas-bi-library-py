@@ -175,7 +175,7 @@
     name: Front End User Collections
     description: This report will display Front End Payment Collections.
     type_id: 3
-    created_by_id:  2
+    created_by_id: 2
     modified_by_id: 89
     modified_at: 2019-08-10 18:23:49.613+00:00
     system_run_url: http://google.com
@@ -512,7 +512,7 @@
     name: Restraint and Alarm Usage
     description: This report displays clinical metrics related to usage of restraints and alarms for residents in a Long Term Care facility.
     type_id: 3
-    created_by_id:  6
+    created_by_id: 6
     modified_by_id: 11
     modified_at: 2019-05-15 15:09:29.010+00:00
     system_run_url: http://google.com
@@ -545,7 +545,7 @@
     system_table: catalog
     name: Director Requests in Last Seven Days
     type_id: 20
-    created_by_id:  6
+    created_by_id: 6
     modified_by_id: 52
     modified_at: 2019-09-19 06:31:40.618+00:00
     system_run_url: http://google.com
@@ -644,7 +644,7 @@
     name: COVID-19 Reporting
     description: This report displays a list of tagged reports. It can include links to run and view the reports.
     type_id: 21
-    created_by_id:  6
+    created_by_id: 6
     modified_by_id: 34
     modified_at: 2020-03-05 10:02:59.928+00:00
     system_run_url: http://google.com
@@ -677,7 +677,7 @@
     name: Prospective Workload Report with Summary
     description: This report is used to find patients who have current RT orders placed on them. The summary tabs allow RT directors to view respiratory work units assigned to a patient sorted either by department or by respiratory therapist.
     type_id: 3
-    created_by_id:  2
+    created_by_id: 2
     modified_by_id: 94
     modified_at: 2020-03-04 19:58:17.883+00:00
     system_run_url: http://google.com
@@ -709,7 +709,7 @@
     system_table: report
     name: IP Workload Acuity by login dept
     type_id: 20
-    created_by_id:  9
+    created_by_id: 9
     modified_by_id: 48
     modified_at: 2020-06-21 10:17:43.971+00:00
     system_run_url: http://google.com
@@ -742,7 +742,7 @@
     system_table: report
     name: Discharge Patients by Discharge Disposition
     type_id: 28
-    created_by_id:  8
+    created_by_id: 8
     modified_by_id: 46
     modified_at: 2019-05-06 02:32:11.484+00:00
     system_run_url: http://google.com
@@ -834,4 +834,3 @@
     visible: N
     orphan: Y
     system_path: /dead/end/path/to_report
-

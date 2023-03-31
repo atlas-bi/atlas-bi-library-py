@@ -152,7 +152,7 @@ def custom_warning_view(request: HttpRequest, exception: Any = None) -> HttpResp
         request,
         "error.html.dj",
         context={"message": "Sorry that page could not be found."},
-        status=200,
+        status=404,
     )
 
 

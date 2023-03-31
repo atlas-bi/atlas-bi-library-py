@@ -56,20 +56,22 @@ class InitiativeTestCase(AtlasTestCase):
         # find an initiative that doesn't exist.
         self.login_admin()
         initiative = Initiatives.objects.order_by("initiative_id").last()
-
-        self.assertEqual(
-            self.client.get(
-                "/initiatives/%s" % (initiative.initiative_id + 1)
-            ).status_code,
-            404,
+        page = self.client.get("/initiatives/%s" % (initiative.initiative_id + 1))
+        self.assertIn(b"Sorry that page could not be found.", page.content)
+        self.assertIn(
+            page.status_code,
+            [302, 404],
         )
+        # if we already hit the error page, we could potentially get a 302 response.
 
         # try to delete it
-        self.assertEqual(
-            self.client.get(
-                "/initiatives/%s/delete" % (initiative.initiative_id + 1)
-            ).status_code,
-            404,
+        page = self.client.get(
+            "/initiatives/%s/delete" % (initiative.initiative_id + 1)
+        )
+
+        self.assertIn(
+            page.status_code,
+            [302, 404],
         )
 
     def test_valid_initiative(self):

@@ -120,8 +120,6 @@
     collection_id: 1
     owner_id: 2
 
-
-
 - model: index.starredreports
   fields:
     report_id: 1

@@ -29,12 +29,12 @@
       Workqueues That I Supervise
     org_value_id: 3
     frequency_id: 3
-    fragility_id:  4
-    executive_report:  Y
-    maintenance_schedule_id:  1
-    modified_at:  2020-07-14 09:56:46.710+00:00
-    created_at:  2019-04-30 22:48:28.374+00:00
-    created_by_id:  81
+    fragility_id: 4
+    executive_report: Y
+    maintenance_schedule_id: 1
+    modified_at: 2020-07-14 09:56:46.710+00:00
+    created_at: 2019-04-30 22:48:28.374+00:00
+    created_by_id: 81
     modified_by_id: 86
 - model: index.reportdocs
   fields:
@@ -47,12 +47,12 @@
       Valid Guarantor , Generic Insurance Check, RX Card Missing, BC Generic Check,   Coverage Update, Appt is missing referral or referral scheduled and unauthd, Reg Pt is Medicare Primary but should be secondary, Reg Pt is Medicare Secondary but should be Primary
     org_value_id: 1
     frequency_id: 2
-    fragility_id:  4
-    executive_report:  Y
-    maintenance_schedule_id:  5
-    modified_at:  2019-06-05 17:26:41.159+00:00
-    created_at:  2020-02-02 11:18:31.568+00:00
-    created_by_id:  46
+    fragility_id: 4
+    executive_report: Y
+    maintenance_schedule_id: 5
+    modified_at: 2019-06-05 17:26:41.159+00:00
+    created_at: 2020-02-02 11:18:31.568+00:00
+    created_by_id: 46
     modified_by_id: 9
 - model: index.reportdocs
   fields:
@@ -632,7 +632,7 @@
     modified_at: 2019-08-09 11:12:49.412+00:00
     created_at: 2019-08-19 17:54:20.872+00:00
     created_by_id: 46
-    modified_by_id:  6
+    modified_by_id: 6
 - model: index.reportdocs
   fields:
     report_id: 30

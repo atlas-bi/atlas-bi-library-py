@@ -96,8 +96,8 @@ class PermissionsCheckMixin:
         """Return a list of permissions."""
         if self.required_permissions is None:
             raise ImproperlyConfigured(
-                "PermissionsCheckMixin requires either a definition of "
-                "'required_permissions' or an implemenetatino of 'get_permission_names()'"
+                "PermissionsCheckMixin requires either a definition of ",
+                "'required_permissions' or an implemenetatino of 'get_permission_names()'",
             )
         return self.required_permissions
 

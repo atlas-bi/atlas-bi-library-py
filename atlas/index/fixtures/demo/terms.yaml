@@ -92,7 +92,7 @@
   fields:
     name: Census Bed
     summary: A bed in the hospital defined in the facility/bed system build as being in the census. Patients in these beds are counted as part of the hospital census.
-    technical_definition: "```A BED record where item # 100 = YES```"
+    technical_definition: '```A BED record where item # 100 = YES```'
     modified_by_id: 8
     modified_at: 2019-07-08 03:57:46.620+0
 - model: index.terms

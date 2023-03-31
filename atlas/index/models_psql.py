@@ -332,7 +332,6 @@ class Users(AbstractUser, PermissionsMixin):
 
     def has_perms(self, perms: List[str], obj: Optional[Any] = None) -> bool:
         return set(perms) < set(self.get_all_permissions)
-        pass
 
     def get_roles(self) -> List[str]:
         """Get users roles."""
