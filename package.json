@@ -10,7 +10,7 @@
   "private": true,
   "scripts": {
     "start": "cd atlas; DJANGO_SETTINGS_MODULE='atlas.settings.dev' poetry run python manage.py runserver",
-    "start:test": "export DJANGO_SETTINGS_MODULE=atlas.settings.test; cd atlas; poetry run python manage.py testserver index/fixtures/* --addrport 127.0.0.1:8009 --noinput",
+    "start:test": "export DJANGO_SETTINGS_MODULE=atlas.settings.test; cd atlas; poetry run python manage.py testserver index/fixtures/*.yaml --addrport 127.0.0.1:8009 --noinput",
     "start:celery": "cd atlas; DJANGO_SETTINGS_MODULE='atlas.settings.dev' poetry run celery -A atlas worker -l DEBUG",
     "start:beat": "cd atlas; DJANGO_SETTINGS_MODULE='atlas.settings.dev' poetry run celery -A atlas beat -l DEBUG --scheduler django_celery_beat.schedulers:DatabaseScheduler",
     "build": "gulp build",
