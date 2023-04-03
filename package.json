@@ -63,7 +63,7 @@
     "del": "7.0.0",
     "dompurify": "2.4.5",
     "es-main": "1.2.0",
-    "eslint": "8.25.0",
+    "eslint": "8.37.0",
     "focus-within": "3.0.2",
     "fontawesome-subset": "4.4.0",
     "fonteditor-core": "2.1.11",
@@ -94,10 +94,10 @@
     "sass": "1.60.0",
     "sass-lint": "1.13.1",
     "semantic-release": "19.0.5",
-    "stylelint": "14.14.0",
+    "stylelint": "14.16.1",
     "stylelint-config-prettier-scss": "0.0.1",
     "stylelint-config-standard-scss": "6.1.0",
-    "stylelint-scss": "4.3.0",
+    "stylelint-scss": "4.6.0",
     "xo": "0.53.1"
   },
   "config": {

@@ -1,6 +1,6 @@
 {
   "name": "linkify-it",
-  "version": "3.0.26",
+  "version": "3.0.27",
   "description": "Links recognition library with FULL unicode support",
   "keywords": [
     "linkify",
@@ -33,7 +33,7 @@
     "benchmark": "2.1.4",
     "browserify": "17.0.0",
     "coveralls": "3.1.1",
-    "eslint": "8.25.0",
+    "eslint": "8.37.0",
     "gh-pages": "4.0.0",
     "mdurl": "1.0.1",
     "mocha": "10.1.0",
