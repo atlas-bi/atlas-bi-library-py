@@ -1974,18 +1974,15 @@ files = [
 
 [[package]]
 name = "pymemcache"
-version = "3.5.2"
+version = "4.0.0"
 description = "A comprehensive, fast, pure Python memcached client"
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3.7"
 files = [
-    {file = "pymemcache-3.5.2-py2.py3-none-any.whl", hash = "sha256:3fca0215845d7b2ecd5f4c627fcf4ce2345a703a897b7e116380115b5a197be2"},
-    {file = "pymemcache-3.5.2.tar.gz", hash = "sha256:8923ab59840f0d5338f1c52dba229fa835545b91c3c2f691c118e678d0fb974e"},
+    {file = "pymemcache-4.0.0-py2.py3-none-any.whl", hash = "sha256:f507bc20e0dc8d562f8df9d872107a278df049fa496805c1431b926f3ddd0eab"},
+    {file = "pymemcache-4.0.0.tar.gz", hash = "sha256:27bf9bd1bbc1e20f83633208620d56de50f14185055e49504f4f5e94e94aff94"},
 ]
-
-[package.dependencies]
-six = "*"
 
 [[package]]
 name = "pyodbc"
@@ -3162,4 +3159,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "82e2c9a84eafc74e639a7fbc4ccdcba4d9cb787b468c16e4239a2c30d510ed4d"
+content-hash = "3cb1fd8646e1eb1fedfdf9c1e7ccd7f30b799a937d2ddf559dda726e55fb6ed9"
