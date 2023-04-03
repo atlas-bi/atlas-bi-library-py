@@ -1,5 +1,5 @@
 # Optionally pass a DATABASE_URL and REDIS_URL arg
-FROM python:3.10-alpine as python_install
+FROM python:3.11-alpine as python_install
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -19,7 +19,7 @@ RUN wget -O - https://install.python-poetry.org | python3 - \
  && chmod 755 ${POETRY_HOME}/bin/poetry \
  && poetry install --no-root --only main
 
-FROM python:3.10-alpine as static
+FROM python:3.11-alpine as static
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/app/.venv/bin:$PATH" \
@@ -48,7 +48,7 @@ RUN if [ -z "$REDIS_URL" ]; then redis-server --daemonize yes; fi \
  && python manage.py migrate --run-syncdb \
  && python manage.py loaddata --app index initial demo/base demo/users demo/groups demo/user_roles demo/user_group_memberships demo/reports demo/report_docs demo/report_maint demo/report_frag_tags demo/terms demo/report_terms demo/report_hierarchy demo/report_query demo/user_folders demo/user_stars demo/shares
 
-FROM python:3.10-alpine as deploy
+FROM python:3.11-alpine as deploy
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/app/.venv/bin:$PATH" \
