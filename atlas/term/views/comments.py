@@ -24,7 +24,6 @@ def comments_delete(request, pk, comment_id):
         data.get("stream")
         and TermCommentStream.objects.filter(stream_id=data.get("stream")).exists()
     ):
-
         TermComments.objects.filter(stream__stream_id=data.get("stream")).delete()
         TermCommentStream.objects.get(stream_id=data.get("stream")).delete()
 
@@ -57,7 +56,6 @@ class Comments(LoginRequiredMixin, ListView):
             data = json.loads(request.body.decode("UTF-8"))
 
             if data.get("message", "") != "":
-
                 if (
                     data.get("stream")
                     and TermCommentStream.objects.filter(

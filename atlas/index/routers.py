@@ -1,4 +1,4 @@
-class IndexRouter(object):
+class IndexRouter:
     def db_for_read(self, model, **hints):
         if model._meta.app_label == "index":
             return "dg_db"

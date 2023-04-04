@@ -96,7 +96,6 @@ def favorites_create_folder(request):
     data = json.loads(request.body.decode("UTF-8"))
 
     if request.method == "POST" and "folder_name" in data:
-
         folder = FavoriteFolders(name=data["folder_name"], user=request.user)
         folder.save()
 
@@ -141,7 +140,6 @@ def favorites_reorder(request):
     # data = json.loads(request.body.decode("UTF-8"))
 
     if request.method == "POST":
-
         # for favorite in data:
         #     Favorites.objects.filter(user=request.user).filter(
         #         favorite_id=favorite["favorite_id"]
@@ -152,7 +150,6 @@ def favorites_reorder(request):
 
 
 def image(request, pk):
-
     user = get_object_or_404(Users, pk=pk)
     image_format = "webp"
 

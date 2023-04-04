@@ -4,7 +4,6 @@ from django.shortcuts import render
 
 @login_required
 def index(request):
-
     context = {
         "title": "Home",
     }
@@ -14,7 +13,6 @@ def index(request):
 
 @login_required
 def video(request):
-
     video_status = request.user.get_preferences().filter(key="WelcomeToAtlasVideo")
 
     if video_status.exists():

@@ -54,7 +54,6 @@ class CollectionDetails(LoginRequiredMixin, DetailView):
         return context
 
     def post(self, request, **kwargs):
-
         collection = Collections.objects.get(collection_id=self.kwargs["pk"])
         collection.name = request.POST.get("name", "")
         collection.search_summary = request.POST.get("search_summary", "")
@@ -138,7 +137,6 @@ class ReportLinkNew(LoginRequiredMixin, View):
         )
 
     def post(self, *args, **kwargs):
-
         data = json.loads(self.request.body.decode("UTF-8"))
 
         if Reports.objects.filter(report_id=data.get("report_id")).exists():
@@ -183,7 +181,6 @@ class TermLinkNew(LoginRequiredMixin, View):
         )
 
     def post(self, *args, **kwargs):
-
         data = json.loads(self.request.body.decode("UTF-8"))
 
         if Terms.objects.filter(term_id=data.get("term_id")).exists():
