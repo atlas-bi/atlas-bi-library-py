@@ -1,0 +1,110 @@
+- model: index.terms
+  fields:
+    name: Charge
+    summary: Transaction posted to a hospital account for services provided.
+    technical_definition: |
+      "```sql
+      TRANSACTIONS.TX_TYPE = 1
+      ```"
+    modified_by_id: 11
+    modified_at: 2019-04-30 20:29:21.078+0
+- model: index.terms
+  fields:
+    name: Payment
+    summary: Transaction  with a transaction type of ""payment"" posted to a hospital account from a payor or guarantor that decreases the amount owed on AR balances. Used for transaction summaries.
+    technical_definition: |
+      ```sql
+      TRANSACTIONS.TX_TYPE = 2 --Payment Transaction Type
+       AND
+      TRANSACTIONS.BAD_DEBT_FLAG_YN <> Y
+       AND
+      TRANSACTIONS.EXTERN_AR_FLAG_YN <> Y
+      ```
+    modified_by_id: 44
+    modified_at: 2020-02-09 19:21:58.777+0
+- model: index.terms
+  fields:
+    name: Adjustment
+    summary: Transaction with a transaction type of ""adjustment"" posted to a hospital account by contractual agreement, agreement with the guarantor, or hospital policy which modifies the balance. Adjustments cannot be payments or charges.
+    technical_definition: |
+      ```sql
+      TRANSACTIONS.TX_TYPE in (3,4) -- debit and credit adjustments
+       AND
+      TRANSACTIONS.IS_SYSTEM_ADJ_YN <> Y
+       AND
+       TRANSACTIONS.BAD_DEBT_FLAG_YN <> Y
+       AND
+      TRANSACTIONS.EXTERN_AR_FLAG_YN,<> Y
+      ```
+    modified_by_id: 82
+    modified_at: 2019-08-07 18:39:33.704+0
+- model: index.terms
+  fields:
+    name: Transaction
+    summary: Transactions posted to a hospital account that moves the balance owed to an external agency to work the account.
+    technical_definition: |
+      ```sql
+      TRANSACTIONS.BAD_DEBT_FLAG_YN = Y
+      AND
+      TRANSACTIONS.IS_SYSTEM_ADJ_YN = Y
+      ```
+    modified_by_id: 85
+    modified_at: 2019-06-15 12:17:26.146+0
+- model: index.terms
+  fields:
+    name: External A/R
+    summary: Transactions posted to a hospital account that moves the balance owed off of active AR to an internal payment plan agency.
+    technical_definition: |
+      ```sql
+      TRANSACTIONS.EXTERN_AR_FLAG_YN = Y
+      AND
+      TRANSACTIONS.IS_SYSTEM_ADJ_YN = Y
+      ```
+    modified_by_id: 12
+    modified_at: 2020-01-05 16:14:13.721+0
+- model: index.terms
+  fields:
+    name: Net A/R
+    summary: Transactions posted to a hospital account that is not being serviced by a bad debt agency or internal payment plan.
+    technical_definition: |
+      ```sql
+      TRANSACTIONS.EXTERN_AR_FLAG_YN <> Y
+      AND
+      TRANSACTIONS.BAD_DEBT_FLAG_YN <> Y
+      ```
+    modified_by_id: 4
+    modified_at: 2020-04-10 11:50:04.731+0
+- model: index.terms
+  fields:
+    name: Bad Debt Visit
+    summary: A Hospital Visit that has been sent to be worked by an External Agency.
+    technical_definition: Transaction Post Date less than or equal to 10 days after discharge date.
+    modified_by_id: 20
+    modified_at: 2020-01-18 07:10:07.644+0
+- model: index.terms
+  fields:
+    name: Orthepedic Case
+    summary: Surgical cases designated as Orthopedic based on their service line classification in the OR.
+    technical_definition: OR Log Service Line value = ORTHOPEDICS (CASE_VOLUME.SERVICE_NAME = ORTHOPEDICS )
+    modified_by_id: 88
+    modified_at: 2020-01-20 17:06:43.381+0
+- model: index.terms
+  fields:
+    name: Census Bed
+    summary: A bed in the hospital defined in the facility/bed system build as being in the census. Patients in these beds are counted as part of the hospital census.
+    technical_definition: '```A BED record where item # 100 = YES```'
+    modified_by_id: 8
+    modified_at: 2019-07-08 03:57:46.620+0
+- model: index.terms
+  fields:
+    name: Observation Case
+    summary: A hospital account that was ever placed into an Observation base class. Discharge base class is ignored meaning patients who were later converted to inpatient are included. This differs from an Observation Discharge which only includes patients discharged with an Observation base class.
+    modified_by_id: 60
+    modified_at: 2019-06-26 08:02:28.339+0
+- model: index.terms
+  fields:
+    name: Unavailable Bed
+    summary: Unavailable Beds are defined as the number of unavailable beds at a given point in time, adjusted based on Staffing or Licensing levels. Staffed Beds are checked first, followed by Licensed Beds. If neither of those are being used, the count falls back to the number of Physical Beds.
+    technical_definition: Set up and logic details available.
+    modified_by_id: 100
+    modified_at: 2019-05-30 11:16:31.601+0

@@ -1,0 +1,833 @@
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 8
+    fragility_tag_id: 1
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 49
+    fragility_tag_id: 2
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 39
+    fragility_tag_id: 3
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 43
+    fragility_tag_id: 4
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 7
+    fragility_tag_id: 5
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 30
+    fragility_tag_id: 6
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 4
+    fragility_tag_id: 7
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 40
+    fragility_tag_id: 8
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 50
+    fragility_tag_id: 9
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 1
+    fragility_tag_id: 10
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 28
+    fragility_tag_id: 11
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 9
+    fragility_tag_id: 12
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 50
+    fragility_tag_id: 13
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 43
+    fragility_tag_id: 14
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 43
+    fragility_tag_id: 15
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 38
+    fragility_tag_id: 16
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 34
+    fragility_tag_id: 1
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 6
+    fragility_tag_id: 2
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 31
+    fragility_tag_id: 3
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 40
+    fragility_tag_id: 4
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 1
+    fragility_tag_id: 5
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 40
+    fragility_tag_id: 6
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 15
+    fragility_tag_id: 8
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 17
+    fragility_tag_id: 9
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 14
+    fragility_tag_id: 10
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 43
+    fragility_tag_id: 11
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 4
+    fragility_tag_id: 12
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 26
+    fragility_tag_id: 14
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 8
+    fragility_tag_id: 15
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 34
+    fragility_tag_id: 16
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 42
+    fragility_tag_id: 2
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 10
+    fragility_tag_id: 4
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 4
+    fragility_tag_id: 5
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 14
+    fragility_tag_id: 6
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 26
+    fragility_tag_id: 7
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 9
+    fragility_tag_id: 8
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 22
+    fragility_tag_id: 9
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 9
+    fragility_tag_id: 10
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 1
+    fragility_tag_id: 11
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 20
+    fragility_tag_id: 12
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 4
+    fragility_tag_id: 13
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 35
+    fragility_tag_id: 14
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 50
+    fragility_tag_id: 15
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 17
+    fragility_tag_id: 16
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 47
+    fragility_tag_id: 1
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 5
+    fragility_tag_id: 2
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 20
+    fragility_tag_id: 3
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 46
+    fragility_tag_id: 4
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 48
+    fragility_tag_id: 5
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 49
+    fragility_tag_id: 6
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 25
+    fragility_tag_id: 7
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 10
+    fragility_tag_id: 8
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 44
+    fragility_tag_id: 11
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 36
+    fragility_tag_id: 12
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 9
+    fragility_tag_id: 13
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 17
+    fragility_tag_id: 14
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 30
+    fragility_tag_id: 15
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 42
+    fragility_tag_id: 16
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 44
+    fragility_tag_id: 2
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 46
+    fragility_tag_id: 3
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 24
+    fragility_tag_id: 4
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 37
+    fragility_tag_id: 6
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 15
+    fragility_tag_id: 7
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 13
+    fragility_tag_id: 8
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 46
+    fragility_tag_id: 10
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 10
+    fragility_tag_id: 11
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 47
+    fragility_tag_id: 12
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 39
+    fragility_tag_id: 13
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 46
+    fragility_tag_id: 14
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 43
+    fragility_tag_id: 16
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 33
+    fragility_tag_id: 1
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 7
+    fragility_tag_id: 2
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 36
+    fragility_tag_id: 3
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 35
+    fragility_tag_id: 4
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 2
+    fragility_tag_id: 5
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 44
+    fragility_tag_id: 6
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 2
+    fragility_tag_id: 11
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 22
+    fragility_tag_id: 12
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 23
+    fragility_tag_id: 13
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 24
+    fragility_tag_id: 14
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 14
+    fragility_tag_id: 15
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 7
+    fragility_tag_id: 16
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 27
+    fragility_tag_id: 1
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 40
+    fragility_tag_id: 2
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 21
+    fragility_tag_id: 4
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 36
+    fragility_tag_id: 5
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 16
+    fragility_tag_id: 6
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 14
+    fragility_tag_id: 7
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 43
+    fragility_tag_id: 8
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 2
+    fragility_tag_id: 9
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 50
+    fragility_tag_id: 10
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 23
+    fragility_tag_id: 11
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 33
+    fragility_tag_id: 12
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 31
+    fragility_tag_id: 13
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 28
+    fragility_tag_id: 1
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 49
+    fragility_tag_id: 1
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 37
+    fragility_tag_id: 2
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 49
+    fragility_tag_id: 7
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 28
+    fragility_tag_id: 8
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 12
+    fragility_tag_id: 3
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 20
+    fragility_tag_id: 4
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 4
+    fragility_tag_id: 9
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 25
+    fragility_tag_id: 9
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 24
+    fragility_tag_id: 3
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 17
+    fragility_tag_id: 7
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 3
+    fragility_tag_id: 4
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 7
+    fragility_tag_id: 1
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 29
+    fragility_tag_id: 2
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 21
+    fragility_tag_id: 2
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 49
+    fragility_tag_id: 12
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 22
+    fragility_tag_id: 2
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 4
+    fragility_tag_id: 8
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 13
+    fragility_tag_id: 3
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 43
+    fragility_tag_id: 1
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 22
+    fragility_tag_id: 1
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 24
+    fragility_tag_id: 7
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 25
+    fragility_tag_id: 1
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 39
+    fragility_tag_id: 5
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 6
+    fragility_tag_id: 1
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 19
+    fragility_tag_id: 4
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 18
+    fragility_tag_id: 1
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 7
+    fragility_tag_id: 13
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 6
+    fragility_tag_id: 13
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 18
+    fragility_tag_id: 3
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 27
+    fragility_tag_id: 6
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 47
+    fragility_tag_id: 15
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 11
+    fragility_tag_id: 7
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 12
+    fragility_tag_id: 10
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 11
+    fragility_tag_id: 2
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 39
+    fragility_tag_id: 2
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 32
+    fragility_tag_id: 2
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 34
+    fragility_tag_id: 9
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 45
+    fragility_tag_id: 3
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 26
+    fragility_tag_id: 9
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 44
+    fragility_tag_id: 4
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 24
+    fragility_tag_id: 10
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 13
+    fragility_tag_id: 2
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 38
+    fragility_tag_id: 9
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 45
+    fragility_tag_id: 5
+
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 37
+    fragility_tag_id: 13
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 5
+    fragility_tag_id: 7
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 27
+    fragility_tag_id: 5
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 16
+    fragility_tag_id: 3
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 50
+    fragility_tag_id: 7
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 42
+    fragility_tag_id: 6
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 44
+    fragility_tag_id: 1
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 11
+    fragility_tag_id: 6
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 9
+    fragility_tag_id: 2
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 14
+    fragility_tag_id: 4
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 12
+    fragility_tag_id: 6
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 7
+    fragility_tag_id: 9
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 6
+    fragility_tag_id: 12
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 8
+    fragility_tag_id: 2
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 35
+    fragility_tag_id: 8
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 14
+    fragility_tag_id: 11
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 9
+    fragility_tag_id: 9
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 34
+    fragility_tag_id: 3
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 45
+    fragility_tag_id: 1
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 3
+    fragility_tag_id: 2
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 32
+    fragility_tag_id: 9
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 28
+    fragility_tag_id: 4
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 41
+    fragility_tag_id: 7
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 36
+    fragility_tag_id: 14
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 18
+    fragility_tag_id: 5
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 35
+    fragility_tag_id: 5
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 26
+    fragility_tag_id: 2
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 36
+    fragility_tag_id: 16
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 30
+    fragility_tag_id: 13
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 10
+    fragility_tag_id: 1
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 35
+    fragility_tag_id: 13
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 6
+    fragility_tag_id: 4
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 12
+    fragility_tag_id: 8
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 50
+    fragility_tag_id: 4
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 23
+    fragility_tag_id: 5
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 28
+    fragility_tag_id: 6
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 3
+    fragility_tag_id: 12
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 44
+    fragility_tag_id: 5
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 33
+    fragility_tag_id: 5
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 48
+    fragility_tag_id: 8
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 9
+    fragility_tag_id: 14
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 11
+    fragility_tag_id: 1
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 22
+    fragility_tag_id: 4
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 32
+    fragility_tag_id: 1
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 19
+    fragility_tag_id: 10
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 10
+    fragility_tag_id: 2
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 5
+    fragility_tag_id: 3
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 38
+    fragility_tag_id: 14
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 20
+    fragility_tag_id: 16
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 50
+    fragility_tag_id: 3
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 31
+    fragility_tag_id: 2
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 19
+    fragility_tag_id: 7
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 46
+    fragility_tag_id: 6
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 5
+    fragility_tag_id: 10
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 8
+    fragility_tag_id: 8
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 14
+    fragility_tag_id: 12
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 43
+    fragility_tag_id: 3
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 44
+    fragility_tag_id: 15
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 24
+    fragility_tag_id: 2
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 26
+    fragility_tag_id: 5
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 40
+    fragility_tag_id: 7
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 25
+    fragility_tag_id: 6
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 34
+    fragility_tag_id: 11
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 3
+    fragility_tag_id: 7
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 5
+    fragility_tag_id: 4
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 15
+    fragility_tag_id: 11
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 31
+    fragility_tag_id: 16
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 33
+    fragility_tag_id: 13
+- model: index.reportfragilitytags
+  fields:
+    report_doc_id: 23
+    fragility_tag_id: 2

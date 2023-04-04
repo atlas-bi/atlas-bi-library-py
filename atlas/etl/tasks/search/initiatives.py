@@ -1,5 +1,7 @@
 """Celery tasks to keep initiative search up to date."""
+# pylint: disable=W0613
 import contextlib
+from typing import Any, Dict, Iterator, Optional
 
 import pysolr
 from celery import shared_task
@@ -8,23 +10,27 @@ from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from django_chunked_iterator import batch_iterator
 from etl.tasks.functions import clean_doc, solr_date
-from index.models import Initiatives
+from index.models import CollectionReports, Collections, Initiatives
 
 
 @receiver(pre_delete, sender=Initiatives)
-def deleted_initiative(sender, instance, **kwargs):
+def deleted_initiative(
+    sender: Initiatives, instance: Initiatives, **kwargs: Dict[Any, Any]
+) -> None:
     """When initiative is delete, remove it from search."""
     delete_initiative.delay(instance.initiative_id)
 
 
 @receiver(post_save, sender=Initiatives)
-def updated_initiative(sender, instance, **kwargs):
+def updated_initiative(
+    sender: Initiatives, instance: Initiatives, **kwargs: Dict[Any, Any]
+) -> None:
     """When initiative is updated, add it to search."""
     load_initiative.delay(instance.initiative_id)
 
 
 @shared_task
-def delete_initiative(initiative_id):
+def delete_initiative(initiative_id: int) -> None:
     """Celery task to remove a initiative from search."""
     solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
 
@@ -32,13 +38,13 @@ def delete_initiative(initiative_id):
 
 
 @shared_task
-def load_initiative(initiative_id):
+def load_initiative(initiative_id: int) -> None:
     """Celery task to reload a initiative in search."""
     load_initiatives(initiative_id)
 
 
 @shared_task
-def reset_initiatives():
+def reset_initiatives() -> None:
     """Reset initiative group in solr.
 
     1. Delete all initiatives from Solr
@@ -53,7 +59,7 @@ def reset_initiatives():
     load_initiatives()
 
 
-def load_initiatives(initiative_id=None):
+def load_initiatives(initiative_id: Optional[int] = None) -> None:
     """Load a group of initiatives to solr database.
 
     1. Convert the objects to list of dicts
@@ -80,14 +86,14 @@ def load_initiatives(initiative_id=None):
     list(map(solr_load_batch, batch_iterator(initiatives.all(), batch_size=1000)))
 
 
-def solr_load_batch(batch):
+def solr_load_batch(batch: Iterator) -> None:
     """Process batch."""
     solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
 
     solr.add(list(map(build_doc, batch)))
 
 
-def build_doc(initiative):
+def build_doc(initiative: Initiatives) -> Dict[Any, Any]:
     """Build initiative doc."""
     doc = {
         "id": "/initiatives/%s" % initiative.initiative_id,
@@ -102,7 +108,7 @@ def build_doc(initiative):
         "executive_owner": str(initiative.exec_owner),
         "financial_impact": str(initiative.financial_impact),
         "strategic_importance": str(initiative.strategic_importance),
-        "last_updated": solr_date(initiative._modified_at),
+        "last_updated": solr_date(initiative.modified_at),
         "updated_by": str(initiative.modified_by),
         "related_collections": [],
         "linked_description": [],
@@ -117,7 +123,9 @@ def build_doc(initiative):
     return clean_doc(doc)
 
 
-def build_initiative_collection_doc(collection, doc):
+def build_initiative_collection_doc(
+    collection: Collections, doc: Dict[Any, Any]
+) -> Dict[Any, Any]:
     """Build initiative collection doc."""
     doc["related_collections"].append(str(collection))
     doc["linked_description"].extend(
@@ -139,7 +147,9 @@ def build_initiative_collection_doc(collection, doc):
     return doc
 
 
-def build_initiative_report_doc(report_link, doc):
+def build_initiative_report_doc(
+    report_link: CollectionReports, doc: Dict[Any, Any]
+) -> Dict[Any, Any]:
     """Build initiative report doc."""
     doc["related_reports"].append(str(report_link.report))
 

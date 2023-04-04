@@ -1,0 +1,65 @@
+{% extends "layout.html.dj" %}
+
+{% block body %}
+    <h1 class="title is-1">Maintenance Tasks</h1>
+    <nav class="breadcrumb">
+        <ul>
+            <li>
+                <a title="reports to retire"
+                   class="tab-lnk active"
+                   href="#recommendretire">To Retire</a>
+            </li>
+            <li>
+                <a title="unused reports" class="tab-lnk" href="#dead">Unused</a>
+            </li>
+            <li>
+                <a title="reports to maintain"
+                   class="tab-lnk"
+                   href="#maintenancerequired">To Maintain</a>
+            </li>
+            <li>
+                <a title="audit-only reports" class="tab-lnk" href="#auditonly">Audit Only</a>
+            </li>
+            <li>
+                <a title="no maint schedule" class="tab-lnk" href="#missingschedule">No Maint Schedule</a>
+            </li>
+            <li>
+                <a title="edited by others" class="tab-lnk" href="#notanalytics">Edited by Others</a>
+            </li>
+            <li>
+                <a title="to document" class="tab-lnk" href="#topundocumented">To Document</a>
+            </li>
+            <li>
+                <a title="new undocumented reports"
+                   class="tab-lnk"
+                   href="#newundocumented">New Undocumented</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="tab-cnt">
+        <div class="tab-dta active" id="recommendretire">
+            <div data-ajax="yes" data-url="{% url "task:recommend_retire" %}"></div>
+        </div>
+        <div class="tab-dta" id="dead">
+            <div data-ajax="yes" data-url="{% url "task:unused" %}"></div>
+        </div>
+        <div class="tab-dta" id="maintenancerequired">
+            <div data-ajax="yes" data-url="{% url "task:maintenance_required" %}"></div>
+        </div>
+        <div class="tab-dta" id="auditonly">
+            <div data-ajax="yes" data-url="{% url "task:audit_only" %}"></div>
+        </div>
+        <div class="tab-dta" id="missingschedule">
+            <div data-ajax="yes" data-url="{% url "task:no_schedule" %}"></div>
+        </div>
+        <div class="tab-dta" id="notanalytics">
+            <div data-ajax="yes" data-url="{% url "task:not_analytics" %}"></div>
+        </div>
+        <div class="tab-dta" id="topundocumented">
+            <div data-ajax="yes" data-url="{% url "task:top_undocumented" %}"></div>
+        </div>
+        <div class="tab-dta" id="newundocumented">
+            <div data-ajax="yes" data-url="{% url "task:new_undocumented" %}"></div>
+        </div>
+    </div>
+{% endblock body %}

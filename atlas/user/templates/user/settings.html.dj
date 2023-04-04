@@ -1,0 +1,25 @@
+{% extends "layout.html.dj" %}
+
+{% load static %}
+
+{% block js %}
+    <script src="{% static '/js/user-settings.min.js' %}"
+            defer="defer"
+            async="async"></script>
+{% endblock js %}
+
+{% block body %}
+    <h1 class="title is-1">Settings</h1>
+    <h3 class="title is-3">Email</h3>
+    <div class="field toggle">
+        <input type="hidden"
+               id="enable_share_notification"
+               value="{% if share_notification.value == "Y" %}Y{% endif %}"/>
+        <input id="switch-share-notification"
+               type="checkbox"
+               name="switch-share-notification"
+               class="switch is-rounded is-info"
+               {% if share_notification.value == "Y" %}checked="checked"{% endif %}/>
+        <label for="switch-share-notification">Enable Share Notification</label>
+    </div>
+{% endblock body %}

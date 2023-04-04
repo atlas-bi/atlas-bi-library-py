@@ -4,13 +4,23 @@ from django import template
 register = template.Library()
 
 
-@register.filter(name="authorized")
-def authorized(value):
-    """Check if user is authorized to use favorites.
+@register.filter(name="get_type")
+def get_type(pathname: str) -> str:
+    """Get page type from path."""
+    if pathname.lower().startswith("/search"):
+        return "Search"
 
-    :param value: list of permissions
-    :returns: true/false if they have a 41
-    """
-    if value:
-        return 41 in value
-    return False
+    if pathname.lower().startswith("/report"):
+        return "Reports"
+    if pathname.lower().startswith("/initiative"):
+        return "Initiatives"
+    if pathname.lower().startswith("/collection"):
+        return "Collections"
+    if pathname.lower().startswith("/term"):
+        return "Terms"
+    if pathname.lower().startswith("/group"):
+        return "Groups"
+    if pathname.lower().startswith("/user"):
+        return "Users"
+
+    return "Other"

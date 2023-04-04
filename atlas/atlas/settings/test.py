@@ -2,6 +2,7 @@
 
 import contextlib
 import os
+from typing import Any
 
 from .base import *
 
@@ -9,11 +10,11 @@ from .base import *
 class DisableMigrations:
     """Disable migrations to force a fresh db load."""
 
-    def __contains__(self, item):
+    def __contains__(self, item: Any) -> bool:
         """Return true for all keys."""
         return True
 
-    def __getitem__(self, item):
+    def __getitem__(self, item: Any) -> None:
         """Return none for all values."""
         return None
 
@@ -21,6 +22,7 @@ class DisableMigrations:
 AUTHENTICATION_BACKENDS = ("atlas.no_pass_auth.Backend",)  # type: ignore[assignment]
 
 LOGIN_URL = "/accounts/login/"
+ENABLE_LOGOUT = True
 
 """
 docker run --name postgresql-container -p 5432:5432 -e POSTGRES_HOST_AUTH_METHOD=trust -d postgres

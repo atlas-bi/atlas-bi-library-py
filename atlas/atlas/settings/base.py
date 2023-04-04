@@ -13,7 +13,7 @@ import contextlib
 import logging
 import os
 from pathlib import Path
-from typing import Optional
+from typing import Any, Dict, Optional, Tuple
 
 import saml2
 import saml2.saml
@@ -139,6 +139,7 @@ INSTALLED_APPS = [
     "django_celery_results",
     "django_celery_beat",
     "fullurl",
+    "django_extensions",
     # Atlas specific
     "index.apps.IndexConfig",
     "mail.apps.MailConfig",
@@ -153,6 +154,7 @@ INSTALLED_APPS = [
     "settings.apps.SettingsConfig",
     "group.apps.GroupConfig",
     "sketch.apps.SketchConfig",
+    "task.apps.TaskConfig",
 ]
 
 MIDDLEWARE = [
@@ -171,7 +173,7 @@ MIDDLEWARE = [
     "djangosaml2.middleware.SamlSessionMiddleware",
 ]
 
-AUTHENTICATION_BACKENDS = (
+AUTHENTICATION_BACKENDS: Tuple[str, ...] = (
     "django.contrib.auth.backends.ModelBackend",
     "djangosaml2.backends.Saml2Backend",
 )
@@ -189,7 +191,6 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                # "atlas.context_processors.settings",
                 "atlas.context_processors.user",
                 "django_settings_export.settings_export",
             ],
@@ -210,7 +211,7 @@ WSGI_APPLICATION = "atlas.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
+DATABASES: Dict[Any, Any] = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "atlas",
@@ -325,7 +326,7 @@ SAML_ATTRIBUTE_MAPPING = {
 }
 
 ORG_NAME = "Riverside Healthcare"
-
+ENABLE_LOGOUT = False
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 SOLR_URL = "http://localhost:8983/solr/atlas/"
@@ -363,7 +364,6 @@ LOGGING = {
 def find_project_root(src: Path) -> Path:
     """Attempt to get the project root."""
     for directory in [src, *src.resolve().parents]:
-
         if (directory / "pyproject.toml").is_file():
             return directory
 
@@ -382,13 +382,12 @@ def find_pyproject(root: Path) -> Optional[Path]:
 
 
 pyproject_file = find_pyproject(find_project_root(Path(__file__)))
-
+VERSION = ""
 if pyproject_file:
     content = tomllib.load(pyproject_file.open("rb"))
     try:
         VERSION = content["tool"]["poetry"]["version"]  # type: ignore
     except KeyError:
-        VERSION = ""
         logging.info("No pyproject.toml found.")
 
 
@@ -402,7 +401,7 @@ FOOTER = {
         }
     },
 }
-SITE_MESSAGE = "Welcom to Atlas"
+SITE_MESSAGE = "Welcome to Atlas"
 LOGO = "img/thinking-face-text-266x80.png"
 
 ENABLE_INITIATIVES = True
@@ -411,6 +410,16 @@ ENABLE_SHARING = True
 ENABLE_TERMS = True
 ENABLE_USER_PROFILES = True
 ENABLE_BREADCRUMBS = True
+
+EMAIL_HOST = ""
+EMAIL_PORT = 25
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = None
+EMAIL_HOST_PASSWORD = None
+EMAIL_SENDER_NAME = f"Atlas | {ORG_NAME} Analytics"
+EMAIL_SENDER_EMAIL = "me@example.com"
+EMAIL_DEFAULT_REPLY_ADDRESS = "me@example.com"
 
 # import custom overrides
 with contextlib.suppress(ImportError):
@@ -428,6 +437,7 @@ SETTINGS_EXPORT = [
     "ENABLE_TERMS",
     "ENABLE_USER_PROFILES",
     "ENABLE_BREADCRUMBS",
+    "ENABLE_LOGOUT",
 ]
 
 SAFE_HTML_TAGS = [

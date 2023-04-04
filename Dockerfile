@@ -1,59 +1,75 @@
-FROM python:3.10
+# Optionally pass a DATABASE_URL and REDIS_URL arg
+FROM python:3.11-alpine as python_install
 
-ENV DEBIAN_FRONTEND=noninteractive \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    POETRY_HOME="/opt/poetry" \
+    POETRY_VIRTUALENVS_IN_PROJECT=1 \
+    POETRY_NO_INTERACTION=1
 
-RUN apt-get update -qq \
-     && apt-get install -yqq --no-install-recommends apt-utils curl pkg-config postgresql-contrib build-essential openjdk-11-jdk wget lsof unixodbc-dev unixodbc libpq-dev htop nodejs npm node-gyp \
-     && apt-get clean \
-     && apt-get autoclean \
-     && rm -rf /var/lib/apt/lists/*
+ENV PATH="$POETRY_HOME/bin:$PATH"
 
-RUN wget https://archive.apache.org/dist/lucene/solr/8.8.2/solr-8.8.2.tgz \
-    && tar xzf solr-8.8.2.tgz solr-8.8.2/bin/install_solr_service.sh --strip-components=2 \
-    && bash ./install_solr_service.sh solr-8.8.2.tgz \
-    && rm solr-8.8.2.tgz
+RUN apk update \
+    && apk add --no-cache build-base postgresql-dev gcc libxml2-dev libxslt-dev musl-dev libressl libffi-dev libressl-dev xmlsec-dev xmlsec unixodbc-dev openldap-dev
 
-COPY /solr/solr.in.sh /etc/default/solr.in.sh
+WORKDIR /app
+COPY pyproject.toml poetry.lock ./
 
-# disable swappiness and autoschema
-RUN echo 'vm.swappiness = 1' >> /etc/sysctl.conf \
-    && /opt/solr/bin/solr start -force -noprompt -v \
-    # primary search core
-    && /opt/solr/bin/solr create -c atlas -force \
-    && /opt/solr/bin/solr config -c atlas -p 8983 -action set-user-property -property update.autoCreateFields -value false \
-    # lookup search core
-    && /opt/solr/bin/solr create -c atlas_lookups -force \
-    && /opt/solr/bin/solr config -c atlas_lookups -p 8983 -action set-user-property -property update.autoCreateFields -value false
+RUN wget -O - https://install.python-poetry.org | python3 - \
+ && chmod 755 ${POETRY_HOME}/bin/poetry \
+ && poetry install --no-root --only main
 
-# copy solr atlas config
-COPY /solr/atlas/managed-schema /var/solr/data/atlas/conf/managed-schema
-COPY /solr/atlas/solrconfig.xml /var/solr/data/atlas/conf/solrconfig.xml
-COPY /solr/atlas/synonyms.txt /var/solr/data/atlas/conf/synonyms.txt
+FROM python:3.11-alpine as static
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PATH="/app/.venv/bin:$PATH" \
+    DJANGO_SETTINGS_MODULE='atlas.settings.demo'
 
-# copy solr atlas lookup config
-COPY /solr/atlas_lookups/managed-schema /var/solr/data/atlas_lookups/conf/managed-schema
-COPY /solr/atlas_lookups/solrconfig.xml /var/solr/data/atlas_lookups/conf/solrconfig.xml
-COPY /solr/atlas_lookups/synonyms.txt /var/solr/data/atlas_lookups/conf/synonyms.txt
+ARG DATABASE_URL \
+    REDIS_URL
 
 WORKDIR /app
 
-COPY /atlas/requirements.txt .
-
-RUN pip install -r requirements.txt
-
-COPY . .
+COPY atlas ./atlas
+COPY pyproject.toml ./
+COPY --from=python_install /app/.venv ./.venv
 
 WORKDIR /app/atlas
 
-COPY release_tasks.sh .
+RUN [ -z "$REDIS_URL" ] \
+ && apk add --no-cache redis
 
-CMD DJANGO_SETTINGS_MODULE='atlas.settings.demo' celery -A atlas worker -l DEBUG -E --detach && \
-    /opt/solr/bin/solr start -force -noprompt -v && gunicorn atlas.wsgi-demo --workers 1 -b 0.0.0.0:$PORT --log-file -
+RUN if [ -z "$REDIS_URL" ]; then redis-server --daemonize yes; fi \
+ && sleep 1 \
+ && python manage.py collectstatic --no-input \
+ && python manage.py compress --force -e html -e 'html.dj' \
+ && python manage.py collectstatic --no-input \
+ && python manage.py reset_db --no-input \
+ && python manage.py migrate --run-syncdb \
+ && python manage.py loaddata --app index initial demo/base demo/users demo/groups demo/user_roles demo/user_group_memberships demo/reports demo/report_docs demo/report_maint demo/report_frag_tags demo/terms demo/report_terms demo/report_hierarchy demo/report_query demo/user_folders demo/user_stars demo/shares
 
-# heroku container: login
-# docker docker build   . -t atlas-py-test
-# docker run -i -t -p 8000:8000 -e PORT=8000 -u 0 atlas-py-test
-# heroku container:push web --app HEROKU_APP_NAME
-# heroku container:release web --app HEROKU_APP_NAME
+FROM python:3.11-alpine as deploy
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PATH="/app/.venv/bin:$PATH" \
+    DJANGO_SETTINGS_MODULE='atlas.settings.demo'
+
+WORKDIR /app
+
+ARG DATABASE_URL \
+    REDIS_URL
+
+RUN apk update && apk add --no-cache openjdk11 bash lsof \
+ && [ -z "$REDIS_URL" ] \
+ && apk add --no-cache redis
+
+COPY solr ./solr
+COPY --from=static /app/atlas ./atlas
+COPY pyproject.toml ./
+COPY --from=python_install /app/.venv ./.venv
+
+WORKDIR /app/atlas
+
+CMD ls /app/solr; celery -A atlas worker -l DEBUG -E --detach && \
+     if [ -z "$REDIS_URL" ]; then redis-server --daemonize yes; fi && \
+    /app/solr/solr-9.0.0/bin/solr start -force -noprompt -v && gunicorn atlas.wsgi --workers 1 -b 0.0.0.0:$PORT --log-file -

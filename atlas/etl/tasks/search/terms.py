@@ -1,5 +1,6 @@
 """Celery tasks to keep term search up to date."""
 import contextlib
+from typing import Any, Dict, Iterator, Optional
 
 import pysolr
 from celery import shared_task
@@ -12,19 +13,19 @@ from index.models import Terms
 
 
 @receiver(pre_delete, sender=Terms)
-def deleted_term(sender, instance, **kwargs):
+def deleted_term(sender: Terms, instance: Terms, **kwargs: Dict[Any, Any]) -> None:
     """When term is delete, remove it from search."""
     delete_term.delay(instance.term_id)
 
 
 @receiver(post_save, sender=Terms)
-def updated_term(sender, instance, **kwargs):
+def updated_term(sender: Terms, instance: Terms, **kwargs: Dict[Any, Any]) -> None:
     """When term is updated, add it to search."""
     load_term.delay(instance.term_id)
 
 
 @shared_task
-def delete_term(term_id):
+def delete_term(term_id: int) -> None:
     """Celery task to remove a term from search."""
     solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
 
@@ -32,13 +33,13 @@ def delete_term(term_id):
 
 
 @shared_task
-def load_term(term_id):
+def load_term(term_id: int) -> None:
     """Celery task to reload a term in search."""
     load_terms(term_id)
 
 
 @shared_task
-def reset_terms():
+def reset_terms() -> None:
     """Reset term group in solr.
 
     1. Delete all terms from Solr
@@ -53,7 +54,7 @@ def reset_terms():
     load_terms()
 
 
-def load_terms(term_id=None):
+def load_terms(term_id: Optional[int] = None) -> None:
     """Load a group of terms to solr database.
 
     1. Convert the objects to list of dicts
@@ -78,17 +79,17 @@ def load_terms(term_id=None):
     list(map(solr_load_batch, batch_iterator(terms.all(), batch_size=1000)))
 
 
-def solr_load_batch(batch):
+def solr_load_batch(batch: Iterator) -> None:
     """Process batch."""
     solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
 
     solr.add(list(map(build_doc, batch)))
 
 
-def build_doc(term):
+def build_doc(term: Terms) -> Dict[Any, Any]:
     """Build term doc."""
     doc = {
-        "id": "/terms/%s" % term.term_id,
+        "id": f"/terms/{term.term_id}",
         "atlas_id": term.term_id,
         "type": "terms",
         "name": str(term),
@@ -97,13 +98,13 @@ def build_doc(term):
         "runs": 10,
         "description": [term.summary, term.technical_definition],
         "approved": term.approved or "N",
-        "approval_date": solr_date(term._approved_at),
+        "approval_date": solr_date(term.approved_at),
         "approved_by": str(term.approved_by),
         "has_external_standard": "Y" if bool(term.has_external_standard) else "N",
         "external_url": term.has_external_standard,
-        "valid_from": solr_date(term._valid_from),
-        "valid_to": solr_date(term._valid_to),
-        "last_updated": solr_date(term._modified_at),
+        "valid_from": solr_date(term.valid_from),
+        "valid_to": solr_date(term.valid_to),
+        "last_updated": solr_date(term.modified_at),
         "updated_by": str(term.modified_by),
         "related_collections": [],
         "related_initiatives": [],

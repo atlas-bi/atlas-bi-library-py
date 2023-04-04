@@ -1,6 +1,9 @@
 """Atlas search settings."""
+# pylint: disable=C0115, W0613, C0116
+from typing import Any, Dict, Tuple
+
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.views import View
 from django.views.generic.base import TemplateView
 from index.models import GlobalSettings, ReportTypes
@@ -12,7 +15,7 @@ class Index(NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, Template
     template_name = "settings/search.html.dj"
     required_permissions = ("Manage Global Site Settings",)
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
         """Add context to request."""
         context = super().get_context_data(**kwargs)
         context["report_types"] = ReportTypes.objects.all()
@@ -34,12 +37,13 @@ class Index(NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, Template
 
         return context
 
-    def post(self, request, *args, **kwargs):
+    def post(
+        self, request: HttpRequest, *args: Tuple[Any], **kwargs: Dict[Any, Any]
+    ) -> HttpResponse:
         search_type = self.kwargs["type"]
         report_type_id = self.kwargs["id"]
 
         if search_type == "reports":
-
             report_type = ReportTypes.objects.filter(type_id=report_type_id).first()
 
             if report_type.visible == "Y":
@@ -50,7 +54,6 @@ class Index(NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, Template
             report_type.save()
 
         else:
-
             fields = {
                 "users": "users_search_visibility",
                 "groups": "groups_search_visibility",
@@ -73,7 +76,9 @@ class Index(NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, Template
 class ReportTypeName(NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, View):
     required_permissions = ("Manage Global Site Settings",)
 
-    def get(self, request, *args, **kwargs):
+    def get(
+        self, request: HttpRequest, *args: Tuple[Any], **kwargs: Dict[Any, Any]
+    ) -> HttpResponse:
         report_type_id = self.kwargs["id"]
 
         report_type = ReportTypes.objects.filter(type_id=report_type_id).first()

@@ -1,11 +1,14 @@
 """Custom Atlas Decorators."""
 from functools import wraps
+from typing import Any, Dict, Optional, Tuple
 from urllib.parse import urlparse
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.views import redirect_to_login
+from django.core.exceptions import ImproperlyConfigured
+from django.http import HttpRequest
 from django.shortcuts import redirect, resolve_url
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
@@ -14,11 +17,11 @@ DEFAULT_MESSAGE = "Unauthorized action."
 
 
 def user_passes_test(
-    test_func,
-    login_url=None,
-    redirect_field_name=REDIRECT_FIELD_NAME,
-    message=DEFAULT_MESSAGE,
-):
+    test_func: Any,
+    login_url: Optional[str] = None,
+    redirect_field_name: str = REDIRECT_FIELD_NAME,
+    message: str = DEFAULT_MESSAGE,
+) -> Any:
     """Wrap decorator function.
 
     Decorator for views that checks that the user passes the given test,
@@ -26,9 +29,11 @@ def user_passes_test(
     that takes the user object and returns True if the user passes.
     """
 
-    def decorator(view_func):
+    def decorator(view_func: Any) -> Any:
         @wraps(view_func)
-        def _wrapped_view(request, *args, **kwargs):
+        def _wrapped_view(
+            request: HttpRequest, *args: Tuple[Any], **kwargs: Dict[Any, Any]
+        ) -> Any:
             if not test_func(request.user):
                 messages.add_message(request, messages.ERROR, message)
             if test_func(request.user):
@@ -51,11 +56,11 @@ def user_passes_test(
 
 
 def admin_required(
-    view_func=None,
-    redirect_field_name=REDIRECT_FIELD_NAME,
-    login_url=settings.LOGIN_URL,
-    message=DEFAULT_MESSAGE,
-):
+    view_func: Any = None,
+    redirect_field_name: str = REDIRECT_FIELD_NAME,
+    login_url: str = settings.LOGIN_URL,
+    message: str = DEFAULT_MESSAGE,
+) -> Any:
     """Require admin to access function.
 
     Decorator for views that checks that the user is logged in and is a
@@ -76,19 +81,33 @@ class NeverCacheMixin:
     """Use for class views where we don't want any caching."""
 
     @method_decorator(never_cache)
-    def dispatch(self, *args, **kwargs):
+    def dispatch(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> Any:
         """Wrap function with decorator."""
-        return super(NeverCacheMixin, self).dispatch(*args, **kwargs)
+        return super().dispatch(*args, **kwargs)  # type: ignore[misc]
 
 
 class PermissionsCheckMixin:
     """Verify user permissions on class views."""
 
-    def dispatch(self, request, *args, **kwargs):
+    request: HttpRequest = None
+    required_permissions: Optional[Tuple[str, ...]] = None
+
+    def get_permission_names(self) -> Any:
+        """Return a list of permissions."""
+        if self.required_permissions is None:
+            raise ImproperlyConfigured(
+                "PermissionsCheckMixin requires either a definition of ",
+                "'required_permissions' or an implemenetatino of 'get_permission_names()'",
+            )
+        return self.required_permissions
+
+    def dispatch(
+        self, request: HttpRequest, *args: Tuple[Any], **kwargs: Dict[Any, Any]
+    ) -> Any:
         """Wrap function with decorator."""
-        if not self.request.user.has_perms(self.required_permissions):
+        if not self.request.user.has_perms(self.get_permission_names()):
             return redirect(
                 request.META.get("HTTP_REFERER", "/")
                 + "?error=You do not have permission to access that page."
             )
-        return super(PermissionsCheckMixin, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)  # type: ignore[misc]

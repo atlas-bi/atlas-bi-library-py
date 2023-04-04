@@ -1,0 +1,137 @@
+{% load markdown %}
+{% load compress %}
+{% load static %}
+{% load atlas_static %}
+{% load helpers %}
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:v="urn:schemas-microsoft-com:vml"
+      xmlns:o="urn:schemas-microsoft-com:office:office"
+      lang="en">
+    <head>
+        <title>Atlas Notification | {{ subject }}</title>
+        <meta charset="utf-8" />
+        <meta name="description" content="Atlas Notification" />
+        <meta name="keywords" content="atlas" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        {% compress css inline %}
+            <link rel="stylesheet"
+                  href="{% static 'css/email.min.css' %}"
+                  type="text/css"
+                  charset="utf-8"/>
+        {% endcompress %}
+
+        {% compress css inline %}
+            {% global_css %}
+        {% endcompress %}
+
+    </head>
+    <body class="m-0 p-0">
+        <div class="preheader"
+             style="display: none;
+                    max-height: 0;
+                    overflow: hidden">{{ message|markdown|text }}</div>
+        <table width="100%">
+            <tr>
+                <td>
+                    <table width="650" align="center">
+                        <tr>
+                            <td>
+                                <table width="580" align="center">
+                                    <!--header-->
+                                    <tr>
+                                        <td height="30"></td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center">
+                                            <nav class="navbar has-shadow">
+                                                <a title="Atlas BI Library"
+                                                   class="navbar-item mx-auto"
+                                                   href="{{ request.scheme }}://{{ request.get_host }}"
+                                                   align="center">
+                                                    <img src="cid:atlas_logo"
+                                                         width="133"
+                                                         height="auto"
+                                                         alt="site logo"
+                                                         style="width:133px"
+                                                         class="mx-auto"
+                                                         title="atlas logo"/>
+                                                </a>
+                                            </nav>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td height="30"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Hi {{ recipient }},</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td height="10"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
+                                                <a title="open user profile"
+                                                   href="{{ request.scheme }}://{{ request.get_host|remove_slash }}{% url 'user:profile' pk=user.user_id %}">{{ sender }}</a>
+                                            {% else %}
+                                                {{ sender }}
+                                            {% endif %}
+                                            shared something with you!
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td height="30"></td>
+                                    </tr>
+                                    <!--/header-->
+                                    <!--message-->
+                                    <tr>
+                                        <td>
+                                            <div class="box">{{ message|markdown }}</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td height="10"></td>
+                                    </tr>
+                                    <!--/message-->
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="30"></td>
+                        </tr>
+                        <!-- footer -->
+                        <tr>
+                            <td align="center">
+                                <small class="has-text-grey">You are receiving this email because Share Notifications are enabled on this account.</small>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center">
+                                <small class="has-text-grey">You can manage your notifications <a title="atlas notifications"
+    href="{{ request.scheme }}://{{ request.get_host|remove_slash }}{% url 'user:settings' %}">here</a>.</small>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="30"></td>
+                        </tr>
+                        <tr>
+                            <td align="center">
+                                <small class="has-text-grey">
+                                    ©{% now "Y" %} {{ settings.ORG_NAME }}
+                                    {% if settings.VERSION %}| Release {{ settings.VERSION }}{% endif %}
+                                </small>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

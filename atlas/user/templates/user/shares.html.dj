@@ -1,0 +1,50 @@
+<div class="shared-container">
+    {% if shares %}
+        <strong class="is-block">Shared With Me</strong>
+        {% for share in shares %}
+            <div class="has-tooltip-arrow has-tooltip-left is-flex is-align-items-center"
+                 data-tooltip="Shared by {{ share.sender }} on {{ share.share_date }}">
+                <form class="remove-shared-object"
+                      action="{% url "mail:remove_share" pk=share.id %}"
+                      method="post">
+                    <button class="button is-ghost py-0">
+                        <i class="fas fa-xmark"></i>
+                    </button>
+                </form>
+                <a title="{{ share.name }}"
+                   href="{{ share.url }}"
+                   aria-label="{{ share.name }}">{{ share.name }}</a>
+            </div>
+        {% endfor %}
+        <script>
+            (function() {
+                if (document.readyState === 'complete') {
+                    load();
+                }
+                window.addEventListener('load', function() {
+                    load();
+                });
+
+                function load() {
+                    if (typeof window.removeShared == 'undefined') {
+                        window.removeShared = function() {
+                            document.addEventListener('submit', function(e) {
+                                if (e.target.closest('.remove-shared-object')) {
+                                    e.preventDefault();
+                                    var s = new XMLHttpRequest();
+                                    s.open('post', e.target.closest('.remove-shared-object').getAttribute('action'), true);
+                                    s.setRequestHeader('X-CSRFToken', csrftoken);
+                                    s.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+                                    s.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                                    s.send();
+                                    e.target.closest('div').parentElement.removeChild(e.target.closest('div'));
+                                }
+                            });
+                        };
+                        window.removeShared();
+                    }
+                }
+            })();
+        </script>
+    {% endif %}
+</div>

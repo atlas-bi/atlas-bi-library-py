@@ -1,5 +1,6 @@
 """Atlas ETL for Search."""
-from django.http import JsonResponse
+# pylint: disable=W0613
+from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect
 from django.views.decorators.cache import never_cache
 
@@ -8,7 +9,7 @@ from . import build_task_status, toggle_task_status
 
 
 @never_cache
-def groups(request, arg):
+def groups(request: HttpRequest, arg: str) -> JsonResponse:
     """Search ETL for groups.
 
     options:
@@ -23,12 +24,12 @@ def groups(request, arg):
     if arg == "status":
         return JsonResponse(build_task_status(task_name, task_function))
 
-    elif arg in ["enable", "disable"]:
+    if arg in ["enable", "disable"]:
         return JsonResponse(
             {"message": toggle_task_status(task_name, task_function, arg)}
         )
 
-    elif arg == "run":
+    if arg == "run":
         # Reload groups now.
         task_reset_groups.delay()
 

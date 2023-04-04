@@ -1,0 +1,184 @@
+- model: index.reportterms
+  fields:
+    report_doc_id: 43
+    term_id: 11
+- model: index.reportterms
+  fields:
+    report_doc_id: 22
+    term_id: 8
+- model: index.reportterms
+  fields:
+    report_doc_id: 1
+    term_id: 8
+- model: index.reportterms
+  fields:
+    report_doc_id: 24
+    term_id: 6
+- model: index.reportterms
+  fields:
+    report_doc_id: 44
+    term_id: 6
+- model: index.reportterms
+  fields:
+    report_doc_id: 35
+    term_id: 8
+- model: index.reportterms
+  fields:
+    report_doc_id: 3
+    term_id: 9
+- model: index.reportterms
+  fields:
+    report_doc_id: 10
+    term_id: 8
+- model: index.reportterms
+  fields:
+    report_doc_id: 21
+    term_id: 6
+- model: index.reportterms
+  fields:
+    report_doc_id: 1
+    term_id: 10
+- model: index.reportterms
+  fields:
+    report_doc_id: 36
+    term_id: 5
+- model: index.reportterms
+  fields:
+    report_doc_id: 30
+    term_id: 4
+- model: index.reportterms
+  fields:
+    report_doc_id: 5
+    term_id: 8
+- model: index.reportterms
+  fields:
+    report_doc_id: 37
+    term_id: 1
+- model: index.reportterms
+  fields:
+    report_doc_id: 46
+    term_id: 11
+- model: index.reportterms
+  fields:
+    report_doc_id: 41
+    term_id: 10
+- model: index.reportterms
+  fields:
+    report_doc_id: 24
+    term_id: 4
+- model: index.reportterms
+  fields:
+    report_doc_id: 30
+    term_id: 1
+- model: index.reportterms
+  fields:
+    report_doc_id: 19
+    term_id: 8
+- model: index.reportterms
+  fields:
+    report_doc_id: 5
+    term_id: 10
+- model: index.reportterms
+  fields:
+    report_doc_id: 22
+    term_id: 2
+- model: index.reportterms
+  fields:
+    report_doc_id: 34
+    term_id: 4
+- model: index.reportterms
+  fields:
+    report_doc_id: 14
+    term_id: 1
+- model: index.reportterms
+  fields:
+    report_doc_id: 33
+    term_id: 6
+- model: index.reportterms
+  fields:
+    report_doc_id: 4
+    term_id: 4
+- model: index.reportterms
+  fields:
+    report_doc_id: 1
+    term_id: 6
+- model: index.reportterms
+  fields:
+    report_doc_id: 45
+    term_id: 3
+- model: index.reportterms
+  fields:
+    report_doc_id: 37
+    term_id: 4
+- model: index.reportterms
+  fields:
+    report_doc_id: 26
+    term_id: 4
+- model: index.reportterms
+  fields:
+    report_doc_id: 26
+    term_id: 11
+- model: index.reportterms
+  fields:
+    report_doc_id: 16
+    term_id: 6
+- model: index.reportterms
+  fields:
+    report_doc_id: 21
+    term_id: 1
+- model: index.reportterms
+  fields:
+    report_doc_id: 38
+    term_id: 1
+- model: index.reportterms
+  fields:
+    report_doc_id: 19
+    term_id: 10
+- model: index.reportterms
+  fields:
+    report_doc_id: 22
+    term_id: 11
+- model: index.reportterms
+  fields:
+    report_doc_id: 7
+    term_id: 1
+- model: index.reportterms
+  fields:
+    report_doc_id: 49
+    term_id: 9
+- model: index.reportterms
+  fields:
+    report_doc_id: 19
+    term_id: 4
+- model: index.reportterms
+  fields:
+    report_doc_id: 11
+    term_id: 7
+- model: index.reportterms
+  fields:
+    report_doc_id: 34
+    term_id: 7
+- model: index.reportterms
+  fields:
+    report_doc_id: 33
+    term_id: 4
+- model: index.reportterms
+  fields:
+    report_doc_id: 47
+    term_id: 8
+- model: index.reportterms
+  fields:
+    report_doc_id: 49
+    term_id: 1
+- model: index.reportterms
+  fields:
+    report_doc_id: 31
+    term_id: 11
+- model: index.reportterms
+  fields:
+    report_doc_id: 29
+    term_id: 10
+- model: index.reportterms
+  fields:
+    report_doc_id: 29
+    term_id: 1

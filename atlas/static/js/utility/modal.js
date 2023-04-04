@@ -3,10 +3,12 @@
   function openModal($element) {
     $element.classList.add('is-active');
     document.dispatchEvent(new CustomEvent('modal-open'));
+    document.querySelector('body').style.overflow = 'hidden';
   }
 
   function closeModal($element) {
     $element.classList.remove('is-active');
+    document.querySelector('body').style.overflow = null;
   }
 
   function closeAllModals() {

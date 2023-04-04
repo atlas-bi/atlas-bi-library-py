@@ -1,0 +1,60 @@
+- model: index.groups
+  fields:
+    account_name: Accident and Emergency Group
+    name: Accident and Emergency Group (Group)
+    email: Accident_and_Emergency@my_hospital.rocks
+    type: Email Distribution
+- model: index.groups
+  fields:
+    account_name: Admissions Group
+    name: Admissions Group (Group)
+    email: Admissions@my_hospital.rocks
+    type: Email Distribution
+- model: index.groups
+  fields:
+    account_name: Cardiology Group
+    name: Cardiology Group (Group)
+    email: Cardiology@my_hospital.rocks
+    type: Email Distribution
+- model: index.groups
+  fields:
+    account_name: Oncology Group
+    name: Oncology Group (Group)
+    email: Oncology@my_hospital.rocks
+    type: Email Distribution
+- model: index.groups
+  fields:
+    account_name: Pharmacy Group
+    name: Pharmacy Group (Group)
+    email: Pharmacy@my_hospital.rocks
+    type: Email Distribution
+- model: index.groups
+  fields:
+    account_name: Radiotherapy Group
+    name: Radiotherapy Group (Group)
+    email: Radiotherapy@my_hospital.rocks
+    type: Email Distribution
+- model: index.groups
+  fields:
+    account_name: Urology Group
+    name: Urology Group (Group)
+    email: Urology@my_hospital.rocks
+    type: Email Distribution
+- model: index.groups
+  fields:
+    account_name: Analytics Group
+    name: Analytics Group (Group)
+    email: Analytics@my_hospital.rocks
+    type: Email Distribution
+- model: index.groups
+  fields:
+    account_name: Ophthalmology Group
+    name: Ophthalmology Group (Group)
+    email: Ophthalmology@my_hospital.rocks
+    type: Email Distribution
+- model: index.groups
+  fields:
+    account_name: Orthopaedics Group
+    name: Orthopaedics Group (Group)
+    email: Orthopaedics@my_hospital.rocks
+    type: Email Distribution

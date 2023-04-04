@@ -1,0 +1,23 @@
+{% load markdown %}
+{% load compress %}
+{% load static %}
+{% load atlas_static %}
+{% load helpers %}
+
+Atlas Notification | {{ subject }}
+{{ request.scheme }}://{{ request.get_host }}
+Hi {{ recipient }}, {{ sender }} shared
+{% if url %}
+    {{ url }}
+{% else %}
+    something
+{% endif %}
+with you!
+---
+
+{{ message|markdown|text }}
+
+---
+You are receiving this email because Share Notifications are enabled on this account. You can manage your notifications at {{ request.scheme }}://{{ request.get_host|remove_slash }}{% url 'user:settings' %}
+This email was sent from Atlas. ©{% now "Y" %} {{ settings.ORG_NAME }}
+{% if settings.VERSION %}| Release {{ settings.VERSION }}{% endif %}

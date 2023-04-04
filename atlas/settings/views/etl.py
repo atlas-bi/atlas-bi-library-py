@@ -1,10 +1,13 @@
 """Atlas ETL Settings."""
+# pylint: disable=C0115, W0613, C0116
 from pathlib import Path
+from typing import Any, Dict, Tuple
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import HttpResponse, redirect, reverse
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import redirect, reverse
 from django.views.generic.base import TemplateView
 from index.models import GlobalSettings
 
@@ -15,15 +18,16 @@ class Index(NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, Template
     template_name = "settings/etl.html.dj"
     required_permissions = ("Manage Global Site Settings",)
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
         """Add context to request."""
         context = super().get_context_data(**kwargs)
         context["etl"] = GlobalSettings.objects.filter(name="report_tag_etl").first()
 
         return context
 
-    def post(self, request, *args, **kwargs):
-
+    def post(
+        self, request: HttpRequest, *args: Tuple[Any], **kwargs: Dict[Any, Any]
+    ) -> HttpResponse:
         setting, _ = GlobalSettings.objects.get_or_create(name="report_tag_etl")
         setting.value = request.POST.get("value", None)
         setting.save()
@@ -34,7 +38,7 @@ class Index(NeverCacheMixin, LoginRequiredMixin, PermissionsCheckMixin, Template
 
 
 @login_required
-def default(request):
+def default(request: HttpRequest) -> HttpResponse:
     if not request.user.has_perm("Manage Global Site Settings"):
         return HttpResponse("", content_type="text/plain")
 

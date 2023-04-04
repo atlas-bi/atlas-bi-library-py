@@ -1,5 +1,9 @@
 (function () {
   function bigNumber(text) {
+    if (text < 10) {
+      return text;
+    }
+
     let n = parseInt(text, 10);
     const d = 10 ** 0;
     let i = 7;
@@ -273,7 +277,7 @@
 
       aj.addEventListener('load', function () {
         $element.innerHTML = '';
-        $element.append(buildDataTable(JSON.parse(aj.responseText)));
+        $element.append(buildDataTable(JSON.parse(aj.responseText).context));
         $element.style.visibility = 'visible';
         $element.style.opacity = '1';
       });
@@ -340,11 +344,9 @@
       event.target.tagName === 'INPUT'
     ) {
       const i = event.target;
-      let type = 1;
 
       if (i.hasAttribute('checked')) {
         i.removeAttribute('checked');
-        type = 2;
         i.closest('tr.has-text-grey-light').classList.remove(
           'has-text-grey-light',
         );
@@ -371,17 +373,8 @@
         });
       }
 
-      const data = {
-        Id: i.dataset.id,
-        Type: type,
-      };
-      const url = Object.keys(data)
-        .map(function (k) {
-          return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]);
-        })
-        .join('&');
       const q = new XMLHttpRequest();
-      q.open('post', i.dataset.url + '?handler=Resolved&' + url, true);
+      q.open('post', i.dataset.url, true);
       q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       q.setRequestHeader('X-CSRFToken', csrftoken);

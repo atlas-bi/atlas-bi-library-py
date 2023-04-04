@@ -14,11 +14,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 import logging
+from typing import Any, Dict
 
 import djangosaml2
 from django.conf import settings as django_settings
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import render
 from django.urls import include, path, re_path
+from django.utils import timezone
+from index.models import AnalyticsErrors
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +54,7 @@ if (
 ):
     urlpatterns.append(path("accounts/", include("django.contrib.auth.urls")))
 
-if hasattr(django_settings, "DEBUG") and getattr(django_settings, "DEBUG"):
+if getattr(django_settings, "DEBUG", False):
     import debug_toolbar
 
     urlpatterns += (path("__debug__/", include(debug_toolbar.urls)),)
@@ -64,7 +68,12 @@ if getattr(django_settings, "TESTING", False):
     from django.http import Http404
     from django.views import static
 
-    def serve(request, path, insecure=False, **kwargs):
+    def serve(
+        request: HttpRequest,
+        path: str,
+        insecure: bool = False,
+        **kwargs: Dict[Any, Any]
+    ) -> Any:
         """Custom static file serve to ignore debug flag."""
         normalized_path = posixpath.normpath(path).lstrip("/")
         absolute_path = finders.find(normalized_path)
@@ -84,17 +93,17 @@ import sys
 import traceback
 
 
-def full_stack():
+def full_stack() -> str:
     """Return full stack trace of an exception.
 
     :returns: full stack trace of an exception.
     """
     exc = sys.exc_info()[0]
     if exc is not None:
-        frame = sys.exc_info()[-1].tb_frame.f_back
+        frame = sys.exc_info()[-1].tb_frame.f_back  # type: ignore[union-attr]
         stack = traceback.extract_stack(frame)
     else:
-        stack = traceback.extract_stack()[:-1]  # last one would be full_stack()
+        stack = traceback.extract_stack()[:-1]  # type: ignore[assignment]  # last one would be full_stack()
     trc = "Traceback (most recent call last):\n"
     stackstr = trc + "".join(traceback.format_list(stack))
     if exc is not None:
@@ -103,20 +112,48 @@ def full_stack():
     return stackstr
 
 
-def custom_error_view(request, exception=None):
+def custom_error_view(request: HttpRequest, exception: Any = None) -> HttpResponse:
     """Log 500 errors."""
+
+    AnalyticsErrors(
+        user=request.user if not request.user.is_anonymous else None,
+        status_code=404,
+        referer=request.META.get("HTTP_REFERER"),
+        useragent=request.headers.get("User-Agent"),
+        message=exception,
+        access_date=timezone.now(),
+        trace=full_stack(),
+    ).save()
     logger.error(full_stack())
     logger.warning(exception)
-    return HttpResponse(
-        "Ops, there was an error. Please try again in a few minutes.", status=500
+    return render(
+        request,
+        "error.html.dj",
+        context={"message": "Sorry an error occurred while accessing that page."},
+        status=200,
     )
 
 
-def custom_warning_view(request, exception=None):
+def custom_warning_view(request: HttpRequest, exception: Any = None) -> HttpResponse:
     """Log 400 errors."""
+    AnalyticsErrors(
+        user=request.user if not request.user.is_anonymous else None,
+        status_code=404,
+        referer=request.META.get("HTTP_REFERER"),
+        useragent=request.headers.get("User-Agent"),
+        message=exception,
+        access_date=timezone.now(),
+    ).save()
+
     logger.warning(full_stack())
     logger.warning(exception)
-    return HttpResponse("Ops, that page doesn't exist!", status=404)
+
+    return render(
+        request,
+        "error.html.dj",
+        context={"message": "Sorry that page could not be found."},
+        status=404,
+    )
 
 
 handler500 = custom_error_view

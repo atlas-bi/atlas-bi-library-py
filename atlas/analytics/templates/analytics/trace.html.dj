@@ -1,0 +1,118 @@
+{% load useragent %}
+{% load details_parser %}
+
+<div>
+    <div class="is-flex is-justify-content-space-between mt-3">
+        <strong>Browser Errors - <span class=" {% if unresolved > 0 %}has-text-danger{% endif %}">{{ unresolved }} unresolved</span> of {{ traces.paginator.count }}</strong>
+        {% if traces.paginator.num_pages > 1 %}
+            <nav class="pagination is-rounded is-small mb-0 mt-2"
+                 aria-label="pagination">
+                <ul class="pagination-list">
+                    {% if traces.has_previous %}
+                        <li>
+                            <a data-page="page=1"
+                               class="pagination-link"
+                               href="#"
+                               title="first page">
+                                <span class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-caret-left"></i>
+                                    </span>
+                                    <span>first</span>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a data-page="?page={{ traces.previous_page_number }}"
+                               class="pagination-link"
+                               href="#"
+                               title="previous page">previous</a>
+                        </li>
+                    {% endif %}
+                    {% if traces.has_next %}
+                        <li>
+                            <a href="#"
+                               title="next page"
+                               class="pagination-link"
+                               data-page="?page={{ traces.next_page_number }}">next</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                               title="last page"
+                               class="pagination-link"
+                               data-page="?page={{ traces.paginator.num_pages }}">
+                                <span class="icon-text">
+                                    <span>last</span>
+                                    <span class="icon">
+                                        <i class="fas fa-caret-right"></i>
+                                    </span>
+                                </span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+    <div class="table-container">
+        <table class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th>Severity</th>
+                    <th>Date</th>
+                    <th>Message</th>
+                    <th>User</th>
+                    <th>OS</th>
+                    <th>Browser</th>
+                    <th>Resolved</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trace in traces %}
+                    {% details_parser trace.message as details %}
+                    <tr {% if trace.handled == 1 %}class="has-text-grey-light"{% endif %}>
+                        <td class="is-nobreak">{{ trace.level|severity }}</td>
+                        <td>{{ trace.access_date }}</td>
+                        <td>
+                            {{ details.logData.msg }} at
+                            <a {% if trace.handled == 1 %}class="has-text-grey-light"{% endif %}
+                               href='{{ trace.referer }}'
+                               target="_blank">{{ trace.referer }}</a>
+                            <br />
+                            in <a {% if trace.handled == 1 %}class="has-text-grey-light"{% endif %}
+    href="{{ details.logData.url }}:{{ details.logData.line_number }}:{{ details.logData.column }}"
+    target="_blank">{{ details.logData.url }}:{{ details.logData.line_number }}:{{ details.logData.column }}</a>
+                            <div class="notification {% if trace.handled != 1 %}is-danger{% endif %}is-family-monospace is-light mt-2 is-wordbreak">
+                                {{ details.logData.errorMsg }}
+                            </div>
+                        </td>
+                        <td>
+                            {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
+                                <a title="open user profile"
+                                   href="{{ trace.user.get_absolute_url }}"
+                                   {% if trace.handled == 1 %}class="has-text-grey-light"{% endif %}>{{ trace.user }}</a>
+                            {% else %}
+                                {{ trace.user }}
+                            {% endif %}
+                        </td>
+                        <td class="is-nobreak">{% agent_os trace.useragent %}</td>
+                        <td class="is-nobreak">{% agent_browser trace.useragent %}</td>
+                        <td>
+                            <div class="field">
+                                <input class="is-checkradio trace-resolved is-info"
+                                       id="trace-{{ trace.id }}"
+                                       data-id="{{ trace.id }}"
+                                       type="checkbox"
+                                       name="trace-{{ trace.id }}"
+                                       data-url="{{ trace.get_absolute_url }}"
+                                       {% if trace.handled == 1 %}checked="checked"{% endif %}/>
+                                <label for="trace-{{ trace.id }}"></label>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <small class="has-text-grey-light">Page {{ traces.number }} of {{ traces.paginator.num_pages }}</small>
+</div>

@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest] #, macos-latest]
-        python-version: [3.7, 3.8, 3.9, '3.10']
+        python-version: [3.8, 3.9, '3.10', 3.11]
       fail-fast: true
 
     services:
@@ -59,12 +59,16 @@ jobs:
 
     - name: install deps
       run: |
-        cd solr && docker run -d -v "$PWD:/var/solr/mine" -p 8983:8983 --name solr_dev solr:8; docker exec solr_dev bash -c "source /var/solr/mine/setup_cores.sh;"
+        sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl
+        cd solr && docker run -d -v "$PWD:/var/solr/mine" -p 8983:8983 --name solr_dev solr:8
+        sleep 30 # give solar time to start
+        docker exec solr_dev bash -c "source /var/solr/mine/setup_cores.sh;"
         poetry install
         python -m pip install codecov
-        sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl
     - name: test
-      run: poetry run tox -e clean,test,cov
+      run: |
+        poetry run tox -e clean,test
+        poetry run tox -e cov
       env:
         POSTGRES_HOST: localhost
         POSTGRES_PORT: 5432
@@ -74,6 +78,5 @@ jobs:
     - name: upload cov
       uses: codecov/codecov-action@v3
       with:
-        files: ./atlas/coverage.xml
-        fail_ci_if_error: true
+        files: ./coverage.xml
         verbose: true

@@ -1,0 +1,114 @@
+{% load useragent %}
+
+<div>
+    <div class="is-flex is-justify-content-space-between mt-3">
+        <strong>Server Errors - <span class=" {% if unresolved > 0 %}has-text-danger{% endif %}">{{ unresolved }} unresolved</span> of {{ errors.paginator.count }}</strong>
+        {% if errors.paginator.num_pages > 1 %}
+            <nav class="pagination is-rounded is-small mb-0 mt-2"
+                 aria-label="pagination">
+                <ul class="pagination-list">
+                    {% if errors.has_previous %}
+                        <li>
+                            <a data-page="page=1"
+                               class="pagination-link"
+                               href="#"
+                               title="first page">
+                                <span class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-caret-left"></i>
+                                    </span>
+                                    <span>first</span>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a data-page="?page={{ errors.previous_page_number }}"
+                               class="pagination-link"
+                               href="#"
+                               title="previous page">previous</a>
+                        </li>
+                    {% endif %}
+                    {% if errors.has_next %}
+                        <li>
+                            <a href="#"
+                               title="next page"
+                               class="pagination-link"
+                               data-page="?page={{ errors.next_page_number }}">next</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                               title="last page"
+                               class="pagination-link"
+                               data-page="?page={{ errors.paginator.num_pages }}">
+                                <span class="icon-text">
+                                    <span>last</span>
+                                    <span class="icon">
+                                        <i class="fas fa-caret-right"></i>
+                                    </span>
+                                </span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+    <div class="table-container">
+        <table class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th>Status Code</th>
+                    <th>Date</th>
+                    <th>Message</th>
+                    <th>User</th>
+                    <th>OS</th>
+                    <th>Browser</th>
+                    <th>Resolved</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for error in errors %}
+                    <tr {% if error.handled == 1 %}class="has-text-grey-light"{% endif %}>
+                        <td class="is-nobreak">{{ error.status_code }}</td>
+                        <td>{{ error.access_date }}</td>
+                        <td>
+                            <a title="open page"
+                               {% if error.handled == 1 %}class="has-text-grey-light"{% endif %}
+                               href="{{ error.referer }}">{{ error.referer }}</a>
+                            {{ error.message }}
+                            {% if error.trace %}
+                                <div class="notification {% if error.handled != 1 %}is-danger{% endif %} is-family-monospace is-light mt-2 is-wordbreak">
+                                    {{ error.trace }}
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if "View Other User" in perms and settings.ENABLE_USER_PROFILES %}
+                                <a title="open user profile"
+                                   href="{{ error.user.get_absolute_url }}"
+                                   {% if error.handled == 1 %}class="has-text-grey-light"{% endif %}>{{ error.user }}</a>
+                            {% else %}
+                                {{ error.user }}
+                            {% endif %}
+                        </td>
+                        <td class="is-nobreak">{% agent_os error.useragent %}</td>
+                        <td class="is-nobreak">{% agent_browser error.useragent %}</td>
+                        <td>
+                            <div class="field">
+                                <input class="is-checkradio error-resolved is-info"
+                                       id="error-{{ error.id }}"
+                                       data-id="{{ error.id }}"
+                                       type="checkbox"
+                                       name="Error-{{ error.id }}"
+                                       data-url="{{ error.get_absolute_url }}"
+                                       {% if error.handled == 1 %}checked="checked"{% endif %}/>
+                                <label for="error-{{ error.id }}"></label>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <small class="has-text-grey-light">Page {{ errors.number }} of {{ errors.paginator.num_pages }}</small>
+</div>

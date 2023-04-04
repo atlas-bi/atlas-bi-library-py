@@ -1,3 +1,4 @@
+# type: ignore
 """Atlas test utils."""
 # pylint: disable=C0103,C0412,W0201,E0213,C0202,R1725,W0106
 
@@ -16,19 +17,20 @@ class AtlasTestCase(TestCase):
     """Atlas base test case."""
 
     fixtures = [
-        "userroles.yaml",
-        "rolepermissions.yaml",
-        "runfrequency.yaml",
-        "financialimpact.yaml",
-        "fragility.yaml",
-        "fragilitytag.yaml",
-        "maintenancelogstatus.yaml",
-        "organizationalvalue.yaml",
-        "reporttypes.yaml",
-        "rolepermissionlinks.yaml",
-        "rolepermissions.yaml",
-        "strategicimportance.yaml",
-        "userroles.yaml",
+        # "userroles.yaml",
+        # "rolepermissions.yaml",
+        # "runfrequency.yaml",
+        # "financialimpact.yaml",
+        # "fragility.yaml",
+        # "fragilitytag.yaml",
+        # "maintenancelogstatus.yaml",
+        # "organizationalvalue.yaml",
+        # "reporttypes.yaml",
+        # "rolepermissionlinks.yaml",
+        # "rolepermissions.yaml",
+        # "strategicimportance.yaml",
+        # "userroles.yaml",
+        "initial.yaml",
         "test.yaml",
     ]
 
@@ -71,20 +73,21 @@ class AtlasBrowserStackTestCase(StaticLiveServerTestCase):
 
     # don't add the "seed.yaml" as contenttypes are auto added.
     fixtures = [
-        "userroles.yaml",
-        "rolepermissions.yaml",
-        "runfrequency.yaml",
-        "financialimpact.yaml",
-        "fragility.yaml",
-        "fragilitytag.yaml",
-        "maintenancelogstatus.yaml",
-        "organizationalvalue.yaml",
-        "projectmilestonefrequency.yaml",
-        "reporttypes.yaml",
-        "rolepermissionlinks.yaml",
-        "rolepermissions.yaml",
-        "strategicimportance.yaml",
-        "userroles.yaml",
+        # "userroles.yaml",
+        # "rolepermissions.yaml",
+        # "runfrequency.yaml",
+        # "financialimpact.yaml",
+        # "fragility.yaml",
+        # "fragilitytag.yaml",
+        # "maintenancelogstatus.yaml",
+        # "organizationalvalue.yaml",
+        # "projectmilestonefrequency.yaml",
+        # "reporttypes.yaml",
+        # "rolepermissionlinks.yaml",
+        # "rolepermissions.yaml",
+        # "strategicimportance.yaml",
+        # "userroles.yaml",
+        "initial.yml"
         "test.yaml",
     ]
 

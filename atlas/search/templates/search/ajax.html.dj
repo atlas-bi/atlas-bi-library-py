@@ -19,7 +19,9 @@
                             {% for value in filter.value %}
                                 <span class="tag is-light is-medium">{{ filter.key|friendly_name }}</span>
                                 {# if there are 0 results, the filters do not show or have values #}
-                                <span class="tag is-warning is-medium">{{ value|friendly_name }}<a class="delete is-small" href="{% facet_url filter.key value %}"></a></span>
+                                <span class="tag is-warning is-medium">{{ value|friendly_name }}<a title="remove filter"
+   class="delete is-small"
+   href="{% facet_url filter.key value %}"></a></span>
                                 {% comment %}
                             } else {
                                 <span class="tag is-warning is-medium">@field.Value<a class="delete is-small" href="{% facet_url "field" field.value %}"></a></span>
@@ -35,7 +37,8 @@
 </section>
 <div class="columns">
     <div class="column is-one-quarter is-sticky is-align-self-flex-start"
-         style="max-height:calc(100vh - 137px); overflow-Y:auto">
+         style="max-height:calc(100vh - 137px);
+                overflow-Y:auto">
         {% include "search/filters.html.dj" %}
     </div>
     <div class="column" id="results">
@@ -79,19 +82,21 @@
             <div class="has-text-centered p-5">
                 <h5>
                     Not finding what you are looking for?
-                    <br>
-                    <a href="http://reports.riversidehealthcare.net/" target="_blank">Request a New Report here.</a>
+                    <br />
+                    <a title="request a new report"
+                       href="https://reports.riversidehealthcare.net/"
+                       target="_blank">Request a New Report here.</a>
                 </h5>
                 <p>
                     <hr />
                     A few things to consider -
-                    <br>
-                    <br>
+                    <br />
+                    <br />
                     Are you searching for a private or hidden report? Try out the advanced search filters!
-                    <br>
-                    <br>
+                    <br />
+                    <br />
                     Is it a new Hyperspace Report? Hyperspace reports typically are not imported until the following business day.
-                    <br>
+                    <br />
                     Is it a new SSRS Report? SSRS reports typically take two hours to be loaded into the search results.
                 </p>
             </div>

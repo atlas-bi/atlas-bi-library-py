@@ -1,5 +1,7 @@
 """Celery tasks to keep collection search up to date."""
+# pylint: disable=W0613
 import contextlib
+from typing import Any, Dict, Iterator, Optional
 
 import pysolr
 from celery import shared_task
@@ -9,17 +11,21 @@ from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from django_chunked_iterator import batch_iterator
 from etl.tasks.functions import clean_doc, solr_date
-from index.models import Collections
+from index.models import CollectionReports, Collections, CollectionTerms
 
 
 @receiver(pre_delete, sender=Collections)
-def deleted_collection(sender, instance, **kwargs):
+def deleted_collection(
+    sender: Collections, instance: Collections, **kwargs: Dict[Any, Any]
+) -> None:
     """When collection is delete, remove it from search."""
     delete_collection.delay(instance.collection_id)
 
 
 @receiver(post_save, sender=Collections)
-def updated_collection(sender, instance, **kwargs):
+def updated_collection(
+    sender: Collections, instance: Collections, **kwargs: Dict[Any, Any]
+) -> None:
     """When collection is updated, add it to search."""
     if instance.hidden == "Y":
         delete_collection.delay(instance.collection_id)
@@ -28,26 +34,26 @@ def updated_collection(sender, instance, **kwargs):
 
 
 @shared_task
-def delete_collection(collection_id):
+def delete_collection(collection_id: int) -> None:
     """Celery task to remove a collection from search."""
     delete_collection_function(collection_id)
 
 
-def delete_collection_function(collection_id):
+def delete_collection_function(collection_id: int) -> None:
     """In process delete function."""
     solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
 
-    solr.delete(q="type:collections AND atlas_id:%s" % collection_id)
+    solr.delete(q=f"type:collections AND atlas_id:{collection_id}")
 
 
 @shared_task
-def load_collection(collection_id):
+def load_collection(collection_id: int) -> None:
     """Celery task to reload a collection in search."""
     load_collections(collection_id)
 
 
 @shared_task
-def reset_collections():
+def reset_collections() -> None:
     """Reset collection group in solr.
 
     1. Delete all collections from Solr
@@ -62,7 +68,7 @@ def reset_collections():
     load_collections()
 
 
-def load_collections(collection_id=None):
+def load_collections(collection_id: Optional[int] = None) -> None:
     """Load a group of collections to solr database.
 
     1. Convert the objects to list of dicts
@@ -82,7 +88,7 @@ def load_collections(collection_id=None):
     if collection_id:
         collections = collections.filter(collection_id=collection_id)
 
-    if len(collections) == 0:
+    if len(collections) == 0 and collection_id:
         delete_collection_function(collection_id)
 
     # reset the batch. reports will be loaded to solr in batches
@@ -90,14 +96,14 @@ def load_collections(collection_id=None):
     list(map(solr_load_batch, batch_iterator(collections.all(), batch_size=1000)))
 
 
-def solr_load_batch(batch):
+def solr_load_batch(batch: Iterator) -> None:
     """Process batch."""
     solr = pysolr.Solr(settings.SOLR_URL, always_commit=True)
 
     solr.add(list(map(build_doc, batch)))
 
 
-def build_doc(collection):
+def build_doc(collection: Collections) -> Dict[Any, Any]:
     """Build a collection doc."""
     doc = {
         "id": "/collections/%s" % collection.collection_id,
@@ -108,7 +114,7 @@ def build_doc(collection):
         "orphan": "N",
         "runs": 10,
         "description": [collection.search_summary, collection.description],
-        "last_updated": solr_date(collection._modified_at),
+        "last_updated": solr_date(collection.modified_at),
         "updated_by": str(collection.modified_by),
         "related_initiatives": [],
         "related_terms": [],
@@ -130,7 +136,9 @@ def build_doc(collection):
     return clean_doc(doc)
 
 
-def build_collection_term_doc(term_link, doc):
+def build_collection_term_doc(
+    term_link: CollectionTerms, doc: Dict[Any, Any]
+) -> Dict[Any, Any]:
     """Build collection term doc."""
     doc["related_terms"].append(str(term_link.term))
     doc["linked_description"].extend(
@@ -143,7 +151,9 @@ def build_collection_term_doc(term_link, doc):
     return doc
 
 
-def build_collection_report_doc(report_link, doc):
+def build_collection_report_doc(
+    report_link: CollectionReports, doc: Dict[Any, Any]
+) -> Dict[Any, Any]:
     """Build collection report doc."""
     doc["related_reports"].append(str(report_link.report))
 

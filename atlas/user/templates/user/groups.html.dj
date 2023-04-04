@@ -1,1 +1,28 @@
-
+<div>
+    {% if groups %}
+        <div class="table-responsive">
+            <table class="table sort" aria-label="groups">
+                <thead>
+                    <tr>
+                        <th>Group Name</th>
+                        <th>Type</th>
+                        <th>Source</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for group in groups %}
+                        <tr>
+                            <td>
+                                <a title="open group profile" href="{{ group.get_absolute_url }}">{{ group }}</a>
+                            </td>
+                            <td>{{ group.type }}</td>
+                            <td>{{ group.source }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <strong>No groups to show.</strong>
+    {% endif %}
+</div>

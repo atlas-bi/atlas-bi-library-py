@@ -2,33 +2,88 @@
 
 {% load helpers %}
 
+{% load static %}
+
+{% block js %}
+    <script src="{% static '/js/analytics.min.js' %}" defer="defer" async="async"></script>
+{% endblock js %}
+
 {% block body %}
-    <div class="pageTitle loose">
-        <h2 class="pageTitle-head">
-            <span>
-                {% if is_me %}
-                    My Profile
-                {% else %}
-                    {{ user.full_name|possessive }} Profile
-                {% endif %}
-            </span>
-        </h2>
-        <div class="tab">
-            <a title="favorites" class="tab-lnk active" href="#favorites">Favorites</a>
-            <!--
-<a class="tab-lnk" href="#mail">Mail</a>
-        -->
-        </div>
-    </div>
+    <h1 class="title is-1">
+        {% if is_me %}
+            Hi, {{ user }}
+        {% else %}
+            You are viewing {{ user.full_name|possessive }} Profile
+        {% endif %}
+    </h1>
+    <nav class="breadcrumb">
+        <ul>
+            <li>
+                <a title="stars"
+                   class="tab-lnk {% if is_me %}active{% endif %}"
+                   href="#stars">Stars</a>
+            </li>
+            <li>
+                <a title="subscriptions" class="tab-lnk" href="#subscriptions">Subscriptions</a>
+            </li>
+            {% if "View Groups" in perms %}
+                <li>
+                    <a title="groups" class="tab-lnk" href="#groups">Groups</a>
+                </li>
+            {% endif %}
+            <li>
+                <a title="run analytics"
+                   class="tab-lnk {% if not is_me %}active{% endif %} "
+                   href="#activity">Run Analytics</a>
+            </li>
+            <li>
+                <a title="report runs" class="tab-lnk " href="#run-list">Report Runs</a>
+            </li>
+            <li>
+                <a title="atlas history" class="tab-lnk" href="#atlas-history">Atlas History</a>
+            </li>
+            {% if "View Site Analytics" in perms %}
+                <li>
+                    <a title="analytics" class="tab-lnk" href="#analytics">Analytics</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
     <section class="tab-cnt">
-        <div class="tab-dta active" id="favorites">
-            <h3 class="pageSection-title">My Favorites</h3>
-            <div data-ajax="yes" data-url="{% url 'user:stars' %}"></div>
+        <div class="tab-dta {% if is_me %}active{% endif %}" id="stars">
+            <div data-ajax="yes"
+                 data-url="{% url "user:stars" %}"
+                 data-parameters="id={{ user.user_id }}"></div>
         </div>
-        <!--
-<div class="tab-dta" id="mail">
- 
-<div data-ajax="yes" data-url="/mail/get_mailbox"></div></div>
--->
+        <div class="tab-dta" id="subscriptions">
+            <div data-ajax="yes"
+                 data-url="{% url "user:subscriptions" pk=user.user_id %}"></div>
+        </div>
+        <div class="tab-dta" id="activity">
+            {% with profile_id=user.user_id profile_type="user" %}
+                {% include "sketch/profile.html.dj" %}
+            {% endwith %}
+        </div>
+        <div class="tab-dta {% if not is_me %}active{% endif %}" id="run-list">
+            <div data-ajax="yes"
+                 data-url="{% url "sketch:run_list" type="user" pk=user.user_id %}"
+                 data-parameters="{{ visible_reports }}">
+            </div>
+        </div>
+        <div class="tab-dta" id="atlas-history">
+            <div data-ajax="yes" data-url="{% url "user:history" pk=user.user_id %}"></div>
+        </div>
+        {% if "View Groups" in perms %}
+            <div class="tab-dta" id="groups">
+                <div data-ajax="yes" data-url="{% url "user:groups" pk=user.user_id %}"></div>
+            </div>
+        {% endif %}
+        {% if "View Site Analytics" in perms %}
+            <div class="tab-dta" id="analytics">
+                {% with user.user_id as user_id %}
+                    {% include "analytics/base.html.dj" %}
+                {% endwith %}
+            </div>
+        {% endif %}
     </section>
 {% endblock body %}

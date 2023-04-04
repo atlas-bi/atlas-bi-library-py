@@ -5,8 +5,6 @@ from . import apps, views
 app_name = apps.MailConfig.name
 
 urlpatterns = [
-    path("", views.index, name="index"),
-    path("check", views.check, name="check"),
-    path("get_mailbox", views.mailbox, name="mailbox"),
-    path("send", views.index, name="send"),
+    path("share", views.Share.as_view(), name="share"),
+    path("remove_share/<int:pk>", views.RemoveShare.as_view(), name="remove_share"),
 ]

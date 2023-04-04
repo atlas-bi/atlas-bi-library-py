@@ -1,0 +1,350 @@
+- model: index.starredreports
+  fields:
+    report_id: 1
+    owner_id: 1
+    folder_id: 1
+    rank: 1
+- model: index.starredreports
+  fields:
+    report_id: 10
+    owner_id: 1
+    folder_id: 2
+    rank: 2
+- model: index.starredreports
+  fields:
+    report_id: 13
+    owner_id: 1
+    folder_id: 3
+- model: index.starredreports
+  fields:
+    report_id: 8
+    owner_id: 1
+    folder_id: 1
+- model: index.starredreports
+  fields:
+    report_id: 7
+    owner_id: 1
+    folder_id: 2
+- model: index.starredreports
+  fields:
+    report_id: 3
+    owner_id: 1
+    folder_id: 3
+- model: index.starredreports
+  fields:
+    report_id: 19
+    owner_id: 1
+- model: index.starredreports
+  fields:
+    report_id: 16
+    owner_id: 1
+- model: index.starredreports
+  fields:
+    report_id: 4
+    owner_id: 1
+- model: index.starredreports
+  fields:
+    report_id: 1
+    owner_id: 2
+    folder_id: 4
+    rank: 1
+- model: index.starredreports
+  fields:
+    report_id: 10
+    owner_id: 2
+    folder_id: 5
+    rank: 2
+- model: index.starredreports
+  fields:
+    report_id: 13
+    owner_id: 2
+    folder_id: 6
+- model: index.starredreports
+  fields:
+    report_id: 8
+    owner_id: 2
+    folder_id: 4
+- model: index.starredreports
+  fields:
+    report_id: 7
+    owner_id: 2
+    folder_id: 5
+- model: index.starredreports
+  fields:
+    report_id: 3
+    owner_id: 2
+    folder_id: 6
+- model: index.starredreports
+  fields:
+    report_id: 19
+    owner_id: 2
+- model: index.starredreports
+  fields:
+    report_id: 16
+    owner_id: 2
+- model: index.starredreports
+  fields:
+    report_id: 4
+    owner_id: 2
+
+- model: index.starredterms
+  fields:
+    term_id: 1
+    owner_id: 1
+- model: index.starredterms
+  fields:
+    term_id: 2
+    owner_id: 1
+- model: index.starredterms
+  fields:
+    term_id: 3
+    owner_id: 1
+- model: index.starredterms
+  fields:
+    term_id: 1
+    owner_id: 2
+- model: index.starredterms
+  fields:
+    term_id: 2
+    owner_id: 2
+- model: index.starredterms
+  fields:
+    term_id: 3
+    owner_id: 2
+- model: index.starredcollections
+  fields:
+    collection_id: 1
+    owner_id: 1
+- model: index.starredcollections
+  fields:
+    collection_id: 1
+    owner_id: 2
+
+- model: index.starredreports
+  fields:
+    report_id: 1
+    owner_id: 1
+- model: index.starredreports
+  fields:
+    report_id: 2
+    owner_id: 2
+- model: index.starredreports
+  fields:
+    report_id: 3
+    owner_id: 3
+- model: index.starredreports
+  fields:
+    report_id: 4
+    owner_id: 4
+
+- model: index.starredreports
+  fields:
+    report_id: 5
+    owner_id: 5
+- model: index.starredreports
+  fields:
+    report_id: 6
+    owner_id: 6
+- model: index.starredreports
+  fields:
+    report_id: 7
+    owner_id: 7
+- model: index.starredreports
+  fields:
+    report_id: 8
+    owner_id: 8
+
+- model: index.starredreports
+  fields:
+    report_id: 9
+    owner_id: 9
+- model: index.starredreports
+  fields:
+    report_id: 10
+    owner_id: 10
+- model: index.starredreports
+  fields:
+    report_id: 11
+    owner_id: 11
+- model: index.starredreports
+  fields:
+    report_id: 12
+    owner_id: 12
+
+- model: index.starredreports
+  fields:
+    report_id: 13
+    owner_id: 13
+- model: index.starredreports
+  fields:
+    report_id: 14
+    owner_id: 14
+- model: index.starredreports
+  fields:
+    report_id: 15
+    owner_id: 15
+- model: index.starredreports
+  fields:
+    report_id: 1
+    owner_id: 2
+
+- model: index.starredreports
+  fields:
+    report_id: 2
+    owner_id: 3
+- model: index.starredreports
+  fields:
+    report_id: 3
+    owner_id: 4
+- model: index.starredreports
+  fields:
+    report_id: 4
+    owner_id: 5
+- model: index.starredreports
+  fields:
+    report_id: 5
+    owner_id: 6
+
+- model: index.starredreports
+  fields:
+    report_id: 6
+    owner_id: 7
+- model: index.starredreports
+  fields:
+    report_id: 7
+    owner_id: 8
+- model: index.starredreports
+  fields:
+    report_id: 8
+    owner_id: 9
+- model: index.starredreports
+  fields:
+    report_id: 9
+    owner_id: 10
+
+- model: index.starredreports
+  fields:
+    report_id: 10
+    owner_id: 11
+- model: index.starredreports
+  fields:
+    report_id: 11
+    owner_id: 12
+- model: index.starredreports
+  fields:
+    report_id: 12
+    owner_id: 13
+- model: index.starredreports
+  fields:
+    report_id: 13
+    owner_id: 14
+
+- model: index.starredreports
+  fields:
+    report_id: 14
+    owner_id: 15
+- model: index.starredreports
+  fields:
+    report_id: 15
+    owner_id: 16
+- model: index.starredreports
+  fields:
+    report_id: 20
+    owner_id: 1
+- model: index.starredreports
+  fields:
+    report_id: 21
+    owner_id: 2
+
+- model: index.starredreports
+  fields:
+    report_id: 22
+    owner_id: 3
+- model: index.starredreports
+  fields:
+    report_id: 23
+    owner_id: 4
+- model: index.starredreports
+  fields:
+    report_id: 24
+    owner_id: 5
+- model: index.starredreports
+  fields:
+    report_id: 25
+    owner_id: 6
+
+- model: index.starredreports
+  fields:
+    report_id: 26
+    owner_id: 7
+- model: index.starredreports
+  fields:
+    report_id: 27
+    owner_id: 8
+- model: index.starredreports
+  fields:
+    report_id: 28
+    owner_id: 9
+- model: index.starredreports
+  fields:
+    report_id: 29
+    owner_id: 10
+
+- model: index.starredreports
+  fields:
+    report_id: 30
+    owner_id: 11
+- model: index.starredreports
+  fields:
+    report_id: 1
+    owner_id: 30
+- model: index.starredreports
+  fields:
+    report_id: 2
+    owner_id: 31
+- model: index.starredreports
+  fields:
+    report_id: 3
+    owner_id: 32
+
+- model: index.starredreports
+  fields:
+    report_id: 4
+    owner_id: 33
+- model: index.starredreports
+  fields:
+    report_id: 5
+    owner_id: 34
+- model: index.starredreports
+  fields:
+    report_id: 6
+    owner_id: 35
+- model: index.starredreports
+  fields:
+    report_id: 7
+    owner_id: 36
+- model: index.starredreports
+  fields:
+    report_id: 8
+    owner_id: 37
+- model: index.starredreports
+  fields:
+    report_id: 9
+    owner_id: 38
+- model: index.starredreports
+  fields:
+    report_id: 12
+    owner_id: 39
+- model: index.starredreports
+  fields:
+    report_id: 13
+    owner_id: 40
+
+- model: index.starredreports
+  fields:
+    report_id: 14
+    owner_id: 41
+- model: index.starredreports
+  fields:
+    report_id: 15
+    owner_id: 42

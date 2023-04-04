@@ -1,0 +1,136 @@
+- model: index.reporthierarchies
+  fields:
+    parent_id: 3
+    child_id: 4
+- model: index.reporthierarchies
+  fields:
+    parent_id: 45
+    child_id: 46
+- model: index.reporthierarchies
+  fields:
+    parent_id: 49
+    child_id: 50
+- model: index.reporthierarchies
+  fields:
+    parent_id: 43
+    child_id: 44
+- model: index.reporthierarchies
+  fields:
+    parent_id: 27
+    child_id: 28
+- model: index.reporthierarchies
+  fields:
+    parent_id: 30
+    child_id: 31
+- model: index.reporthierarchies
+  fields:
+    parent_id: 35
+    child_id: 36
+- model: index.reporthierarchies
+  fields:
+    parent_id: 32
+    child_id: 33
+- model: index.reporthierarchies
+  fields:
+    parent_id: 24
+    child_id: 25
+- model: index.reporthierarchies
+  fields:
+    parent_id: 17
+    child_id: 18
+- model: index.reporthierarchies
+  fields:
+    parent_id: 20
+    child_id: 21
+- model: index.reporthierarchies
+  fields:
+    parent_id: 18
+    child_id: 19
+- model: index.reporthierarchies
+  fields:
+    parent_id: 37
+    child_id: 38
+- model: index.reporthierarchies
+  fields:
+    parent_id: 8
+    child_id: 9
+- model: index.reporthierarchies
+  fields:
+    parent_id: 5
+    child_id: 6
+- model: index.reporthierarchies
+  fields:
+    parent_id: 19
+    child_id: 20
+- model: index.reporthierarchies
+  fields:
+    parent_id: 6
+    child_id: 7
+- model: index.reporthierarchies
+  fields:
+    parent_id: 28
+    child_id: 29
+- model: index.reporthierarchies
+  fields:
+    parent_id: 40
+    child_id: 41
+- model: index.reporthierarchies
+  fields:
+    parent_id: 44
+    child_id: 45
+- model: index.reporthierarchies
+  fields:
+    parent_id: 22
+    child_id: 23
+- model: index.reporthierarchies
+  fields:
+    parent_id: 46
+    child_id: 47
+- model: index.reporthierarchies
+  fields:
+    parent_id: 12
+    child_id: 13
+- model: index.reporthierarchies
+  fields:
+    parent_id: 4
+    child_id: 5
+- model: index.reporthierarchies
+  fields:
+    parent_id: 26
+    child_id: 27
+- model: index.reporthierarchies
+  fields:
+    parent_id: 7
+    child_id: 8
+- model: index.reporthierarchies
+  fields:
+    parent_id: 33
+    child_id: 34
+- model: index.reporthierarchies
+  fields:
+    parent_id: 41
+    child_id: 42
+- model: index.reporthierarchies
+  fields:
+    parent_id: 2
+    child_id: 3
+- model: index.reporthierarchies
+  fields:
+    parent_id: 25
+    child_id: 26
+- model: index.reporthierarchies
+  fields:
+    parent_id: 23
+    child_id: 24
+- model: index.reporthierarchies
+  fields:
+    parent_id: 9
+    child_id: 10
+- model: index.reporthierarchies
+  fields:
+    parent_id: 16
+    child_id: 17
+- model: index.reporthierarchies
+  fields:
+    parent_id: 42
+    child_id: 4

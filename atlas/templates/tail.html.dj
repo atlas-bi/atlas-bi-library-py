@@ -5,28 +5,45 @@
 <div class="mail-notification-container"></div>
 <div class="fixed-notification-wrapper"></div>
 <script src="{% static '/js/shared.min.js' %}"></script>
-<script src="{% static '/js/alive.min.js' %}"></script>
 <script src="{% static '/js/search.min.js' %}" defer="defer" async="async"></script>
 <script src="{% static '/js/utility.min.js' %}" defer="defer" async="async"></script>
 
 {% compress js file main %}
     <script src="{% static '/js/essential.js' %}" defer="defer" async="async"></script>
-    <script src="{% static '/lib/scrollbars/simple-scrollbar.js' %}" defer="defer" async="async"></script>
+    <script src="{% static '/lib/scrollbars/simple-scrollbar.js' %}"
+            defer="defer"
+            async="async"></script>
 {% endcompress %}
 
 <script src="{% static '/js/profile.min.js' %}" defer="defer" async="async"></script>
 
 {% compress js file editor %}
-    <script src="{% static '/lib/codemirror/codemirror.js' %}" defer="defer" async="async"></script>
-    <script src="{% static '/lib/codemirror/autorefresh.js' %}" defer="defer" async="async"></script>
-    <script src="{% static '/lib/codemirror/overlay.js' %}" defer="defer" async="async"></script>
-    <script src="{% static '/lib/codemirror/markdown.js' %}" defer="defer" async="async"></script>
-    <script src="{% static '/lib/codemirror/gfm.js' %}" defer="defer" async="async"></script>
-    <script src="{% static '/lib/codemirror/python.js' %}" defer="defer" async="async"></script>
+    <script src="{% static '/lib/codemirror/codemirror.js' %}"></script>
+    <script src="{% static '/lib/codemirror/autorefresh.js' %}"
+            defer="defer"
+            async="async"></script>
+    <script src="{% static '/lib/codemirror/overlay.js' %}"
+            defer="defer"
+            async="async"></script>
+    <script src="{% static '/lib/codemirror/markdown.js' %}"
+            defer="defer"
+            async="async"></script>
+    <script src="{% static '/lib/codemirror/gfm.js' %}"
+            defer="defer"
+            async="async"></script>
+    <script src="{% static '/lib/codemirror/python.js' %}"
+            defer="defer"
+            async="async"></script>
     <script src="{% static '/lib/codemirror/r.js' %}" defer="defer" async="async"></script>
-    <script src="{% static '/lib/codemirror/shell.js' %}" defer="defer" async="async"></script>
-    <script src="{% static '/lib/codemirror/sql.js' %}" defer="defer" async="async"></script>
-    <script src="{% static '/lib/codemirror/shell.js' %}" defer="defer" async="async"></script>
+    <script src="{% static '/lib/codemirror/shell.js' %}"
+            defer="defer"
+            async="async"></script>
+    <script src="{% static '/lib/codemirror/sql.js' %}"
+            defer="defer"
+            async="async"></script>
+    <script src="{% static '/lib/codemirror/shell.js' %}"
+            defer="defer"
+            async="async"></script>
     <script src="{% static '/js/editor.min.js' %}" defer="defer" async="async"></script>
 {% endcompress %}
 

@@ -18,7 +18,7 @@
         <div class="modal-content">
             <div class="box">
                 <strong class="mb-4">Share {{ collection.name }}</strong>
-                <form class="share" action="{% url 'mail:send' %}" method="post">
+                <form class="share" action="{% url 'mail:share' %}" method="post">
                     <input type="hidden" class="mlbx-share" value="1" />
                     <input type="hidden" class="share-name" value="{{ collection.name }}" />
                     <input type="hidden"

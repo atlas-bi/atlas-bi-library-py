@@ -1,0 +1,20 @@
+{% load dates %}
+
+<div>
+    <span class="has-text-grey">Documented reports with no maintenance schedule.</span>
+    {% if reports|length == 0 %}
+        <p>
+            <br />
+            No reports to show.
+        </p>
+    {% else %}
+        {% for report in reports %}
+            <div>
+                <a title="open report" href="{{ report.get_absolute_url }}">{{ report }}</a>
+                Last updated
+                {% if report.modified_by %}by {{ report.modified_by }} on{% endif %}
+                <span data-tooltip="{{ report.modified_at }}">{{ report.modified_at|relative }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>

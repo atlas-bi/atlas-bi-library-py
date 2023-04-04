@@ -1,8 +1,6 @@
 packages/atlas-bi_*.*
 packages/atlas-bi-[0-9]*.[0-9]*.[0-9]*
 BrowserStackLocal
-package-lock.json
-poetry.lock
 .rejected
 .env
 .config
@@ -16,6 +14,8 @@ solr/solr-*/docs
 solr/solr-*/docker
 solr/solr-*/prometheus-exporter
 solr/solr-*/server/solr/atlas_lookups/data/
+atlas/mail/temp
+.ruff_cache
 # Created by https://www.toptal.com/developers/gitignore/api/python,macos,windows,django
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,macos,windows,django
 

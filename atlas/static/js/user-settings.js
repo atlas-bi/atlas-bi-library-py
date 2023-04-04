@@ -1,14 +1,9 @@
 (function () {
   document
     .querySelector('#enable_share_notification')
-    .addEventListener('change', (event) => {
+    .addEventListener('change', () => {
       const q = new XMLHttpRequest();
-      q.open(
-        'get',
-        '/users/settings?handler=EnableShareNotification&value=' +
-          event.target.value,
-        true,
-      );
+      q.open('get', '/users/settings/toggle?setting=share_notification', true);
       q.setRequestHeader(
         'Content-Type',
         'application/x-www-form-urlencoded; charset=UTF-8',

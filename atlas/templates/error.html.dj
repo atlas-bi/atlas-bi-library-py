@@ -1,0 +1,5 @@
+{% extends "layout.html.dj" %}
+
+{% block body %}
+    <h3 class="title is-3">{{ message }}</h3>
+{% endblock body %}

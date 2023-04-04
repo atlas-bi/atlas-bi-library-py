@@ -7,7 +7,7 @@ from .base import BASE_DIR, INSTALLED_APPS
 DEBUG = True
 
 AUTHENTICATION_BACKENDS = ("atlas.no_pass_auth.Backend",)  # type: ignore[assignment]
-
+ENABLE_LOGOUT = True
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
 

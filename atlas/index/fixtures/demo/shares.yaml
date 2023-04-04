@@ -1,0 +1,140 @@
+- model: index.shareditems
+  fields:
+    sender_id: 1
+    recipient_id: 1
+    url: /reports/1
+    name: Workqueue Monitoring - Users Supervised WQs
+    share_date: 2022-04-01 08:07:05.130+0
+- model: index.shareditems
+  fields:
+    sender_id: 2
+    recipient_id:
+    url: /reports/2
+    name: Billing Workqueue Monitoring - Users Supervised Workqueues
+    share_date: 2022-04-03 11:25:45.567+0
+- model: index.shareditems
+  fields:
+    sender_id: 3
+    recipient_id: 1
+    url: /reports/3
+    name: User Pt WQ Contacts Added Today
+    share_date: 2022-04-03 11:45:27.250+0
+- model: index.shareditems
+  fields:
+    sender_id: 4
+    recipient_id: 1
+    url: /reports/4
+    name: Bypassed Warnings For Today
+    share_date: 2022-04-14 16:48:49.570+0
+- model: index.shareditems
+  fields:
+    sender_id: 5
+    recipient_id: 1
+    url: /reports/5
+    name: Census Report
+    share_date: 2022-04-24 10:37:11.507+0
+- model: index.shareditems
+  fields:
+    sender_id: 6
+    recipient_id: 1
+    url: /reports/6
+    name: Discharge Efficiency
+    share_date: 2022-04-24 10:47:19.883+0
+- model: index.shareditems
+  fields:
+    sender_id: 7
+    recipient_id: 1
+    url: /reports/7
+    name: User Pt WQ Contacts Added This Month
+    share_date: 2022-04-24 10:47:19.887+0
+- model: index.shareditems
+  fields:
+    sender_id: 8
+    recipient_id: 1
+    url: /reports/8
+    name: Monthly Financial Summary
+    share_date: 2022-04-24 10:47:31.157+0
+- model: index.shareditems
+  fields:
+    sender_id: 9
+    recipient_id: 1
+    url: /reports/9
+    name: Current Observation Patients
+    share_date: 2022-04-24 10:47:49.790+0
+- model: index.shareditems
+  fields:
+    sender_id: 10
+    recipient_id: 1
+    url: /reports/10
+    name: Wait Time Trends
+    share_date: 2022-05-28 16:30:44.090+0
+- model: index.shareditems
+  fields:
+    sender_id: 11
+    recipient_id: 2
+    url: /reports/11
+    name: Front End User Collections
+    share_date: 2022-06-03 11:27:12.280+0
+- model: index.shareditems
+  fields:
+    sender_id: 12
+    recipient_id: 2
+    url: /reports/12
+    name: Occupancy Summary
+    share_date: 2022-06-24 12:05:11.060+0
+- model: index.shareditems
+  fields:
+    sender_id: 13
+    recipient_id: 2
+    url: /reports/13
+    name: Hospitalist Census
+    share_date: 2022-07-07 09:47:23.420+0
+- model: index.shareditems
+  fields:
+    sender_id: 14
+    recipient_id: 2
+    url: /reports/14
+    name: All Imaging Studies Today - Reg/Sched
+    share_date: 2022-07-23 14:41:14.630+0
+- model: index.shareditems
+  fields:
+    sender_id: 15
+    recipient_id: 2
+    url: /reports/15
+    name: LTC Skilled Nursing Facility Daily Census
+    share_date: 2022-09-22 07:51:18.100+0
+- model: index.shareditems
+  fields:
+    sender_id: 16
+    recipient_id: 2
+    url: /reports/16
+    name: Bypassed Warnings For Today
+    share_date: 2022-09-22 07:59:37.537+0
+- model: index.shareditems
+  fields:
+    sender_id: 1
+    recipient_id: 2
+    url: /reports/17
+    name: User Pt WQ Contacts Added Today
+    share_date: 2022-09-22 10:45:19.487+0
+- model: index.shareditems
+  fields:
+    sender_id: 2
+    recipient_id: 2
+    url: /reports/18
+    name: Outsourced Agency
+    share_date: 2022-09-23 08:51:11.717+0
+- model: index.shareditems
+  fields:
+    sender_id: 3
+    recipient_id: 2
+    url: /reports/19
+    name: Monthly Financial Summary Two
+    share_date: 2022-09-30 08:52:43.250+0
+- model: index.shareditems
+  fields:
+    sender_id: 4
+    recipient_id: 20
+    url: /reports/1
+    name: Schedule by Date
+    share_date: 2022-04-14 00:00:00.000+0

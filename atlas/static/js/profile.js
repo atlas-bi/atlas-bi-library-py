@@ -287,6 +287,7 @@
                 '&end_at=0';
               break;
           }
+
           loadChart(dataset);
           loadBoxes(dataset);
           loadAjax(dataset);
@@ -386,6 +387,7 @@
           if ($element.dataset.url.includes('?')) {
             parameters = parameters.replace('?', '&');
           }
+
           $element.setAttribute('data-parameters', parameters);
         }
 

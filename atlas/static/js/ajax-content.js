@@ -175,8 +175,8 @@
           element.removeAttribute('data-ajax');
 
           const q = new XMLHttpRequest();
-          q.setRequestHeader('X-CSRFToken', csrftoken);
           q.open('get', u, true);
+          q.setRequestHeader('X-CSRFToken', csrftoken);
           q.setRequestHeader(
             'Content-Type',
             'application/x-www-form-urlencoded; charset=UTF-8',
@@ -230,6 +230,7 @@
       event.target.closest('[data-url][data-page]') &&
       event.target.closest('.pagination-link[data-page]')
     ) {
+      event.preventDefault();
       event.target
         .closest('[data-url][data-page]')
         .setAttribute(

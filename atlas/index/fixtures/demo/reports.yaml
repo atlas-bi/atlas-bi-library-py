@@ -1,0 +1,836 @@
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: component
+    name: Workqueue Monitoring - Users Supervised WQs
+    description: This component shows information about workqueues that are supervised by the logged in user.
+    type_id: 3
+    created_by_id: 64
+    modified_by_id: 75
+    modified_at: 2019-12-03 06:13:49.008+00:00
+    system_run_url: http://google.com
+    system_identifier: ABC
+    system_id: 1
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: report
+    name: Billing Workqueue Monitoring - Users Supervised Workqueues
+    description: Identifies workqueues supervised by the report user. It is intended to give users an overview of the health of their supervised workqueues.
+    type_id: 17
+    created_by_id: 80
+    modified_by_id: 31
+    modified_at: 2019-11-14 12:50:54.649+00:00
+    system_run_url: http://google.com
+    system_identifier: EFG
+    system_id: 2
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: report
+    name: User Pt WQ Contacts Added Today
+    description: This report is for  My Account Errors for Today component.  It will show any errors that were not resolved in 48 hours.
+    type_id: 20
+    created_by_id: 83
+    modified_by_id: 51
+    modified_at: 2019-09-23 00:43:53.215+00:00
+    system_run_url: http://google.com
+    system_identifier: HIJ
+    system_id: 3
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: report
+    name: Bypassed Warnings For Today
+    description: This report will show bypassed warnings for individual user.
+    type_id: 21
+    created_by_id: 95
+    modified_by_id: 90
+    modified_at: 2019-05-28 15:31:15.201+00:00
+    system_run_url: http://google.com
+    system_identifier: ABC
+    system_id: 4
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: report
+    name: Census Report
+    description: This report displays the current  Census of Inpatient departments. Includes all IP departments that have beds. Shows current bed occupancy as well as the expected occupancy.
+    type_id: 28
+    created_by_id: 22
+    modified_by_id: 16
+    modified_at: 2019-12-17 09:10:07.075+00:00
+    system_run_url: http://google.com
+    system_identifier: EFG
+    system_id: 5
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: report
+    name: Discharge Efficiency
+    description: Shows number of discharges over the past month by unit, the percent of patients who had their discharge order written by 10am, the percent of patients who had their AVS printed by 12pm, and the percent of patients who were discharged by 1pm.
+    type_id: 3
+    created_by_id: 38
+    modified_by_id: 13
+    modified_at: 2019-08-05 18:51:08.962+00:00
+    system_run_url: http://google.com
+    system_identifier: HIJ
+    system_id: 6
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: report
+    name: User Pt WQ Contacts Added This Month
+    description: This report is for  errors. It will show any errors that were not resolved in less than an hour.
+    type_id: 17
+    created_by_id: 85
+    modified_by_id: 54
+    modified_at: 2019-05-09 06:30:00.294+00:00
+    system_run_url: http://google.com
+    system_identifier: ABC
+    system_id: 7
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: catalog
+    name: Monthly Financial Summary
+    type_id: 20
+    created_by_id: 61
+    modified_by_id: 4
+    modified_at: 2020-01-07 19:53:06.756+00:00
+    system_run_url: http://google.com
+    system_identifier: EFG
+    system_id: 8
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: report
+    name: Current Observation Patients
+    description: This report shows all patients who are currently admitted with an Observation patient class.
+    type_id: 21
+    created_by_id: 46
+    modified_by_id: 63
+    modified_at: 2020-06-22 23:34:02.907+00:00
+    system_run_url: http://google.com
+    system_identifier: HIJ
+    system_id: 9
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: component
+    name: Wait Time Trends
+    description: Portion of the ED Dashboard that displays wait time trends for the department
+    type_id: 28
+    created_by_id: 52
+    modified_by_id: 61
+    modified_at: 2019-04-22 21:59:31.941+00:00
+    system_run_url: http://google.com
+    system_identifier: ABC
+    system_id: 10
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: report
+    name: Front End User Collections
+    description: This report will display Front End Payment Collections.
+    type_id: 3
+    created_by_id: 2
+    modified_by_id: 89
+    modified_at: 2019-08-10 18:23:49.613+00:00
+    system_run_url: http://google.com
+    system_identifier: EFG
+    system_id: 11
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: report
+    name: Occupancy Summary
+    description: This report shows occupied beds in your facility. Reports created from this will contain information about currently open, occupied, and unavailable beds, broken down at the department level. The location for the report will be specified within the dashboard.
+    type_id: 17
+    created_by_id: 27
+    modified_by_id: 61
+    modified_at: 2019-09-05 08:42:18.692+00:00
+    system_run_url: http://google.com
+    system_identifier: HIJ
+    system_id: 12
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: report
+    name: Hospitalist Census
+    description: In house patients with hospitalists as attending
+    type_id: 20
+    created_by_id: 90
+    modified_by_id: 75
+    modified_at: 2019-04-16 08:38:04.970+00:00
+    system_run_url: http://google.com
+    system_identifier: ABC
+    system_id: 13
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: report
+    name: All Imaging Studies Today - Reg/Sched
+    description: This report searches for any imaging study scheduled for todays date.
+    type_id: 21
+    created_by_id: 47
+    modified_by_id: 5
+    modified_at: 2019-12-31 09:55:47.469+00:00
+    system_run_url: http://google.com
+    system_identifier: ABC
+    system_id: 14
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: report
+    name: LTC Skilled Nursing Facility Daily Census
+    description: This report helps  administrators and  coordinators review the current residents in their facilities. The report columns show the residents expected reimbursement, etc,  events for each resident for the current month.
+    type_id: 28
+    created_by_id: 78
+    modified_by_id: 99
+    modified_at: 2019-07-30 22:52:07.765+00:00
+    system_run_url: http://google.com
+    system_identifier: EFG
+    system_id: 15
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: report
+    name: Bypassed Warnings For Today
+    description: This report will show bypassed warnings.
+    type_id: 3
+    created_by_id: 36
+    modified_by_id: 10
+    modified_at: 2020-01-09 23:40:23.821+00:00
+    system_run_url: http://google.com
+    system_identifier: HIJ
+    system_id: 16
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: report
+    name: User Pt WQ Contacts Added Today
+    description: This report is for errors.  It will show any errors that were not resolved in 48 hours.
+    type_id: 17
+    created_by_id: 42
+    modified_by_id: 93
+    modified_at: 2019-05-25 20:39:19.994+00:00
+    system_run_url: http://google.com
+    system_identifier: ABC
+    system_id: 17
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: component
+    name: Outsourced Agency
+    description: This is used to add the it to dashboards.
+    type_id: 20
+    created_by_id: 87
+    modified_by_id: 96
+    modified_at: 2020-01-08 03:28:07.289+00:00
+    system_run_url: http://google.com
+    system_identifier: EFG
+    system_id: 18
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: component
+    name: Monthly Financial Summary Two
+    description: This  displays the  Monthly Financial Summary Report.
+    type_id: 21
+    created_by_id: 90
+    modified_by_id: 5
+    modified_at: 2019-12-13 22:46:40.760+00:00
+    system_run_url: http://google.com
+    system_identifier: HIJ
+    system_id: 19
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: catalog
+    name: Schedule by Date
+    type_id: 28
+    created_by_id: 79
+    modified_by_id: 82
+    modified_at: 2019-08-26 18:44:06.031+00:00
+    system_run_url: http://google.com
+    system_identifier: ABC
+    system_id: 20
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: component
+    name: Current Occupancy Details
+    description: This component shows the current occupancy of the hospital.
+    type_id: 3
+    created_by_id: 56
+    modified_by_id: 41
+    modified_at: 2020-07-22 14:43:10.122+00:00
+    system_run_url: http://google.com
+    system_identifier: EFG
+    system_id: 21
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: catalog
+    name: Radiology SMR
+    type_id: 17
+    created_by_id: 89
+    modified_by_id: 31
+    modified_at: 2019-04-09 14:33:49.229+00:00
+    system_run_url: http://google.com
+    system_identifier: HIJ
+    system_id: 22
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: otherreport
+    system_table: report
+    name: IP Find Admitted Patients For IP Patient Safety
+    description: Find admitted patients based on location information criteria.
+    type_id: 20
+    created_by_id: 90
+    modified_by_id: 92
+    modified_at: 2019-10-26 07:35:50.391+00:00
+    system_run_url: http://google.com
+    system_identifier: ABC
+    system_id: 23
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: report
+    name: IP Find Admitted Patients For IP
+    description: Find admitted patients based on location information.
+    type_id: 21
+    created_by_id: 92
+    modified_by_id: 81
+    modified_at: 2019-08-21 20:59:55.041+00:00
+    system_run_url: http://google.com
+    system_identifier: EFG
+    system_id: 24
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: report
+    name: ED All Patients Today Since Midnight
+    description: List of all patients arrived to the ED over the last 24 hours.
+    type_id: 28
+    created_by_id: 38
+    modified_by_id: 63
+    modified_at: 2020-01-11 18:27:56.593+00:00
+    system_run_url: http://google.com
+    system_identifier: HIJ
+    system_id: 25
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: report
+    name: Remittance Unposted Checks
+    description: This report includes all remittance checks that have been loaded or processed, and not yet accepted.
+    type_id: 3
+    created_by_id: 45
+    modified_by_id: 84
+    modified_at: 2020-02-02 13:58:18.940+00:00
+    system_run_url: http://google.com
+    system_identifier: ABC
+    system_id: 26
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: report
+    name: Remittance Unposted Checks Dashboard
+    type_id: 17
+    created_by_id: 99
+    modified_by_id: 84
+    modified_at: 2020-02-03 22:11:13.622+00:00
+    system_run_url: http://google.com
+    system_identifier: ABC
+    system_id: 27
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: report
+    name: Occupancy Summary
+    description: This report shows occupied beds in your facility. Reports created from this will contain information about currently open, occupied, and unavailable beds, broken down at the department level. The location for the report will be specified within the dashboard.
+    type_id: 20
+    created_by_id: 14
+    modified_by_id: 84
+    modified_at: 2020-03-28 03:48:35.207+00:00
+    system_run_url: http://google.com
+    system_identifier: EFG
+    system_id: 28
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: report
+    name: ED All Patients Yesterday
+    description: List of all patients arrived to the ED yesterday.
+    type_id: 21
+    created_by_id: 20
+    modified_by_id: 52
+    modified_at: 2019-12-13 14:50:52.255+00:00
+    system_run_url: http://google.com
+    system_identifier: HIJ
+    system_id: 29
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: component
+    name: Coordinator Reports
+    description: This report is meant for the coordinator.
+    type_id: 28
+    created_by_id: 26
+    modified_by_id: 18
+    modified_at: 2019-07-23 09:15:43.831+00:00
+    system_run_url: http://google.com
+    system_identifier: ABC
+    system_id: 30
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: component
+    name: Restraint and Alarm Usage
+    description: This report displays clinical metrics related to usage of restraints and alarms for residents in a Long Term Care facility.
+    type_id: 3
+    created_by_id: 6
+    modified_by_id: 11
+    modified_at: 2019-05-15 15:09:29.010+00:00
+    system_run_url: http://google.com
+    system_identifier: EFG
+    system_id: 31
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: report
+    name: COVID Patients In-House
+    description: This report returns all in house patients that have confirmed or ordered labs for COVID-19.
+    type_id: 17
+    created_by_id: 46
+    modified_by_id: 28
+    modified_at: 2020-04-29 22:31:32.943+00:00
+    system_run_url: http://google.com
+    system_identifier: HIJ
+    system_id: 32
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: catalog
+    name: Director Requests in Last Seven Days
+    type_id: 20
+    created_by_id: 6
+    modified_by_id: 52
+    modified_at: 2019-09-19 06:31:40.618+00:00
+    system_run_url: http://google.com
+    system_identifier: ABC
+    system_id: 33
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: catalog
+    name: Director Requests Completed in Last Seven Days
+    type_id: 21
+    created_by_id: 49
+    modified_by_id: 93
+    modified_at: 2020-01-15 02:37:20.297+00:00
+    system_run_url: http://google.com
+    system_identifier: EFG
+    system_id: 34
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: catalog
+    name: Oral Care Documentation
+    type_id: 28
+    created_by_id: 47
+    modified_by_id: 86
+    modified_at: 2019-12-14 13:28:30.313+00:00
+    system_run_url: http://google.com
+    system_identifier: HIJ
+    system_id: 35
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: report
+    name: Patients monitored by Care Coordination Team
+    description: This report is intended for population health users to see recent and upcoming outreach status and other details about all patients currently being monitored by the care coordination team. It finds all patients who have a care coordinator on their care team.
+    type_id: 3
+    created_by_id: 26
+    modified_by_id: 84
+    modified_at: 2020-03-05 17:09:17.922+00:00
+    system_run_url: http://google.com
+    system_identifier: ABC
+    system_id: 36
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: catalog
+    name: Schedule by Date Range
+    type_id: 17
+    created_by_id: 55
+    modified_by_id: 14
+    modified_at: 2020-05-11 04:56:35.226+00:00
+    system_run_url: http://google.com
+    system_identifier: EFG
+    system_id: 37
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: component
+    name: Observation Metrics
+    description: This component displays the average number of hours current Observation patients have spent in  Observation.
+    type_id: 20
+    created_by_id: 64
+    modified_by_id: 97
+    modified_at: 2019-07-29 22:57:41.022+00:00
+    system_run_url: http://google.com
+    system_identifier: HIJ
+    system_id: 38
+    visible: Y
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: component
+    name: COVID-19 Reporting
+    description: This report displays a list of tagged reports. It can include links to run and view the reports.
+    type_id: 21
+    created_by_id: 6
+    modified_by_id: 34
+    modified_at: 2020-03-05 10:02:59.928+00:00
+    system_run_url: http://google.com
+    system_identifier: ABC
+    system_id: 39
+    visible: N
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: catalog
+    name: Follow Up Appointments Made
+    type_id: 28
+    created_by_id: 51
+    modified_by_id: 82
+    modified_at: 2019-11-19 07:57:31.686+00:00
+    system_run_url: http://google.com
+    system_identifier: ABC
+    system_id: 40
+    visible: N
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: report
+    name: Prospective Workload Report with Summary
+    description: This report is used to find patients who have current RT orders placed on them. The summary tabs allow RT directors to view respiratory work units assigned to a patient sorted either by department or by respiratory therapist.
+    type_id: 3
+    created_by_id: 2
+    modified_by_id: 94
+    modified_at: 2020-03-04 19:58:17.883+00:00
+    system_run_url: http://google.com
+    system_identifier: EFG
+    system_id: 41
+    visible: N
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: catalog
+    name: Director Current Queue
+    type_id: 17
+    created_by_id: 34
+    modified_by_id: 13
+    modified_at: 2020-04-05 20:58:26.928+00:00
+    system_run_url: http://google.com
+    system_identifier: HIJ
+    system_id: 42
+    visible: N
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: report
+    name: IP Workload Acuity by login dept
+    type_id: 20
+    created_by_id: 9
+    modified_by_id: 48
+    modified_at: 2020-06-21 10:17:43.971+00:00
+    system_run_url: http://google.com
+    system_identifier: ABC
+    system_id: 43
+    visible: N
+    orphan: N
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: report
+    name: Current Leave of Absence
+    description: Admissions directors and other operational leaders can use this report to know who is currently on Leave of Absence.
+    type_id: 21
+    created_by_id: 61
+    modified_by_id: 66
+    modified_at: 2020-07-23 00:30:09.914+00:00
+    system_run_url: http://google.com
+    system_identifier: EFG
+    system_id: 44
+    visible: N
+    orphan: Y
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: report
+    name: Discharge Patients by Discharge Disposition
+    type_id: 28
+    created_by_id: 8
+    modified_by_id: 46
+    modified_at: 2019-05-06 02:32:11.484+00:00
+    system_run_url: http://google.com
+    system_identifier: HIJ
+    system_id: 45
+    visible: N
+    orphan: Y
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: component
+    name: Executive Daily Stats
+    description: This component includes daily inpatient admissions, observation admissions, ED arrivals, hospital outpatient visits, and the bed occupancy rate.
+    type_id: 3
+    created_by_id: 44
+    modified_by_id: 81
+    modified_at: 2020-06-13 08:31:19.030+00:00
+    system_run_url: http://google.com
+    system_identifier: ABC
+    system_id: 46
+    visible: N
+    orphan: Y
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: report
+    name: Hours in Observation
+    description: Length of stay for patients in observaton
+    type_id: 17
+    created_by_id: 17
+    modified_by_id: 11
+    modified_at: 2019-08-27 13:46:17.112+00:00
+    system_run_url: http://google.com
+    system_identifier: EFG
+    system_id: 47
+    visible: N
+    orphan: Y
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: catalog
+    name: New ECW Transactions
+    type_id: 20
+    created_by_id: 61
+    modified_by_id: 19
+    modified_at: 2019-07-01 01:13:21.759+00:00
+    system_run_url: http://google.com
+    system_identifier: HIJ
+    system_id: 48
+    visible: N
+    orphan: Y
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_02
+    system_db: reportserver
+    system_table: report
+    name: IP Central Line Days
+    description: This  report will show all patients with an active CVC (central venous catheter) or PICC (peripherally inserted central catheter) line.
+    type_id: 21
+    created_by_id: 98
+    modified_by_id: 59
+    modified_at: 2019-06-14 00:10:32.341+00:00
+    system_run_url: http://google.com
+    system_identifier: ABC
+    system_id: 49
+    visible: N
+    orphan: Y
+    system_path: /dead/end/path/to_report
+- model: index.reports
+  fields:
+    system_server: my_server_01
+    system_db: reportserver
+    system_table: catalog
+    name: IP Readmission Rates by Year and Month - MEDICARE
+    type_id: 28
+    created_by_id: 44
+    modified_by_id: 80
+    modified_at: 2019-11-27 00:37:18.289+00:00
+    system_run_url: http://google.com
+    system_identifier: EFG
+    system_id: 50
+    visible: N
+    orphan: Y
+    system_path: /dead/end/path/to_report

@@ -1,0 +1,1060 @@
+- model: index.reportdocs
+  fields:
+    report_id: 1
+    ops_owner_id: 11
+    requester_id: 60
+    description: This component displays a list of workqueues supervised by the user running the report. Data is populated by the report. See reports Atlas entry for a list of dashboards where it appears.
+    org_value_id: 1
+    frequency_id: 5
+    fragility_id: 1
+    executive_report: Y
+    maintenance_schedule_id: 1
+    modified_at: 2020-05-02 17:02:10.805+00:00
+    created_at: 2020-02-14 05:28:16.101+00:00
+    created_by_id: 29
+    modified_by_id: 85
+- model: index.reportdocs
+  fields:
+    report_id: 2
+    ops_owner_id: 26
+    requester_id: 69
+    description: This report displays a list of workqueues supervised by the user running the report. See components Atlas entry for a list of dashboards where it appears.
+    assumptions: |
+      Select Workqueues between T-7 (2/7/2020) and T (2/14/2020)
+      From
+      Workqueue tabs
+      Active
+      Service area
+      Dynamic workqueue selection
+      Workqueues That I Supervise
+    org_value_id: 3
+    frequency_id: 3
+    fragility_id: 4
+    executive_report: Y
+    maintenance_schedule_id: 1
+    modified_at: 2020-07-14 09:56:46.710+00:00
+    created_at: 2019-04-30 22:48:28.374+00:00
+    created_by_id: 81
+    modified_by_id: 86
+- model: index.reportdocs
+  fields:
+    report_id: 3
+    ops_owner_id: 59
+    requester_id: 60
+    description: This report is for  errors  for Today report. It will show any errors (rules) that were not resolved in 48 hours in specific workqueues for each user.
+    assumptions: |
+      The report will ignore any of these rules:
+      Valid Guarantor , Generic Insurance Check, RX Card Missing, BC Generic Check,   Coverage Update, Appt is missing referral or referral scheduled and unauthd, Reg Pt is Medicare Primary but should be secondary, Reg Pt is Medicare Secondary but should be Primary
+    org_value_id: 1
+    frequency_id: 2
+    fragility_id: 4
+    executive_report: Y
+    maintenance_schedule_id: 5
+    modified_at: 2019-06-05 17:26:41.159+00:00
+    created_at: 2020-02-02 11:18:31.568+00:00
+    created_by_id: 46
+    modified_by_id: 9
+- model: index.reportdocs
+  fields:
+    report_id: 4
+    ops_owner_id: 100
+    requester_id: 77
+    description: This report will show REG Bypassed warnings for individual users for today.  Specific workflows and specific confirmation error rules are selected for this report.
+    assumptions: |
+      Four confirmation error rules are excluded:
+      Generic Insurance Check, Valid Guarantor, RX Card missing, REG Pt has PCP on Encounter Date
+    org_value_id: 1
+    frequency_id: 2
+    fragility_id: 1
+    executive_report: Y
+    maintenance_schedule_id: 5
+    modified_at: 2020-02-09 23:42:30.681+00:00
+    created_at: 2020-06-25 22:17:42.225+00:00
+    created_by_id: 10
+    modified_by_id: 79
+- model: index.reportdocs
+  fields:
+    report_id: 5
+    ops_owner_id: 95
+    requester_id: 84
+    description: |
+      Service Area =  EMERGENCY DEPT
+        or  ICU MAIN
+        or  MED SURG
+        or  MEDICAL
+        or  REHAB
+        or  MENTAL HLTH ADULT
+        or  MENTAL HLTH FEM
+        or  MENTAL HLTH MALE
+        or  NURSERY
+        or  OBSERVATION OLD
+        or  CARDIAC TELE
+        or  MENTAL HLTH PEDS
+        or  ORTHO NEURO MED
+        or  OB/GYN WOM/NB SVCS
+        or  LABOR AND DELIVERY
+        or  BH SR CARE UNIT
+        or  OBSERVATION
+    org_value_id: 2
+    frequency_id: 1
+    fragility_id: 2
+    executive_report: Y
+    maintenance_schedule_id: 3
+    modified_at: 2020-07-31 22:07:50.252+00:00
+    created_at: 2019-11-10 08:33:08.376+00:00
+    created_by_id: 5
+    modified_by_id: 56
+- model: index.reportdocs
+  fields:
+    report_id: 6
+    ops_owner_id: 54
+    requester_id: 27
+    description: This report is the basis for the  Discharge Efficiency component  on the Daily Census Dashboard. It displays information for patients discharged within the past month by Unit. It includes both patient-level detail about each discharge and a summary tab that displays the percentage of patients who had a discharge order written by 10am, had their AVS printed by 12pm, and were actually discharged from the bed by 1pm.
+    assumptions: |
+      Search Summary
+      Select Pending Events between MB (11/1/2019) 12:00 AM and T-1 (11/18/2019) 11:59 PM
+      From
+      Current unit:
+       BH SR CARE UNIT OR
+       CARDIAC TELE OR
+       ICU MAIN OR
+       LABOR AND DELIVERY OR
+       MEDICAL OR
+       MENTAL HLTH ADULT OR
+       MENTAL HLTH FEM OR
+       MENTAL HLTH MALE OR
+       MENTAL HLTH PEDS OR
+       OBSERVATION OR
+       ORTHO NEURO MED OR
+       OB/GYN WOM/NB SVCS OR
+       REHAB
+      Allow a record only once:
+      Yes
+
+      Where
+      Event type:
+      Discharge
+      AND Completed:
+      Yes
+    org_value_id: 2
+    frequency_id: 1
+    fragility_id: 4
+    executive_report: Y
+    maintenance_schedule_id: 1
+    modified_at: 2019-10-28 11:03:07.952+00:00
+    created_at: 2020-01-05 10:51:46.393+00:00
+    created_by_id: 95
+    modified_by_id: 29
+- model: index.reportdocs
+  fields:
+    report_id: 7
+    ops_owner_id: 19
+    requester_id: 64
+    description: This report will show any errors (rules) that were not resolved in 48 hours in specific workqueues for each user.
+    assumptions: |
+      The report will ignore any of these rules (Affected rules):
+      Valid Guarantor, Generic Insurance Check,  RX Card Missing, BC Generic Check, Coverage Update, Appt is missing referral or referral scheduled and unauthd, Reg Pt is Medicare Primary but should be secondary, Reg Pt is Medicare Secondary but should be Primary
+    org_value_id: 3
+    frequency_id: 4
+    fragility_id: 4
+    executive_report: Y
+    maintenance_schedule_id: 1
+    modified_at: 2020-07-01 21:34:24.971+00:00
+    created_at: 2020-04-08 14:24:49.759+00:00
+    created_by_id: 90
+    modified_by_id: 3
+- model: index.reportdocs
+  fields:
+    report_id: 8
+    ops_owner_id: 86
+    requester_id: 91
+    description: |
+      Requester: President Obama
+      Operational User: President Trump
+      ##ME1559
+    assumptions: |
+      Report underlying dashboard component  Monthly Financial Summary. This report and its component allow reporting for a longer time span than the report Monthly Financial Activity .
+      The SQL query uses  table TRANSACTIONS posted for the last 14 months and interrogates the transaction characteristics against the expected characteristics for the categories HB Charges, HB Payments, HB Adjustments, HB Bad Debt, HB External A/R, and HB Net A/R.
+      The transactions for each category are reported as sums each of the previous 14 months.
+      Sevice area = 10 only.
+    org_value_id: 2
+    frequency_id: 4
+    fragility_id: 1
+    executive_report: Y
+    maintenance_schedule_id: 3
+    modified_at: 2019-11-13 05:20:31.256+00:00
+    created_at: 2019-04-09 17:37:31.910+00:00
+    created_by_id: 71
+    modified_by_id: 3
+- model: index.reportdocs
+  fields:
+    report_id: 9
+    ops_owner_id: 27
+    requester_id: 52
+    description: This report lists observation patients currently admitted somewhere in the hospital. Patients can be in any unit, not just the observation unit.
+    assumptions: |
+      Patients with confirmed admissions, not discharged, and currently in an observation patient class.
+      ADT admission status:
+      2 --Confirmed Admission
+      AND Discharge date:
+      Does not exist
+      AND Patient class:
+      Observation
+    org_value_id: 3
+    frequency_id: 1
+    fragility_id: 2
+    executive_report: Y
+    maintenance_schedule_id: 4
+    modified_at: 2019-09-10 08:43:47.539+00:00
+    created_at: 2020-02-17 07:45:07.314+00:00
+    created_by_id: 55
+    modified_by_id: 12
+- model: index.reportdocs
+  fields:
+    report_id: 10
+    ops_owner_id: 87
+    requester_id: 85
+    description: Displays the average amount of time patients have waited between various events in the emergency department over the last 6, 12  and 24 hours.  For example, the Room Time event window might display the average amount of time patients have waited between when they were arrived at the ED and when they were roomed. For each event window, this component displays the averages over several different time periods.
+    assumptions: The wait times displayed here also include patients who are currently waiting, and have been waiting longer than the historical average for the given time period. This ensures that if the wait time has recently increased because more patients are in the waiting period, the reported time will increase accordingly.
+    org_value_id: 3
+    frequency_id: 4
+    fragility_id: 1
+    executive_report: Y
+    maintenance_schedule_id: 5
+    modified_at: 2020-04-23 12:30:05.017+00:00
+    created_at: 2019-04-12 13:40:46.862+00:00
+    created_by_id: 19
+    modified_by_id: 78
+- model: index.reportdocs
+  fields:
+    report_id: 11
+    ops_owner_id: 24
+    requester_id: 40
+    description: This report will display Front End Payment Collections.
+    org_value_id: 1
+    frequency_id: 5
+    fragility_id: 1
+    executive_report: Y
+    maintenance_schedule_id: 3
+    modified_at: 2019-10-13 13:26:10.893+00:00
+    created_at: 2020-06-06 04:55:18.984+00:00
+    created_by_id: 47
+    modified_by_id: 32
+- model: index.reportdocs
+  fields:
+    report_id: 12
+    ops_owner_id: 73
+    requester_id: 100
+    description: This report shows occupied beds in your facility. Reports created from this will contain information about currently open, occupied, and unavailable beds, broken down at the department level. The location for the report will be specified within the dashboard.
+    assumptions: |
+      (Department = MENTAL HLTH ADULT
+      or
+      MENTAL HLTH FEM
+      or
+      MENTAL HLTH MALE
+      or
+      MENTAL HLTH PEDS
+      or
+      BH SR CARE UNIT
+      or
+      CARDIAC TELE
+      or
+      OBSERVATION
+      or
+      ICU MAIN
+      or
+      MED SURG
+      or
+      LABOR AND DELIVERY
+      or
+      LD PROCEDURE
+      or
+      NURSERY
+      or
+      REHAB
+      or
+      OB/GYN WOM/NB SVCS
+      or
+      ORTHO NEURO MED
+      or
+      MEDICAL)
+      and
+      (type = IP Psych Facility
+        or
+        Normal
+        or
+        Emergency Dept
+        or
+        Labor & Delivery
+        or
+        IP Rehab Facility)
+    org_value_id: 2
+    frequency_id: 1
+    fragility_id: 3
+    executive_report: Y
+    maintenance_schedule_id: 2
+    modified_at: 2019-08-16 16:04:58.935+00:00
+    created_at: 2020-05-07 07:26:33.966+00:00
+    created_by_id: 5
+    modified_by_id: 88
+- model: index.reportdocs
+  fields:
+    report_id: 13
+    ops_owner_id: 54
+    requester_id: 92
+    description: In house patients with AIM hospitalists as attending
+    assumptions: |
+      Select Patients
+      From
+      Admitted Patients by Hospital:
+
+      Where
+      Tx Team: Attending Providers:
+    org_value_id: 2
+    frequency_id: 5
+    fragility_id: 2
+    executive_report: Y
+    maintenance_schedule_id: 3
+    modified_at: 2020-04-03 01:36:39.992+00:00
+    created_at: 2019-08-23 11:01:35.316+00:00
+    created_by_id: 23
+    modified_by_id: 10
+- model: index.reportdocs
+  fields:
+    report_id: 14
+    ops_owner_id: 63
+    requester_id: 88
+    description: This report searches for any imaging study scheduled for todays date.   The SUMMARY tab will display patient detail for each Status.
+    org_value_id: 1
+    frequency_id: 1
+    fragility_id: 1
+    executive_report: Y
+    maintenance_schedule_id: 5
+    modified_at: 2019-04-09 05:41:30.652+00:00
+    created_at: 2019-09-22 10:38:13.894+00:00
+    created_by_id: 14
+    modified_by_id: 86
+- model: index.reportdocs
+  fields:
+    report_id: 15
+    ops_owner_id: 22
+    requester_id: 2
+    description: This report helps  administrators and  coordinators review the current residents in their facilities. The report columns show the residents PDPM expected reimbursement, Case Mix Index and Case Mix Group for each PDPM classification, and the detail report shows the ADT events for each resident for the current month.
+    org_value_id: 2
+    frequency_id: 4
+    fragility_id: 3
+    executive_report: Y
+    maintenance_schedule_id: 2
+    modified_at: 2020-05-22 20:14:10.164+00:00
+    created_at: 2019-04-24 14:20:56.334+00:00
+    created_by_id: 56
+    modified_by_id: 22
+- model: index.reportdocs
+  fields:
+    report_id: 16
+    ops_owner_id: 42
+    requester_id: 26
+    description: This report will show the bypassed warnings for registrars.   It will check a specific list of workflows for the bypassed warnings.   It will exclude 6 confirmation rules.   You can see the specific workflows and confirmation rules in the Images.
+    assumptions: |
+      Only certain workflows are checked.   There are 6 confirmation rules that are excluded.
+    org_value_id: 3
+    frequency_id: 3
+    fragility_id: 4
+    executive_report: Y
+    maintenance_schedule_id: 3
+    modified_at: 2019-05-15 12:42:46.656+00:00
+    created_at: 2020-07-30 21:01:11.916+00:00
+    created_by_id: 4
+    modified_by_id: 52
+- model: index.reportdocs
+  fields:
+    report_id: 17
+    ops_owner_id: 26
+    requester_id: 25
+    description: This report will display all bypassed warnings by an registrar.   Only specific workqueues are checked.   There are 8 affected rules that are excluded.
+    assumptions: The specific workqueues and affected rules are listed in the Images section.
+    org_value_id: 3
+    frequency_id: 2
+    fragility_id: 1
+    executive_report: Y
+    maintenance_schedule_id: 5
+    modified_at: 2019-12-26 00:09:45.357+00:00
+    created_at: 2019-06-22 06:58:26.616+00:00
+    created_by_id: 58
+    modified_by_id: 68
+- model: index.reportdocs
+  fields:
+    report_id: 18
+    ops_owner_id: 93
+    requester_id: 90
+    org_value_id: 3
+    frequency_id: 1
+    fragility_id: 1
+    executive_report: Y
+    maintenance_schedule_id: 2
+    modified_at: 2019-08-18 22:58:06.417+00:00
+    created_at: 2019-10-23 08:34:27.074+00:00
+    created_by_id: 96
+    modified_by_id: 70
+- model: index.reportdocs
+  fields:
+    report_id: 19
+    ops_owner_id: 1
+    requester_id: 95
+    description: |
+      Requester: President Obama
+      Operational User: President Trump
+      ##ME1559
+    assumptions: |
+      Dashboard component  HB Monthly Financial Summary which displays the  report  Monthly Financial Summary.
+      Service area = 10 only.
+    org_value_id: 1
+    frequency_id: 3
+    fragility_id: 2
+    executive_report: Y
+    maintenance_schedule_id: 2
+    modified_at: 2019-08-14 00:07:16.635+00:00
+    created_at: 2019-05-07 17:59:50.201+00:00
+    created_by_id: 57
+    modified_by_id: 24
+- model: index.reportdocs
+  fields:
+    report_id: 20
+    ops_owner_id: 9
+    requester_id: 25
+    description: This report displays the daily Senior Living van schedule from the Carevan scheduling web application. The report does not sync in real time with the Carevan app, so changes in the app are not immediately reflected in the report. It is intended to be distributed at the beginning of the day.
+    org_value_id: 3
+    frequency_id: 1
+    fragility_id: 1
+    executive_report: Y
+    maintenance_schedule_id: 3
+    modified_at: 2020-03-18 12:27:37.597+00:00
+    created_at: 2019-10-25 10:47:16.801+00:00
+    created_by_id: 9
+    modified_by_id: 41
+- model: index.reportdocs
+  fields:
+    report_id: 21
+    ops_owner_id: 92
+    requester_id: 92
+    description: This component shows the current occupancy of the hospital. It is summarized based on the same unit groups used in the Bed Board. It automatically refreshes every sixty minutes
+    assumptions: |
+      The columns are as follows:
+      *Unit: This is based on the unit groups within Bed Planning.
+
+      *Occ: The number of occupied beds in that unit group.
+
+      *Open: The number of open beds within the unit group.
+
+      *Unavail: The number of unavailable beds within the unit group.
+
+      *Pend In: The number of pending admissions and transfers into a department.
+
+      *Pend Out: The number of pending discharges and transfers for patients currently in a department bed.
+
+      *# Beds: The number of census beds in the unit group.
+      Based on workbench report ""Occupancy Summary""
+      Pend In  department values are based on pending ADT events (PND records) with a destination values  of that department.
+
+      Pend Out values are based on pending ADT events (PND records) for patients in a bed in that department using the encounter (CSN) on the PND record.
+    org_value_id: 2
+    frequency_id: 1
+    fragility_id: 1
+    executive_report: Y
+    maintenance_schedule_id: 5
+    modified_at: 2020-05-18 04:05:47.517+00:00
+    created_at: 2019-10-04 00:29:32.842+00:00
+    created_by_id: 52
+    modified_by_id: 77
+- model: index.reportdocs
+  fields:
+    report_id: 22
+    ops_owner_id: 2
+    requester_id: 81
+    description: Pulls in Radiology SMR for a specified date range
+    assumptions: |
+      Logic:
+      Pull in all imaging procedures for this facility
+      Add in lab requisitions
+      Add charges forl ab
+
+      * Patient Type comes from the  account
+      * Area is based on department names to group into
+      * Cost  is ""Other"" for everything except , since most stats are not charge based.
+      All imaging procedures have an associated procedure weight, and all new imaging procedures will have one added by the radiology team.
+
+      Procedure weights are saved in RADIOLOGY_WEIGHTS by analytics
+    org_value_id: 1
+    frequency_id: 5
+    fragility_id: 2
+    executive_report: Y
+    maintenance_schedule_id: 3
+    modified_at: 2019-08-22 14:07:10.937+00:00
+    created_at: 2020-06-12 09:14:57.462+00:00
+    created_by_id: 93
+    modified_by_id: 54
+- model: index.reportdocs
+  fields:
+    report_id: 23
+    ops_owner_id: 84
+    requester_id: 73
+    description: Find admitted and HOV patients based on location information criteria .
+    assumptions: |
+      Exclude  patients? Yes
+      Department excluded (none)
+      Hospital excluded
+    org_value_id: 1
+    frequency_id: 5
+    fragility_id: 3
+    executive_report: N
+    maintenance_schedule_id: 3
+    modified_at: 2019-06-16 01:06:06.928+00:00
+    created_at: 2019-10-01 17:55:58.885+00:00
+    created_by_id: 84
+    modified_by_id: 2
+- model: index.reportdocs
+  fields:
+    report_id: 24
+    ops_owner_id: 23
+    requester_id: 56
+    description: Find admitted and HOV patients based on location information criteria.
+    assumptions: |
+      Exclude  patients? Yes
+      Department excluded:
+
+      Hospital excluded:
+
+    org_value_id: 1
+    frequency_id: 3
+    fragility_id: 1
+    executive_report: N
+    maintenance_schedule_id: 1
+    modified_at: 2020-03-27 07:01:54.777+00:00
+    created_at: 2019-10-29 22:39:09.230+00:00
+    created_by_id: 9
+    modified_by_id: 95
+- model: index.reportdocs
+  fields:
+    report_id: 25
+    ops_owner_id: 7
+    requester_id: 42
+    description: List of all patients arrived to the ED since 00:00 of the current day. Includes link to encounter summary.  Summarizes data by arrival time, by disposition, and Left without Being Seen patients
+    assumptions: |
+      ED events to include: ED ARRIVED
+    org_value_id: 1
+    frequency_id: 1
+    fragility_id: 2
+    executive_report: N
+    maintenance_schedule_id: 3
+    modified_at: 2019-12-03 19:18:34.851+00:00
+    created_at: 2019-06-22 04:35:59.020+00:00
+    created_by_id: 86
+    modified_by_id: 50
+- model: index.reportdocs
+  fields:
+    report_id: 26
+    ops_owner_id: 20
+    requester_id: 93
+    description: This report includes all remittance checks that have been loaded or processed, and not yet accepted. This represents the current checks as seen in Check Mode of the Remittance activity.
+    assumptions: |
+      Date Option = Load Date between 01/01/2010 and Today
+      and
+      Billing System = Professional Billing
+      and
+      Status = Loaded Processed
+    org_value_id: 1
+    frequency_id: 3
+    fragility_id: 3
+    executive_report: N
+    maintenance_schedule_id: 1
+    modified_at: 2019-09-21 16:30:10.476+00:00
+    created_at: 2020-04-13 08:01:28.297+00:00
+    created_by_id: 26
+    modified_by_id: 52
+- model: index.reportdocs
+  fields:
+    report_id: 27
+    ops_owner_id: 3
+    requester_id: 73
+    assumptions: |
+      Date Option = Check Date
+      and
+      Billing System = Hospital Billing
+      and
+      Service Area =
+    org_value_id: 1
+    frequency_id: 5
+    fragility_id: 3
+    executive_report: N
+    maintenance_schedule_id: 5
+    modified_at: 2019-08-14 16:46:19.826+00:00
+    created_at: 2019-07-19 10:05:26.109+00:00
+    created_by_id: 33
+    modified_by_id: 10
+- model: index.reportdocs
+  fields:
+    report_id: 28
+    ops_owner_id: 46
+    requester_id: 83
+    description: This report shows occupied beds in your facility. Reports created from this will contain information about currently open, occupied, and unavailable beds, broken down at the department level. The location for the report will be specified within the dashboard.
+    assumptions: |
+      (Department  = MENTAL HLTH ADULT
+      or
+      MENTAL HLTH FEM
+      or
+      MENTAL HLTH MALE
+      or
+      MENTAL HLTH PEDS
+      or
+      BH SR CARE UNIT)
+      AND
+      Unit Type = IP Psych Facility
+    org_value_id: 2
+    frequency_id: 2
+    fragility_id: 1
+    executive_report: N
+    maintenance_schedule_id: 5
+    modified_at: 2019-11-01 11:59:42.798+00:00
+    created_at: 2019-05-28 22:24:21.362+00:00
+    created_by_id: 70
+    modified_by_id: 80
+- model: index.reportdocs
+  fields:
+    report_id: 29
+    ops_owner_id: 75
+    requester_id: 16
+    description: This report will display the patients that presented in the ED yesterday.   You can view the detailed patient information, totals by disposition, arrivals by Hour, disposition graph with Acuity, and Financial Class breakdown.   You are able to see patient data under the Financial Class breakdown tab.
+    org_value_id: 3
+    frequency_id: 2
+    fragility_id: 1
+    executive_report: N
+    maintenance_schedule_id: 1
+    modified_at: 2019-08-09 11:12:49.412+00:00
+    created_at: 2019-08-19 17:54:20.872+00:00
+    created_by_id: 46
+    modified_by_id: 6
+- model: index.reportdocs
+  fields:
+    report_id: 30
+    ops_owner_id: 27
+    requester_id: 32
+    description: Contains links to a number of reports intended for use by the  Coordinator as well as  surveyors.
+    org_value_id: 1
+    frequency_id: 3
+    fragility_id: 1
+    executive_report: N
+    maintenance_schedule_id: 3
+    modified_at: 2019-07-13 07:38:24.410+00:00
+    created_at: 2020-02-22 10:48:34.830+00:00
+    created_by_id: 47
+    modified_by_id: 67
+- model: index.reportdocs
+  fields:
+    report_id: 31
+    ops_owner_id: 4
+    requester_id: 98
+    description: Restraints and Alarms shows the numbers of residents admitted to a long-term care facility who have received restraints or used alarms in the last seven days.
+    assumptions: |
+      Based on whether the user clicks the number of restraints or alarms, it links to reports created from report models:
+
+      Residents with Restraint Usage in the Past Week
+      Residents with Alarm Usage in the Past Week
+      Both report models are based on report template.
+
+    org_value_id: 1
+    frequency_id: 3
+    fragility_id: 4
+    executive_report: N
+    maintenance_schedule_id: 2
+    modified_at: 2019-11-27 21:09:56.249+00:00
+    created_at: 2020-03-11 03:57:36.376+00:00
+    created_by_id: 72
+    modified_by_id: 16
+- model: index.reportdocs
+  fields:
+    report_id: 32
+    ops_owner_id: 58
+    requester_id: 25
+    description: This report returns all in house patients that have confirmed or ordered labs for COVID-19 with test status.  Includes both hospital and long term care patients, with ventilator hours (where applicable) and consults who have signed on to the treatment team.
+    assumptions: |
+      Select Beds
+      Where
+      Patient infection:
+      COVID-19 Confirmed OR
+      COVID-19 Rule Out
+
+    org_value_id: 1
+    frequency_id: 3
+    fragility_id: 1
+    executive_report: N
+    maintenance_schedule_id: 3
+    modified_at: 2019-04-20 23:44:26.455+00:00
+    created_at: 2020-07-31 08:48:37.805+00:00
+    created_by_id: 13
+    modified_by_id: 85
+- model: index.reportdocs
+  fields:
+    report_id: 33
+    ops_owner_id: 34
+    requester_id: 96
+    description: |
+      This report pulls data from the Analytics ticketing system to display the new requests submitted to a single directors report request queue in the last seven days. The director is chosen by inputting their email in the “correct” format.
+
+      The list  contains all of the report requests submitted on behalf of the chosen director to the Analytics report request system in the last seven days. The team will work these requests in the order listed in the priority column. Directors can view their complete queue and change the priority of their requests . Drag the ""Rank"" column until the ticket is in the appropriate place and click ""Save Changes"". New reporting content from Epic will be placed in the director request queue for approval and prioritization. This content will be labeled as a ""note"" and will include a link to release note system for review. New reporting content will no longer be released directly. The ""Master Rank"" field indicates your requests position in the overall queue of all report requests that are being worked by the Analytics team. Analytics works requests with the smallest Master Rank number first.
+
+      This report is part of a set of weekly subscriptions sent to directors with report request queues. The reports cover the status of the directors current queue and list the report requests that were both created and completed on their behalf in the last seven days.
+    org_value_id: 3
+    frequency_id: 3
+    fragility_id: 2
+    executive_report: N
+    maintenance_schedule_id: 3
+    modified_at: 2020-01-31 19:38:47.331+00:00
+    created_at: 2019-09-30 06:27:51.542+00:00
+    created_by_id: 46
+    modified_by_id: 16
+- model: index.reportdocs
+  fields:
+    report_id: 34
+    ops_owner_id: 8
+    requester_id: 89
+    description: |
+      This report pulls data from the Analytics ticketing system to display the new requests submitted to a single directors report request queue in the last seven days. The director is chosen by inputting their email in the “correct” format.
+
+      The list  contains all of the report requests submitted on behalf of the chosen director to the Analytics report request system in the last seven days. The team will work these requests in the order listed in the priority column. Directors can view their complete queue and change the priority of their requests . Drag the ""Rank"" column until the ticket is in the appropriate place and click ""Save Changes"". New reporting content from Epic will be placed in the director request queue for approval and prioritization. This content will be labeled as a ""note"" and will include a link to release note system for review. New reporting content will no longer be released directly. The ""Master Rank"" field indicates your requests position in the overall queue of all report requests that are being worked by the Analytics team. Analytics works requests with the smallest Master Rank number first.
+
+      This report is part of a set of weekly subscriptions sent to directors with report request queues. The reports cover the status of the directors current queue and list the report requests that were both created and completed on their behalf in the last seven days.
+    org_value_id: 3
+    frequency_id: 5
+    fragility_id: 1
+    executive_report: N
+    maintenance_schedule_id: 3
+    modified_at: 2020-04-05 08:24:13.407+00:00
+    created_at: 2019-08-22 11:09:47.613+00:00
+    created_by_id: 92
+    modified_by_id: 87
+- model: index.reportdocs
+  fields:
+    report_id: 35
+    ops_owner_id: 100
+    requester_id: 34
+    description: ORAL CARE DOCUMENTATION
+    assumptions: |
+      This query will display Oral Care documentation completed for patients.
+      This report pulls data based on Flowsheet rows: ORAL CARE.  It only pulls charting for the previous day.
+    org_value_id: 3
+    frequency_id: 1
+    fragility_id: 1
+    executive_report: N
+    maintenance_schedule_id: 2
+    modified_at: 2019-06-04 13:33:24.783+00:00
+    created_at: 2019-08-02 11:00:51.699+00:00
+    created_by_id: 77
+    modified_by_id: 93
+- model: index.reportdocs
+  fields:
+    report_id: 36
+    ops_owner_id: 16
+    requester_id: 32
+    assumptions: |
+      Select Patients between M-1 and T
+      From
+      Patient base:
+      All Patients
+
+      Where
+      Registry:
+
+      AND Patient living status:
+      Alive
+    org_value_id: 3
+    frequency_id: 5
+    fragility_id: 1
+    executive_report: N
+    maintenance_schedule_id: 5
+    modified_at: 2020-05-23 04:53:10.744+00:00
+    created_at: 2020-07-21 07:16:28.352+00:00
+    created_by_id: 9
+    modified_by_id: 88
+- model: index.reportdocs
+  fields:
+    report_id: 37
+    ops_owner_id: 45
+    requester_id: 7
+    description: This report displays the daily Senior Living van schedule from the Carevan scheduling web application for a selected date range. The report does not sync in real time with the Carevan app, so changes in the app are not immediately reflected in the report. It is intended to be distributed at the beginning of the day.
+    org_value_id: 3
+    frequency_id: 5
+    fragility_id: 2
+    executive_report: N
+    maintenance_schedule_id: 4
+    modified_at: 2020-07-29 03:41:51.434+00:00
+    created_at: 2020-03-05 06:51:46.299+00:00
+    created_by_id: 87
+    modified_by_id: 30
+- model: index.reportdocs
+  fields:
+    report_id: 38
+    ops_owner_id: 89
+    requester_id: 6
+    description: |
+      This component displays the average number of hours current Observation patients have spent in the Observation patient class. The columns are as follows:
+    assumptions: |
+      *Unit: The unit where the patients are currently located.
+
+      *# of patients: The number of observation patients in the unit.
+
+      *Avg Hrs in Obs: The average number of hours each observation patient has in an observation status for that unit.
+
+      *% Pts >20Hrs: The percentage of observation patients who are in the unit who have been in an observation status for more than 20 hours.
+      Patients with confirmed admissions, not discharged, and currently in an observation patient class.
+
+      ADT admission status:
+      2 --Confirmed Admission
+      AND Discharge date:
+      Does not exist
+      AND Patient class:
+      Observation
+    org_value_id: 3
+    frequency_id: 4
+    fragility_id: 1
+    executive_report: N
+    maintenance_schedule_id: 2
+    modified_at: 2020-01-24 15:14:23.716+00:00
+    created_at: 2019-12-13 18:37:55.911+00:00
+    created_by_id: 29
+    modified_by_id: 34
+- model: index.reportdocs
+  fields:
+    report_id: 39
+    ops_owner_id: 90
+    requester_id: 14
+    description: This component displays a list of tagged reports and displays Covid testing outcomes from 1/1/2020 to present. It includes links to run and view the reports.
+    org_value_id: 3
+    frequency_id: 3
+    fragility_id: 2
+    executive_report: N
+    maintenance_schedule_id: 2
+    modified_at: 2019-10-03 14:01:27.973+00:00
+    created_at: 2020-04-07 20:21:42.663+00:00
+    created_by_id: 6
+    modified_by_id: 33
+- model: index.reportdocs
+  fields:
+    report_id: 40
+    ops_owner_id: 12
+    requester_id: 76
+    description: |
+      FOLLOW UP APPOINTMENTS MADE
+
+      This query will display any OBSERVATION patients and their Attempts to Make Post Discharge Appt info.
+      follow up appointments made
+      Report checks Flowsheet row POST DISCHARGE APPOINTMENT NOT MADE FOR PATIENT and Flowsheet row WHICH OFFICE FOR APPOINTMENT.  You can select Start/End date and Departments.
+    org_value_id: 3
+    frequency_id: 4
+    fragility_id: 3
+    executive_report: N
+    maintenance_schedule_id: 5
+    modified_at: 2020-07-18 22:26:26.527+00:00
+    created_at: 2019-06-18 04:17:10.324+00:00
+    created_by_id: 6
+    modified_by_id: 17
+- model: index.reportdocs
+  fields:
+    report_id: 41
+    ops_owner_id: 37
+    requester_id: 36
+    description: This report is used to find patients who have current RT orders placed on them. The summary tabs allow RT directors to view respiratory work units assigned to a patient sorted either by department or by respiratory therapist.
+    assumptions: |
+      Select Patients
+      From
+      Admitted Patients by Hospital:
+
+      Where
+      Order: Matches Filter:
+      Filter: RT_ORDERS and Yes/No: Yes
+    org_value_id: 2
+    frequency_id: 5
+    fragility_id: 2
+    executive_report: N
+    maintenance_schedule_id: 5
+    modified_at: 2020-02-13 06:09:55.275+00:00
+    created_at: 2020-08-01 07:55:27.002+00:00
+    created_by_id: 42
+    modified_by_id: 28
+- model: index.reportdocs
+  fields:
+    report_id: 42
+    ops_owner_id: 48
+    requester_id: 42
+    description: |
+      This report pulls data from the Analytics ticketing system to display the new requests submitted to a single directors report request queue in the last seven days. The director is chosen by inputting their email in the “correct” format.
+
+      The list  contains all of the report requests submitted on behalf of the chosen director to the Analytics report request system in the last seven days. The team will work these requests in the order listed in the priority column. Directors can view their complete queue and change the priority of their requests . Drag the ""Rank"" column until the ticket is in the appropriate place and click ""Save Changes"". New reporting content from Epic will be placed in the director request queue for approval and prioritization. This content will be labeled as a ""note"" and will include a link to release note system for review. New reporting content will no longer be released directly. The ""Master Rank"" field indicates your requests position in the overall queue of all report requests that are being worked by the Analytics team. Analytics works requests with the smallest Master Rank number first.
+
+      This report is part of a set of weekly subscriptions sent to directors with report request queues. The reports cover the status of the directors current queue and list the report requests that were both created and completed on their behalf in the last seven days.
+    org_value_id: 3
+    frequency_id: 1
+    fragility_id: 4
+    executive_report: N
+    maintenance_schedule_id: 1
+    modified_at: 2020-04-06 04:57:58.830+00:00
+    created_at: 2019-04-22 03:55:22.213+00:00
+    created_by_id: 98
+    modified_by_id: 56
+- model: index.reportdocs
+  fields:
+    report_id: 43
+    ops_owner_id: 35
+    requester_id: 88
+    description: The latest acuity scores  by patient by unit.  The users log in  drives what information is displayed.
+    assumptions: |
+      Select Patients
+      From
+      Admitted Patients (Context Specific):
+      User Login Department
+
+      Where
+      Adt patient class:
+      Inpatient OR
+      Observation OR
+      Hospice
+    org_value_id: 2
+    frequency_id: 4
+    fragility_id: 3
+    executive_report: N
+    maintenance_schedule_id: 3
+    modified_at: 2020-07-30 23:04:16.303+00:00
+    created_at: 2019-07-20 14:25:41.998+00:00
+    created_by_id: 77
+    modified_by_id: 1
+- model: index.reportdocs
+  fields:
+    report_id: 44
+    ops_owner_id: 94
+    requester_id: 63
+    description: This query will display any rehab patient that is on Leave of Absence.
+    org_value_id: 3
+    frequency_id: 3
+    fragility_id: 4
+    executive_report: N
+    maintenance_schedule_id: 2
+    modified_at: 2020-04-05 17:45:43.443+00:00
+    created_at: 2019-05-03 14:38:08.889+00:00
+    created_by_id: 71
+    modified_by_id: 14
+- model: index.reportdocs
+  fields:
+    report_id: 45
+    ops_owner_id: 35
+    requester_id: 26
+    assumptions: |
+      Effective Date >= W-1
+      and
+      Effective Date <= Today
+      and
+      Reporting Base Class = Inpatient
+      and
+      Use statistical definition of discharge? = Yes
+      and
+      Revenue location not equal to REHABILITATION
+        or not equal to SLC ASSISTED LIVING AND MEMORY CARE
+        or not equal to SLC ASSISTED LIVING AND MEMORY CARE
+    org_value_id: 3
+    frequency_id: 5
+    fragility_id: 1
+    executive_report: N
+    maintenance_schedule_id: 4
+    modified_at: 2019-10-06 04:22:26.212+00:00
+    created_at: 2020-04-06 07:24:38.598+00:00
+    created_by_id: 96
+    modified_by_id: 65
+- model: index.reportdocs
+  fields:
+    report_id: 46
+    ops_owner_id: 63
+    requester_id: 10
+    description: This report collects hospital admissions stats for key patient categories including all inpatients, bedded ED patients, new outpatient hospital accounts, OB, and pediatrics.
+    org_value_id: 1
+    frequency_id: 4
+    fragility_id: 4
+    executive_report: N
+    maintenance_schedule_id: 2
+    modified_at: 2020-03-27 20:50:43.312+00:00
+    created_at: 2019-08-22 04:09:49.724+00:00
+    created_by_id: 43
+    modified_by_id: 88
+- model: index.reportdocs
+  fields:
+    report_id: 47
+    ops_owner_id: 94
+    requester_id: 42
+    org_value_id: 3
+    frequency_id: 2
+    fragility_id: 1
+    executive_report: N
+    maintenance_schedule_id: 3
+    modified_at: 2019-05-23 16:45:31.704+00:00
+    created_at: 2019-05-13 17:21:29.958+00:00
+    created_by_id: 54
+    modified_by_id: 84
+- model: index.reportdocs
+  fields:
+    report_id: 48
+    ops_owner_id: 54
+    requester_id: 9
+    org_value_id: 3
+    frequency_id: 2
+    fragility_id: 1
+    executive_report: N
+    maintenance_schedule_id: 4
+    modified_at: 2019-10-31 03:48:12.537+00:00
+    created_at: 2019-07-26 13:52:44.550+00:00
+    created_by_id: 76
+    modified_by_id: 33
+- model: index.reportdocs
+  fields:
+    report_id: 49
+    ops_owner_id: 33
+    requester_id: 38
+    description: This is a report that will show all patients with an active CVC (central venous catheter) or PICC (peripherally inserted central catheter) line. The report displays information about the active line in columns and includes a link to a detailed report of assessment documentation at the bottom.
+    assumptions: |
+      Select Patients LDAs
+      From
+      Admitted patients by department:
+      All
+      LDA status:
+      Active
+
+      Where
+      LDA type:
+      Central venous catheter OR
+      Peripherally inserted central catheter OR
+      Port-a-Cath
+      AND Authorized service areas:
+      Not equal to SENIOR LIFE COMMUNITIES
+    org_value_id: 3
+    frequency_id: 3
+    fragility_id: 1
+    executive_report: N
+    maintenance_schedule_id: 1
+    modified_at: 2019-09-30 06:40:59.058+00:00
+    created_at: 2020-04-17 20:45:26.961+00:00
+    created_by_id: 79
+    modified_by_id: 61
+- model: index.reportdocs
+  fields:
+    report_id: 50
+    ops_owner_id: 50
+    requester_id: 32
+    description: Traditional Medicare readmission rates by year and month overall and for AMI, COPD, heart failure, pneumonia, stroke, hip/knee, CABG and sepsis.
+    assumptions: |
+      Readmission populations match the CMS criteria for 30 day readmissions as closely as possible, but not all the documentation for CMS requirements is available.It is also important to note that a patient may have been an inpatient at another facility at some time.
+      NOTE: This methodology differs from that used by  for readmission reporting.
+    org_value_id: 3
+    frequency_id: 3
+    fragility_id: 3
+    executive_report: N
+    maintenance_schedule_id: 3
+    modified_at: 2019-04-20 02:13:57.531+00:00
+    created_at: 2019-09-01 23:22:05.291+00:00
+    created_by_id: 64
+    modified_by_id: 29

@@ -3,7 +3,9 @@
 <div class="card">
     <div class="card-header">
         <div class="card-header-title is-justify-content-space-between py-2">
-            <a class="has-text-dark" href="{{ user.get_absolute_url }}">{{ user }}</a>
+            <a title="open user profile"
+               class="has-text-dark"
+               href="{{ user.get_absolute_url }}">{{ user }}</a>
             <span class="tags">
                 <span class="tag">user</span>
                 {% if matched_field %}
@@ -16,13 +18,15 @@
         </div>
     </div>
     <div class="card-content pt-3 pb-2">
-        <a class="media"  href="{{ user.get_absolute_url }}">
+        <a title="open user profile"
+           class="media"
+           href="{{ user.get_absolute_url }}">
             <div class="media-left">
                 <figure class="image is-128x128">
                     <picture>
                         <source srcset="{% static 'img/report_placeholder_128x128.webp' %}"
                                 type="image/webp"
-                                loading="lazy">
+                                loading="lazy"/>
                         <img title="placeholder"
                              src="{% static 'img/report_placeholder_128x128.png' %}"
                              alt="placeholder image"

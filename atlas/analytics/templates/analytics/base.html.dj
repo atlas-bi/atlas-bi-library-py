@@ -1,0 +1,191 @@
+{% load mathfilters %}
+{% load static %}
+
+<h1 class="title is-1">Analytics</h1>
+<div id="active-users"></div>
+<div class="is-flex mb-4 is-justify-content-space-between">
+    <div class="is-flex">
+        <div class="is-flex mr-5 is-flex-direction-column">
+            <h1 class="title is-2 mb-0 is-family-sans-serif">
+                <span id="analytics-views">-</span>
+            </h1>
+            <span>Views</span>
+        </div>
+        <div class="is-flex mx-5 is-flex-direction-column">
+            <h1 class="title is-2 mb-0 is-family-sans-serif">
+                <span id="analytics-visitors">-</span>
+            </h1>
+            <span>Visitors</span>
+        </div>
+        <div class="is-flex ml-5 is-flex-direction-column">
+            <h1 class="title is-2 mb-0 is-family-sans-serif">
+                <span id="analytics-load-time">-</span>s
+            </h1>
+            <span>Load Time</span>
+        </div>
+    </div>
+    <div class="dropdown mb-5 is-select"  data-target="views-chart">
+        <div class="dropdown-trigger ">
+            <button class="button"
+                    aria-haspopup="true"
+                    aria-controls="views-chart-dropdown">
+                <span class="select-value">Last 24 hours</span>
+                <span class="icon is-small">
+                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                </span>
+            </button>
+        </div>
+        <div class="dropdown-menu" id="views-chart-dropdown"role="menu">
+            <div class="dropdown-content">
+                <a title="today" href="#" class="dropdown-item" data-range="1">Today</a>
+                <a title="last 24 hours"
+                   href="#"
+                   class="dropdown-item is-active"
+                   data-range="2">Last 24 hours</a>
+                <hr class="dropdown-divider" />
+                <a title="this week" href="#" class="dropdown-item" data-range="3">This week</a>
+                <a title="last 7 days" href="#" class="dropdown-item" data-range="4">Last 7 days</a>
+                <hr class="dropdown-divider" />
+                <a title="this month" href="#" class="dropdown-item" data-range="5">This month</a>
+                <a title="last 30 days" href="#" class="dropdown-item" data-range="6">Last 30 days</a>
+                <a title="last 90 days" href="#" class="dropdown-item" data-range="7">Last 90 days</a>
+                <a title="this year" href="#" class="dropdown-item" data-range="8">This year</a>
+                <hr class="dropdown-divider" />
+                <a title="all time" href="#" class="dropdown-item" data-range="9">All time</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="chart-wrapper">
+    {% if user_id is not null %}
+        <canvas id="visits-chart"
+                data-url="{% url 'analytics:visits' %}?user_id={{ user_id }}"
+                width="400"
+                height="400"></canvas>
+    {% elif group_id is not null %}
+        <canvas id="visits-chart"
+                data-url="{% url 'analytics:visits' %}?group_id={{ group_id }}"
+                width="400"
+                height="400"></canvas>
+    {% else %}
+        <canvas id="visits-chart"
+                data-url="{% url 'analytics:visits' %}"
+                width="400"
+                height="400"></canvas>
+    {% endif %}
+</div>
+<div class="columns pt-5">
+    <div class="column is-one-third is-half-tablet">
+        {% if user_id is not null %}
+            <div class="bar-data-wrapper analytics"
+                 data-url="{% url 'analytics:browsers' %}?user_id={{ user_id }}"
+                 data-callback="browser">
+            </div>
+        {% elif group_id is not null %}
+            <div class="bar-data-wrapper analytics"
+                 data-url="{% url 'analytics:browsers' %}?group_id={{ group_id }}"
+                 data-callback="browser">
+            </div>
+        {% else %}
+            <div class="bar-data-wrapper analytics"
+                 data-url="{% url 'analytics:browsers' %}"
+                 data-callback="browser"></div>
+        {% endif %}
+    </div>
+    <div class="column is-one-third is-half-tablet">
+        {% if user_id is not null %}
+            <div class="bar-data-wrapper analytics"
+                 data-url="{% url 'analytics:os' %}?user_id={{ user_id }}"
+                 data-callback="os">
+            </div>
+        {% elif group_id is not null %}
+            <div class="bar-data-wrapper analytics"
+                 data-url="{% url 'analytics:os' %}?group_id={{ group_id }}"
+                 data-callback="os">
+            </div>
+        {% else %}
+            <div class="bar-data-wrapper analytics"
+                 data-url="{% url 'analytics:os' %}"
+                 data-callback="os"></div>
+        {% endif %}
+    </div>
+    <div class="column is-one-third is-half-tablet">
+        {% if user_id is not null %}
+            <div class="bar-data-wrapper analytics"
+                 data-url="{% url 'analytics:resolution' %}?user_id={{ user_id }}"></div>
+        {% elif group_id is not null %}
+            <div class="bar-data-wrapper analytics"
+                 data-url="{% url 'analytics:resolution' %}?group_id={{ group_id }}"></div>
+        {% else %}
+            <div class="bar-data-wrapper analytics"
+                 data-url="{% url 'analytics:resolution' %}">
+            </div>
+        {% endif %}
+    </div>
+</div>
+<div class="columns">
+    <div class="column is-one-third is-half-tablet">
+        {% if group_id is not null %}
+            <div class="bar-data-wrapper analytics"
+                 data-url="{% url 'analytics:users' %}?group_id={{ group_id }}">
+            </div>
+        {% elif user_id is null %}
+            <div class="bar-data-wrapper analytics"
+                 data-url="{% url 'analytics:users' %}">
+            </div>
+        {% endif %}
+    </div>
+    <div class="column is-one-third is-half-tablet">
+        {% if user_id is not null %}
+            <div class="bar-data-wrapper analytics"
+                 data-url="{% url 'analytics:load_time' %}?user_id={{ user_id }}">
+            </div>
+        {% elif group_id is not null %}
+            <div class="bar-data-wrapper analytics"
+                 data-url="{% url 'analytics:load_time' %}?group_id={{ group_id }}">
+            </div>
+        {% else %}
+            <div class="bar-data-wrapper analytics"
+                 data-url="{% url 'analytics:load_time' %}">
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% if user_id is not null %}
+    <div data-ajax="yes"
+         class="analytics no-loader"
+         data-page="0"
+         data-url="{% url 'analytics:trace' %}?user_id={{ user_id }}">
+    </div>
+{% elif group_id is not null %}
+    <div data-ajax="yes"
+         class="analytics no-loader"
+         data-page="0"
+         data-url="{% url 'analytics:trace' %}?group_id={{ group_id }}">
+    </div>
+{% else %}
+    <div data-ajax="yes"
+         class="analytics no-loader"
+         data-page="0"
+         data-url="{% url 'analytics:trace' %}">
+    </div>
+{% endif %}
+{% if user_id is not null %}
+    <div data-ajax="yes"
+         class="analytics no-loader"
+         data-page="0"
+         data-url="{% url 'analytics:error' %}?user_id={{ user_id }}">
+    </div>
+{% elif group_id is not null %}
+    <div data-ajax="yes"
+         class="analytics no-loader"
+         data-page="0"
+         data-url="{% url 'analytics:error' %}?group_id={{ group_id }}">
+    </div>
+{% else %}
+    <div data-ajax="yes"
+         class="analytics no-loader"
+         data-page="0"
+         data-url="{% url 'analytics:error' %}">
+    </div>
+{% endif %}

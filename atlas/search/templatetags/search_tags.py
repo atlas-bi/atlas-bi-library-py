@@ -1,15 +1,15 @@
-"""Custom template tags to render dates."""
+"""Custom template tags for search."""
 import copy
+from typing import Any, Dict
 from urllib.parse import urlencode
 
 from django import template
-from RelativeToNow import relative_to_now
 
 register = template.Library()
 
 
 @register.filter(name="friendly_name")
-def friendly_name(value):
+def friendly_name(value: str) -> str:
     """Convert filter name to friendly name.
 
     :param value: input date
@@ -27,48 +27,49 @@ def friendly_name(value):
 
 
 @register.simple_tag(takes_context=True)
-def facet_url(context, facet, value):
+def facet_url(context: Dict[Any, Any], facet: str, value: str) -> str:
     """Convert filter name to friendly name.
 
     :param value: input date
     :returns: string
     """
     return (
-        context.request.path
+        context.request.path  # type: ignore[attr-defined]
         + "?"
-        + urlencode(set_parameter(context.request.GET, {facet: value}))
+        + urlencode(set_parameter(context.request.GET, {facet: value}))  # type: ignore[attr-defined]
     )
 
 
 @register.simple_tag(takes_context=True)
-def facet_checked(context, facet, value):
+def facet_checked(context: Dict[Any, Any], facet: str, value: str) -> bool:
     """Convert filter name to friendly name.
 
     :param value: input date
     :returns: string
     """
-    if context.request.GET.get(facet, None) == value:
+    if context.request.GET.get(facet, None) == value:  # type: ignore[attr-defined]
         return True
     return False
 
 
 @register.simple_tag(takes_context=True)
-def facet_has_checked(context, facet):
+def facet_has_checked(context: Dict[Any, Any], facet: str) -> bool:
     """Convert filter name to friendly name.
 
     :param value: input date
     :returns: string
     """
-    if context.request.GET.get(facet, None):
+    if context.request.GET.get(facet, None):  # type: ignore[attr-defined]
         return True
     return False
 
 
-def set_parameter(query, parameters):
+def set_parameter(query: Dict[Any, Any], parameters: Dict[Any, Any]) -> Dict[Any, Any]:
+    """Set a query parameter."""
     query_copy = copy.deepcopy(query)
 
     if "type" in parameters:
-        for key, value in query.items():
+        for key, _ in query.items():
             if (
                 key != "type"
                 and key != "query"
@@ -88,7 +89,6 @@ def set_parameter(query, parameters):
             query_copy.pop("page")
 
         for key, value in parameters.items():
-
             if key in query and value == query[key]:
                 query_copy.pop(key)
 
@@ -99,48 +99,3 @@ def set_parameter(query, parameters):
                     query_copy["type"] = "reports"
 
     return query_copy
-
-
-#             var qs = QueryHelpers.ParseQuery(helper.Request.QueryString.Value ?? "");
-#             // if we are changing type, we should remove all other filters.
-#             if (parameters.ContainsKey("type"))
-#                 foreach (var p in qs)
-#                     if (
-#                         p.Key != "type"
-#                         && p.Key != "Query"
-#                         && p.Key != "advanced"
-#                         && !(parameters["type"] == "reports" && p.Key == "report_type_text")
-#                     )
-#                         qs.Remove(p.Key);
-#                 foreach (var p in parameters)
-#                     // if we need an "uncheck" url, the pop the key.
-#                     if (qs.ContainsKey(p.Key) && qs[p.Key] == p.Value)
-#                         qs.Remove(p.Key);
-#                     else
-#                         qs[p.Key] = p.Value;
-#             else
-#             {
-#                 foreach (var p in parameters)
-#                 {
-#                     // remove change page from query
-#                     if (qs.ContainsKey("PageIndex"))
-#                     {
-#                         qs.Remove("PageIndex");
-#                     }
-#                     // if we need an "uncheck" url, the pop the key.
-#                     if (qs.ContainsKey(p.Key) && qs[p.Key] == p.Value)
-#                     {
-#                         qs.Remove(p.Key);
-#                     }
-#                     else
-#                     {
-#                         qs[p.Key] = p.Value;
-#                         if (p.Key == "report_type_text")
-#                         {
-#                             qs["type"] = "reports";
-#                         }
-#                     }
-#                 }
-#             }
-#             return helper.Request.Path + QueryString.Create(qs);
-#         }

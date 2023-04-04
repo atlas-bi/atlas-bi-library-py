@@ -1,0 +1,640 @@
+- model: index.financialimpact
+  pk: 1
+  fields:
+    name: Medium
+- model: index.financialimpact
+  pk: 2
+  fields:
+    name: High
+- model: index.financialimpact
+  pk: 3
+  fields:
+    name: Critical
+- model: index.fragility
+  pk: 1
+  fields:
+    name: High
+- model: index.fragility
+  pk: 2
+  fields:
+    name: Medium
+- model: index.fragility
+  pk: 3
+  fields:
+    name: Low
+- model: index.fragility
+  pk: 4
+  fields:
+    name: Very Low
+- model: index.fragilitytag
+  pk: 1
+  fields:
+    name: Facility Build
+- model: index.fragilitytag
+  pk: 2
+  fields:
+    name: Procedure Code (CPT)
+- model: index.fragilitytag
+  pk: 3
+  fields:
+    name: Procedure Code (ICD)
+- model: index.fragilitytag
+  pk: 4
+  fields:
+    name: Procedure Code (Proc ID)
+- model: index.fragilitytag
+  pk: 5
+  fields:
+    name: Diagnosis Code
+- model: index.fragilitytag
+  pk: 6
+  fields:
+    name: Regulatory Changes
+- model: index.fragilitytag
+  pk: 7
+  fields:
+    name: Payor Plan Name
+- model: index.fragilitytag
+  pk: 8
+  fields:
+    name: Agency Build
+- model: index.fragilitytag
+  pk: 9
+  fields:
+    name: Service Area
+- model: index.fragilitytag
+  pk: 10
+  fields:
+    name: SER Build
+- model: index.fragilitytag
+  pk: 11
+  fields:
+    name: Workqueues
+- model: index.fragilitytag
+  pk: 12
+  fields:
+    name: Billing Indicators
+- model: index.fragilitytag
+  pk: 13
+  fields:
+    name: Batches
+- model: index.fragilitytag
+  pk: 14
+  fields:
+    name: M-Code
+- model: index.fragilitytag
+  pk: 15
+  fields:
+    name: Patient Class
+- model: index.fragilitytag
+  pk: 16
+  fields:
+    name: Bad Debt
+- model: index.fragilitytag
+  pk: 7
+  fields:
+    name: New Application
+- model: index.fragilitytag
+  pk: 8
+  fields:
+    name: Rules Engine
+- model: index.fragilitytag
+  pk: 9
+  fields:
+    name: Registry
+- model: index.fragilitytag
+  pk: 10
+  fields:
+    name: SQL
+- model: index.fragilitytag
+  pk: 11
+  fields:
+    name: Free Text
+- model: index.fragilitytag
+  pk: 12
+  fields:
+    name: ClarityREF Dependencies
+- model: index.fragilitytag
+  pk: 13
+  fields:
+    name: External Application
+- model: index.fragilitytag
+  pk: 14
+  fields:
+    name: Flowsheets
+- model: index.fragilitytag
+  pk: 15
+  fields:
+    name: Primary Care Provider
+- model: index.fragilitytag
+  pk: 16
+  fields:
+    name: Order Sets
+- model: index.fragilitytag
+  pk: 17
+  fields:
+    name: Workflow Dependent
+- model: index.maintenancelogstatus
+  pk: 1
+  fields:
+    name: Approved - No Changes
+- model: index.maintenancelogstatus
+  pk: 2
+  fields:
+    name: Approved - With Changes
+- model: index.maintenancelogstatus
+  pk: 3
+  fields:
+    name: Recommend Retire
+- model: index.maintenanceschedule
+  pk: 1
+  fields:
+    name: Quarterly
+- model: index.maintenanceschedule
+  pk: 2
+  fields:
+    name: Twice a Year
+- model: index.maintenanceschedule
+  pk: 3
+  fields:
+    name: Yearly
+- model: index.maintenanceschedule
+  pk: 4
+  fields:
+    name: Every Two Years
+- model: index.maintenanceschedule
+  pk: 5
+  fields:
+    name: Audit Only
+- model: index.organizationalvalue
+  pk: 1
+  fields:
+    name: High
+- model: index.organizationalvalue
+  pk: 2
+  fields:
+    name: Medium-High
+- model: index.organizationalvalue
+  pk: 3
+  fields:
+    name: Medium
+- model: index.reporttypes
+  pk: 1
+  fields:
+    name: Application Report
+    code: HRX
+- model: index.reporttypes
+  pk: 2
+  fields:
+    name: Application Report Template
+    short_name: RW Template
+    code: HGR
+- model: index.reporttypes
+  pk: 3
+  fields:
+    name: Epic-Crystal Report
+    short_name: Crystal Report
+    code: HRX
+    visible: Y
+- model: index.reporttypes
+  pk: 4
+  fields:
+    name: Epic-Crystal Template
+    short_name: Crystal Template
+    code: HGR
+- model: index.reporttypes
+  pk: 5
+  fields:
+    name: Epic-WebI Report
+    short_name: RW Report
+    code: HRX
+- model: index.reporttypes
+  pk: 6
+  fields:
+    name: Epic-WebI Template
+    short_name: RW Template
+    code: HGR
+- model: index.reporttypes
+  pk: 7
+  fields:
+    name: External Crystal Template
+    short_name: RW Template
+    code: HGR
+- model: index.reporttypes
+  pk: 8
+  fields:
+    name: External WebI Template
+    short_name: RW Template
+    code: HGR
+- model: index.reporttypes
+  pk: 9
+  fields:
+    name: Other HGR Template
+    short_name: RW Template
+    code: HGR
+- model: index.reporttypes
+  pk: 10
+  fields:
+    name: Other HRX Report
+    short_name: RW Report
+    code: HRX
+- model: index.reporttypes
+  pk: 11
+  fields:
+    name: Other Radar Dashboard
+    code: IDM
+    short_name: Radar Dashboard
+- model: index.reporttypes
+  pk: 12
+  fields:
+    name: Personalization Radar Dashboard
+    code: IDM
+    short_name: Radar Dashboard
+- model: index.reporttypes
+  pk: 13
+  fields:
+    name: Personalization Radar Dashboard Component
+    code: IDB
+    short_name: Radar Component
+- model: index.reporttypes
+  pk: 14
+  fields:
+    name: Radar Dashboard Resource
+    short_name: Radar Resource
+    code: IDK
+- model: index.reporttypes
+  pk: 15
+  fields:
+    name: Radar Metric
+    code: IDN
+- model: index.reporttypes
+  pk: 16
+  fields:
+    name: Redirector Radar Dashboard
+    short_name: Radar Dashboard
+    code: IDM
+- model: index.reporttypes
+  pk: 17
+  fields:
+    name: Reporting Workbench Report
+    short_name: RW Report
+    code: HRX
+    visible: Y
+- model: index.reporttypes
+  pk: 18
+  fields:
+    name: Reporting Workbench Template
+    short_name: RW Template
+    code: HGR
+- model: index.reporttypes
+  pk: 19
+  fields:
+    name: SlicerDicer Filter
+    code: FDS
+- model: index.reporttypes
+  pk: 20
+  fields:
+    name: Source Radar Dashboard
+    short_name: Radar Dashboard
+    visible: Y
+    code: IDM
+- model: index.reporttypes
+  pk: 21
+  fields:
+    name: Source Radar Dashboard Component
+    short_name: Radar Component
+    visible: Y
+    code: IDB
+- model: index.reporttypes
+  pk: 22
+  fields:
+    name: SSRS Datasource
+- model: index.reporttypes
+  pk: 23
+  fields:
+    name: SSRS File
+    visible: Y
+- model: index.reporttypes
+  pk: 24
+  fields:
+    name: SSRS Folder
+- model: index.reporttypes
+  pk: 25
+  fields:
+    name: SSRS KPI
+- model: index.reporttypes
+  pk: 26
+  fields:
+    name: SSRS Linked Report
+- model: index.reporttypes
+  pk: 27
+  fields:
+    name: SSRS Mobile Report (folder)
+    short_name: SSRS Folder
+- model: index.reporttypes
+  pk: 28
+  fields:
+    name: SSRS Report
+    visible: Y
+- model: index.reporttypes
+  pk: 29
+  fields:
+    name: SSRS Shared Dataset
+- model: index.reporttypes
+  pk: 30
+  fields:
+    name: User Created Radar Dashboard
+    short_name: Radar Dashboard
+    code: IDM
+- model: index.reporttypes
+  pk: 31
+  fields:
+    name: SSRS Report Part
+- model: index.reporttypes
+  pk: 32
+  fields:
+    name: Other Radar Dashboard Component
+    short_name: Radar Component
+    code: IDB
+- model: index.reporttypes
+  pk: 33
+  fields:
+    name: User Created Radar Dashboard Component
+    short_name: Radar Component
+    code: IDB
+- model: index.reporttypes
+  pk: 34
+  fields:
+    name: Datalink Template
+    code: HGR
+- model: index.reporttypes
+  pk: 35
+  fields:
+    name: Datalink Report
+    short_name: RW Report
+    code: HRX
+- model: index.reporttypes
+  pk: 36
+  fields:
+    name: Tableau Workbook
+    visible: Y
+- model: index.reporttypes
+  pk: 37
+  fields:
+    name: SlicerDicer Model
+    visible: Y
+    code: FDM
+- model: index.reporttypes
+  pk: 38
+  fields:
+    name: Tableau Dashboard
+- model: index.reporttypes
+  pk: 39
+  fields:
+    name: Reporting Workbench Extension
+    short_name: RW Extension
+    code: LPP
+- model: index.reporttypes
+  pk: 40
+  fields:
+    name: Reporting Workbench Column
+    short_name: RW Column
+    code: PAF
+- model: index.reporttypes
+  pk: 41
+  fields:
+    name: SlicerDicer Session
+    code: HRX
+    visible: Y
+- model: index.reporttypes
+  pk: 42
+  fields:
+    name: SASS Cubes
+    short_name: SASS Cube
+    visible: Y
+- model: index.rolepermissions
+  pk: 1
+  fields:
+    name: Edit User Permissions
+- model: index.rolepermissions
+  pk: 2
+  fields:
+    name: Approve Terms
+- model: index.rolepermissions
+  pk: 3
+  fields:
+    name: Create New Terms
+- model: index.rolepermissions
+  pk: 4
+  fields:
+    name: Delete Approved Terms
+- model: index.rolepermissions
+  pk: 5
+  fields:
+    name: Delete Unapproved Terms
+- model: index.rolepermissions
+  pk: 6
+  fields:
+    name: Edit Approved Terms
+- model: index.rolepermissions
+  pk: 7
+  fields:
+    name: Edit Report Documentation
+- model: index.rolepermissions
+  pk: 8
+  fields:
+    name: Edit Unapproved Terms
+- model: index.rolepermissions
+  pk: 9
+  fields:
+    name: Link/Unlink Terms and ReportObjects
+- model: index.rolepermissions
+  pk: 10
+  fields:
+    name: View Hidden ReportObjects
+- model: index.rolepermissions
+  pk: 11
+  fields:
+    name: View Unapproved Terms
+- model: index.rolepermissions
+  pk: 12
+  fields:
+    name: Edit Role Permissions
+- model: index.rolepermissions
+  pk: 13
+  fields:
+    name: Search
+- model: index.rolepermissions
+  pk: 14
+  fields:
+    name: Create Initiative
+- model: index.rolepermissions
+  pk: 15
+  fields:
+    name: Delete Initiative
+- model: index.rolepermissions
+  pk: 16
+  fields:
+    name: Edit Initiative
+- model: index.rolepermissions
+  pk: 17
+  fields:
+    name: Create Collection
+- model: index.rolepermissions
+  pk: 18
+  fields:
+    name: Delete Collection
+- model: index.rolepermissions
+  pk: 19
+  fields:
+    name: Edit Collection
+- model: index.rolepermissions
+  pk: 20
+  fields:
+    name: Create Parameters
+- model: index.rolepermissions
+  pk: 21
+  fields:
+    name: Delete Parameters
+- model: index.rolepermissions
+  pk: 22
+  fields:
+    name: Edit Report Purge Option
+- model: index.rolepermissions
+  pk: 23
+  fields:
+    name: View Site Analytics
+- model: index.rolepermissions
+  pk: 24
+  fields:
+    name: View Other User
+- model: index.rolepermissions
+  pk: 25
+  fields:
+    name: Open In Editor
+- model: index.rolepermissions
+  pk: 26
+  fields:
+    name: View Report Profiles
+- model: index.rolepermissions
+  pk: 27
+  fields:
+    name: Search For Other User
+- model: index.rolepermissions
+  pk: 28
+  fields:
+    name: Edit Other Users
+- model: index.rolepermissions
+  pk: 29
+  fields:
+    name: Edit Report Hidden Option
+- model: index.rolepermissions
+  pk: 30
+  fields:
+    name: Can Change Roles
+- model: index.rolepermissions
+  pk: 31
+  fields:
+    name: Manage Global Site Setting
+
+- model: index.rolepermissions
+  pk: 32
+  fields:
+    name: Manage Global Site Setting
+- model: index.rolepermissions
+  pk: 33
+  fields:
+    name: Show Advanced Search
+- model: index.rolepermissions
+  pk: 34
+  fields:
+    name: View Groups
+- model: index.rolepermissions
+  pk: 35
+  fields:
+    name: Edit Group Permissions
+- model: index.rolepermissions
+  pk: 36
+  fields:
+    name: Manage ETL
+- model: index.userroles
+  pk: 1
+  fields:
+    name: Administrator
+- model: index.userroles
+  pk: 2
+  fields:
+    name: User
+- model: index.userroles
+  pk: 3
+  fields:
+    name: Director
+- model: index.rolepermissionlinks
+  pk: 1
+  fields:
+    role_id: 2
+    permission_id: 11
+- model: index.rolepermissionlinks
+  pk: 2
+  fields:
+    role_id: 2
+    permission_id: 13
+- model: index.rolepermissionlinks
+  pk: 3
+  fields:
+    role_id: 2
+    permission_id: 25
+- model: index.rolepermissionlinks
+  pk: 4
+  fields:
+    role_id: 2
+    permission_id: 26
+
+- model: index.rolepermissionlinks
+  pk: 5
+  fields:
+    role_id: 2
+    permission_id: 28
+
+- model: index.rolepermissionlinks
+  pk: 6
+  fields:
+    role_id: 2
+    permission_id: 29
+- model: index.rolepermissionlinks
+  pk: 7
+  fields:
+    role_id: 2
+    permission_id: 35
+- model: index.runfrequency
+  pk: 1
+  fields:
+    name: Multiple Times Per Day
+- model: index.runfrequency
+  pk: 2
+  fields:
+    name: Daily
+- model: index.runfrequency
+  pk: 3
+  fields:
+    name: Weekly
+- model: index.runfrequency
+  pk: 4
+  fields:
+    name: Monthly
+- model: index.runfrequency
+  pk: 5
+  fields:
+    name: Yearly
+- model: index.strategicimportance
+  pk: 1
+  fields:
+    name: Medium
+- model: index.strategicimportance
+  pk: 2
+  fields:
+    name: High
+- model: index.strategicimportance
+  pk: 3
+  fields:
+    name: Critical

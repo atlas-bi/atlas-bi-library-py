@@ -6,7 +6,7 @@ const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const commonjs = require('@rollup/plugin-commonjs');
 const { babel } = require('@rollup/plugin-babel');
 const json = require('@rollup/plugin-json');
-
+var addsrc = require('gulp-add-src');
 const swc = require('gulp-swc');
 
 const swcOptions = {
@@ -116,10 +116,10 @@ gulp.task('js:analytics', function () {
   return (
     gulp
       .src(['atlas/static/js/analytics.js'])
-      // .pipe(rollup(rollupConfig))
+      .pipe(rollup(rollupConfig))
       .pipe(concat('analytics.min.js'))
       // .pipe(uglify(uglifyConfig))
-      .pipe(swc(swcOptions))
+      // .pipe(swc(swcOptions))
       .pipe(gulp.dest('atlas/static/js/'))
   );
 });
@@ -149,15 +149,12 @@ gulp.task('js:userSettings', function () {
 });
 
 gulp.task('js:tracker', function () {
-  return (
-    gulp
-      .src(['atlas/static/js/tracker.js', 'node_modules/jsnlog/jsnlog.js'])
-      // .pipe(rollup(rollupConfig))
-      .pipe(concat('alive.min.js'))
-      // .pipe(uglify(uglifyConfig))
-      .pipe(swc(swcOptions))
-      .pipe(gulp.dest('atlas/static/js/'))
-  );
+  return gulp
+    .src(['atlas/static/js/tracker.js'])
+    .pipe(rollup(rollupConfig))
+    .pipe(addsrc('node_modules/jsnlog/jsnlog.js'))
+    .pipe(concat('alive.min.js'))
+    .pipe(gulp.dest('atlas/static/js/'));
 });
 
 gulp.task('js:highlighter', () => {

@@ -132,7 +132,8 @@
                 <div class="modal-content modal-image">
                     <p class="image">
                         <picture>
-                            <source srcset="{{ report.imgs.first.get_absolute_url }}?size=1200x1200&type=webp 800w, /{{ report.imgs.first.get_absolute_url }}?size=2000x2000&type=webp 1200w"
+                            <source srcset="{{ report.imgs.first.get_absolute_url }}?size=1200x1200&type=webp 800w,
+                                            /{{ report.imgs.first.get_absolute_url }}?size=2000x2000&type=webp 1200w"
                                     type="image/webp"
                                     loading="lazy"
                                     sizes="100vw"/>

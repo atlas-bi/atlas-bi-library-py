@@ -107,7 +107,11 @@
                         <hr class="dropdown-divider" />
                         <a title="your settings"
                            class="navbar-item"
-                           href="{{ request.user.get_absolute_url }}/settings">Settings</a>
+                           href="{% url "user:settings" %}">Settings</a>
+                        {% if settings.ENABLE_LOGOUT %}
+                            <hr class="dropdown-divider" />
+                            <a title="logout" class="navbar-item" href="{% url 'logout' %}">Logout</a>
+                        {% endif %}
                     </div>
                 </div>
                 {% if user.is_superuser %}

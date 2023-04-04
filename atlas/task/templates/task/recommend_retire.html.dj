@@ -1,0 +1,19 @@
+{% load markdown %}
+
+<div>
+    <span class="has-text-grey">Reports with red outline have not been reviewed in the last 6 months.</span>
+    {% if reports.count == 0 %}
+        <p>
+            <br />
+            No reports to show.
+        </p>
+    {% endif %}
+    {% for log in reports %}
+        <div>
+            <a title="open report"
+               href="{{ log.report_doc.report.get_absolute_url }}">{{ log.report_doc.report }}</a>
+            <span class="has-text-grey">· Recommended by {{ log.maintainer }} on {{ log.maintained_at }}</span>
+            {% if log.comments %}<div class="markdown">{{ log.comments|markdown }}</div>{% endif %}
+        </div>
+    {% endfor %}
+</div>

@@ -2,6 +2,7 @@ node_modules/*
 atlas/static/css/*.css
 atlas/static/lib/*
 solr/*
+solr
 atlas/static/font/rasa/*
 atlas/static/font/inter/*
 atlas/static/font/source-code-pro/*

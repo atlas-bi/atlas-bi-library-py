@@ -1,11 +1,11 @@
 """Atlas Initiative views."""
-# pylint: disable=C0116,C0115,W0613,W0212,R0201
+# pylint: disable=C0116,C0115,W0613,W0212
 
-from typing import List
+from typing import Any, Dict, List, Tuple
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, reverse
-from django.urls import resolve
 from django.views.generic import (
     DeleteView,
     DetailView,
@@ -23,13 +23,13 @@ class InitiativeList(LoginRequiredMixin, ListView):
         Initiatives.objects.prefetch_related("collections")
         .prefetch_related("starred")
         .all()
-        .order_by("-_modified_at")
+        .order_by("-modified_at")
     )
     context_object_name = "initiatives"
     template_name = "initiative/all.html.dj"
     extra_context = {"title": "Initiatives"}
 
-    def get(self, request, **kwargs):
+    def get(self, request: HttpRequest, **kwargs: Dict[Any, Any]) -> HttpResponse:
         # maintain compatibility with .net urls: initiative?id=1
         if request.GET.get("id"):
             return redirect("initiative:item", pk=request.GET.get("id"))
@@ -48,7 +48,7 @@ class InitiativeDetails(LoginRequiredMixin, DetailView):
         "strategic_importance",
     ).prefetch_related("collections", "collections__starred")
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
         context = super().get_context_data(**kwargs)
 
         context["title"] = self.object
@@ -71,13 +71,15 @@ class InitiativeEdit(
     ).prefetch_related("collections", "collections__starred")
     fields: List[str] = []
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Dict[Any, Any]) -> Dict[Any, Any]:
         context = super().get_context_data(**kwargs)
         context["title"] = f"Editing {self.object}"
 
         return context
 
-    def post(self, request, *args, **kwargs):
+    def post(
+        self, request: HttpRequest, *args: Tuple[Any], **kwargs: Dict[Any, Any]
+    ) -> HttpResponse:
         initiative = Initiatives.objects.get(initiative_id=self.kwargs["pk"])
 
         initiative.name = request.POST.get("name", "")
@@ -106,7 +108,9 @@ class InitiativeNew(LoginRequiredMixin, PermissionsCheckMixin, TemplateView):
     template_name = "initiative/new.html.dj"
     extra_context = {"title": "New Initiative"}
 
-    def post(self, request, *args, **kwargs):
+    def post(
+        self, request: HttpRequest, *args: Tuple[Any], **kwargs: Dict[Any, Any]
+    ) -> HttpResponse:
         initiative = Initiatives(
             name=request.POST.get("name", ""),
             description=request.POST.get("description", ""),
@@ -125,7 +129,7 @@ class InitiativeNew(LoginRequiredMixin, PermissionsCheckMixin, TemplateView):
             collection_id__in=request.POST.getlist("linked_data_collections")
         ).update(initiative=initiative)
 
-        return redirect(initiative.get_absolute_url() + "?success=Changes saved.")
+        return redirect(initiative.get_absolute_url() + "?success=Changes saved.")  # type: ignore[no-untyped-call]
 
 
 class InitiativeDelete(LoginRequiredMixin, PermissionsCheckMixin, DeleteView):
@@ -133,16 +137,16 @@ class InitiativeDelete(LoginRequiredMixin, PermissionsCheckMixin, DeleteView):
     model = Initiatives
     template_name = "initiative/new.html.dj"
 
-    def get_success_url(self):
+    def get_success_url(self) -> str:
         return reverse("initiative:list") + "?success=Initiative successfully deleted."
 
-    def get(self, *args, **kwargs):
+    def get(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
         return redirect(
-            resolve("initiative:list")
+            reverse("initiative:list")
             + "?error=You are not authorized to access that page."
         )
 
-    def post(self, *args, **kwargs):
+    def post(self, *args: Tuple[Any], **kwargs: Dict[Any, Any]) -> HttpResponse:
         """Delete a initiative.
 
         1. Updated linked collections to None

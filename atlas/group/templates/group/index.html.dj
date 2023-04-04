@@ -2,18 +2,12 @@
 
 {% load dates %}
 
-{% comment %}
-@{
-    ViewData["Title"] = @Model.Group.Name;
-    ViewBag.GroupId = @Model.Group.Id;
-    if(ViewBag.DefaultReportTypes.Count > 0)
-    {
-        foreach (var item in ViewBag.DefaultReportTypes){
-            ViewBag.DefaultFilters += "&reportType=" + @item;
-        }
-    }
-}
-{% endcomment %}
+{% load helpers %}
+{% load static %}
+
+{% block js %}
+    <script src="{% static '/js/analytics.min.js' %}" defer="defer" async="async"></script>
+{% endblock js %}
 
 {% block body %}
     <h1 class="title is-1">{{ group }}</h1>
@@ -101,7 +95,9 @@
                     </table>
                 </div>
             {% else %}
-                <p>No Users With This Group</p>
+                <p>
+                    No Users With This Group
+                </p>
             {% endif %}
         </div>
         <div class="tab-dta" id="reports">
@@ -161,27 +157,22 @@
                 </p>
             {% endif %}
         </div>
-        {% comment %}
-    @{
-        ViewBag.ProfileType = "group";
-        ViewBag.ProfileId = ViewBag.GroupId;
-    }
-        {% endcomment %}
         <div class="tab-dta" id="activity">
-            <partial name="Profile/Partials/_FullProfile" />
+            {% with profile_id=group.group_id profile_type="group" %}
+                {% include "sketch/profile.html.dj" %}
+            {% endwith %}
         </div>
         <div class="tab-dta" id="run-list">
             <div data-ajax="yes"
-                 data-url="{% url "sketch:index" %}"
-                 data-parameters="handler=RunList&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters">
+                 data-url="{% url "sketch:run_list" type="group" pk=group.group_id %}"
+                 data-parameters="{{ visible_reports }}">
             </div>
         </div>
         {% if "View Site Analytics" in perms %}
             <div class="tab-dta" id="analytics">
-                @section js {
-                <script src="/js/analytics.min.js" defer="defer" async="async"></script>
-                }
-                <partial name="Analytics/Partials/_Index" />
+                {% with group.group_id as group_id %}
+                    {% include "analytics/base.html.dj" %}
+                {% endwith %}
             </div>
         {% endif %}
     </section>
