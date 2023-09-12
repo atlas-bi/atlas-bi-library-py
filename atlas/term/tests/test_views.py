@@ -26,7 +26,6 @@ from atlas.testutils import AtlasTestCase
 
 
 class TermTestCase(AtlasTestCase):
-
     # pre-login tests.
     # verify that all pages redirect to login screen.
 

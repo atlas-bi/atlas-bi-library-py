@@ -17,7 +17,6 @@ from PIL import Image
 
 @login_required
 def index(request, pk):
-
     report_id = pk
 
     report = (
@@ -205,7 +204,6 @@ def maint_status(request, pk):
 
 @login_required
 def image(request, report_id, pk=None):
-
     image_format = "webp"
 
     # Browsers (IE11) that do not support webp
@@ -235,7 +233,6 @@ def image(request, report_id, pk=None):
         pk = "report_placeholder"
 
     if re.match(r"^\d+x\d+$", size):
-
         width, height = (int(x) for x in size.split("x"))
 
         # image must be a perfect ratio, without distortion.
