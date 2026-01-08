@@ -1,280 +1,185 @@
-# Turbo - Django & Next.js boilerplate <!-- omit from toc -->
+# Atlas BI Libarary
 
-Turbo is a simple bootstrap template for Django and Next.js, combining both frameworks under one monorepository, including best practices.
 
-## Features <!-- omit from toc -->
+## What is Atlas Py?
 
-- **Microsites**: supports several front ends connected to API backend
-- **API typesafety**: exported types from backend stored in shared front end package
-- **Server actions**: handling form submissions in server part of Next project
-- **Tailwind CSS**: built-in support for all front end packages and sites
-- **Docker Compose**: start both front end and backend by running `docker compose up`
-- **Auth system**: incorporated user authentication based on JWT tokens
-- **Profile management**: update profile information from the front end
-- **Registrations**: creation of new user accounts (activation not included)
-- **Admin theme**: Unfold admin theme with user & group management
-- **Custom user model**: extended default Django user model
-- **Visual Studio Code**: project already constains VS Code containers and tasks
+    This project was a working proof of concept for a Python verion of Atlas Library.
+    The future of Atlas Libary will most likely use concepts from this repo but with a different frontend.
+    Until that project happens this repo will be archived.
 
-## Table of contents <!-- omit from toc -->
+This is a Python version of the [Atlas BI Library](https://github.com/atlas-bi/atlas-bi-library) DotNet webapp. It is currently under development.
 
-- [Quickstart](#quickstart)
-  - [Environment files configuration](#environment-files-configuration)
-  - [Running docker compose](#running-docker-compose)
-- [Included dependencies](#included-dependencies)
-  - [Backend dependencies](#backend-dependencies)
-  - [Front end dependencies](#front-end-dependencies)
-- [Front end project structure](#front-end-project-structure)
-  - [Adding microsite to docker-compose.yaml](#adding-microsite-to-docker-composeyaml)
-- [Authentication](#authentication)
-  - [Configuring env variables](#configuring-env-variables)
-  - [User accounts on the backend](#user-accounts-on-the-backend)
-  - [Authenticated paths on frontend](#authenticated-paths-on-frontend)
-- [API calls to backend](#api-calls-to-backend)
-  - [API Client](#api-client)
-  - [Updating OpenAPI schema](#updating-openapi-schema)
-  - [Swagger](#swagger)
-  - [Client side requests](#client-side-requests)
-- [Test suite](#test-suite)
-- [Developing in VS Code](#developing-in-vs-code)
+In our love of open source we felt the need for a version of the Atlas BI Library webapp that used completely open source tools. This version of the app will effectively mirror the DotNet version in functionality and appearance, but will be installed on Ubuntu server.
 
-## Quickstart
+### Advantages of Atlas Py
 
-To start using Turbo, it is needed to clone the repository to your local machine and then run `docker compose`, which will take care about the installation process. The only prerequisite for starting Turbo template is to have `docker compose` installed and preconfiguring files with environment variables.
+| Feature | DotNet | Python | Discussion |
+|-------|-------|------|---------|
+| Authentication | IIS Windows | Saml2 | Saml2 is superior to IISWA in a few areas - primary, it allows users to login on generic workstations, through IOS devices, and it allows 2 factor.
+| Speed | Fast | Very Fast | Django ORM database queries outperform DotNet Linq queries, improving site performance. We are also able to do complex image optimization on linux to improve image load times.
+| Database | Sql Server | Sql Server,  Postgres | Multiple databases are supported.
+| Testing | Difficult | Simple | Code testing is much simpler in Python and we anticipate having a full code base and UI test suite.
+| Install | Manual | Semi-Automated | The DotNet version requires quite a bit of manual server setup and work during install, while the python version uses apt installers which configure the server and install or update in a single command.
+
+
+[![codecov](https://codecov.io/gh/atlas-bi/atlas-bi-library-py/branch/master/graph/badge.svg?token=2JfEYNRwFl)](https://codecov.io/gh/atlas-bi/atlas-bi-library-py) [![codacy](https://app.codacy.com/project/badge/Grade/74d31f9d9f1840818bc68bb0d26a9dda)](https://www.codacy.com/gh/atlas-bi/atlas-bi-library-py/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=atlas-bi/atlas-bi-library-py&amp;utm_campaign=Badge_Grade) [![CodeQL](https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/codeql.yml/badge.svg)](https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/codeql.yml) [![Maintainability](https://api.codeclimate.com/v1/badges/5b76a0292bbe56043511/maintainability)](https://codeclimate.com/github/atlas-bi/atlas-bi-library-py/maintainability) [![quality](https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/quality.yml/badge.svg)](https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/quality.yml) [![demo](https://github.com/atlas-bi/atlas-bi-library-py/actions/workflows/demo.yml/badge.svg)](https://atlas-py.herokuapp.com) [![browserstack](https://automate.browserstack.com/badge.svg?badge_key=SWVldTlYclVWZEJ5R0NQUFRTMlltSTlNQ2JRaEF1ek9NeWd1L0FjYWt1cz0tLUcyRUhJUGprRDVmTnlyUytOQmpkVWc9PQ==--017a6b444f1f4d88941b98cea65cbce32c651a58)](https://automate.browserstack.com/public-build/SWVldTlYclVWZEJ5R0NQUFRTMlltSTlNQ2JRaEF1ek9NeWd1L0FjYWt1cz0tLUcyRUhJUGprRDVmTnlyUytOQmpkVWc9PQ==--017a6b444f1f4d88941b98cea65cbce32c651a58)
+
+## Project Goals
+
+Take a look at the [github project](https://github.com/atlas-bi/atlas-bi-library-py/projects/1) to see a list of planned features.
+
+## Documentation
+
+See the [project documentation](https://atlas-bi.github.io/atlas-bi-library-py/)
+
+## How can I contribute?
+
+-   [Suggest a new feature or idea in our discussion board!](https://github.com/atlas-bi/atlas-bi-library-py/discussions)
+-   Try out the [daily build demo](https://demo.atlas.bi/). Please  [create an issue](https://github.com/atlas-bi/atlas-bi-library-py/issues) for any bugs you find!
+-   Contribute to the code!
+
+## Development
+
+This version of the app is built using python + django.
+
+- [Precommit](https://pre-commit.com) `pre-commit install` 
+- [Poetry](https://python-poetry.org)
+- [Pyenv](https://github.com/pyenv/pyenv) `pyenv local 3.6.2 3.7.0 3.8.0 3.9.0` 
+- [NodeJS](https://nodejs.dev)
+- Developing on windows is difficult, but can be done. [Git sdk64](https://github.com/git-for-windows/git-sdk-64) works well for installing and running these tools.
+
+There are a few settings files to run the app. The required settings have already been set in the existing files. Org specific settings can be added in `*_cust.py` files. They will be ignored in commits.
+
+If you need to override any of the default config, add your overrides to the `*_cust.py` files.
+
+The names should be:
+
+- `settings_cust.py` 
+- `dev_cust.py` 
+- `prod_cust.py` 
+- `test_cust.py` 
+
+As an example, if you want to use an existing Atlas sql server database, you can add a database config like this:
+
+```python
+# stop multiple queries for db version
+from sql_server.pyodbc.base import DatabaseWrapper
+DatabaseWrapper.sql_server_version = 2017
+
+DATABSES = "default": {
+    "ENGINE": "sql_server.pyodbc",
+    "NAME": "atlas",
+    "HOST": "server_name",
+    "USER": "datagov",
+    "PASSWORD": "12345",
+    "OPTIONS": {
+        "driver": "ODBC Driver 17 for SQL Server",
+        "extra_params": "MARS_Connection=Yes",
+    },
+    "schemas": ["app", "dbo"],
+},
+# note, sql server will only allow connections if app is the default schema for the user.
+```
+
+## Running the app
+
+Redis, Solr and a database should be up. See `solr/readme.md` for a guide to starting up a demo solr instance for development.
+
+In terminal 1, start webapp:
 
 ```bash
-git clone https://github.com/unfoldadmin/turbo.git
-cd turbo
+cd atlas && poetry run python manage.py runserver
 ```
 
-### Environment files configuration
-
-Before you can run `docker compose up`, you have to set up two files with environment variables. Both files are loaded via `docker compose` and variables are available within docker containers.
+In terminal 2, start celery (for ETL\'s):
 
 ```bash
-cp .env.backend.template .env.backend # set SECRET_KEY and DEBUG=1 for debug mode on
-cp .env.frontend.template .env.frontend # set NEXTAUTH_SECRET to a value "openssl rand -base64 32"
+DJANGO_SETTINGS_MODULE='atlas.settings.dev' poetry run celery -A atlas worker -l DEBUG
 ```
 
-For more advanced environment variables configuration for the front end, it is recommended to read official [Next.js documentation](https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables) about environment variables where it is possible to configure specific variables for each microsite.
-
-On the backend it is possible to use third party libraries for loading environment variables. In case that loading variables through `os.environ` is not fulfilling the requriements, we recommend using [django-environ](https://github.com/joke2k/django-environ) application.
-
-### Running docker compose
+In terminal 3, start celery beat (for scheduled ETL\'s):
 
 ```bash
-docker compose up
+DJANGO_SETTINGS_MODULE='atlas.settings.dev' poetry run celery -A atlas beat -l DEBUG --scheduler django_celery_beat.schedulers:DatabaseScheduler
 ```
 
-After successful installation, it will be possible to access both front end (http://localhost:3000) and backend (http://localhost:8000) part of the system from the browsers.
-
-**NOTE**: Don't forget to change database credentials in docker-compose.yaml and in .env.backend by configuring `DATABASE_PASSWORD`.
-
-## Included dependencies
-
-The general rule when it comes to dependencies is to have minimum of third party applications or plugins to avoid future problems updating the project and keep the maintenance of applications is minimal.
-
-### Backend dependencies
-
-For dependency management in Django application we are using `uv`. When starting the project through the `docker compose` command, it is checked for new dependencies as well. In the case they are not installed, docker will install them before running development server.
-
-- **[djangorestframework](https://github.com/encode/django-rest-framework)** - REST API support
-- **[djangorestframework-simplejwt](https://github.com/jazzband/djangorestframework-simplejwt)** - JWT auth for REST API
-- **[drf-spectacular](https://github.com/tfranzel/drf-spectacular)** - OpenAPI schema generator
-- **[django-unfold](https://github.com/unfoldadmin/django-unfold)** - Admin theme for Django admin panel
-
-Below, you can find a command to install new dependency into backend project.
+In terminal 4, start static file watcher
 
 ```bash
-docker compose exec api uv add djangorestframework
+npm run watch
 ```
 
-### Front end dependencies
-
-For the frontend project, it is bit more complicated to maintain front end dependencies than in backend part. Dependencies, can be split into two parts. First part are general dependencies available for all projects under packages and apps folders. The second part are dependencies, which are project specific.
-
-- **[next-auth](https://github.com/nextauthjs/next-auth)** - Next.js authentication
-- **[react-hook-form](https://github.com/react-hook-form/react-hook-form)** - Handling of React forms
-- **[tailwind-merge](https://github.com/dcastil/tailwind-merge)** - Tailwind CSS class names helper
-- **[zod](https://github.com/colinhacks/zod)** - Schema validation
-
-To install a global dependency for all packages and apps, use `-w` parameter. In case of development package, add `-D` argument to install it into development dependencies.
+## Building Static Content
 
 ```bash
-docker compose exec web pnpm add react-hook-form -w
+npm run build
+
+# or live
+npm run watch
 ```
 
-To install a dependency for specific app or package, use `--filter` to specify particular package.
+## Running tests
+
+Testing uses a local postgres server and redis server. The server names are `postgres` and `redis` to allow them to run as a service in the ci/cd pipelines. The best thing is to add a mapping in your local host file of `127.0.0.1 postgres` and `127.0.0.1 redis`.
+
+1.  Start postgres in a docker container. (You can do the same with redis, or, as in our case, install with homebrew.)
+
+    ```bash
+    docker run --name postgresql-container -p 5432:5432 -e POSTGRES_HOST_AUTH_METHOD=trust -d postgres
+    ```
+
+2.  Start solr
+
+See `/solr/readme.rst` for a guide.
+
+3.  Run code tests directly
+
+    ```bash
+    poetry run python manage.py test --no-input --pattern="test_views.py" --settings atlas.settings.test
+
+    # or with tox
+    # run with py36, 37, 38 or 39.
+    tox -e clean,py39,cov
+    ```
+
+4.  Run browser tests
+
+    ```bash
+    BROWSERSTACK_USERNAME=<browserstack username> \
+    BROWSERSTACK_ACCESS_KEY=<browserstack accesskey> \
+    BROWSERSTACK_BUILD_NAME="local" \
+    BROWSERSTACK_PROJECT_NAME="Atlas-Py" \
+    poetry run python manage.py test --no-input --pattern="test_browser.py" --settings atlas.settings.test_browser
+
+    # or with tox
+    tox -e clean,browsertest,cov -r
+    ```
+
+## Database
+
+Integrates with db-first sqlserver, or managed postres db.
+
+## Caching
+
+Using python-memcached
+
+to create cache:
 
 ```bash
-docker compose exec web pnpm --filter web add react-hook-form
+python manage.py createcachetable
 ```
 
-## Front end project structure
+## Release Process
 
-Project structure on the front end, it is quite different from the directory hierarchy in the backend. Turbo counts with an option that front end have multiple front ends available on various domains or ports.
-
-```text
-frontend
-| - apps       // available sites
-|   - web      // available next.js project
-| - packages   // shared packages between sites
-|   - types    // exported types from backend - api
-|   - ui       // general ui components
-```
-
-The general rule here is, if you want to have some shared code, create new package under packages/ folder. After adding new package and making it available for your website, it is needed to install the new package into website project by running a command below.
+create a new tag
 
 ```bash
-docker compose exec web pnpm --filter web add @frontend/ui
+git tag x.x.x
+git push origin --tags
 ```
 
-### Adding microsite to docker-compose.yaml
+This will trigger a workflow to build a release.
 
-If you want to have new website facing customers, create new project under apps/ directory. Keep in mind that `docker-compose.yaml` file must be adjusted to start a new project with appropriate new port.
+Edit release to trigger build of .deb installer.
 
-```yaml
-new_microsite:
-  command: bash -c "pnpm install -r && pnpm --filter new_microsite dev"
-  build:
-    context: frontend # Dockerfile can be same
-  volumes:
-    - ./frontend:/app
-  expose:
-    - "3001" # different port
-  ports:
-    - "3001:3001" # different port
-  env_file:
-    - .env.frontend
-  depends_on:
-    - api
-```
-
-## Authentication
-
-For the authentication, Turbo uses **django-simplejwt** and **next-auth** package to provide simple REST based JWT authentication. On the backend, there is no configuraton related to django-simplejwt so everything is set to default values.
-
-On the front end, next-auth is used to provide credentials authentication. The most important file on the front end related to authentication is `frontend/web/lib/auth.ts` which is containing whole business logic behind authentication.
-
-### Configuring env variables
-
-Before starting using authentication, it is crucial to configure environment variable `NEXTAUTH_SECRET` in .env.frontend file. You can set the value to the output of the command below.
-
-```bash
-openssl rand -base64 32
-```
-
-### User accounts on the backend
-
-There are two ways how to create new user account in the backend. First option is to run managed command responsible for creating superuser. It is more or less required, if you want to have an access to the Django admin. After running the command below, it will be possible to log in on the front end part of the application.
-
-```bash
-docker compose exec api uv run -- python manage.py createsuperuser
-```
-
-The second option how to create new user account is to register it on the front end. Turbo provides simple registration form. After account registration, it will be not possible to log in because account is inactive. Superuser needs to access Django admin and activate an account. This is a default behavior provided by Turbo, implementation of special way of account activation is currently out the scope of the project.
-
-### Authenticated paths on frontend
-
-To ensure path is only for authenticated users, it is possible to use `getServerSession` to check the status of user.
-
-This function accepts an argument with authentication options, which can be imported from `@/lib/auth` and contains credentials authentication business logic.
-
-```tsx
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import { authOptions } from "@/lib/auth";
-
-const SomePageForAuthenticatedUsers = async () => {
-  const session = await getServerSession(authOptions);
-
-  if (session === null) {
-    return redirect("/");
-  }
-
-  return <>content</>;
-};
-```
-
-To require authenticated user account on multiple pages, similar business logic can be applied in `layouts.tsx`.
-
-```tsx
-import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-
-const AuthenticatedLayout = async ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
-  const session = await getServerSession(authOptions);
-
-  if (session === null) {
-    return redirect("/");
-  }
-
-  return <>{children}</>;
-};
-
-export default AuthenticatedLayout;
-```
-
-## API calls to backend
-
-Currently Turbo implements Next.js server actions in folder `frontend/apps/web/actions/` responsible for communication with the backend. When the server action is hit from the client, it fetches required data from Django API backend.
-
-### API Client
-
-The query between server action and Django backend is handled by using an API client generated by `openapi-typescript-codegen` package. In Turbo, there is a function `getApiClient` available in `frontend/apps/web/lib/api.ts` which already implements default options and authentication tokens.
-
-### Updating OpenAPI schema
-
-After changes on the backend, for example adding new fields into serializers, it is required to update typescript schema on the frontend. The schema can be updated by running command below. In VS Code, there is prepared task which will update definition.
-
-```bash
-docker compose exec web pnpm openapi:generate
-```
-
-### Swagger
-
-By default, Turbo includes Swagger for API schema which is available here `http://localhost:8000/api/schema/swagger-ui/`. Swagger can be disabled by editing `urls.py` and removing `SpectacularSwaggerView`.
-
-### Client side requests
-
-At the moment, Turbo does not contain any examples of client side requests towards the backend. All the requests are handled by server actions. For client side requests, it is recommended to use [react-query](https://github.com/TanStack/query).
-
-## Test suite
-
-Project contains test suite for backend part. For testing it was used library called [pytest](https://docs.pytest.org/en/latest/) along with some additinal libraries extending functionality of pytest:
-
-- [pytest-django](https://pytest-django.readthedocs.io/en/latest/) - for testing django applications
-- [pytest-factoryboy](https://pytest-factoryboy.readthedocs.io/en/latest/) - for creating test data
-
-All these libraries mentioned above are already preconfigured in `backend/api/tests` directory.
-
-- `conftest.py` - for configuring pytest
-- `factories.py` - for generating reusable test objects using factory_boy, which creates model instances with default values that can be customized as needed
-- `fixtures.py` - for creating pytest fixtures that provide test data or resources that can be shared and reused across multiple tests
-
-To run tests, use the command below which will collect all the tests available in backend/api/tests folder:
-
-```bash
-docker compose exec api uv run -- pytest .
-```
-
-Tu run tests available only in one specific file run:
-
-```bash
-docker compose exec api uv run -- pytest api/tests/test_api.py
-```
-
-To run one specific test, use the command below:
-
-```bash
-docker compose exec api uv run -- pytest api/tests/test_api.py -k "test_api_users_me_authorized"
-```
-
-## Developing in VS Code
-
-The project contains configuration files for devcontainers so it is possible to directly work inside the container within VS Code. When the project opens in the VS Code the popup will appear to reopen the project in container. An action **Dev Containers: Reopen in Container** is available as well. Click on the reopen button and select the container which you want to work on. When you want to switch from the frontend to the backend project run **Dev Containers: Switch container** action. In case you are done and you want to work in the parent folder run **Dev Containers: Reopen Folder Locally** action
+from master branch like from package.json and other places
