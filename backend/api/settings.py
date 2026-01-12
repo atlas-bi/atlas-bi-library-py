@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "drf_spectacular",
     "api",
+    "atlas_index",
 ]
 
 ######################################################################
@@ -75,19 +76,62 @@ TEMPLATES = [
 ######################################################################
 # Database
 ######################################################################
-DATABASES = {
-    "default": {
+DB_MODE = environ.get("DB_MODE", "dual").strip().lower()
+DEFAULT_DB_VENDOR = environ.get("DEFAULT_DB_VENDOR", "postgres").strip().lower()
+
+
+def _postgres_db(prefix: str = "DATABASE_") -> dict:
+    return {
         "ENGINE": "django.db.backends.postgresql",
-        "USER": environ.get("DATABASE_USER", "postgres"),
-        "PASSWORD": environ.get("DATABASE_PASSWORD", "change-password"),
-        "NAME": environ.get("DATABASE_NAME", "db"),
-        "HOST": environ.get("DATABASE_HOST", "db"),
-        "PORT": "5432",
+        "USER": environ.get(f"{prefix}USER", "postgres"),
+        "PASSWORD": environ.get(f"{prefix}PASSWORD", "change-password"),
+        "NAME": environ.get(f"{prefix}NAME", "db"),
+        "HOST": environ.get(f"{prefix}HOST", "localhost"),
+        "PORT": environ.get(f"{prefix}PORT", "5432"),
         "TEST": {
-            "NAME": "test",
+            "NAME": environ.get(f"{prefix}TEST_NAME", "test"),
         },
     }
+
+
+def _sqlserver_db(prefix: str = "DATABASE_") -> dict:
+    driver = environ.get("SQLSERVER_DRIVER", "ODBC Driver 17 for SQL Server")
+    extra_params = environ.get("SQLSERVER_EXTRA_PARAMS", "MARS_Connection=Yes")
+    return {
+        "ENGINE": "mssql",
+        "NAME": environ.get(f"{prefix}NAME", "atlas"),
+        "HOST": environ.get(f"{prefix}HOST", "localhost"),
+        "USER": environ.get(f"{prefix}USER", "sa"),
+        "PASSWORD": environ.get(f"{prefix}PASSWORD", ""),
+        "PORT": environ.get(f"{prefix}PORT", "1433"),
+        "OPTIONS": {
+            "driver": driver,
+            "extra_params": extra_params,
+        },
+    }
+
+
+def _db_for(vendor: str, prefix: str = "DATABASE_") -> dict:
+    vendor = vendor.strip().lower()
+    if vendor in {"postgres", "postgresql", "psql"}:
+        return _postgres_db(prefix=prefix)
+    if vendor in {"mssql", "sqlserver", "sql_server"}:
+        return _sqlserver_db(prefix=prefix)
+    raise ValueError(
+        f"Unsupported DB vendor: {vendor!r}. Use postgres or mssql (sqlserver)."
+    )
+
+
+DATABASES = {
+    "default": _db_for(DEFAULT_DB_VENDOR, prefix="DATABASE_"),
 }
+
+DATABASE_ROUTERS: list[str] = []
+
+if DB_MODE == "dual":
+    DG_DB_VENDOR = environ.get("DG_DB_VENDOR", "mssql").strip().lower()
+    DATABASES["dg_db"] = _db_for(DG_DB_VENDOR, prefix="DG_DB_")
+    DATABASE_ROUTERS = ["api.db_routers.DgDbRouter"]
 
 ######################################################################
 # Authentication

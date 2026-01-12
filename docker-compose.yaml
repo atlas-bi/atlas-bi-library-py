@@ -2,6 +2,7 @@ version: "3.9"
 
 services:
   db:
+    profiles: ["postgres"]
     image: postgres:17
     expose:
       - "5432"
@@ -18,7 +19,7 @@ services:
       timeout: 2s
       retries: 10
   api:
-    command: bash -c "uv sync && uv run -- python manage.py migrate && uv run -- python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "uv sync && uv run -- python manage.py runserver 0.0.0.0:8000"
     build:
       context: backend
     expose:
@@ -30,13 +31,23 @@ services:
     environment:
       DEBUG: ${DEBUG}
       SECRET_KEY: ${SECRET_KEY}
+      DB_MODE: ${DB_MODE}
+      DEFAULT_DB_VENDOR: ${DEFAULT_DB_VENDOR}
       DATABASE_USER: ${DATABASE_USER}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
       DATABASE_NAME: ${DATABASE_NAME}
       DATABASE_HOST: ${DATABASE_HOST}
-    depends_on:
-      db:
-        condition: service_healthy
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_TEST_NAME: ${DATABASE_TEST_NAME}
+      SQLSERVER_DRIVER: ${SQLSERVER_DRIVER}
+      SQLSERVER_EXTRA_PARAMS: ${SQLSERVER_EXTRA_PARAMS}
+      DG_DB_VENDOR: ${DG_DB_VENDOR}
+      DG_DB_USER: ${DG_DB_USER}
+      DG_DB_PASSWORD: ${DG_DB_PASSWORD}
+      DG_DB_NAME: ${DG_DB_NAME}
+      DG_DB_HOST: ${DG_DB_HOST}
+      DG_DB_PORT: ${DG_DB_PORT}
+      DG_DB_APP_LABELS: ${DG_DB_APP_LABELS}
   web:
     command: bash -c "pnpm install -r && pnpm --filter web dev"
     build:
