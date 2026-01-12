@@ -6,4 +6,6 @@ RUN npm install -g pnpm
 
 WORKDIR /app
 
+COPY . .
+
 EXPOSE 3000

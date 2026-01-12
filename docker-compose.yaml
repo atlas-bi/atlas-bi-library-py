@@ -26,8 +26,6 @@ services:
       - "8000"
     ports:
       - "8000:8000"
-    volumes:
-      - ./backend:/app
     environment:
       DEBUG: ${DEBUG}
       SECRET_KEY: ${SECRET_KEY}
@@ -52,8 +50,7 @@ services:
     command: bash -c "pnpm install -r && pnpm --filter web dev"
     build:
       context: frontend
-    volumes:
-      - ./frontend:/app
+    working_dir: /app
     expose:
       - "3000"
     ports:
