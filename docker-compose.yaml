@@ -2,7 +2,6 @@ version: "3.9"
 
 services:
   db:
-    profiles: ["postgres"]
     image: postgres:17
     expose:
       - "5432"
@@ -22,6 +21,7 @@ services:
     command: bash -c "uv sync && uv run -- python manage.py runserver 0.0.0.0:8000"
     build:
       context: backend
+    working_dir: /app
     expose:
       - "8000"
     ports:
