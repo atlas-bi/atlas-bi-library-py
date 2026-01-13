@@ -34,7 +34,7 @@ services:
       DATABASE_USER: ${DATABASE_USER:-postgres}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD:-${POSTGRES_PASSWORD}}
       DATABASE_NAME: ${DATABASE_NAME:-${POSTGRES_DB:-atlas}}
-      DATABASE_HOST: ${DATABASE_HOST:-db}
+      DATABASE_HOST: db
       DATABASE_PORT: ${DATABASE_PORT:-5432}
       DATABASE_TEST_NAME: ${DATABASE_TEST_NAME}
       SQLSERVER_DRIVER: ${SQLSERVER_DRIVER}
@@ -46,6 +46,9 @@ services:
       DG_DB_HOST: ${DG_DB_HOST}
       DG_DB_PORT: ${DG_DB_PORT:-1433}
       DG_DB_APP_LABELS: ${DG_DB_APP_LABELS}
+    depends_on:
+      db:
+        condition: service_healthy
   web:
     command: bash -c "pnpm install -r && pnpm --filter web dev"
     build:
