@@ -55,6 +55,11 @@ function authHeader(session?: Session | null) {
   return headers
 }
 
+type NextFetchOptions = {
+  revalidate?: number | false
+  tags?: string[]
+}
+
 export async function atlasFetch<T>(
   path: string,
   opts: {
@@ -62,12 +67,12 @@ export async function atlasFetch<T>(
     method?: string
     body?: unknown
     cache?: RequestCache
-    next?: any
+    next?: NextFetchOptions
   } = {}
 ): Promise<T> {
   const url = `${getBaseUrl()}${path.startsWith('/') ? '' : '/'}${path}`
 
-  const init: RequestInit & { next?: any } = {
+  const init: RequestInit & { next?: NextFetchOptions } = {
     method: opts.method ?? (opts.body ? 'POST' : 'GET'),
     headers: {
       'Content-Type': 'application/json',
@@ -81,10 +86,7 @@ export async function atlasFetch<T>(
     init.next = opts.next
   }
 
-  const res = await (fetch as unknown as (input: RequestInfo | URL, init?: any) => Promise<Response>)(
-    url,
-    init
-  )
+  const res = await fetch(url, init)
 
   if (!res.ok) {
     const text = await res.text().catch(() => '')

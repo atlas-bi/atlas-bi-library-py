@@ -138,10 +138,14 @@ export function CollectionForm({
       <div className="rounded-lg border bg-white p-6">
         <div className="grid gap-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="collection-name"
+              className="mb-1 block text-sm font-medium text-gray-700"
+            >
               Name
             </label>
             <input
+              id="collection-name"
               className="w-full rounded-md border px-3 py-2"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -151,10 +155,14 @@ export function CollectionForm({
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="collection-purpose"
+              className="mb-1 block text-sm font-medium text-gray-700"
+            >
               Purpose
             </label>
             <textarea
+              id="collection-purpose"
               className="w-full rounded-md border px-3 py-2"
               value={searchSummary}
               onChange={(e) => setSearchSummary(e.target.value)}
@@ -163,10 +171,14 @@ export function CollectionForm({
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="collection-description"
+              className="mb-1 block text-sm font-medium text-gray-700"
+            >
               Description
             </label>
             <textarea
+              id="collection-description"
               className="w-full rounded-md border px-3 py-2"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
