@@ -80,3 +80,288 @@ class ReportTagLink(models.Model):
     class Meta:
         managed = False
         db_table = "ReportTagLinks"
+
+
+class AtlasUser(models.Model):
+    user_id = models.AutoField(db_column="UserID", primary_key=True)
+    username = models.TextField(db_column="Username")
+    email = models.TextField(db_column="Email", blank=True, default="")
+    display_name = models.TextField(db_column="DisplayName", blank=True, default="")
+    full_name = models.TextField(db_column="Fullname_calc", blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = "User"
+
+    def __str__(self) -> str:
+        return self.full_name or self.display_name or self.username or ""
+
+
+class Initiative(models.Model):
+    initiative_id = models.AutoField(db_column="InitiativeID", primary_key=True)
+    name = models.TextField(db_column="Name", blank=True, default="")
+    description = models.TextField(db_column="Description", blank=True, default="")
+
+    class Meta:
+        managed = False
+        db_table = "Initiative"
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Term(models.Model):
+    term_id = models.AutoField(db_column="TermId", primary_key=True)
+    name = models.CharField(db_column="Name", max_length=255, blank=True, default="")
+    summary = models.TextField(db_column="Summary", blank=True, default="")
+
+    class Meta:
+        managed = False
+        db_table = "Term"
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Collection(models.Model):
+    collection_id = models.AutoField(db_column="CollectionId", primary_key=True)
+    initiative = models.ForeignKey(
+        Initiative,
+        on_delete=models.DO_NOTHING,
+        db_column="InitiativeId",
+        blank=True,
+        null=True,
+        related_name="collections",
+    )
+    name = models.TextField(db_column="Name", blank=True, default="")
+    search_summary = models.TextField(db_column="Purpose", blank=True, default="")
+    description = models.TextField(db_column="Description", blank=True, default="")
+    modified_at = models.DateTimeField(db_column="LastUpdateDate", blank=True, null=True)
+    modified_by = models.ForeignKey(
+        AtlasUser,
+        on_delete=models.DO_NOTHING,
+        related_name="collection_modifier",
+        db_column="LastUpdateUser",
+        blank=True,
+        null=True,
+    )
+    hidden = models.CharField(db_column="Hidden", max_length=1, blank=True, default="")
+
+    class Meta:
+        managed = False
+        db_table = "Collection"
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class CollectionReport(models.Model):
+    link_id = models.AutoField(db_column="LinkId", primary_key=True)
+    report = models.ForeignKey(
+        ReportObject,
+        on_delete=models.DO_NOTHING,
+        db_column="ReportId",
+        related_name="collection_links",
+        blank=True,
+        null=True,
+    )
+    collection = models.ForeignKey(
+        Collection,
+        on_delete=models.DO_NOTHING,
+        db_column="CollectionId",
+        blank=True,
+        null=True,
+        related_name="reports",
+    )
+    rank = models.IntegerField(db_column="Rank", blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = "CollectionReport"
+
+    def __str__(self) -> str:
+        return self.report.title if self.report else ""
+
+
+class CollectionTerm(models.Model):
+    link_id = models.AutoField(db_column="LinkId", primary_key=True)
+    term = models.ForeignKey(
+        Term,
+        on_delete=models.DO_NOTHING,
+        db_column="TermId",
+        related_name="collection_links",
+        blank=True,
+        null=True,
+    )
+    collection = models.ForeignKey(
+        Collection,
+        on_delete=models.DO_NOTHING,
+        db_column="CollectionId",
+        blank=True,
+        null=True,
+        related_name="terms",
+    )
+    rank = models.IntegerField(db_column="Rank", blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = "CollectionTerm"
+
+    def __str__(self) -> str:
+        return self.term.name if self.term else ""
+
+
+class UserPreferences(models.Model):
+    preference_id = models.AutoField(db_column="UserPreferenceId", primary_key=True)
+    key = models.TextField(db_column="ItemType", blank=True, default="")
+    value = models.IntegerField(db_column="ItemValue", blank=True, null=True)
+    item_id = models.IntegerField(db_column="ItemId", blank=True, null=True)
+    user = models.ForeignKey(
+        AtlasUser,
+        on_delete=models.DO_NOTHING,
+        db_column="UserId",
+        blank=True,
+        null=True,
+        related_name="user_preferences",
+    )
+
+    class Meta:
+        managed = False
+        db_table = "UserPreferences"
+
+
+class Groups(models.Model):
+    group_id = models.AutoField(db_column="GroupId", primary_key=True)
+    account_name = models.TextField(db_column="AccountName", blank=True, default="")
+    name = models.TextField(db_column="GroupName", blank=True, default="")
+
+    class Meta:
+        managed = False
+        db_table = "Groups"
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class UserRoles(models.Model):
+    role_id = models.AutoField(db_column="UserRolesId", primary_key=True)
+    name = models.TextField(db_column="Name", blank=True, default="")
+    description = models.TextField(db_column="Description", blank=True, default="")
+
+    class Meta:
+        managed = False
+        db_table = "UserRoles"
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class RolePermissions(models.Model):
+    permissions_id = models.AutoField(db_column="RolePermissionsId", primary_key=True)
+    name = models.TextField(db_column="Name", blank=True, default="")
+    description = models.TextField(db_column="Description", blank=True, default="")
+
+    class Meta:
+        managed = False
+        db_table = "RolePermissions"
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class RolePermissionLinks(models.Model):
+    permissionlinks_id = models.AutoField(
+        db_column="RolePermissionLinksId", primary_key=True
+    )
+    role = models.ForeignKey(
+        UserRoles,
+        on_delete=models.DO_NOTHING,
+        db_column="UserRolesId",
+        blank=True,
+        null=True,
+        related_name="permission_links",
+    )
+    permission = models.ForeignKey(
+        RolePermissions,
+        on_delete=models.DO_NOTHING,
+        db_column="RolePermissionsId",
+        blank=True,
+        null=True,
+        related_name="role_permission_links",
+    )
+
+    class Meta:
+        managed = False
+        db_table = "RolePermissionLinks"
+
+
+class GroupRoleLinks(models.Model):
+    rolelinks_id = models.AutoField(db_column="GroupRoleLinksId", primary_key=True)
+    group = models.ForeignKey(
+        Groups,
+        on_delete=models.DO_NOTHING,
+        db_column="GroupId",
+        blank=True,
+        null=True,
+        related_name="role_links",
+    )
+    role = models.ForeignKey(
+        UserRoles,
+        on_delete=models.DO_NOTHING,
+        db_column="UserRolesId",
+        blank=True,
+        null=True,
+        related_name="role_groups",
+    )
+
+    class Meta:
+        managed = False
+        db_table = "GroupRoleLinks"
+
+
+class UserRoleLinks(models.Model):
+    rolelinks_id = models.AutoField(db_column="UserRoleLinksId", primary_key=True)
+    user = models.ForeignKey(
+        AtlasUser,
+        on_delete=models.DO_NOTHING,
+        db_column="UserId",
+        blank=True,
+        null=True,
+        related_name="role_links",
+    )
+    role = models.ForeignKey(
+        UserRoles,
+        on_delete=models.DO_NOTHING,
+        db_column="UserRolesId",
+        blank=True,
+        null=True,
+        related_name="role_users",
+    )
+
+    class Meta:
+        managed = False
+        db_table = "UserRoleLinks"
+
+
+class UserGroupMemberships(models.Model):
+    membership_id = models.AutoField(db_column="MembershipId", primary_key=True)
+    user = models.ForeignKey(
+        AtlasUser,
+        on_delete=models.DO_NOTHING,
+        db_column="UserId",
+        blank=True,
+        null=True,
+        related_name="group_links",
+    )
+    group = models.ForeignKey(
+        Groups,
+        on_delete=models.DO_NOTHING,
+        db_column="GroupId",
+        blank=True,
+        null=True,
+        related_name="user_links",
+    )
+
+    class Meta:
+        managed = False
+        db_table = "UserGroupMemberships"

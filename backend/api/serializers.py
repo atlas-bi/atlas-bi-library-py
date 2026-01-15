@@ -5,6 +5,18 @@ from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
 
+from atlas_index.models import (
+    AtlasUser,
+    Collection,
+    CollectionReport,
+    CollectionTerm,
+    Initiative,
+    ReportObject,
+    Term,
+)
+
+from .permissions import get_atlas_user_for_request_user
+
 User = get_user_model()
 
 
@@ -121,3 +133,141 @@ class UserCreateErrorSerializer(serializers.Serializer):
     password_retype = serializers.ListSerializer(
         child=serializers.CharField(), required=False
     )
+
+
+class InitiativeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Initiative
+        fields = ["initiative_id", "name", "description"]
+
+
+class TermSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Term
+        fields = ["term_id", "name", "summary"]
+
+
+class ReportObjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReportObject
+        fields = ["report_id", "title", "name"]
+
+
+class CollectionSerializer(serializers.ModelSerializer):
+    initiative = InitiativeSerializer(read_only=True)
+    initiative_id = serializers.PrimaryKeyRelatedField(
+        source="initiative",
+        queryset=Initiative.objects.all(),
+        allow_null=True,
+        required=False,
+        write_only=True,
+    )
+
+    class Meta:
+        model = Collection
+        fields = [
+            "collection_id",
+            "name",
+            "search_summary",
+            "description",
+            "hidden",
+            "modified_at",
+            "initiative",
+            "initiative_id",
+        ]
+        read_only_fields = ["collection_id", "modified_at", "initiative"]
+
+    def validate_hidden(self, value: str) -> str:
+        v = (value or "").strip().upper()
+        if v in {"Y", "YES", "TRUE", "1", "ON"}:
+            return "Y"
+        if v in {"N", "NO", "FALSE", "0", "OFF", ""}:
+            return "N"
+        raise serializers.ValidationError("Hidden must be 'Y' or 'N'.")
+
+    def _set_modified_by(self, instance: Collection) -> None:
+        request = self.context.get("request")
+        if request is None or not getattr(request, "user", None):
+            return
+
+        atlas_user = get_atlas_user_for_request_user(request.user)
+        if atlas_user is None:
+            return
+
+        instance.modified_by = AtlasUser.objects.get(pk=atlas_user.pk)
+
+    def create(self, validated_data):
+        instance = super().create(validated_data)
+        self._set_modified_by(instance)
+        instance.save(update_fields=["modified_by"])
+        return instance
+
+    def update(self, instance, validated_data):
+        instance = super().update(instance, validated_data)
+        self._set_modified_by(instance)
+        instance.save(update_fields=["modified_by"])
+        return instance
+
+
+class CollectionReportSerializer(serializers.ModelSerializer):
+    report = ReportObjectSerializer(read_only=True)
+    report_id = serializers.PrimaryKeyRelatedField(
+        source="report",
+        queryset=ReportObject.objects.all(),
+        allow_null=True,
+        required=False,
+    )
+    collection_id = serializers.PrimaryKeyRelatedField(
+        source="collection",
+        queryset=Collection.objects.all(),
+        allow_null=True,
+        required=False,
+    )
+
+    class Meta:
+        model = CollectionReport
+        fields = ["link_id", "collection_id", "report", "report_id", "rank"]
+        read_only_fields = ["link_id"]
+
+
+class CollectionTermSerializer(serializers.ModelSerializer):
+    term = TermSerializer(read_only=True)
+    term_id = serializers.PrimaryKeyRelatedField(
+        source="term",
+        queryset=Term.objects.all(),
+        allow_null=True,
+        required=False,
+        write_only=True,
+    )
+    collection_id = serializers.PrimaryKeyRelatedField(
+        source="collection",
+        queryset=Collection.objects.all(),
+        allow_null=True,
+        required=False,
+        write_only=True,
+    )
+
+    class Meta:
+        model = CollectionTerm
+        fields = ["link_id", "collection_id", "term", "term_id", "rank"]
+        read_only_fields = ["link_id", "term"]
+
+
+class CollectionDetailSerializer(CollectionSerializer):
+    reports = CollectionReportSerializer(many=True, read_only=True)
+    terms = CollectionTermSerializer(many=True, read_only=True)
+
+    class Meta(CollectionSerializer.Meta):
+        fields = CollectionSerializer.Meta.fields + ["reports", "terms"]
+
+
+class ReportSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReportObject
+        fields = ["report_id", "title", "name"]
+
+
+class TermSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Term
+        fields = ["term_id", "name"]
