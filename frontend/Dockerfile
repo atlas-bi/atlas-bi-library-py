@@ -1,4 +1,4 @@
-FROM node:21
+FROM node:21 AS builder
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
@@ -14,5 +14,19 @@ COPY packages/ui/package.json ./packages/ui/package.json
 RUN pnpm install -r --frozen-lockfile
 
 COPY . .
+
+RUN pnpm --filter web build
+
+
+FROM node:21 AS runner
+
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+
+RUN npm install -g pnpm
+
+WORKDIR /app
+
+COPY --from=builder /app /app
 
 EXPOSE 3000

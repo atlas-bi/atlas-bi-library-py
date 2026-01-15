@@ -21,7 +21,7 @@ COPY backend/ ./
 EXPOSE 8000
 
 
-FROM node:21 AS web
+FROM node:21 AS web_builder
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
@@ -37,5 +37,19 @@ COPY frontend/packages/ui/package.json ./packages/ui/package.json
 RUN pnpm install -r --frozen-lockfile
 
 COPY frontend/ ./
+
+RUN pnpm --filter web build
+
+
+FROM node:21 AS web
+
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+
+RUN npm install -g pnpm
+
+WORKDIR /app
+
+COPY --from=web_builder /app /app
 
 EXPOSE 3000
