@@ -1,8 +1,8 @@
+import { CollectionCard } from '@/components/collections/collection-card'
 import { listCollections } from '@/lib/atlas-api'
 import { authOptions } from '@/lib/auth'
-import { CollectionCard } from '@/components/collections/collection-card'
-import Link from 'next/link'
 import { getServerSession } from 'next-auth'
+import Link from 'next/link'
 
 export default async function CollectionsPage() {
   const session = await getServerSession(authOptions)
