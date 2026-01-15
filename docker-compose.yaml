@@ -5,8 +5,6 @@ services:
     image: postgres:17
     expose:
       - "5432"
-    ports:
-      - "5432:5432"
     volumes:
       - ./data:/var/lib/postgresql/data
     environment:
@@ -24,8 +22,6 @@ services:
     working_dir: /app
     expose:
       - "8000"
-    ports:
-      - "8000:8000"
     environment:
       DEBUG: ${DEBUG}
       SECRET_KEY: ${SECRET_KEY}
@@ -56,8 +52,6 @@ services:
     working_dir: /app
     expose:
       - "3000"
-    ports:
-      - "3001:3000"
     environment:
       API_URL: ${API_URL}
       NEXTAUTH_URL: ${NEXTAUTH_URL}
