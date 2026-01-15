@@ -29,6 +29,13 @@ RUN npm install -g pnpm
 
 WORKDIR /app
 
+COPY frontend/pnpm-lock.yaml frontend/pnpm-workspace.yaml frontend/package.json ./
+COPY frontend/apps/web/package.json ./apps/web/package.json
+COPY frontend/packages/types/package.json ./packages/types/package.json
+COPY frontend/packages/ui/package.json ./packages/ui/package.json
+
+RUN pnpm install -r --frozen-lockfile
+
 COPY frontend/ ./
 
 EXPOSE 3000

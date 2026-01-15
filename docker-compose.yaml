@@ -50,7 +50,7 @@ services:
       db:
         condition: service_healthy
   web:
-    command: bash -c "pnpm install -r && pnpm --filter web dev"
+    command: bash -c "pnpm --filter web dev"
     build:
       context: frontend
     working_dir: /app
