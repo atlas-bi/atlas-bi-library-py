@@ -17,6 +17,17 @@ services:
       interval: 2s
       timeout: 2s
       retries: 10
+  dg_db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    expose:
+      - "1433"
+    ports:
+      - "${DG_DB_HOST_PORT:-1434}:1433"
+    volumes:
+      - turbo_mssql_data:/var/opt/mssql
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${DG_DB_PASSWORD}
   api:
     command: bash -c "uv sync && uv run -- python manage.py runserver 0.0.0.0:8000"
     build:
@@ -43,12 +54,14 @@ services:
       DG_DB_USER: ${DG_DB_USER:-sa}
       DG_DB_PASSWORD: ${DG_DB_PASSWORD}
       DG_DB_NAME: ${DG_DB_NAME:-atlas}
-      DG_DB_HOST: ${DG_DB_HOST}
+      DG_DB_HOST: ${DG_DB_HOST:-dg_db}
       DG_DB_PORT: ${DG_DB_PORT:-1433}
       DG_DB_APP_LABELS: ${DG_DB_APP_LABELS}
     depends_on:
       db:
         condition: service_healthy
+      dg_db:
+        condition: service_started
   web:
     command: bash -c "pnpm --filter web start -p 3000"
     build:
@@ -67,3 +80,4 @@ services:
 
 volumes:
   turbo_pg_data:
+  turbo_mssql_data:
