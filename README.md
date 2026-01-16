@@ -42,9 +42,9 @@ See the [project documentation](https://atlas-bi.github.io/atlas-bi-library-py/)
 
 This version of the app is built using python + django.
 
-- [Precommit](https://pre-commit.com) `pre-commit install` 
+- [Precommit](https://pre-commit.com) `pre-commit install`
 - [Poetry](https://python-poetry.org)
-- [Pyenv](https://github.com/pyenv/pyenv) `pyenv local 3.6.2 3.7.0 3.8.0 3.9.0` 
+- [Pyenv](https://github.com/pyenv/pyenv) `pyenv local 3.6.2 3.7.0 3.8.0 3.9.0`
 - [NodeJS](https://nodejs.dev)
 - Developing on windows is difficult, but can be done. [Git sdk64](https://github.com/git-for-windows/git-sdk-64) works well for installing and running these tools.
 
@@ -54,10 +54,10 @@ If you need to override any of the default config, add your overrides to the `*_
 
 The names should be:
 
-- `settings_cust.py` 
-- `dev_cust.py` 
-- `prod_cust.py` 
-- `test_cust.py` 
+- `settings_cust.py`
+- `dev_cust.py`
+- `prod_cust.py`
+- `test_cust.py`
 
 As an example, if you want to use an existing Atlas sql server database, you can add a database config like this:
 
