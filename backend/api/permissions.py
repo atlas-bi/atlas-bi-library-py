@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Iterable
+from collections.abc import Iterable
 
 from rest_framework.permissions import BasePermission
 
@@ -33,17 +33,23 @@ def get_atlas_user_for_request_user(request_user) -> AtlasUser | None:
 
 
 def _atlas_user_has_active_admin(atlas_user: AtlasUser) -> bool:
-    admin_disabled = UserPreferences.objects.filter(user=atlas_user, key="AdminDisabled").exists()
+    admin_disabled = UserPreferences.objects.filter(
+        user=atlas_user, key="AdminDisabled"
+    ).exists()
     if admin_disabled:
         return False
 
-    if UserRoleLinks.objects.filter(user=atlas_user, role__name="Administrator").exists():
+    if UserRoleLinks.objects.filter(
+        user=atlas_user, role__name="Administrator"
+    ).exists():
         return True
 
     group_ids = UserGroupMemberships.objects.filter(user=atlas_user).values_list(
         "group_id", flat=True
     )
-    if GroupRoleLinks.objects.filter(group_id__in=group_ids, role__name="Administrator").exists():
+    if GroupRoleLinks.objects.filter(
+        group_id__in=group_ids, role__name="Administrator"
+    ).exists():
         return True
 
     return False
@@ -56,9 +62,9 @@ def _atlas_user_permission_names(atlas_user: AtlasUser) -> set[str]:
 
     # Base permissions from the default "User" role.
     base_user_perms = set(
-        RolePermissions.objects.filter(role_permission_links__role__name="User").values_list(
-            "name", flat=True
-        )
+        RolePermissions.objects.filter(
+            role_permission_links__role__name="User"
+        ).values_list("name", flat=True)
     )
 
     # Direct user roles (excluding Administrator/User which are handled elsewhere).
@@ -101,7 +107,9 @@ class AtlasRolePermission(BasePermission):
         if not request.user or not request.user.is_authenticated:
             return False
 
-        required: Iterable[str] = getattr(view, "required_permissions", None) or self.required_permissions
+        required: Iterable[str] = (
+            getattr(view, "required_permissions", None) or self.required_permissions
+        )
         required = tuple(required)
         if not required:
             return True
