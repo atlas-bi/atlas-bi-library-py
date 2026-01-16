@@ -17,7 +17,9 @@ class ReportObjectType(models.Model):
 
 class ReportObject(models.Model):
     report_id = models.AutoField(db_column="ReportObjectID", primary_key=True)
-    report_key = models.TextField(db_column="ReportObjectBizKey", blank=True, default="")
+    report_key = models.TextField(
+        db_column="ReportObjectBizKey", blank=True, default=""
+    )
     type = models.ForeignKey(
         ReportObjectType,
         on_delete=models.DO_NOTHING,
@@ -35,7 +37,9 @@ class ReportObject(models.Model):
     system_server = models.CharField(db_column="SourceServer", max_length=255)
     system_db = models.CharField(db_column="SourceDB", max_length=255)
     system_table = models.CharField(db_column="SourceTable", max_length=255)
-    system_run_url = models.TextField(db_column="ReportObjectURL", blank=True, default="")
+    system_run_url = models.TextField(
+        db_column="ReportObjectURL", blank=True, default=""
+    )
 
     class Meta:
         managed = False
