@@ -28,8 +28,25 @@ services:
     environment:
       ACCEPT_EULA: "Y"
       MSSQL_SA_PASSWORD: ${DG_DB_PASSWORD}
+  dg_db_init:
+    image: mcr.microsoft.com/mssql-tools:latest
+    depends_on:
+      - dg_db
+    environment:
+      DG_DB_NAME: ${DG_DB_NAME:-atlas}
+      DG_DB_HOST: ${DG_DB_HOST:-dg_db}
+      DG_DB_PORT: ${DG_DB_PORT:-1433}
+      DG_DB_USER: ${DG_DB_USER:-sa}
+      DG_DB_PASSWORD: ${DG_DB_PASSWORD}
+    command: >-
+      bash -c '
+      until /opt/mssql-tools/bin/sqlcmd -S ${DG_DB_HOST},${DG_DB_PORT} -U ${DG_DB_USER} -P "${DG_DB_PASSWORD}" -Q "SELECT 1" >/dev/null 2>&1; do
+        echo "Waiting for SQL Server...";
+        sleep 2;
+      done;
+      /opt/mssql-tools/bin/sqlcmd -S ${DG_DB_HOST},${DG_DB_PORT} -U ${DG_DB_USER} -P "${DG_DB_PASSWORD}" -Q "IF DB_ID(N''''${DG_DB_NAME}'''') IS NULL CREATE DATABASE [${DG_DB_NAME}]"'
   api:
-    command: bash -c "uv sync && uv run -- python manage.py migrate && uv run -- python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "uv sync && uv run -- python manage.py migrate && uv run -- python manage.py migrate --database=dg_db && uv run -- python manage.py seed_dg_db && uv run -- python manage.py runserver 0.0.0.0:8000"
     build:
       context: backend
     working_dir: /app
@@ -56,12 +73,14 @@ services:
       DG_DB_NAME: ${DG_DB_NAME:-atlas}
       DG_DB_HOST: ${DG_DB_HOST:-dg_db}
       DG_DB_PORT: ${DG_DB_PORT:-1433}
-      DG_DB_APP_LABELS: ${DG_DB_APP_LABELS}
+      DG_DB_APP_LABELS: ${DG_DB_APP_LABELS:-atlas_index}
     depends_on:
       db:
         condition: service_healthy
       dg_db:
         condition: service_started
+      dg_db_init:
+        condition: service_completed_successfully
   web:
     command: bash -c "pnpm --filter web start -p 3000"
     build:

@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = environ.get("SECRET_KEY", get_random_secret_key())
 
-DEBUG = environ.get("DEBUG", "") == "1"
+DEBUG = environ.get("DEBUG", "") == "0"
 
 allowed_hosts_env = environ.get("ALLOWED_HOSTS", "localhost,api")
 ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(",") if host.strip()]

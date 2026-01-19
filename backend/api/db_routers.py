@@ -8,7 +8,7 @@ def _labels_from_env(name: str, default: str = "") -> set[str]:
 
 class DgDbRouter:
     def __init__(self) -> None:
-        self._app_labels = _labels_from_env("DG_DB_APP_LABELS", "")
+        self._app_labels = _labels_from_env("DG_DB_APP_LABELS", "atlas_index")
 
     def db_for_read(self, model, **hints):
         if model._meta.app_label in self._app_labels:
