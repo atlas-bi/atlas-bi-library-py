@@ -19,6 +19,12 @@ services:
       retries: 10
   dg_db:
     image: mcr.microsoft.com/mssql/server:2022-latest
+    user: "0:0"
+    command: >-
+      bash -lc "
+      chown -R 10001:0 /var/opt/mssql || true
+      exec /opt/mssql/bin/sqlservr
+      "
     expose:
       - "1433"
     ports:
@@ -40,7 +46,7 @@ services:
       set -e
       uv sync
 
-      python - <<'PY'
+      uv run -- python - <<'PY'
       import os
       import time
 
@@ -106,7 +112,7 @@ services:
       SQLSERVER_EXTRA_PARAMS: ${SQLSERVER_EXTRA_PARAMS}
       DG_DB_VENDOR: ${DG_DB_VENDOR:-mssql}
       DG_DB_USER: ${DG_DB_USER:-sa}
-      DG_DB_PASSWORD: ${DG_DB_PASSWORD}
+      DG_DB_PASSWORD: ${DG_DB_PASSWORD:-StrongPassword!123}
       DG_DB_NAME: ${DG_DB_NAME:-atlas}
       DG_DB_HOST: ${DG_DB_HOST:-dg_db}
       DG_DB_PORT: ${DG_DB_PORT:-1433}
