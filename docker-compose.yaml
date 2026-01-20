@@ -30,12 +30,10 @@ services:
       MSSQL_SA_PASSWORD: ${DG_DB_PASSWORD}
       MSSQL_PID: ${MSSQL_PID:-Evaluation}
     healthcheck:
-      test:
-        - CMD-SHELL
-        - "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $$MSSQL_SA_PASSWORD -C -Q 'SELECT 1' || exit 1"
+      test: ["CMD-SHELL", "bash -lc 'exec 3<>/dev/tcp/127.0.0.1/1433' >/dev/null 2>&1"]
       interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 30
   api:
     command: |-
       bash -lc "
