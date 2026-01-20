@@ -57,7 +57,7 @@ COPY --from=api_builder /app /app
 EXPOSE 8000
 
 
-FROM node:21 AS web_builder
+FROM node:21-alpine AS web_builder
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
@@ -68,6 +68,8 @@ ARG NEXTAUTH_SECRET=changeme
 ENV API_URL=$API_URL
 ENV NEXTAUTH_URL=$NEXTAUTH_URL
 ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+
+RUN apk add --no-cache libc6-compat
 
 RUN npm install -g pnpm
 
@@ -85,10 +87,12 @@ COPY frontend/ ./
 RUN pnpm --filter web build
 
 
-FROM node:21 AS web
+FROM node:21-alpine AS web
 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
+
+RUN apk add --no-cache libc6-compat
 
 RUN npm install -g pnpm
 
