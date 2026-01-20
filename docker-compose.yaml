@@ -27,7 +27,7 @@ services:
       - turbo_mssql_data:/var/opt/mssql
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: ${DG_DB_PASSWORD}
+      MSSQL_SA_PASSWORD: ${DG_DB_PASSWORD:-StrongPassword!123}
       MSSQL_PID: ${MSSQL_PID:-Evaluation}
     healthcheck:
       test: ["CMD-SHELL", "bash -lc 'exec 3<>/dev/tcp/127.0.0.1/1433' >/dev/null 2>&1"]
@@ -115,7 +115,7 @@ services:
       db:
         condition: service_healthy
       dg_db:
-        condition: service_healthy
+        condition: service_started
   web:
     command: bash -c "pnpm --filter web start -p 3000"
     build:
