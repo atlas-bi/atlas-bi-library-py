@@ -44,9 +44,8 @@ services:
     command: |-
       bash -lc "
       set -e
-      uv sync
 
-      uv run -- python - <<'PY'
+      /.venv/bin/python - <<'PY'
       import os
       import time
 
@@ -85,13 +84,15 @@ services:
           raise SystemExit(f'Failed waiting for SQL Server / creating DB: {last}')
       PY
 
-      uv run -- python manage.py migrate
-      uv run -- python manage.py migrate --database=dg_db
-      uv run -- python manage.py seed_dg_db
-      uv run -- python manage.py runserver 0.0.0.0:8000
+      /.venv/bin/python manage.py migrate
+      /.venv/bin/python manage.py migrate --database=dg_db
+      /.venv/bin/python manage.py seed_dg_db
+      /.venv/bin/python manage.py runserver 0.0.0.0:8000
       "
     build:
-      context: backend
+      context: .
+      dockerfile: Dockerfile
+      target: api
     working_dir: /app
     expose:
       - "8000"
@@ -125,7 +126,9 @@ services:
   web:
     command: bash -c "pnpm --filter web start -p 3000"
     build:
-      context: frontend
+      context: .
+      dockerfile: Dockerfile
+      target: web
     working_dir: /app
     expose:
       - "3000"
