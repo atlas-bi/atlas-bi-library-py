@@ -40,11 +40,17 @@ services:
       DG_DB_PASSWORD: ${DG_DB_PASSWORD}
     command: >-
       bash -c '
-      until /opt/mssql-tools/bin/sqlcmd -S ${DG_DB_HOST},${DG_DB_PORT} -U ${DG_DB_USER} -P "${DG_DB_PASSWORD}" -Q "SELECT 1" >/dev/null 2>&1; do
+      SQLCMD=/opt/mssql-tools18/bin/sqlcmd;
+      if [ ! -x "$SQLCMD" ]; then SQLCMD=/opt/mssql-tools/bin/sqlcmd; fi;
+      if [ ! -x "$SQLCMD" ]; then echo "sqlcmd not found"; exit 1; fi;
+      ATTEMPTS=0;
+      until $SQLCMD -S ${DG_DB_HOST},${DG_DB_PORT} -U ${DG_DB_USER} -P "${DG_DB_PASSWORD}" -Q "SELECT 1" >/dev/null 2>&1; do
+        ATTEMPTS=$((ATTEMPTS+1));
+        if [ $ATTEMPTS -ge 60 ]; then echo "SQL Server not ready after 120s"; exit 1; fi;
         echo "Waiting for SQL Server...";
         sleep 2;
       done;
-      /opt/mssql-tools/bin/sqlcmd -S ${DG_DB_HOST},${DG_DB_PORT} -U ${DG_DB_USER} -P "${DG_DB_PASSWORD}" -Q "IF DB_ID(N''''${DG_DB_NAME}'''') IS NULL CREATE DATABASE [${DG_DB_NAME}]"'
+      $SQLCMD -S ${DG_DB_HOST},${DG_DB_PORT} -U ${DG_DB_USER} -P "${DG_DB_PASSWORD}" -Q "IF DB_ID(N''''${DG_DB_NAME}'''') IS NULL CREATE DATABASE [${DG_DB_NAME}]"'
   api:
     command: bash -c "uv sync && uv run -- python manage.py migrate && uv run -- python manage.py migrate --database=dg_db && uv run -- python manage.py seed_dg_db && uv run -- python manage.py runserver 0.0.0.0:8000"
     build:
