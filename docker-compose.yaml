@@ -121,7 +121,7 @@ services:
       db:
         condition: service_healthy
       dg_db:
-        condition: service_started
+        condition: service_healthy
   web:
     command: bash -c "pnpm --filter web start -p 3000"
     build:
