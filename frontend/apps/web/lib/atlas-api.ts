@@ -7,7 +7,11 @@ export type AtlasCollection = {
   description: string
   hidden: string
   modified_at: string | null
-  initiative?: { initiative_id: number; name: string; description: string } | null
+  initiative?: {
+    initiative_id: number
+    name: string
+    description: string
+  } | null
   reports?: AtlasCollectionReportLink[]
   terms?: AtlasCollectionTermLink[]
 }
@@ -100,8 +104,12 @@ export async function atlasFetch<T>(
   return (await res.json()) as T
 }
 
-export async function listCollections(session?: Session | null): Promise<AtlasCollection[]> {
-  const data = await atlasFetch<{ results?: AtlasCollection[] } | AtlasCollection[]>('/api/collections/', {
+export async function listCollections(
+  session?: Session | null
+): Promise<AtlasCollection[]> {
+  const data = await atlasFetch<
+    { results?: AtlasCollection[] } | AtlasCollection[]
+  >('/api/collections/', {
     session,
     cache: 'no-store'
   })
@@ -121,7 +129,10 @@ export async function getCollection(
 
 export async function createCollection(
   session: Session | null,
-  data: Pick<AtlasCollection, 'name' | 'search_summary' | 'description' | 'hidden'>
+  data: Pick<
+    AtlasCollection,
+    'name' | 'search_summary' | 'description' | 'hidden'
+  >
 ): Promise<AtlasCollection> {
   return atlasFetch<AtlasCollection>('/api/collections/', {
     session,
@@ -133,7 +144,9 @@ export async function createCollection(
 export async function updateCollection(
   session: Session | null,
   id: number,
-  data: Partial<Pick<AtlasCollection, 'name' | 'search_summary' | 'description' | 'hidden'>>
+  data: Partial<
+    Pick<AtlasCollection, 'name' | 'search_summary' | 'description' | 'hidden'>
+  >
 ): Promise<AtlasCollection> {
   return atlasFetch<AtlasCollection>(`/api/collections/${id}/`, {
     session,
@@ -159,10 +172,13 @@ export async function searchReports(
   q: string
 ): Promise<AtlasReportSearchResult[]> {
   const qp = new URLSearchParams({ q })
-  return atlasFetch<AtlasReportSearchResult[]>(`/api/search/reports/?${qp.toString()}`, {
-    session,
-    cache: 'no-store'
-  })
+  return atlasFetch<AtlasReportSearchResult[]>(
+    `/api/search/reports/?${qp.toString()}`,
+    {
+      session,
+      cache: 'no-store'
+    }
+  )
 }
 
 export async function searchTerms(
@@ -170,8 +186,11 @@ export async function searchTerms(
   q: string
 ): Promise<AtlasTermSearchResult[]> {
   const qp = new URLSearchParams({ q })
-  return atlasFetch<AtlasTermSearchResult[]>(`/api/search/terms/?${qp.toString()}`, {
-    session,
-    cache: 'no-store'
-  })
+  return atlasFetch<AtlasTermSearchResult[]>(
+    `/api/search/terms/?${qp.toString()}`,
+    {
+      session,
+      cache: 'no-store'
+    }
+  )
 }

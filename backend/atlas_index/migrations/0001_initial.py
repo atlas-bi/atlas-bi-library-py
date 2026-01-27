@@ -10,7 +10,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="AtlasUser",
             fields=[
-                ("user_id", models.AutoField(db_column="UserID", primary_key=True, serialize=False)),
+                (
+                    "user_id",
+                    models.AutoField(
+                        db_column="UserID", primary_key=True, serialize=False
+                    ),
+                ),
                 ("username", models.TextField(db_column="Username")),
                 (
                     "full_name",
@@ -50,7 +55,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Groups",
             fields=[
-                ("group_id", models.AutoField(db_column="GroupId", primary_key=True, serialize=False)),
+                (
+                    "group_id",
+                    models.AutoField(
+                        db_column="GroupId", primary_key=True, serialize=False
+                    ),
+                ),
                 (
                     "account_name",
                     models.TextField(db_column="AccountName", blank=True, default=""),
@@ -75,7 +85,9 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "initiative_id",
-                    models.AutoField(db_column="InitiativeID", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="InitiativeID", primary_key=True, serialize=False
+                    ),
                 ),
                 ("name", models.TextField(db_column="Name", blank=True, default="")),
                 (
@@ -90,7 +102,11 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "type_id",
-                    models.AutoField(db_column="ReportObjectTypeID", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="ReportObjectTypeID",
+                        primary_key=True,
+                        serialize=False,
+                    ),
                 ),
                 ("name", models.TextField(db_column="Name")),
                 (
@@ -111,7 +127,9 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "permissions_id",
-                    models.AutoField(db_column="RolePermissionsId", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="RolePermissionsId", primary_key=True, serialize=False
+                    ),
                 ),
                 ("name", models.TextField(db_column="Name", blank=True, default="")),
                 (
@@ -126,11 +144,15 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "tag_id",
-                    models.AutoField(db_column="TagId", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="TagId", primary_key=True, serialize=False
+                    ),
                 ),
                 (
                     "name",
-                    models.CharField(db_column="Name", max_length=450, blank=True, null=True),
+                    models.CharField(
+                        db_column="Name", max_length=450, blank=True, null=True
+                    ),
                 ),
                 (
                     "description",
@@ -144,11 +166,15 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "term_id",
-                    models.AutoField(db_column="TermId", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="TermId", primary_key=True, serialize=False
+                    ),
                 ),
                 (
                     "name",
-                    models.CharField(db_column="Name", max_length=255, blank=True, default=""),
+                    models.CharField(
+                        db_column="Name", max_length=255, blank=True, default=""
+                    ),
                 ),
                 (
                     "summary",
@@ -162,7 +188,9 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "role_id",
-                    models.AutoField(db_column="UserRolesId", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="UserRolesId", primary_key=True, serialize=False
+                    ),
                 ),
                 ("name", models.TextField(db_column="Name", blank=True, default="")),
                 (
@@ -177,11 +205,15 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "report_id",
-                    models.AutoField(db_column="ReportObjectID", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="ReportObjectID", primary_key=True, serialize=False
+                    ),
                 ),
                 (
                     "report_key",
-                    models.TextField(db_column="ReportObjectBizKey", blank=True, default=""),
+                    models.TextField(
+                        db_column="ReportObjectBizKey", blank=True, default=""
+                    ),
                 ),
                 (
                     "name",
@@ -197,7 +229,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "detailed_description",
-                    models.TextField(db_column="DetailedDescription", blank=True, default=""),
+                    models.TextField(
+                        db_column="DetailedDescription", blank=True, default=""
+                    ),
                 ),
                 (
                     "system_server",
@@ -213,7 +247,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "system_run_url",
-                    models.TextField(db_column="ReportObjectURL", blank=True, default=""),
+                    models.TextField(
+                        db_column="ReportObjectURL", blank=True, default=""
+                    ),
                 ),
                 (
                     "type",
@@ -234,7 +270,9 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "collection_id",
-                    models.AutoField(db_column="CollectionId", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="CollectionId", primary_key=True, serialize=False
+                    ),
                 ),
                 ("name", models.TextField(db_column="Name", blank=True, default="")),
                 (
@@ -247,11 +285,15 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "modified_at",
-                    models.DateTimeField(db_column="LastUpdateDate", blank=True, null=True),
+                    models.DateTimeField(
+                        db_column="LastUpdateDate", blank=True, null=True
+                    ),
                 ),
                 (
                     "hidden",
-                    models.CharField(db_column="Hidden", max_length=1, blank=True, default=""),
+                    models.CharField(
+                        db_column="Hidden", max_length=1, blank=True, default=""
+                    ),
                 ),
                 (
                     "initiative",
@@ -283,7 +325,9 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "link_id",
-                    models.AutoField(db_column="LinkId", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="LinkId", primary_key=True, serialize=False
+                    ),
                 ),
                 (
                     "rank",
@@ -319,7 +363,9 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "link_id",
-                    models.AutoField(db_column="LinkId", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="LinkId", primary_key=True, serialize=False
+                    ),
                 ),
                 (
                     "rank",
@@ -355,7 +401,9 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "rolelinks_id",
-                    models.AutoField(db_column="GroupRoleLinksId", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="GroupRoleLinksId", primary_key=True, serialize=False
+                    ),
                 ),
                 (
                     "group",
@@ -387,7 +435,9 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "link_id",
-                    models.AutoField(db_column="ReportTagLinkId", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="ReportTagLinkId", primary_key=True, serialize=False
+                    ),
                 ),
                 (
                     "report",
@@ -419,7 +469,11 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "permissionlinks_id",
-                    models.AutoField(db_column="RolePermissionLinksId", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="RolePermissionLinksId",
+                        primary_key=True,
+                        serialize=False,
+                    ),
                 ),
                 (
                     "permission",
@@ -451,7 +505,9 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "membership_id",
-                    models.AutoField(db_column="MembershipId", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="MembershipId", primary_key=True, serialize=False
+                    ),
                 ),
                 (
                     "group",
@@ -483,7 +539,9 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "preference_id",
-                    models.AutoField(db_column="UserPreferenceId", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="UserPreferenceId", primary_key=True, serialize=False
+                    ),
                 ),
                 ("key", models.TextField(db_column="ItemType", blank=True, default="")),
                 (
@@ -513,7 +571,9 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "rolelinks_id",
-                    models.AutoField(db_column="UserRoleLinksId", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="UserRoleLinksId", primary_key=True, serialize=False
+                    ),
                 ),
                 (
                     "role",

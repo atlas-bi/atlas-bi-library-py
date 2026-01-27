@@ -36,17 +36,23 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="term",
             name="technical_definition",
-            field=models.TextField(db_column="TechnicalDefinition", blank=True, default=""),
+            field=models.TextField(
+                db_column="TechnicalDefinition", blank=True, default=""
+            ),
         ),
         migrations.AddField(
             model_name="term",
             name="approved",
-            field=models.CharField(db_column="ApprovedYN", max_length=1, blank=True, default=""),
+            field=models.CharField(
+                db_column="ApprovedYN", max_length=1, blank=True, default=""
+            ),
         ),
         migrations.AddField(
             model_name="term",
             name="approval_datetime",
-            field=models.DateTimeField(db_column="ApprovalDateTime", blank=True, null=True),
+            field=models.DateTimeField(
+                db_column="ApprovalDateTime", blank=True, null=True
+            ),
         ),
         migrations.AddField(
             model_name="term",
@@ -70,17 +76,23 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="term",
             name="external_standard_url",
-            field=models.TextField(db_column="ExternalStandardUrl", blank=True, default=""),
+            field=models.TextField(
+                db_column="ExternalStandardUrl", blank=True, default=""
+            ),
         ),
         migrations.AddField(
             model_name="term",
             name="valid_from_datetime",
-            field=models.DateTimeField(db_column="ValidFromDateTime", blank=True, null=True),
+            field=models.DateTimeField(
+                db_column="ValidFromDateTime", blank=True, null=True
+            ),
         ),
         migrations.AddField(
             model_name="term",
             name="valid_to_datetime",
-            field=models.DateTimeField(db_column="ValidToDateTime", blank=True, null=True),
+            field=models.DateTimeField(
+                db_column="ValidToDateTime", blank=True, null=True
+            ),
         ),
         migrations.AddField(
             model_name="term",
@@ -97,7 +109,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="term",
             name="last_updated_datetime",
-            field=models.DateTimeField(db_column="LastUpdatedDateTime", blank=True, null=True),
+            field=models.DateTimeField(
+                db_column="LastUpdatedDateTime", blank=True, null=True
+            ),
         ),
         migrations.AddField(
             model_name="reportobject",
@@ -126,7 +140,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="reportobject",
             name="last_modified_date",
-            field=models.DateTimeField(db_column="LastModifiedDate", blank=True, null=True),
+            field=models.DateTimeField(
+                db_column="LastModifiedDate", blank=True, null=True
+            ),
         ),
         migrations.AddField(
             model_name="reportobject",
@@ -141,7 +157,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="reportobject",
             name="report_server_catalog_id",
-            field=models.IntegerField(db_column="ReportServerCatalogID", blank=True, null=True),
+            field=models.IntegerField(
+                db_column="ReportServerCatalogID", blank=True, null=True
+            ),
         ),
         migrations.AddField(
             model_name="reportobject",
@@ -160,7 +178,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="reportobject",
             name="report_server_path",
-            field=models.TextField(db_column="ReportServerPath", blank=True, default=""),
+            field=models.TextField(
+                db_column="ReportServerPath", blank=True, default=""
+            ),
         ),
         migrations.CreateModel(
             name="OrganizationalValue",
@@ -168,7 +188,9 @@ class Migration(migrations.Migration):
                 (
                     "organizational_value_id",
                     models.AutoField(
-                        db_column="OrganizationalValueID", primary_key=True, serialize=False
+                        db_column="OrganizationalValueID",
+                        primary_key=True,
+                        serialize=False,
                     ),
                 ),
                 ("name", models.TextField(db_column="Name", blank=True, default="")),
@@ -181,7 +203,9 @@ class Migration(migrations.Migration):
                 (
                     "estimated_run_frequency_id",
                     models.AutoField(
-                        db_column="EstimatedRunFrequencyID", primary_key=True, serialize=False
+                        db_column="EstimatedRunFrequencyID",
+                        primary_key=True,
+                        serialize=False,
                     ),
                 ),
                 ("name", models.TextField(db_column="Name", blank=True, default="")),
@@ -193,7 +217,9 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "fragility_id",
-                    models.AutoField(db_column="FragilityID", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="FragilityID", primary_key=True, serialize=False
+                    ),
                 ),
                 ("name", models.TextField(db_column="Name", blank=True, default="")),
             ],
@@ -205,7 +231,9 @@ class Migration(migrations.Migration):
                 (
                     "schedule_id",
                     models.AutoField(
-                        db_column="MaintenanceScheduleID", primary_key=True, serialize=False
+                        db_column="MaintenanceScheduleID",
+                        primary_key=True,
+                        serialize=False,
                     ),
                 ),
                 ("name", models.TextField(db_column="Name", blank=True, default="")),
@@ -218,7 +246,9 @@ class Migration(migrations.Migration):
                 (
                     "status_id",
                     models.AutoField(
-                        db_column="MaintenanceLogStatusID", primary_key=True, serialize=False
+                        db_column="MaintenanceLogStatusID",
+                        primary_key=True,
+                        serialize=False,
                     ),
                 ),
                 ("name", models.TextField(db_column="Name", blank=True, default="")),
@@ -252,28 +282,42 @@ class Migration(migrations.Migration):
                         related_name="doc",
                     ),
                 ),
-                ("requester", models.TextField(db_column="Requester", blank=True, default="")),
+                (
+                    "requester",
+                    models.TextField(db_column="Requester", blank=True, default=""),
+                ),
                 (
                     "developer_description",
-                    models.TextField(db_column="DeveloperDescription", blank=True, default=""),
+                    models.TextField(
+                        db_column="DeveloperDescription", blank=True, default=""
+                    ),
                 ),
                 (
                     "key_assumptions",
-                    models.TextField(db_column="KeyAssumptions", blank=True, default=""),
+                    models.TextField(
+                        db_column="KeyAssumptions", blank=True, default=""
+                    ),
                 ),
                 (
                     "executive_visibility",
                     models.CharField(
-                        db_column="ExecutiveVisibilityYN", max_length=1, blank=True, default=""
+                        db_column="ExecutiveVisibilityYN",
+                        max_length=1,
+                        blank=True,
+                        default="",
                     ),
                 ),
                 (
                     "last_update_datetime",
-                    models.DateTimeField(db_column="LastUpdateDateTime", blank=True, null=True),
+                    models.DateTimeField(
+                        db_column="LastUpdateDateTime", blank=True, null=True
+                    ),
                 ),
                 (
                     "created_datetime",
-                    models.DateTimeField(db_column="CreatedDateTime", blank=True, null=True),
+                    models.DateTimeField(
+                        db_column="CreatedDateTime", blank=True, null=True
+                    ),
                 ),
                 (
                     "operational_owner_user",
@@ -360,7 +404,9 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "link_id",
-                    models.AutoField(db_column="LinkId", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="LinkId", primary_key=True, serialize=False
+                    ),
                 ),
                 (
                     "report_doc",
@@ -388,7 +434,9 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "link_id",
-                    models.AutoField(db_column="LinkId", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="LinkId", primary_key=True, serialize=False
+                    ),
                 ),
                 (
                     "report_doc",
@@ -422,9 +470,14 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "maintenance_date",
-                    models.DateTimeField(db_column="MaintenanceDate", blank=True, null=True),
+                    models.DateTimeField(
+                        db_column="MaintenanceDate", blank=True, null=True
+                    ),
                 ),
-                ("comment", models.TextField(db_column="Comment", blank=True, default="")),
+                (
+                    "comment",
+                    models.TextField(db_column="Comment", blank=True, default=""),
+                ),
                 (
                     "report_doc",
                     models.ForeignKey(
@@ -466,7 +519,9 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "link_id",
-                    models.AutoField(db_column="LinkId", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="LinkId", primary_key=True, serialize=False
+                    ),
                 ),
                 (
                     "report_doc",
@@ -494,7 +549,9 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "hierarchy_id",
-                    models.AutoField(db_column="HierarchyId", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="HierarchyId", primary_key=True, serialize=False
+                    ),
                 ),
                 (
                     "parent_report",
@@ -522,7 +579,9 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "query_id",
-                    models.AutoField(db_column="QueryId", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="QueryId", primary_key=True, serialize=False
+                    ),
                 ),
                 ("query", models.TextField(db_column="Query")),
                 (
@@ -543,12 +602,17 @@ class Migration(migrations.Migration):
                 (
                     "run_data_id",
                     models.CharField(
-                        db_column="RunDataId", primary_key=True, serialize=False, max_length=450
+                        db_column="RunDataId",
+                        primary_key=True,
+                        serialize=False,
+                        max_length=450,
                     ),
                 ),
                 (
                     "run_start_time",
-                    models.DateTimeField(db_column="RunStartTime", blank=True, null=True),
+                    models.DateTimeField(
+                        db_column="RunStartTime", blank=True, null=True
+                    ),
                 ),
                 (
                     "run_duration_seconds",
@@ -562,27 +626,39 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "run_status",
-                    models.CharField(db_column="RunStatus", max_length=50, blank=True, null=True),
+                    models.CharField(
+                        db_column="RunStatus", max_length=50, blank=True, null=True
+                    ),
                 ),
                 (
                     "last_load_date",
-                    models.DateTimeField(db_column="LastLoadDate", blank=True, null=True),
+                    models.DateTimeField(
+                        db_column="LastLoadDate", blank=True, null=True
+                    ),
                 ),
                 (
                     "run_start_time_hour",
-                    models.IntegerField(db_column="RunStartTime_Hour", blank=True, null=True),
+                    models.IntegerField(
+                        db_column="RunStartTime_Hour", blank=True, null=True
+                    ),
                 ),
                 (
                     "run_start_time_day",
-                    models.IntegerField(db_column="RunStartTime_Day", blank=True, null=True),
+                    models.IntegerField(
+                        db_column="RunStartTime_Day", blank=True, null=True
+                    ),
                 ),
                 (
                     "run_start_time_month",
-                    models.IntegerField(db_column="RunStartTime_Month", blank=True, null=True),
+                    models.IntegerField(
+                        db_column="RunStartTime_Month", blank=True, null=True
+                    ),
                 ),
                 (
                     "run_start_time_year",
-                    models.IntegerField(db_column="RunStartTime_Year", blank=True, null=True),
+                    models.IntegerField(
+                        db_column="RunStartTime_Year", blank=True, null=True
+                    ),
                 ),
                 (
                     "run_user",
@@ -603,13 +679,17 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "bridge_id",
-                    models.AutoField(db_column="BridgeId", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="BridgeId", primary_key=True, serialize=False
+                    ),
                 ),
                 ("run_id", models.IntegerField(db_column="RunId")),
                 ("runs", models.IntegerField(db_column="Runs", blank=True, null=True)),
                 (
                     "inherited",
-                    models.CharField(db_column="Inherited", max_length=1, blank=True, default=""),
+                    models.CharField(
+                        db_column="Inherited", max_length=1, blank=True, default=""
+                    ),
                 ),
                 (
                     "report",
@@ -628,7 +708,9 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "folder_id",
-                    models.AutoField(db_column="FolderId", primary_key=True, serialize=False),
+                    models.AutoField(
+                        db_column="FolderId", primary_key=True, serialize=False
+                    ),
                 ),
                 (
                     "folder_name",
