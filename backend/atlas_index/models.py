@@ -17,7 +17,9 @@ class ReportObjectType(models.Model):
 
 class ReportObject(models.Model):
     report_id = models.AutoField(db_column="ReportObjectID", primary_key=True)
-    report_key = models.TextField(db_column="ReportObjectBizKey", blank=True, default="")
+    report_key = models.TextField(
+        db_column="ReportObjectBizKey", blank=True, default=""
+    )
     type = models.ForeignKey(
         ReportObjectType,
         on_delete=models.DO_NOTHING,
@@ -35,7 +37,9 @@ class ReportObject(models.Model):
     system_server = models.CharField(db_column="SourceServer", max_length=255)
     system_db = models.CharField(db_column="SourceDB", max_length=255)
     system_table = models.CharField(db_column="SourceTable", max_length=255)
-    system_run_url = models.TextField(db_column="ReportObjectURL", blank=True, default="")
+    system_run_url = models.TextField(
+        db_column="ReportObjectURL", blank=True, default=""
+    )
     author = models.ForeignKey(
         "AtlasUser",
         on_delete=models.DO_NOTHING,
@@ -55,7 +59,9 @@ class ReportObject(models.Model):
     last_modified_date = models.DateTimeField(
         db_column="LastModifiedDate", blank=True, null=True
     )
-    epic_master_file = models.TextField(db_column="EpicMasterFile", blank=True, default="")
+    epic_master_file = models.TextField(
+        db_column="EpicMasterFile", blank=True, default=""
+    )
     epic_record_id = models.TextField(db_column="EpicRecordID", blank=True, default="")
     report_server_catalog_id = models.IntegerField(
         db_column="ReportServerCatalogID", blank=True, null=True
@@ -66,7 +72,9 @@ class ReportObject(models.Model):
     orphaned = models.CharField(
         db_column="OrphanedReportObjectYN", max_length=1, blank=True, default=""
     )
-    report_server_path = models.TextField(db_column="ReportServerPath", blank=True, default="")
+    report_server_path = models.TextField(
+        db_column="ReportServerPath", blank=True, default=""
+    )
 
     class Meta:
         managed = True
@@ -153,7 +161,9 @@ class Term(models.Model):
     technical_definition = models.TextField(
         db_column="TechnicalDefinition", blank=True, default=""
     )
-    approved = models.CharField(db_column="ApprovedYN", max_length=1, blank=True, default="")
+    approved = models.CharField(
+        db_column="ApprovedYN", max_length=1, blank=True, default=""
+    )
     approval_datetime = models.DateTimeField(
         db_column="ApprovalDateTime", blank=True, null=True
     )
@@ -174,7 +184,9 @@ class Term(models.Model):
     valid_from_datetime = models.DateTimeField(
         db_column="ValidFromDateTime", blank=True, null=True
     )
-    valid_to_datetime = models.DateTimeField(db_column="ValidToDateTime", blank=True, null=True)
+    valid_to_datetime = models.DateTimeField(
+        db_column="ValidToDateTime", blank=True, null=True
+    )
     updated_by = models.ForeignKey(
         "AtlasUser",
         on_delete=models.DO_NOTHING,
@@ -208,7 +220,9 @@ class Collection(models.Model):
     name = models.TextField(db_column="Name", blank=True, default="")
     search_summary = models.TextField(db_column="Purpose", blank=True, default="")
     description = models.TextField(db_column="Description", blank=True, default="")
-    modified_at = models.DateTimeField(db_column="LastUpdateDate", blank=True, null=True)
+    modified_at = models.DateTimeField(
+        db_column="LastUpdateDate", blank=True, null=True
+    )
     modified_by = models.ForeignKey(
         AtlasUser,
         on_delete=models.DO_NOTHING,
@@ -519,7 +533,9 @@ class ReportObjectDoc(models.Model):
     developer_description = models.TextField(
         db_column="DeveloperDescription", blank=True, default=""
     )
-    key_assumptions = models.TextField(db_column="KeyAssumptions", blank=True, default="")
+    key_assumptions = models.TextField(
+        db_column="KeyAssumptions", blank=True, default=""
+    )
     organizational_value = models.ForeignKey(
         OrganizationalValue,
         on_delete=models.DO_NOTHING,
@@ -558,7 +574,9 @@ class ReportObjectDoc(models.Model):
     last_update_datetime = models.DateTimeField(
         db_column="LastUpdateDateTime", blank=True, null=True
     )
-    created_datetime = models.DateTimeField(db_column="CreatedDateTime", blank=True, null=True)
+    created_datetime = models.DateTimeField(
+        db_column="CreatedDateTime", blank=True, null=True
+    )
     created_by = models.ForeignKey(
         AtlasUser,
         on_delete=models.DO_NOTHING,
@@ -622,7 +640,9 @@ class ReportObjectDocFragilityTags(models.Model):
 
 
 class MaintenanceLog(models.Model):
-    maintenance_log_id = models.AutoField(db_column="MaintenanceLogId", primary_key=True)
+    maintenance_log_id = models.AutoField(
+        db_column="MaintenanceLogId", primary_key=True
+    )
     report_doc = models.ForeignKey(
         ReportObjectDoc,
         on_delete=models.DO_NOTHING,
@@ -639,7 +659,9 @@ class MaintenanceLog(models.Model):
         null=True,
         related_name="maintenance_logs",
     )
-    maintenance_date = models.DateTimeField(db_column="MaintenanceDate", blank=True, null=True)
+    maintenance_date = models.DateTimeField(
+        db_column="MaintenanceDate", blank=True, null=True
+    )
     comment = models.TextField(db_column="Comment", blank=True, default="")
     status = models.ForeignKey(
         MaintenanceLogStatus,
@@ -711,7 +733,9 @@ class ReportObjectQuery(models.Model):
 
 
 class ReportObjectRunData(models.Model):
-    run_data_id = models.CharField(db_column="RunDataId", primary_key=True, max_length=450)
+    run_data_id = models.CharField(
+        db_column="RunDataId", primary_key=True, max_length=450
+    )
     run_user = models.ForeignKey(
         AtlasUser,
         on_delete=models.DO_NOTHING,
@@ -720,16 +744,34 @@ class ReportObjectRunData(models.Model):
         null=True,
         related_name="report_runs",
     )
-    run_start_time = models.DateTimeField(db_column="RunStartTime", blank=True, null=True)
-    run_duration_seconds = models.DecimalField(
-        db_column="RunDurationSeconds", max_digits=18, decimal_places=2, blank=True, null=True
+    run_start_time = models.DateTimeField(
+        db_column="RunStartTime", blank=True, null=True
     )
-    run_status = models.CharField(db_column="RunStatus", max_length=50, blank=True, null=True)
-    last_load_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
-    run_start_time_hour = models.IntegerField(db_column="RunStartTime_Hour", blank=True, null=True)
-    run_start_time_day = models.IntegerField(db_column="RunStartTime_Day", blank=True, null=True)
-    run_start_time_month = models.IntegerField(db_column="RunStartTime_Month", blank=True, null=True)
-    run_start_time_year = models.IntegerField(db_column="RunStartTime_Year", blank=True, null=True)
+    run_duration_seconds = models.DecimalField(
+        db_column="RunDurationSeconds",
+        max_digits=18,
+        decimal_places=2,
+        blank=True,
+        null=True,
+    )
+    run_status = models.CharField(
+        db_column="RunStatus", max_length=50, blank=True, null=True
+    )
+    last_load_date = models.DateTimeField(
+        db_column="LastLoadDate", blank=True, null=True
+    )
+    run_start_time_hour = models.IntegerField(
+        db_column="RunStartTime_Hour", blank=True, null=True
+    )
+    run_start_time_day = models.IntegerField(
+        db_column="RunStartTime_Day", blank=True, null=True
+    )
+    run_start_time_month = models.IntegerField(
+        db_column="RunStartTime_Month", blank=True, null=True
+    )
+    run_start_time_year = models.IntegerField(
+        db_column="RunStartTime_Year", blank=True, null=True
+    )
 
     class Meta:
         managed = True
@@ -746,7 +788,9 @@ class ReportObjectRunDataBridge(models.Model):
     )
     run_id = models.IntegerField(db_column="RunId")
     runs = models.IntegerField(db_column="Runs", blank=True, null=True)
-    inherited = models.CharField(db_column="Inherited", max_length=1, blank=True, default="")
+    inherited = models.CharField(
+        db_column="Inherited", max_length=1, blank=True, default=""
+    )
 
     class Meta:
         managed = True
