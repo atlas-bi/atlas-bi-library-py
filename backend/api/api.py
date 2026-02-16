@@ -30,6 +30,9 @@ from .serializers import (
     UserCurrentErrorSerializer,
     UserCurrentSerializer,
 )
+from .solr import is_enabled as solr_is_enabled
+from .solr import search_reports as solr_search_reports
+from .solr import search_terms as solr_search_terms
 
 User = get_user_model()
 
@@ -222,11 +225,18 @@ class ReportSearchView(APIView):
 
     def get(self, request, *args, **kwargs):
         q = (request.query_params.get("q") or "").strip()
-        qs = ReportObject.objects.all()
+        if solr_is_enabled() and q:
+            hits = solr_search_reports(q, rows=20)
+            atlas_ids = [h.atlas_id for h in hits if h.type == "reports" and h.atlas_id]
+            if atlas_ids:
+                qs = ReportObject.objects.filter(report_id__in=atlas_ids)
+                by_id = {obj.report_id: obj for obj in qs}
+                ordered = [by_id[x] for x in atlas_ids if x in by_id]
+                return Response(ReportSearchSerializer(ordered, many=True).data)
 
+        qs = ReportObject.objects.all()
         if q:
             qs = qs.filter(title__icontains=q) | qs.filter(name__icontains=q)
-
         qs = qs.order_by("title")[:20]
         return Response(ReportSearchSerializer(qs, many=True).data)
 
@@ -236,11 +246,18 @@ class TermSearchView(APIView):
 
     def get(self, request, *args, **kwargs):
         q = (request.query_params.get("q") or "").strip()
-        qs = Term.objects.all()
+        if solr_is_enabled() and q:
+            hits = solr_search_terms(q, rows=20)
+            atlas_ids = [h.atlas_id for h in hits if h.type == "terms" and h.atlas_id]
+            if atlas_ids:
+                qs = Term.objects.filter(term_id__in=atlas_ids)
+                by_id = {obj.term_id: obj for obj in qs}
+                ordered = [by_id[x] for x in atlas_ids if x in by_id]
+                return Response(TermSearchSerializer(ordered, many=True).data)
 
+        qs = Term.objects.all()
         if q:
             qs = qs.filter(name__icontains=q)
-
         qs = qs.order_by("name")[:20]
         return Response(TermSearchSerializer(qs, many=True).data)
 

@@ -1,5 +1,9 @@
 from django.db import models
 
+# ---------------------------------------------------------------------------
+# dbo-schema tables (flat names, already SQL-friendly)
+# ---------------------------------------------------------------------------
+
 
 class ReportObjectType(models.Model):
     type_id = models.AutoField(db_column="ReportObjectTypeID", primary_key=True)
@@ -9,7 +13,7 @@ class ReportObjectType(models.Model):
 
     class Meta:
         managed = True
-        db_table = "ReportObjectType"
+        db_table = "reportObjectType"
 
     def __str__(self) -> str:
         return self.name
@@ -20,7 +24,7 @@ class ReportObject(models.Model):
     report_key = models.TextField(db_column="ReportObjectBizKey", blank=True, default="")
     type = models.ForeignKey(
         ReportObjectType,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         db_column="ReportObjectTypeID",
         blank=True,
         null=True,
@@ -32,9 +36,9 @@ class ReportObject(models.Model):
     detailed_description = models.TextField(
         db_column="DetailedDescription", blank=True, default=""
     )
-    system_server = models.CharField(db_column="SourceServer", max_length=255)
-    system_db = models.CharField(db_column="SourceDB", max_length=255)
-    system_table = models.CharField(db_column="SourceTable", max_length=255)
+    system_server = models.CharField(db_column="SourceServer", max_length=255, default="")
+    system_db = models.CharField(db_column="SourceDB", max_length=255, default="")
+    system_table = models.CharField(db_column="SourceTable", max_length=255, default="")
     system_run_url = models.TextField(db_column="ReportObjectURL", blank=True, default="")
     author = models.ForeignKey(
         "AtlasUser",
@@ -55,22 +59,28 @@ class ReportObject(models.Model):
     last_modified_date = models.DateTimeField(
         db_column="LastModifiedDate", blank=True, null=True
     )
-    epic_master_file = models.TextField(db_column="EpicMasterFile", blank=True, default="")
-    epic_record_id = models.TextField(db_column="EpicRecordID", blank=True, default="")
-    report_server_catalog_id = models.IntegerField(
-        db_column="ReportServerCatalogID", blank=True, null=True
+    epic_master_file = models.CharField(
+        db_column="EpicMasterFile", max_length=50, blank=True, default=""
+    )
+    epic_record_id = models.DecimalField(
+        db_column="EpicRecordID", max_digits=18, decimal_places=0, blank=True, null=True
+    )
+    report_server_catalog_id = models.CharField(
+        db_column="ReportServerCatalogID", max_length=255, blank=True, default=""
     )
     default_visibility = models.CharField(
         db_column="DefaultVisibilityYN", max_length=1, blank=True, default=""
     )
     orphaned = models.CharField(
-        db_column="OrphanedReportObjectYN", max_length=1, blank=True, default=""
+        db_column="OrphanedReportObjectYN", max_length=1, blank=True, default="N"
     )
-    report_server_path = models.TextField(db_column="ReportServerPath", blank=True, default="")
+    report_server_path = models.TextField(
+        db_column="ReportServerPath", blank=True, default=""
+    )
 
     class Meta:
         managed = True
-        db_table = "ReportObject"
+        db_table = "reportObject"
 
     def __str__(self) -> str:
         return self.title or self.name or ""
@@ -83,7 +93,7 @@ class Tag(models.Model):
 
     class Meta:
         managed = True
-        db_table = "Tags"
+        db_table = "tags"
 
     def __str__(self) -> str:
         return self.name or ""
@@ -110,7 +120,7 @@ class ReportTagLink(models.Model):
 
     class Meta:
         managed = True
-        db_table = "ReportTagLinks"
+        db_table = "reportTagLinks"
 
 
 class AtlasUser(models.Model):
@@ -127,10 +137,54 @@ class AtlasUser(models.Model):
 
     class Meta:
         managed = True
-        db_table = "User"
+        db_table = "user"
 
     def __str__(self) -> str:
         return self.full_name or self.display_name or self.username or ""
+
+
+class Groups(models.Model):
+    group_id = models.AutoField(db_column="GroupId", primary_key=True)
+    account_name = models.TextField(db_column="AccountName", blank=True, default="")
+    name = models.TextField(db_column="GroupName", blank=True, default="")
+    email = models.TextField(db_column="GroupEmail", blank=True, default="")
+    group_type = models.TextField(db_column="GroupType", blank=True, default="")
+
+    class Meta:
+        managed = True
+        db_table = "userGroups"
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class UserGroupMemberships(models.Model):
+    membership_id = models.AutoField(db_column="MembershipId", primary_key=True)
+    user = models.ForeignKey(
+        AtlasUser,
+        on_delete=models.DO_NOTHING,
+        db_column="UserId",
+        blank=True,
+        null=True,
+        related_name="group_links",
+    )
+    group = models.ForeignKey(
+        Groups,
+        on_delete=models.DO_NOTHING,
+        db_column="GroupId",
+        blank=True,
+        null=True,
+        related_name="user_links",
+    )
+
+    class Meta:
+        managed = True
+        db_table = "userGroupsMembership"
+
+
+# ---------------------------------------------------------------------------
+# app-schema tables → renamed to flat SQL-friendly names
+# ---------------------------------------------------------------------------
 
 
 class Initiative(models.Model):
@@ -140,7 +194,7 @@ class Initiative(models.Model):
 
     class Meta:
         managed = True
-        db_table = "Initiative"
+        db_table = "initiative"
 
     def __str__(self) -> str:
         return self.name
@@ -153,30 +207,34 @@ class Term(models.Model):
     technical_definition = models.TextField(
         db_column="TechnicalDefinition", blank=True, default=""
     )
-    approved = models.CharField(db_column="ApprovedYN", max_length=1, blank=True, default="")
-    approval_datetime = models.DateTimeField(
+    approved_yn = models.CharField(
+        db_column="ApprovedYN", max_length=1, blank=True, default=""
+    )
+    approval_date_time = models.DateTimeField(
         db_column="ApprovalDateTime", blank=True, null=True
     )
     approved_by = models.ForeignKey(
-        "AtlasUser",
+        AtlasUser,
         on_delete=models.DO_NOTHING,
         db_column="ApprovedByUserId",
         blank=True,
         null=True,
         related_name="approved_terms",
     )
-    has_external_standard = models.CharField(
+    has_external_standard_yn = models.CharField(
         db_column="HasExternalStandardYN", max_length=1, blank=True, default=""
     )
-    external_standard_url = models.TextField(
-        db_column="ExternalStandardUrl", blank=True, default=""
+    external_standard_url = models.CharField(
+        db_column="ExternalStandardUrl", max_length=4000, blank=True, default=""
     )
-    valid_from_datetime = models.DateTimeField(
+    valid_from = models.DateTimeField(
         db_column="ValidFromDateTime", blank=True, null=True
     )
-    valid_to_datetime = models.DateTimeField(db_column="ValidToDateTime", blank=True, null=True)
+    valid_to = models.DateTimeField(
+        db_column="ValidToDateTime", blank=True, null=True
+    )
     updated_by = models.ForeignKey(
-        "AtlasUser",
+        AtlasUser,
         on_delete=models.DO_NOTHING,
         db_column="UpdatedByUserId",
         blank=True,
@@ -189,7 +247,7 @@ class Term(models.Model):
 
     class Meta:
         managed = True
-        db_table = "app.Term"
+        db_table = "term"
 
     def __str__(self) -> str:
         return self.name
@@ -208,7 +266,9 @@ class Collection(models.Model):
     name = models.TextField(db_column="Name", blank=True, default="")
     search_summary = models.TextField(db_column="Purpose", blank=True, default="")
     description = models.TextField(db_column="Description", blank=True, default="")
-    modified_at = models.DateTimeField(db_column="LastUpdateDate", blank=True, null=True)
+    modified_at = models.DateTimeField(
+        db_column="LastUpdateDate", blank=True, null=True
+    )
     modified_by = models.ForeignKey(
         AtlasUser,
         on_delete=models.DO_NOTHING,
@@ -221,7 +281,7 @@ class Collection(models.Model):
 
     class Meta:
         managed = True
-        db_table = "Collection"
+        db_table = "collection"
 
     def __str__(self) -> str:
         return self.name
@@ -233,9 +293,9 @@ class CollectionReport(models.Model):
         ReportObject,
         on_delete=models.DO_NOTHING,
         db_column="ReportId",
-        related_name="collection_links",
         blank=True,
         null=True,
+        related_name="collection_links",
     )
     collection = models.ForeignKey(
         Collection,
@@ -249,7 +309,7 @@ class CollectionReport(models.Model):
 
     class Meta:
         managed = True
-        db_table = "CollectionReport"
+        db_table = "collectionReport"
 
     def __str__(self) -> str:
         return self.report.title if self.report else ""
@@ -261,9 +321,9 @@ class CollectionTerm(models.Model):
         Term,
         on_delete=models.DO_NOTHING,
         db_column="TermId",
-        related_name="collection_links",
         blank=True,
         null=True,
+        related_name="collection_links",
     )
     collection = models.ForeignKey(
         Collection,
@@ -277,7 +337,7 @@ class CollectionTerm(models.Model):
 
     class Meta:
         managed = True
-        db_table = "CollectionTerm"
+        db_table = "collectionTerm"
 
     def __str__(self) -> str:
         return self.term.name if self.term else ""
@@ -287,7 +347,6 @@ class UserPreferences(models.Model):
     preference_id = models.AutoField(db_column="UserPreferenceId", primary_key=True)
     key = models.TextField(db_column="ItemType", blank=True, default="")
     value = models.IntegerField(db_column="ItemValue", blank=True, null=True)
-    item_id = models.IntegerField(db_column="ItemId", blank=True, null=True)
     user = models.ForeignKey(
         AtlasUser,
         on_delete=models.DO_NOTHING,
@@ -299,22 +358,7 @@ class UserPreferences(models.Model):
 
     class Meta:
         managed = True
-        db_table = "UserPreferences"
-
-
-class Groups(models.Model):
-    group_id = models.AutoField(db_column="GroupId", primary_key=True)
-    account_name = models.TextField(db_column="AccountName", blank=True, default="")
-    name = models.TextField(db_column="GroupName", blank=True, default="")
-    email = models.TextField(db_column="GroupEmail", blank=True, default="")
-    group_type = models.TextField(db_column="GroupType", blank=True, default="")
-
-    class Meta:
-        managed = True
-        db_table = "UserGroups"
-
-    def __str__(self) -> str:
-        return self.name
+        db_table = "userPreferences"
 
 
 class UserRoles(models.Model):
@@ -324,7 +368,7 @@ class UserRoles(models.Model):
 
     class Meta:
         managed = True
-        db_table = "UserRoles"
+        db_table = "userRoles"
 
     def __str__(self) -> str:
         return self.name
@@ -337,7 +381,7 @@ class RolePermissions(models.Model):
 
     class Meta:
         managed = True
-        db_table = "RolePermissions"
+        db_table = "rolePermissions"
 
     def __str__(self) -> str:
         return self.name
@@ -366,7 +410,7 @@ class RolePermissionLinks(models.Model):
 
     class Meta:
         managed = True
-        db_table = "RolePermissionLinks"
+        db_table = "rolePermissionLinks"
 
 
 class GroupRoleLinks(models.Model):
@@ -390,7 +434,7 @@ class GroupRoleLinks(models.Model):
 
     class Meta:
         managed = True
-        db_table = "GroupRoleLinks"
+        db_table = "groupRoleLinks"
 
 
 class UserRoleLinks(models.Model):
@@ -414,31 +458,12 @@ class UserRoleLinks(models.Model):
 
     class Meta:
         managed = True
-        db_table = "app.UserRoleLinks"
+        db_table = "userRoleLinks"
 
 
-class UserGroupMemberships(models.Model):
-    membership_id = models.AutoField(db_column="MembershipId", primary_key=True)
-    user = models.ForeignKey(
-        AtlasUser,
-        on_delete=models.DO_NOTHING,
-        db_column="UserId",
-        blank=True,
-        null=True,
-        related_name="group_links",
-    )
-    group = models.ForeignKey(
-        Groups,
-        on_delete=models.DO_NOTHING,
-        db_column="GroupId",
-        blank=True,
-        null=True,
-        related_name="user_links",
-    )
-
-    class Meta:
-        managed = True
-        db_table = "UserGroupsMembership"
+# ---------------------------------------------------------------------------
+# Lookup tables (were in app schema)
+# ---------------------------------------------------------------------------
 
 
 class OrganizationalValue(models.Model):
@@ -449,7 +474,7 @@ class OrganizationalValue(models.Model):
 
     class Meta:
         managed = True
-        db_table = "app.OrganizationalValue"
+        db_table = "organizationalValue"
 
 
 class EstimatedRunFrequency(models.Model):
@@ -460,7 +485,7 @@ class EstimatedRunFrequency(models.Model):
 
     class Meta:
         managed = True
-        db_table = "app.EstimatedRunFrequency"
+        db_table = "estimatedRunFrequency"
 
 
 class Fragility(models.Model):
@@ -469,7 +494,7 @@ class Fragility(models.Model):
 
     class Meta:
         managed = True
-        db_table = "app.Fragility"
+        db_table = "fragility"
 
 
 class MaintenanceSchedule(models.Model):
@@ -478,7 +503,7 @@ class MaintenanceSchedule(models.Model):
 
     class Meta:
         managed = True
-        db_table = "app.MaintenanceSchedule"
+        db_table = "maintenanceSchedule"
 
 
 class MaintenanceLogStatus(models.Model):
@@ -487,7 +512,7 @@ class MaintenanceLogStatus(models.Model):
 
     class Meta:
         managed = True
-        db_table = "app.MaintenanceLogStatus"
+        db_table = "maintenanceLogStatus"
 
 
 class FragilityTag(models.Model):
@@ -496,7 +521,12 @@ class FragilityTag(models.Model):
 
     class Meta:
         managed = True
-        db_table = "app.FragilityTag"
+        db_table = "fragilityTag"
+
+
+# ---------------------------------------------------------------------------
+# ReportObject documentation / extended metadata (was app.ReportObject_doc)
+# ---------------------------------------------------------------------------
 
 
 class ReportObjectDoc(models.Model):
@@ -507,7 +537,7 @@ class ReportObjectDoc(models.Model):
         primary_key=True,
         related_name="doc",
     )
-    operational_owner_user = models.ForeignKey(
+    operational_owner = models.ForeignKey(
         AtlasUser,
         on_delete=models.DO_NOTHING,
         db_column="OperationalOwnerUserID",
@@ -515,11 +545,23 @@ class ReportObjectDoc(models.Model):
         null=True,
         related_name="owned_report_docs",
     )
-    requester = models.TextField(db_column="Requester", blank=True, default="")
+    requester = models.ForeignKey(
+        AtlasUser,
+        on_delete=models.DO_NOTHING,
+        db_column="Requester",
+        blank=True,
+        null=True,
+        related_name="requested_report_docs",
+    )
+    git_lab_project_url = models.TextField(
+        db_column="GitLabProjectURL", blank=True, null=True
+    )
     developer_description = models.TextField(
         db_column="DeveloperDescription", blank=True, default=""
     )
-    key_assumptions = models.TextField(db_column="KeyAssumptions", blank=True, default="")
+    key_assumptions = models.TextField(
+        db_column="KeyAssumptions", blank=True, default=""
+    )
     organizational_value = models.ForeignKey(
         OrganizationalValue,
         on_delete=models.DO_NOTHING,
@@ -544,7 +586,7 @@ class ReportObjectDoc(models.Model):
         null=True,
         related_name="report_docs",
     )
-    executive_visibility = models.CharField(
+    executive_visibility_yn = models.CharField(
         db_column="ExecutiveVisibilityYN", max_length=1, blank=True, default=""
     )
     maintenance_schedule = models.ForeignKey(
@@ -555,10 +597,12 @@ class ReportObjectDoc(models.Model):
         null=True,
         related_name="report_docs",
     )
-    last_update_datetime = models.DateTimeField(
+    last_update_date_time = models.DateTimeField(
         db_column="LastUpdateDateTime", blank=True, null=True
     )
-    created_datetime = models.DateTimeField(db_column="CreatedDateTime", blank=True, null=True)
+    created_date_time = models.DateTimeField(
+        db_column="CreatedDateTime", blank=True, null=True
+    )
     created_by = models.ForeignKey(
         AtlasUser,
         on_delete=models.DO_NOTHING,
@@ -575,10 +619,20 @@ class ReportObjectDoc(models.Model):
         null=True,
         related_name="updated_report_docs",
     )
+    enabled_for_hyperspace = models.CharField(
+        db_column="EnabledForHyperspace", max_length=1, blank=True, default=""
+    )
+    do_not_purge = models.CharField(
+        db_column="DoNotPurge", max_length=1, blank=True, default=""
+    )
+    hidden = models.CharField(db_column="Hidden", max_length=1, blank=True, default="")
+    developer_notes = models.TextField(
+        db_column="DeveloperNotes", blank=True, default=""
+    )
 
     class Meta:
         managed = True
-        db_table = "app.ReportObject_doc"
+        db_table = "reportObject_doc"
 
 
 class ReportObjectDocTerms(models.Model):
@@ -598,7 +652,7 @@ class ReportObjectDocTerms(models.Model):
 
     class Meta:
         managed = True
-        db_table = "app.ReportObjectDocTerms"
+        db_table = "reportObjectDocTerms"
 
 
 class ReportObjectDocFragilityTags(models.Model):
@@ -618,7 +672,7 @@ class ReportObjectDocFragilityTags(models.Model):
 
     class Meta:
         managed = True
-        db_table = "app.reportobjectdocfragilitytags"
+        db_table = "reportObjectDocFragilityTags"
 
 
 class MaintenanceLog(models.Model):
@@ -633,13 +687,13 @@ class MaintenanceLog(models.Model):
     )
     maintainer = models.ForeignKey(
         AtlasUser,
-        on_delete=models.DO_NOTHING,
-        db_column="MaintainerID",
-        blank=True,
-        null=True,
+        on_delete=models.CASCADE,
+        db_column="MaintainerId",
         related_name="maintenance_logs",
     )
-    maintenance_date = models.DateTimeField(db_column="MaintenanceDate", blank=True, null=True)
+    maintenance_date = models.DateTimeField(
+        db_column="MaintenanceDate", blank=True, null=True
+    )
     comment = models.TextField(db_column="Comment", blank=True, default="")
     status = models.ForeignKey(
         MaintenanceLogStatus,
@@ -652,7 +706,7 @@ class MaintenanceLog(models.Model):
 
     class Meta:
         managed = True
-        db_table = "app.MaintenanceLog"
+        db_table = "maintenanceLog"
 
 
 class ReportObjectDocMaintenanceLogs(models.Model):
@@ -672,7 +726,12 @@ class ReportObjectDocMaintenanceLogs(models.Model):
 
     class Meta:
         managed = True
-        db_table = "app.ReportObjectDocMaintenanceLogs"
+        db_table = "reportObjectDocMaintenanceLogs"
+
+
+# ---------------------------------------------------------------------------
+# dbo-schema tables (continued)
+# ---------------------------------------------------------------------------
 
 
 class ReportObjectHierarchy(models.Model):
@@ -692,7 +751,7 @@ class ReportObjectHierarchy(models.Model):
 
     class Meta:
         managed = True
-        db_table = "ReportObjectHierarchy"
+        db_table = "reportObjectHierarchy"
 
 
 class ReportObjectQuery(models.Model):
@@ -707,7 +766,7 @@ class ReportObjectQuery(models.Model):
 
     class Meta:
         managed = True
-        db_table = "ReportObjectQuery"
+        db_table = "reportObjectQuery"
 
 
 class ReportObjectRunData(models.Model):
@@ -733,7 +792,7 @@ class ReportObjectRunData(models.Model):
 
     class Meta:
         managed = True
-        db_table = "ReportObjectRunData"
+        db_table = "reportObjectRunData"
 
 
 class ReportObjectRunDataBridge(models.Model):
@@ -750,7 +809,7 @@ class ReportObjectRunDataBridge(models.Model):
 
     class Meta:
         managed = True
-        db_table = "ReportObjectRunDataBridge"
+        db_table = "reportObjectRunDataBridge"
 
 
 class UserFavoriteFolders(models.Model):
@@ -767,4 +826,4 @@ class UserFavoriteFolders(models.Model):
 
     class Meta:
         managed = True
-        db_table = "app.UserFavoriteFolders"
+        db_table = "userFavoriteFolders"

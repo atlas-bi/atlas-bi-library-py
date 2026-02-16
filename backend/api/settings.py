@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = environ.get("SECRET_KEY", get_random_secret_key())
 
-DEBUG = environ.get("DEBUG", "") == "0"
+DEBUG = environ.get("DEBUG", "1") != "0"
 
 allowed_hosts_env = environ.get("ALLOWED_HOSTS", "localhost,api")
 ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(",") if host.strip()]
@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_celery_results",
+    "django_celery_beat",
     "rest_framework",
     "rest_framework_simplejwt",
     "drf_spectacular",
@@ -165,9 +167,33 @@ USE_I18N = True
 USE_TZ = True
 
 ######################################################################
+# Celery
+######################################################################
+REDIS_URL = environ.get("REDIS_URL", "redis://127.0.0.1:6379").strip()
+
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_BROKER_URL = environ.get("CELERY_BROKER_URL", REDIS_URL).strip()
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+DJANGO_CELERY_BEAT_TZ_AWARE = True
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_RESULT_EXTENDED = True
+
+######################################################################
 # Staticfiles
 ######################################################################
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+######################################################################
+# Solr
+######################################################################
+SOLR_URL = environ.get("SOLR_URL", "").strip()
+SOLR_LOOKUP_URL = environ.get("SOLR_LOOKUP_URL", "").strip()
 
 ######################################################################
 # Rest Framework
@@ -189,8 +215,8 @@ REST_FRAMEWORK = {
 # Unfold
 ######################################################################
 UNFOLD = {
-    "SITE_HEADER": _("Turbo Admin"),
-    "SITE_TITLE": _("Turbo Admin"),
+    "SITE_HEADER": _("Atlas Admin"),
+    "SITE_TITLE": _("Atlas Admin"),
     "SIDEBAR": {
         "show_search": True,
         "show_all_applications": True,
