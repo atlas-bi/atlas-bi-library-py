@@ -102,7 +102,9 @@ def is_enabled() -> bool:
     return bool(getattr(settings, "SOLR_URL", ""))
 
 
-def search(handler: str, query: str, *, rows: int = 20, fq: Iterable[str] | None = None) -> list[SolrHit]:
+def search(
+    handler: str, query: str, *, rows: int = 20, fq: Iterable[str] | None = None
+) -> list[SolrHit]:
     url = getattr(settings, "SOLR_URL", "")
     if not url:
         return []

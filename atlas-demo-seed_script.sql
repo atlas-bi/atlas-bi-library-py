@@ -943,10 +943,10 @@ values
  (23,'2019-07-18 23:30:41.107','Report updated to current standard.',2),
  (47,'2019-11-28 17:32:55.783','Report updated to current standard.',2),
  (59,'2019-07-31 21:54:41.079','Report updated to current standard.',2);
- 
+
  declare @MaintenanceLogFkColumn sysname;
  declare @ReportObjectDocIdColumn sysname;
- 
+
  select top (1) @MaintenanceLogFkColumn = pc.name
  from sys.foreign_key_columns fkc
  join sys.columns pc
@@ -954,12 +954,12 @@ values
   and pc.column_id = fkc.parent_column_id
  where fkc.parent_object_id = object_id('app.MaintenanceLog')
    and fkc.referenced_object_id = object_id('app.ReportObject_doc');
- 
+
  select top (1) @ReportObjectDocIdColumn = c.name
  from sys.columns c
  where c.object_id = object_id('app.ReportObject_doc')
    and c.name in ('ReportObjectID','ReportObjectId');
- 
+
  if @MaintenanceLogFkColumn is not null and @ReportObjectDocIdColumn is not null
  begin
      declare @sql nvarchar(max);
@@ -1005,7 +1005,7 @@ if object_id('app.ReportObjectDocMaintenanceLogs','U') is not null
  begin
      declare @ReportObjectDocMaintenanceLogsReportObjectFkColumn sysname;
      declare @ReportObjectDocMaintenanceLogsMaintenanceLogFkColumn sysname;
- 
+
      select top (1) @ReportObjectDocMaintenanceLogsReportObjectFkColumn = pc.name
      from sys.foreign_key_columns fkc
      join sys.columns pc
@@ -1013,7 +1013,7 @@ if object_id('app.ReportObjectDocMaintenanceLogs','U') is not null
       and pc.column_id = fkc.parent_column_id
      where fkc.parent_object_id = object_id('app.ReportObjectDocMaintenanceLogs')
        and fkc.referenced_object_id = object_id('app.ReportObject_doc');
- 
+
      select top (1) @ReportObjectDocMaintenanceLogsMaintenanceLogFkColumn = pc.name
      from sys.foreign_key_columns fkc
      join sys.columns pc
@@ -1021,7 +1021,7 @@ if object_id('app.ReportObjectDocMaintenanceLogs','U') is not null
       and pc.column_id = fkc.parent_column_id
      where fkc.parent_object_id = object_id('app.ReportObjectDocMaintenanceLogs')
        and fkc.referenced_object_id = object_id('app.MaintenanceLog');
- 
+
      if @ReportObjectDocMaintenanceLogsReportObjectFkColumn is not null
         and @ReportObjectDocMaintenanceLogsMaintenanceLogFkColumn is not null
      begin
@@ -1175,13 +1175,13 @@ if object_id('app.ReportObjectDocMaintenanceLogs','U') is not null
      end
  end
  GO
- 
+
  if object_id('app.reportobjectdocfragilitytags','U') is not null
     and object_id('app.ReportObject_doc','U') is not null
  begin
      declare @ReportObjectDocFragilityTagsReportObjectFkColumn sysname;
      declare @ReportObjectDocFragilityTagsFragilityTagFkColumn sysname;
- 
+
      select top (1) @ReportObjectDocFragilityTagsReportObjectFkColumn = pc.name
      from sys.foreign_key_columns fkc
      join sys.columns pc
@@ -1189,7 +1189,7 @@ if object_id('app.ReportObjectDocMaintenanceLogs','U') is not null
       and pc.column_id = fkc.parent_column_id
      where fkc.parent_object_id = object_id('app.reportobjectdocfragilitytags')
        and fkc.referenced_object_id = object_id('app.ReportObject_doc');
- 
+
      select top (1) @ReportObjectDocFragilityTagsFragilityTagFkColumn = pc.name
      from sys.foreign_key_columns fkc
      join sys.foreign_keys fk
@@ -1202,7 +1202,7 @@ if object_id('app.ReportObjectDocMaintenanceLogs','U') is not null
      where fkc.parent_object_id = object_id('app.reportobjectdocfragilitytags')
        and fkc.referenced_object_id <> object_id('app.ReportObject_doc')
        and ro.name like '%Fragility%Tag%';
- 
+
      if @ReportObjectDocFragilityTagsFragilityTagFkColumn is null
      begin
          select top (1) @ReportObjectDocFragilityTagsFragilityTagFkColumn = pc.name
@@ -1213,7 +1213,7 @@ if object_id('app.ReportObjectDocMaintenanceLogs','U') is not null
          where fkc.parent_object_id = object_id('app.reportobjectdocfragilitytags')
            and fkc.referenced_object_id <> object_id('app.ReportObject_doc');
      end
- 
+
      if @ReportObjectDocFragilityTagsReportObjectFkColumn is not null
         and @ReportObjectDocFragilityTagsFragilityTagFkColumn is not null
      begin
@@ -1532,7 +1532,7 @@ TRANSACTIONS.BAD_DEBT_FLAG_YN <> Y
 ('Observation Case','A hospital account that was ever placed into an Observation base class. Discharge base class is ignored meaning patients who were later converted to inpatient are included. This differs from an Observation Discharge which only includes patients discharged with an Observation base class.','','N','2020-01-05 19:06:29.022','89','N','','2019-07-22 16:25:28.267','9999-12-31 00:00:00.000','60','2019-06-26 08:02:28.339'),
 ('Unavailable Bed','Unavailable Beds are defined as the number of unavailable beds at a given point in time, adjusted based on Staffing or Licensing levels. Staffed Beds are checked first, followed by Licensed Beds. If neither of those are being used, the count falls back to the number of Physical Beds.','Set up and logic details available.','Y','2019-07-18 15:51:51.444','58','','','2019-07-18 15:51:51.444','9999-12-31 00:00:00.000','100','2019-05-30 11:16:31.601')
  GO
- 
+
  -- report term links
  if object_id('app.ReportObjectDocTerms','U') is not null
     and object_id('app.Term','U') is not null
@@ -1540,7 +1540,7 @@ TRANSACTIONS.BAD_DEBT_FLAG_YN <> Y
  begin
      declare @ReportObjectDocTermsReportObjectFkColumn sysname;
      declare @ReportObjectDocTermsTermFkColumn sysname;
- 
+
      select top (1) @ReportObjectDocTermsReportObjectFkColumn = pc.name
      from sys.foreign_key_columns fkc
      join sys.columns pc
@@ -1548,7 +1548,7 @@ TRANSACTIONS.BAD_DEBT_FLAG_YN <> Y
       and pc.column_id = fkc.parent_column_id
      where fkc.parent_object_id = object_id('app.ReportObjectDocTerms')
        and fkc.referenced_object_id = object_id('app.ReportObject_doc');
- 
+
      select top (1) @ReportObjectDocTermsTermFkColumn = pc.name
      from sys.foreign_key_columns fkc
      join sys.columns pc
@@ -1556,7 +1556,7 @@ TRANSACTIONS.BAD_DEBT_FLAG_YN <> Y
       and pc.column_id = fkc.parent_column_id
      where fkc.parent_object_id = object_id('app.ReportObjectDocTerms')
        and fkc.referenced_object_id = object_id('app.Term');
- 
+
      if @ReportObjectDocTermsReportObjectFkColumn is not null and @ReportObjectDocTermsTermFkColumn is not null
      begin
          declare @sql2 nvarchar(max);
@@ -1629,7 +1629,7 @@ TRANSACTIONS.BAD_DEBT_FLAG_YN <> Y
                    and dt.[' + replace(@ReportObjectDocTermsTermFkColumn, ']', ']]') + N'] = v.TermId
              );
          ';
- 
+
          exec sp_executesql @sql2;
      end
  end

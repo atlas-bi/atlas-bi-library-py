@@ -1,7 +1,9 @@
 import type { AtlasCollection } from '@/lib/atlas-api'
 import Link from 'next/link'
 
-export function CollectionCard({ collection }: { collection: AtlasCollection }) {
+export function CollectionCard({
+  collection
+}: { collection: AtlasCollection }) {
   const description =
     collection.description?.trim() || collection.search_summary?.trim() || ''
 
