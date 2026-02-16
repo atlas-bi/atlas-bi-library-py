@@ -1,12 +1,12 @@
 'use client'
 
+import type { CollectionUpsertInput } from '@/actions/collections-actions'
+import { upsertCollectionAction } from '@/actions/collections-actions'
 import type {
   AtlasCollection,
   AtlasReportSearchResult,
   AtlasTermSearchResult
 } from '@/lib/atlas-api'
-import type { CollectionUpsertInput } from '@/actions/collections-actions'
-import { upsertCollectionAction } from '@/actions/collections-actions'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useMemo, useState, useTransition } from 'react'
@@ -54,14 +54,16 @@ export function CollectionForm({
     )
   }, [initial])
 
-  const [selectedReports, setSelectedReports] = useState<SelectedReport[]>(
-    initialReports
-  )
-  const [selectedTerms, setSelectedTerms] = useState<SelectedTerm[]>(initialTerms)
+  const [selectedReports, setSelectedReports] =
+    useState<SelectedReport[]>(initialReports)
+  const [selectedTerms, setSelectedTerms] =
+    useState<SelectedTerm[]>(initialTerms)
 
   const [reportQuery, setReportQuery] = useState('')
   const [termQuery, setTermQuery] = useState('')
-  const [reportResults, setReportResults] = useState<AtlasReportSearchResult[]>([])
+  const [reportResults, setReportResults] = useState<AtlasReportSearchResult[]>(
+    []
+  )
   const [termResults, setTermResults] = useState<AtlasTermSearchResult[]>([])
 
   async function runReportSearch(q: string) {
@@ -119,7 +121,9 @@ export function CollectionForm({
 
         <div className="flex gap-3">
           <Link
-            href={initial ? `/collections/${initial.collection_id}` : '/collections'}
+            href={
+              initial ? `/collections/${initial.collection_id}` : '/collections'
+            }
             className="rounded-md border bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
             Cancel

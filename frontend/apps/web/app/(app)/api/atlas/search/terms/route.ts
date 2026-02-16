@@ -1,4 +1,4 @@
-import { atlasFetch, type AtlasTermSearchResult } from '@/lib/atlas-api'
+import { type AtlasTermSearchResult, atlasFetch } from '@/lib/atlas-api'
 import { authOptions } from '@/lib/auth'
 import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'

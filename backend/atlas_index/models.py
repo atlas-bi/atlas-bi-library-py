@@ -21,7 +21,9 @@ class ReportObjectType(models.Model):
 
 class ReportObject(models.Model):
     report_id = models.AutoField(db_column="ReportObjectID", primary_key=True)
-    report_key = models.TextField(db_column="ReportObjectBizKey", blank=True, default="")
+    report_key = models.TextField(
+        db_column="ReportObjectBizKey", blank=True, default=""
+    )
     type = models.ForeignKey(
         ReportObjectType,
         on_delete=models.SET_NULL,
@@ -36,10 +38,14 @@ class ReportObject(models.Model):
     detailed_description = models.TextField(
         db_column="DetailedDescription", blank=True, default=""
     )
-    system_server = models.CharField(db_column="SourceServer", max_length=255, default="")
+    system_server = models.CharField(
+        db_column="SourceServer", max_length=255, default=""
+    )
     system_db = models.CharField(db_column="SourceDB", max_length=255, default="")
     system_table = models.CharField(db_column="SourceTable", max_length=255, default="")
-    system_run_url = models.TextField(db_column="ReportObjectURL", blank=True, default="")
+    system_run_url = models.TextField(
+        db_column="ReportObjectURL", blank=True, default=""
+    )
     author = models.ForeignKey(
         "AtlasUser",
         on_delete=models.DO_NOTHING,
@@ -230,9 +236,7 @@ class Term(models.Model):
     valid_from = models.DateTimeField(
         db_column="ValidFromDateTime", blank=True, null=True
     )
-    valid_to = models.DateTimeField(
-        db_column="ValidToDateTime", blank=True, null=True
-    )
+    valid_to = models.DateTimeField(db_column="ValidToDateTime", blank=True, null=True)
     updated_by = models.ForeignKey(
         AtlasUser,
         on_delete=models.DO_NOTHING,
@@ -676,7 +680,9 @@ class ReportObjectDocFragilityTags(models.Model):
 
 
 class MaintenanceLog(models.Model):
-    maintenance_log_id = models.AutoField(db_column="MaintenanceLogId", primary_key=True)
+    maintenance_log_id = models.AutoField(
+        db_column="MaintenanceLogId", primary_key=True
+    )
     report_doc = models.ForeignKey(
         ReportObjectDoc,
         on_delete=models.DO_NOTHING,
@@ -770,7 +776,9 @@ class ReportObjectQuery(models.Model):
 
 
 class ReportObjectRunData(models.Model):
-    run_data_id = models.CharField(db_column="RunDataId", primary_key=True, max_length=450)
+    run_data_id = models.CharField(
+        db_column="RunDataId", primary_key=True, max_length=450
+    )
     run_user = models.ForeignKey(
         AtlasUser,
         on_delete=models.DO_NOTHING,
@@ -779,16 +787,34 @@ class ReportObjectRunData(models.Model):
         null=True,
         related_name="report_runs",
     )
-    run_start_time = models.DateTimeField(db_column="RunStartTime", blank=True, null=True)
-    run_duration_seconds = models.DecimalField(
-        db_column="RunDurationSeconds", max_digits=18, decimal_places=2, blank=True, null=True
+    run_start_time = models.DateTimeField(
+        db_column="RunStartTime", blank=True, null=True
     )
-    run_status = models.CharField(db_column="RunStatus", max_length=50, blank=True, null=True)
-    last_load_date = models.DateTimeField(db_column="LastLoadDate", blank=True, null=True)
-    run_start_time_hour = models.IntegerField(db_column="RunStartTime_Hour", blank=True, null=True)
-    run_start_time_day = models.IntegerField(db_column="RunStartTime_Day", blank=True, null=True)
-    run_start_time_month = models.IntegerField(db_column="RunStartTime_Month", blank=True, null=True)
-    run_start_time_year = models.IntegerField(db_column="RunStartTime_Year", blank=True, null=True)
+    run_duration_seconds = models.DecimalField(
+        db_column="RunDurationSeconds",
+        max_digits=18,
+        decimal_places=2,
+        blank=True,
+        null=True,
+    )
+    run_status = models.CharField(
+        db_column="RunStatus", max_length=50, blank=True, null=True
+    )
+    last_load_date = models.DateTimeField(
+        db_column="LastLoadDate", blank=True, null=True
+    )
+    run_start_time_hour = models.IntegerField(
+        db_column="RunStartTime_Hour", blank=True, null=True
+    )
+    run_start_time_day = models.IntegerField(
+        db_column="RunStartTime_Day", blank=True, null=True
+    )
+    run_start_time_month = models.IntegerField(
+        db_column="RunStartTime_Month", blank=True, null=True
+    )
+    run_start_time_year = models.IntegerField(
+        db_column="RunStartTime_Year", blank=True, null=True
+    )
 
     class Meta:
         managed = True
@@ -805,7 +831,9 @@ class ReportObjectRunDataBridge(models.Model):
     )
     run_id = models.IntegerField(db_column="RunId")
     runs = models.IntegerField(db_column="Runs", blank=True, null=True)
-    inherited = models.CharField(db_column="Inherited", max_length=1, blank=True, default="")
+    inherited = models.CharField(
+        db_column="Inherited", max_length=1, blank=True, default=""
+    )
 
     class Meta:
         managed = True
