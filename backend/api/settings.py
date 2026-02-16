@@ -78,7 +78,8 @@ TEMPLATES = [
 ######################################################################
 # Database
 ######################################################################
-DB_MODE = environ.get("DB_MODE", "dual").strip().lower()
+_is_pytest = "PYTEST_CURRENT_TEST" in environ
+DB_MODE = environ.get("DB_MODE", "single" if _is_pytest else "dual").strip().lower()
 DEFAULT_DB_VENDOR = environ.get("DEFAULT_DB_VENDOR", "postgres").strip().lower()
 
 
@@ -97,7 +98,7 @@ def _postgres_db(prefix: str = "DATABASE_") -> dict:
 
 
 def _sqlserver_db(prefix: str = "DATABASE_") -> dict:
-    driver = environ.get("SQLSERVER_DRIVER", "ODBC Driver 17 for SQL Server")
+    driver = environ.get("SQLSERVER_DRIVER", "ODBC Driver 18 for SQL Server")
     extra_params = environ.get("SQLSERVER_EXTRA_PARAMS", "MARS_Connection=Yes")
     return {
         "ENGINE": "mssql",
