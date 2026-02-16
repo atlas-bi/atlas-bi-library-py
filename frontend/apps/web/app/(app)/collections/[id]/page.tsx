@@ -1,7 +1,7 @@
 import { getCollection } from '@/lib/atlas-api'
 import { authOptions } from '@/lib/auth'
-import Link from 'next/link'
 import { getServerSession } from 'next-auth'
+import Link from 'next/link'
 
 export default async function CollectionDetailsPage({
   params
@@ -57,7 +57,9 @@ export default async function CollectionDetailsPage({
 
       {collection.initiative ? (
         <section>
-          <h2 className="text-lg font-semibold text-gray-900">Owning Initiative</h2>
+          <h2 className="text-lg font-semibold text-gray-900">
+            Owning Initiative
+          </h2>
           <div className="mt-3 rounded-lg border bg-white p-4">
             <div className="font-medium text-gray-900">
               {collection.initiative.name}
@@ -79,10 +81,7 @@ export default async function CollectionDetailsPage({
               .slice()
               .sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0))
               .map((r) => (
-                <div
-                  key={r.link_id}
-                  className="rounded-lg border bg-white p-4"
-                >
+                <div key={r.link_id} className="rounded-lg border bg-white p-4">
                   <div className="font-medium text-gray-900">
                     {r.report.title || r.report.name}
                   </div>
@@ -100,10 +99,7 @@ export default async function CollectionDetailsPage({
               .slice()
               .sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0))
               .map((t) => (
-                <div
-                  key={t.link_id}
-                  className="rounded-lg border bg-white p-4"
-                >
+                <div key={t.link_id} className="rounded-lg border bg-white p-4">
                   <div className="font-medium text-gray-900">{t.term.name}</div>
                   {t.term.summary ? (
                     <div className="mt-1 text-sm text-gray-600">

@@ -96,7 +96,12 @@ class Command(BaseCommand):
         result = sql_text
 
         # Remove USE [atlas] statements
-        result = re.sub(r"(?i)^USE\s+\[atlas\]\s*$", "-- USE [atlas] (removed)", result, flags=re.MULTILINE)
+        result = re.sub(
+            r"(?i)^USE\s+\[atlas\]\s*$",
+            "-- USE [atlas] (removed)",
+            result,
+            flags=re.MULTILINE,
+        )
 
         # Replace table names (case-insensitive)
         for old, new in _TABLE_RENAMES:
@@ -148,7 +153,9 @@ class Command(BaseCommand):
         adapted_sql = self._adapt_sql(raw_sql)
 
         # Split on GO batch separators
-        batches = re.split(r"^\s*GO\s*$", adapted_sql, flags=re.MULTILINE | re.IGNORECASE)
+        batches = re.split(
+            r"^\s*GO\s*$", adapted_sql, flags=re.MULTILINE | re.IGNORECASE
+        )
 
         cn = self._get_raw_connection()
         cur = cn.cursor()
