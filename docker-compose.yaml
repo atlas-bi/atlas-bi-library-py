@@ -36,6 +36,11 @@ services:
       MSSQL_SA_PASSWORD: ${DG_DB_PASSWORD:-StrongPassword!123}
       MSSQL_PID: ${MSSQL_PID:-Evaluation}
       MSSQL_MEMORY_LIMIT_MB: ${MSSQL_MEMORY_LIMIT_MB:-2048}
+    healthcheck:
+      test: ["CMD-SHELL", "/bin/bash -lc 'echo > /dev/tcp/127.0.0.1/1433'"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
   api:
     command:
       - bash
@@ -131,7 +136,7 @@ services:
       db:
         condition: service_healthy
       dg_db:
-        condition: service_started
+        condition: service_healthy
   celery_worker:
     command: |-
       bash -lc "
