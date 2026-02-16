@@ -3,7 +3,7 @@ import { DeleteAccountForm } from '@/components/forms/delete-account-form'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Delete account - Turbo'
+  title: 'Delete account - Atlas'
 }
 
 export default function DeleteAccount() {

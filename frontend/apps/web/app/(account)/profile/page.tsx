@@ -6,7 +6,7 @@ import type { Metadata } from 'next'
 import { getServerSession } from 'next-auth'
 
 export const metadata: Metadata = {
-  title: 'Profile - Turbo'
+  title: 'Profile - Atlas'
 }
 
 export default async function Profile() {

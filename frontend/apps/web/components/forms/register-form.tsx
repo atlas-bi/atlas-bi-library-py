@@ -25,7 +25,7 @@ export function RegisterForm({
   return (
     <>
       <FormHeader
-        title="Create new account in Turbo"
+        title="Create new account in Atlas"
         description="Get an access to internal application"
       />
 

@@ -32,7 +32,7 @@ export function LoginForm() {
   return (
     <>
       <FormHeader
-        title="Welcome back to Turbo"
+        title="Welcome back to Atlas"
         description="Get an access to internal application"
       />
 

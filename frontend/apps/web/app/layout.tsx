@@ -8,7 +8,7 @@ import '@frontend/ui/styles/globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Turbo - Django & Next.js Bootstrap Template'
+  title: 'Atlas'
 }
 
 export default function RootLayout({
