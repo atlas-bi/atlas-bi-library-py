@@ -1,6 +1,11 @@
-version: "3.9"
 
 services:
+  redis:
+    image: redis:7
+    expose:
+      - "6379"
+    ports:
+      - "${REDIS_HOST_PORT:-6379}:6379"
   db:
     image: postgres:17
     expose:
@@ -8,104 +13,151 @@ services:
     ports:
       - "${POSTGRES_HOST_PORT:-5433}:5432"
     volumes:
-      - turbo_pg_data:/var/lib/postgresql/data
+      - atlas_pg_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-atlas}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 2s
       timeout: 2s
       retries: 10
   dg_db:
+    platform: linux/amd64
     image: mcr.microsoft.com/mssql/server:2022-latest
-    user: "0:0"
-    command: >-
-      bash -lc "
-      chown -R 10001:0 /var/opt/mssql || true
-      exec /opt/mssql/bin/sqlservr
-      "
     expose:
       - "1433"
     ports:
       - "${DG_DB_HOST_PORT:-1434}:1433"
     volumes:
-      - turbo_mssql_data:/var/opt/mssql
+      - atlas_mssql_data:/var/opt/mssql
     environment:
       ACCEPT_EULA: "Y"
       MSSQL_SA_PASSWORD: ${DG_DB_PASSWORD:-StrongPassword!123}
       MSSQL_PID: ${MSSQL_PID:-Evaluation}
+      MSSQL_MEMORY_LIMIT_MB: ${MSSQL_MEMORY_LIMIT_MB:-2048}
   api:
+    command:
+      - bash
+      - -lc
+      - |
+        set -e
+
+        # Wait for SQL Server and create the atlas DB if it doesn't exist
+        /.venv/bin/python - <<'PY'
+        import os, time, pyodbc
+
+        host = os.environ.get('DG_DB_HOST', 'dg_db')
+        port = os.environ.get('DG_DB_PORT', '1433')
+        user = os.environ.get('DG_DB_USER', 'sa')
+        pw   = os.environ.get('DG_DB_PASSWORD', '')
+        db   = os.environ.get('DG_DB_NAME', 'atlas')
+        driver = os.environ.get('SQLSERVER_DRIVER', 'ODBC Driver 18 for SQL Server')
+        extra  = os.environ.get('SQLSERVER_EXTRA_PARAMS', 'Encrypt=no;TrustServerCertificate=yes')
+
+        dsn = f"DRIVER={{{driver}}};SERVER={host},{port};UID={user};PWD={pw};DATABASE=master;{extra}"
+        last = None
+        for _ in range(60):
+            try:
+                cn = pyodbc.connect(dsn, timeout=5)
+                cn.autocommit = True
+                cur = cn.cursor()
+                cur.execute("""
+                    IF DB_ID(?) IS NULL
+                    BEGIN
+                        DECLARE @db sysname = ?;
+                        DECLARE @sql nvarchar(max) = N'CREATE DATABASE ' + QUOTENAME(@db);
+                        EXEC(@sql);
+                    END
+                """, db, db)
+                cur.close()
+                cn.close()
+                break
+            except Exception as e:
+                last = e
+                time.sleep(2)
+        else:
+            raise SystemExit(f'Failed waiting for SQL Server / creating DB: {last}')
+        PY
+
+        /.venv/bin/python manage.py makemigrations atlas_index --noinput
+        /.venv/bin/python manage.py migrate
+        /.venv/bin/python manage.py migrate --database=dg_db
+        /.venv/bin/python manage.py seed_demo_data
+        /.venv/bin/python manage.py collectstatic --noinput
+        /.venv/bin/python manage.py createsuperuser --noinput 2>/dev/null || true
+        /.venv/bin/python manage.py runserver 0.0.0.0:8000
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: api
+    working_dir: /app
+    volumes:
+      - ./atlas-demo-seed_script.sql:/app/seed.sql:ro
+    expose:
+      - "8000"
+    ports:
+      - "${API_HOST_PORT:-8000}:8000"
+    environment:
+      ATLAS_DEMO_SEED_SQL_PATH: /app/seed.sql
+      DEBUG: ${DEBUG:-1}
+      SECRET_KEY: ${SECRET_KEY:-dev-secret-key}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL:-redis://redis:6379/0}
+      DB_MODE: ${DB_MODE:-dual}
+      DEFAULT_DB_VENDOR: ${DEFAULT_DB_VENDOR:-postgres}
+      DATABASE_USER: ${DATABASE_USER:-postgres}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-postgres}
+      DATABASE_NAME: ${DATABASE_NAME:-${POSTGRES_DB:-atlas}}
+      DATABASE_HOST: db
+      DATABASE_PORT: ${DATABASE_PORT:-5432}
+      DATABASE_TEST_NAME: ${DATABASE_TEST_NAME:-test}
+      SQLSERVER_DRIVER: ${SQLSERVER_DRIVER:-ODBC Driver 18 for SQL Server}
+      SQLSERVER_EXTRA_PARAMS: ${SQLSERVER_EXTRA_PARAMS:-Encrypt=no;TrustServerCertificate=yes}
+      DG_DB_VENDOR: ${DG_DB_VENDOR:-mssql}
+      DG_DB_USER: ${DG_DB_USER:-sa}
+      DG_DB_PASSWORD: ${DG_DB_PASSWORD:-StrongPassword!123}
+      DG_DB_NAME: ${DG_DB_NAME:-atlas}
+      DG_DB_HOST: ${DG_DB_HOST:-dg_db}
+      DG_DB_PORT: ${DG_DB_PORT:-1433}
+      DG_DB_APP_LABELS: ${DG_DB_APP_LABELS:-atlas_index}
+      DJANGO_SUPERUSER_USERNAME: ${DJANGO_SUPERUSER_USERNAME:-admin}
+      DJANGO_SUPERUSER_EMAIL: ${DJANGO_SUPERUSER_EMAIL:-admin@localhost}
+      DJANGO_SUPERUSER_PASSWORD: ${DJANGO_SUPERUSER_PASSWORD:-admin}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,api,127.0.0.1,0.0.0.0}
+    depends_on:
+      redis:
+        condition: service_started
+      db:
+        condition: service_healthy
+      dg_db:
+        condition: service_started
+  celery_worker:
     command: |-
       bash -lc "
       set -e
-
-      /.venv/bin/python - <<'PY'
-      import os
-      import time
-
-      import pyodbc
-
-      host = os.environ.get('DG_DB_HOST', 'dg_db')
-      port = os.environ.get('DG_DB_PORT', '1433')
-      user = os.environ.get('DG_DB_USER', 'sa')
-      pw = os.environ.get('DG_DB_PASSWORD', '')
-      db = os.environ.get('DG_DB_NAME', 'atlas')
-      driver = os.environ.get('SQLSERVER_DRIVER', 'ODBC Driver 18 for SQL Server')
-      extra = os.environ.get(
-          'SQLSERVER_EXTRA_PARAMS',
-          'Encrypt=yes;TrustServerCertificate=yes',
-      )
-
-      dsn = f\"DRIVER={{{driver}}};SERVER={host},{port};UID={user};PWD={pw};DATABASE=master;{extra}\"
-      last = None
-      for _ in range(60):
-          try:
-              cn = pyodbc.connect(dsn, timeout=5)
-              cn.autocommit = True
-              cur = cn.cursor()
-              cur.execute(
-                  \"IF DB_ID(?) IS NULL EXEC('CREATE DATABASE [' + REPLACE(?,']',']]') + ']')\",
-                  db,
-                  db,
-              )
-              cur.close()
-              cn.close()
-              break
-          except Exception as e:
-              last = e
-              time.sleep(2)
-      else:
-          raise SystemExit(f'Failed waiting for SQL Server / creating DB: {last}')
-      PY
-
-      /.venv/bin/python manage.py migrate
-      /.venv/bin/python manage.py migrate --database=dg_db
-      /.venv/bin/python manage.py seed_dg_db
-      /.venv/bin/python manage.py runserver 0.0.0.0:8000
+      /.venv/bin/celery -A api worker -l INFO
       "
     build:
       context: .
       dockerfile: Dockerfile
       target: api
     working_dir: /app
-    expose:
-      - "8000"
-    ports:
-      - "${API_HOST_PORT:-8000}:8000"
     environment:
-      DEBUG: ${DEBUG}
-      SECRET_KEY: ${SECRET_KEY}
+      DEBUG: ${DEBUG:-1}
+      SECRET_KEY: ${SECRET_KEY:-dev-secret-key}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL:-redis://redis:6379/0}
       DB_MODE: ${DB_MODE:-dual}
       DEFAULT_DB_VENDOR: ${DEFAULT_DB_VENDOR:-postgres}
       DATABASE_USER: ${DATABASE_USER:-postgres}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-${POSTGRES_PASSWORD}}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-postgres}
       DATABASE_NAME: ${DATABASE_NAME:-${POSTGRES_DB:-atlas}}
       DATABASE_HOST: db
       DATABASE_PORT: ${DATABASE_PORT:-5432}
-      DATABASE_TEST_NAME: ${DATABASE_TEST_NAME}
-      SQLSERVER_DRIVER: ${SQLSERVER_DRIVER}
-      SQLSERVER_EXTRA_PARAMS: ${SQLSERVER_EXTRA_PARAMS}
+      DATABASE_TEST_NAME: ${DATABASE_TEST_NAME:-test}
+      SQLSERVER_DRIVER: ${SQLSERVER_DRIVER:-ODBC Driver 18 for SQL Server}
+      SQLSERVER_EXTRA_PARAMS: ${SQLSERVER_EXTRA_PARAMS:-Encrypt=no;TrustServerCertificate=yes}
       DG_DB_VENDOR: ${DG_DB_VENDOR:-mssql}
       DG_DB_USER: ${DG_DB_USER:-sa}
       DG_DB_PASSWORD: ${DG_DB_PASSWORD:-StrongPassword!123}
@@ -114,12 +166,46 @@ services:
       DG_DB_PORT: ${DG_DB_PORT:-1433}
       DG_DB_APP_LABELS: ${DG_DB_APP_LABELS:-atlas_index}
     depends_on:
-      db:
-        condition: service_healthy
-      dg_db:
-        condition: service_started
+      - redis
+      - api
+  celery_beat:
+    command: |-
+      bash -lc "
+      set -e
+      /.venv/bin/celery -A api beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+      "
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: api
+    working_dir: /app
+    environment:
+      DEBUG: ${DEBUG:-1}
+      SECRET_KEY: ${SECRET_KEY:-dev-secret-key}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL:-redis://redis:6379/0}
+      DB_MODE: ${DB_MODE:-dual}
+      DEFAULT_DB_VENDOR: ${DEFAULT_DB_VENDOR:-postgres}
+      DATABASE_USER: ${DATABASE_USER:-postgres}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-postgres}
+      DATABASE_NAME: ${DATABASE_NAME:-${POSTGRES_DB:-atlas}}
+      DATABASE_HOST: db
+      DATABASE_PORT: ${DATABASE_PORT:-5432}
+      DATABASE_TEST_NAME: ${DATABASE_TEST_NAME:-test}
+      SQLSERVER_DRIVER: ${SQLSERVER_DRIVER:-ODBC Driver 18 for SQL Server}
+      SQLSERVER_EXTRA_PARAMS: ${SQLSERVER_EXTRA_PARAMS:-Encrypt=no;TrustServerCertificate=yes}
+      DG_DB_VENDOR: ${DG_DB_VENDOR:-mssql}
+      DG_DB_USER: ${DG_DB_USER:-sa}
+      DG_DB_PASSWORD: ${DG_DB_PASSWORD:-StrongPassword!123}
+      DG_DB_NAME: ${DG_DB_NAME:-atlas}
+      DG_DB_HOST: ${DG_DB_HOST:-dg_db}
+      DG_DB_PORT: ${DG_DB_PORT:-1433}
+      DG_DB_APP_LABELS: ${DG_DB_APP_LABELS:-atlas_index}
+    depends_on:
+      - redis
+      - api
   web:
-    command: bash -c "pnpm --filter web start -p 3000"
+    command: sh -c "pnpm --filter web start -p 3000"
     build:
       context: .
       dockerfile: Dockerfile
@@ -130,12 +216,12 @@ services:
     ports:
       - "${WEB_HOST_PORT:-3001}:3000"
     environment:
-      API_URL: ${API_URL}
-      NEXTAUTH_URL: ${NEXTAUTH_URL}
-      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      API_URL: ${API_URL:-http://api:8000}
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3001}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-dev-nextauth-secret}
     depends_on:
       - api
 
 volumes:
-  turbo_pg_data:
-  turbo_mssql_data:
+  atlas_pg_data:
+  atlas_mssql_data:
