@@ -177,6 +177,7 @@ services:
     command: |-
       bash -lc "
       set -e
+      /.venv/bin/python manage.py migrate --noinput
       /.venv/bin/celery -A api beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
       "
     build:
