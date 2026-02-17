@@ -50,7 +50,9 @@ services:
 
         # Wait for SQL Server and create the atlas DB if it doesn't exist
         /.venv/bin/python - <<'PY'
-        import os, time, pyodbc
+        import os, socket, time
+
+        import pyodbc
 
         host = os.environ.get('DG_DB_HOST', 'dg_db')
         port = os.environ.get('DG_DB_PORT', '1433')
@@ -60,11 +62,42 @@ services:
         driver = os.environ.get('SQLSERVER_DRIVER', 'ODBC Driver 18 for SQL Server')
         extra  = os.environ.get('SQLSERVER_EXTRA_PARAMS', 'Encrypt=no;TrustServerCertificate=yes')
 
+        print('SQL Server connection env:')
+        print(f"  DG_DB_HOST={host}")
+        print(f"  DG_DB_PORT={port}")
+        print(f"  DG_DB_USER={user}")
+        print(f"  DG_DB_PASSWORD={'<set>' if pw else '<empty>'}")
+        print(f"  DG_DB_NAME={db}")
+        print(f"  SQLSERVER_DRIVER={driver}")
+        print(f"  SQLSERVER_EXTRA_PARAMS={extra}")
+
+        try:
+            resolved = socket.gethostbyname(host)
+            print(f"  DG_DB_HOST_RESOLVED={resolved}")
+        except Exception as e:
+            print(f"  DG_DB_HOST_RESOLVE_ERROR={e!r}")
+            resolved = None
+
+        def _tcp_probe(h: str, p: int, timeout: float = 1.0) -> str:
+            try:
+                with socket.create_connection((h, p), timeout=timeout):
+                    return 'ok'
+            except Exception as e:
+                return f"error: {e!r}"
+
+        try:
+            port_int = int(port)
+        except Exception:
+            port_int = 1433
+
+        probe_target = resolved or host
+        print(f"  TCP_PROBE({probe_target}:{port_int})={_tcp_probe(probe_target, port_int)}")
+
         dsn = f"DRIVER={{{driver}}};SERVER={host},{port};UID={user};PWD={pw};DATABASE=master;{extra}"
         last = None
-        for _ in range(60):
+        for attempt in range(1, 121):
             try:
-                cn = pyodbc.connect(dsn, timeout=5)
+                cn = pyodbc.connect(dsn, timeout=15)
                 cn.autocommit = True
                 cur = cn.cursor()
                 cur.execute("""
@@ -80,6 +113,9 @@ services:
                 break
             except Exception as e:
                 last = e
+                if attempt in {1, 3, 5, 10, 20, 40, 80, 120}:
+                    print(f"SQL Server connect attempt {attempt}/120 failed: {e!r}")
+                    print(f"  TCP_PROBE({probe_target}:{port_int})={_tcp_probe(probe_target, port_int)}")
                 time.sleep(2)
         else:
             raise SystemExit(f'Failed waiting for SQL Server / creating DB: {last}')
