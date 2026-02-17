@@ -41,6 +41,10 @@ services:
       interval: 5s
       timeout: 3s
       retries: 30
+    networks:
+      default:
+        aliases:
+          - sqlserver
   api:
     command:
       - bash
