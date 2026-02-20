@@ -26,11 +26,10 @@ repos:
     hooks:
       - id: conventional-pre-commit
         stages: [commit-msg]
-  - repo: https://github.com/timothycrosley/isort
-    rev: 5.10.1
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
     hooks:
       - id: isort
-        additional_dependencies: [toml]
   - repo: https://github.com/ambv/black
     rev: 22.8.0
     hooks:
