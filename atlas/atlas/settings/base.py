@@ -98,10 +98,21 @@ SECRET_KEY = os.environ.get(
 DEBUG = False
 DEMO = False
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-]
+_allowed_hosts_env = os.environ.get("ALLOWED_HOSTS", "").strip()
+if _allowed_hosts_env:
+    if _allowed_hosts_env == "*":
+        ALLOWED_HOSTS = ["*"]
+    else:
+        ALLOWED_HOSTS = [
+            h.strip()
+            for h in _allowed_hosts_env.split(",")
+            if h.strip()
+        ]
+else:
+    ALLOWED_HOSTS = [
+        "localhost",
+        "127.0.0.1",
+    ]
 
 INTERNAL_IPS = [
     "127.0.0.1",
