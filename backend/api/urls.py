@@ -28,19 +28,21 @@ router.register(
     "collection-terms", CollectionTermViewSet, basename="api-collection-terms"
 )
 
+api_urlpatterns = [
+    path("", RedirectView.as_view(url="/admin/", permanent=False)),
+    path("", include(router.urls)),
+    path("schema/swagger-ui/", SpectacularSwaggerView.as_view(url_name="schema")),
+    path("schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("search/reports/", ReportSearchView.as_view(), name="api-search-reports"),
+    path("search/terms/", TermSearchView.as_view(), name="api-search-terms"),
+    path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+]
+
 urlpatterns = [
-    path(
-        "api/schema/swagger-ui/",
-        SpectacularSwaggerView.as_view(url_name="schema"),
-    ),
-    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
-    path("api/search/reports/", ReportSearchView.as_view(), name="api-search-reports"),
-    path("api/search/terms/", TermSearchView.as_view(), name="api-search-terms"),
-    path("api/", include(router.urls)),
-    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("api/", include(api_urlpatterns)),
     path("admin/", admin.site.urls),
-    path("", RedirectView.as_view(url="/api/", permanent=False)),
+    path("", RedirectView.as_view(url="/admin/", permanent=False)),
 ]
 
 if settings.DEBUG:
