@@ -140,18 +140,15 @@ class InitiativeSerializer(serializers.ModelSerializer):
         model = Initiative
         fields = ["initiative_id", "name", "description"]
 
-
 class TermSerializer(serializers.ModelSerializer):
     class Meta:
         model = Term
         fields = ["term_id", "name", "summary"]
 
-
 class ReportObjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReportObject
         fields = ["report_id", "title", "name"]
-
 
 class CollectionSerializer(serializers.ModelSerializer):
     initiative = InitiativeSerializer(read_only=True)
@@ -207,6 +204,13 @@ class CollectionSerializer(serializers.ModelSerializer):
         self._set_modified_by(instance)
         instance.save(update_fields=["modified_by"])
         return instance
+
+
+class InitiativeDetailSerializer(InitiativeSerializer):
+    collections = CollectionSerializer(many=True, read_only=True)
+
+    class Meta(InitiativeSerializer.Meta):
+        fields = InitiativeSerializer.Meta.fields + ["collections"]
 
 
 class CollectionReportSerializer(serializers.ModelSerializer):

@@ -11,6 +11,7 @@ from atlas_index.models import (
     Collection,
     CollectionReport,
     CollectionTerm,
+    Initiative,
     ReportObject,
     Term,
 )
@@ -21,6 +22,8 @@ from .serializers import (
     CollectionReportSerializer,
     CollectionSerializer,
     CollectionTermSerializer,
+    InitiativeSerializer,
+    InitiativeDetailSerializer,
     ReportSearchSerializer,
     TermSearchSerializer,
     UserChangePasswordErrorSerializer,
@@ -119,6 +122,28 @@ class UserViewSet(
     def delete_account(self, request, *args, **kwargs):
         self.request.user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class InitiativeViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, AtlasRolePermission]
+    queryset = Initiative.objects.all().order_by("name")
+
+    def get_permissions(self):
+        if self.action == "create":
+            self.required_permissions = ("Create Initiative",)
+        elif self.action in {"update", "partial_update"}:
+            self.required_permissions = ("Edit Initiative",)
+        elif self.action == "destroy":
+            self.required_permissions = ("Delete Initiative",)
+        else:
+            self.required_permissions = ()
+
+        return super().get_permissions()
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return InitiativeDetailSerializer
+        return InitiativeSerializer
 
 
 class CollectionViewSet(viewsets.ModelViewSet):

@@ -11,6 +11,7 @@ from .api import (
     CollectionReportViewSet,
     CollectionTermViewSet,
     CollectionViewSet,
+    InitiativeViewSet,
     ReportSearchView,
     TermSearchView,
     UserViewSet,
@@ -18,6 +19,7 @@ from .api import (
 
 router = routers.DefaultRouter()
 router.register("users", UserViewSet, basename="api-users")
+router.register("initiatives", InitiativeViewSet, basename="api-initiatives")
 router.register("collections", CollectionViewSet, basename="api-collections")
 router.register(
     "collection-reports", CollectionReportViewSet, basename="api-collection-reports"
