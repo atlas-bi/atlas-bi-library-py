@@ -1,8 +1,6 @@
 'use client'
 
 import { loginFormSchema } from '@/lib/validation'
-import { FormFooter } from '@frontend/ui/forms/form-footer'
-import { FormHeader } from '@frontend/ui/forms/form-header'
 import { SubmitField } from '@frontend/ui/forms/submit-field'
 import { TextField } from '@frontend/ui/forms/text-field'
 import { ErrorMessage } from '@frontend/ui/messages/error-message'
@@ -30,45 +28,53 @@ export function LoginForm() {
   })
 
   return (
-    <>
-      <FormHeader
-        title="Welcome back to Atlas"
-        description="Get an access to internal application"
-      />
+    <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 max-w-md w-full mx-auto">
+      <div className="text-center mb-8">
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-900 mb-2">
+          Sign in to Atlas
+        </h1>
+        <p className="text-sm text-gray-600">
+          Enter your credentials to access the library.
+        </p>
+      </div>
 
       {search.has('error') && search.get('error') === 'CredentialsSignin' && (
-        <ErrorMessage>Provided account does not exists.</ErrorMessage>
+        <div className="mb-4">
+          <ErrorMessage>Invalid username or password.</ErrorMessage>
+        </div>
       )}
 
       <form
         method="post"
         action="/api/auth/callback/credentials"
         onSubmit={onSubmitHandler}
+        className="space-y-6"
       >
-        <TextField
-          type="text"
-          register={register('username')}
-          formState={formState}
-          label="Username"
-          placeholder="Email address or username"
-        />
+        <div className="space-y-4">
+          <TextField
+            type="text"
+            register={register('username')}
+            formState={formState}
+            label="Username"
+            placeholder="Username or email"
+          />
 
-        <TextField
-          type="password"
-          register={register('password', { required: true })}
-          formState={formState}
-          label="Password"
-          placeholder="Enter your password"
-        />
+          <TextField
+            type="password"
+            register={register('password', { required: true })}
+            formState={formState}
+            label="Password"
+            placeholder="••••••••"
+          />
+        </div>
 
-        <SubmitField>Sign in</SubmitField>
+        <button
+          type="submit"
+          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors"
+        >
+          Sign in
+        </button>
       </form>
-
-      <FormFooter
-        cta="Don't have an account?"
-        link="/register"
-        title="Sign up"
-      />
-    </>
+    </div>
   )
 }
