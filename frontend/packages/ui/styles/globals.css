@@ -2,6 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .breadcrumb ul {
+    @apply flex flex-wrap gap-x-6 gap-y-2 text-sm;
+  }
+
+  .tab .tab-lnk + .tab-lnk::before {
+    content: '/';
+    @apply mx-2 text-gray-300 no-underline;
+  }
+
+  .tab-lnk {
+    @apply text-purple-600 underline;
+  }
+
+  .tab-lnk.active {
+    @apply font-semibold;
+  }
+
+  .tab-cnt {
+    @apply flex flex-col gap-10;
+  }
+
+  .tab-dta {
+    @apply scroll-mt-24;
+  }
+
+  .tab-cnt > .tab-dta {
+    @apply hidden w-full;
+  }
+
+  .tab-cnt > .tab-dta.active {
+    @apply block;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
