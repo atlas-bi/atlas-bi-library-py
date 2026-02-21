@@ -105,16 +105,13 @@ def _env_bool(name: str, default: bool = False) -> bool:
         return default
     return val.strip().lower() in {"1", "true", "yes", "y", "on"}
 
+
 _allowed_hosts_env = os.environ.get("ALLOWED_HOSTS", "").strip()
 if _allowed_hosts_env:
     if _allowed_hosts_env == "*":
         ALLOWED_HOSTS = ["*"]
     else:
-        ALLOWED_HOSTS = [
-            h.strip()
-            for h in _allowed_hosts_env.split(",")
-            if h.strip()
-        ]
+        ALLOWED_HOSTS = [h.strip() for h in _allowed_hosts_env.split(",") if h.strip()]
 else:
     ALLOWED_HOSTS = [
         "localhost",
