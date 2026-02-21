@@ -1,0 +1,78 @@
+module.exports = {
+  ci: {
+    upload:
+      process.env.LHCI_UPLOAD_TARGET &&
+      process.env.LHCI_UPLOAD_TARGET !== 'lhci'
+        ? {
+            target: process.env.LHCI_UPLOAD_TARGET,
+          }
+        : {
+            target: 'lhci',
+            serverBaseUrl:
+              process.env.LHCI_SERVER_BASE_URL || 'https://lighthouse.atlas.bi',
+          },
+    assert: {
+      preset: 'lighthouse:no-pwa',
+      assertions: {
+        'color-contrast': 'warn',
+        'is-crawlable': 'off',
+        redirects: 'off',
+        'robots-txt': 'off',
+        'csp-xss': 'warn',
+        'unused-css-rules': 'warn',
+        'tap-targets': 'warn',
+        'third-party-facades': 'warn',
+        'unused-javascript': 'warn',
+        'uses-responsive-images': 'warn',
+        'uses-text-compression': 'warn',
+        'crawlable-anchors': 'warn',
+        label: 'warn',
+        'link-name': 'warn',
+        'heading-order': 'warn',
+        'meta-description': 'warn',
+        'button-name': 'warn',
+        'image-size-responsive': 'warn',
+        'lcp-lazy-loaded': 'warn',
+        'errors-in-console': 'warn',
+        'font-size': 'warn',
+      },
+    },
+
+    collect: {
+      puppeteerScript: './node_scripts/lighthouse.js',
+      puppeteerLaunchOptions: {
+        args: [
+          '--allow-no-sandbox-job',
+          '--allow-sandbox-debugging',
+          '--no-sandbox',
+          '--disable-gpu',
+          '--disable-gpu-sandbox',
+          '--disable-dev-shm-usage',
+          '--no-first-run',
+          '--no-default-browser-check',
+        ],
+      },
+      psiStrategy: 'desktop',
+      disableStorageReset: true,
+      settings: {
+        disableStorageReset: true,
+        maxWaitForLoad: 60000,
+        throttlingMethod: 'devtools',
+        hostname: '127.0.0.1',
+        preset: 'desktop',
+      },
+      maxAutodiscoverUrls: 10,
+      url: [
+        'http://127.0.0.1:8009',
+        'http://127.0.0.1:8009/initiatives/',
+        'http://127.0.0.1:8009/initiatives/1',
+        'http://127.0.0.1:8009/collections/',
+        'http://127.0.0.1:8009/collections/',
+        'http://127.0.0.1:8009/terms/',
+        'http://127.0.0.1:8009/terms/1',
+        'http://127.0.0.1:8009/reports/1',
+        'http://127.0.0.1:8009/users/2',
+      ],
+    },
+  },
+};
