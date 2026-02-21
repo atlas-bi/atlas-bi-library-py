@@ -71,6 +71,7 @@ jobs:
           npm install -g @lhci/cli@0.9.x
           lhci autorun
         env:
+          LHCI_UPLOAD_TARGET: temporary-public-storage
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
           PGPASSWORD: 12345

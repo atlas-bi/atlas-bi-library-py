@@ -1,9 +1,16 @@
 module.exports = {
   ci: {
-    upload: {
-      target: 'lhci',
-      serverBaseUrl: 'https://lighthouse.atlas.bi',
-    },
+    upload:
+      process.env.LHCI_UPLOAD_TARGET &&
+      process.env.LHCI_UPLOAD_TARGET !== 'lhci'
+        ? {
+            target: process.env.LHCI_UPLOAD_TARGET,
+          }
+        : {
+            target: 'lhci',
+            serverBaseUrl:
+              process.env.LHCI_SERVER_BASE_URL || 'https://lighthouse.atlas.bi',
+          },
     assert: {
       preset: 'lighthouse:no-pwa',
       assertions: {
@@ -40,10 +47,12 @@ module.exports = {
           '--no-sandbox',
           '--disable-gpu',
           '--disable-gpu-sandbox',
-          '--display',
+          '--disable-dev-shm-usage',
+          '--no-first-run',
+          '--no-default-browser-check',
         ],
       },
-      psiStrategy: 'dekstop',
+      psiStrategy: 'desktop',
       disableStorageReset: true,
       settings: {
         disableStorageReset: true,
