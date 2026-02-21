@@ -51,7 +51,8 @@ jobs:
 
       - name: install deps
         run: |
-          sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl
+          sudo apt-get update
+          sudo apt-get install -y libxml2-dev libxmlsec1-dev libxmlsec1-openssl
           cd solr && docker run -d -v "$PWD:/var/solr/mine" -p 8983:8983 --name solr_dev solr:8
           sleep 30 # give solar time to start
           docker exec solr_dev bash -c "source /var/solr/mine/setup_cores.sh;"
