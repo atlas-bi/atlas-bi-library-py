@@ -19,18 +19,46 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
+    - name: setup python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
 
-      - name: Install Uv
-        run: pip install uv
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
 
-      - name: Run tests
-        env:
-          DATABASE_HOST: localhost
-          DATABASE_USER: postgres
-          DATABASE_PASSWORD: postgres
-          DATABASE_NAME: postgres
-        run: cd backend && uv run -- pytest .
+    - name: Install Node Deps
+      run: |
+        npm --version
+        npm install
+
+    - name: Setup Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: 1.8.5
+
+    - name: install deps
+      run: |
+        sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl
+        cd solr && docker run -d -v "$PWD:/var/solr/mine" -p 8983:8983 --name solr_dev solr:8
+        sleep 30 # give solar time to start
+        docker exec solr_dev bash -c "source /var/solr/mine/setup_cores.sh;"
+        poetry install
+        python -m pip install codecov
+    - name: test
+      run: |
+        poetry run tox -e clean,test
+        poetry run tox -e cov
+      env:
+        POSTGRES_HOST: localhost
+        POSTGRES_PORT: 5432
+        PGPASSWORD: 12345
+        REDIS_HOST: localhost
+        REDIS_PORT: 6379
+    - name: upload cov
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage.xml
+        verbose: true
