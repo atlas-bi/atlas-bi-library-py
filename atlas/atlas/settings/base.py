@@ -98,15 +98,51 @@ SECRET_KEY = os.environ.get(
 DEBUG = False
 DEMO = False
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-]
+
+def _env_bool(name: str, default: bool = False) -> bool:
+    val = os.environ.get(name)
+    if val is None:
+        return default
+    return val.strip().lower() in {"1", "true", "yes", "y", "on"}
+
+
+_allowed_hosts_env = os.environ.get("ALLOWED_HOSTS", "").strip()
+if _allowed_hosts_env:
+    if _allowed_hosts_env == "*":
+        ALLOWED_HOSTS = ["*"]
+    else:
+        ALLOWED_HOSTS = [h.strip() for h in _allowed_hosts_env.split(",") if h.strip()]
+else:
+    ALLOWED_HOSTS = [
+        "localhost",
+        "127.0.0.1",
+    ]
 
 INTERNAL_IPS = [
     "127.0.0.1",
     "localhost",
 ]
+
+_csrf_trusted_origins_env = os.environ.get("CSRF_TRUSTED_ORIGINS", "").strip()
+if _csrf_trusted_origins_env:
+    CSRF_TRUSTED_ORIGINS = [
+        x.strip() for x in _csrf_trusted_origins_env.split(",") if x.strip()
+    ]
+
+if _env_bool("USE_X_FORWARDED_HOST", False):
+    USE_X_FORWARDED_HOST = True
+
+if _env_bool("USE_X_FORWARDED_PORT", False):
+    USE_X_FORWARDED_PORT = True
+
+if _env_bool("SECURE_PROXY_SSL_HEADER", False):
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+if _env_bool("CSRF_COOKIE_SECURE", False):
+    CSRF_COOKIE_SECURE = True
+
+if _env_bool("SESSION_COOKIE_SECURE", False):
+    SESSION_COOKIE_SECURE = True
 
 SESSION_ENGINE = "redis_sessions.session"
 
@@ -172,6 +208,18 @@ MIDDLEWARE = [
     "htmlmin.middleware.MarkRequestMiddleware",  # for htmlmin
     "djangosaml2.middleware.SamlSessionMiddleware",
 ]
+
+if _env_bool("USE_WHITENOISE", False):
+    if "whitenoise.middleware.WhiteNoiseMiddleware" not in MIDDLEWARE:
+        try:
+            idx = MIDDLEWARE.index("django.middleware.security.SecurityMiddleware")
+            MIDDLEWARE.insert(idx + 1, "whitenoise.middleware.WhiteNoiseMiddleware")
+        except ValueError:
+            MIDDLEWARE.insert(0, "whitenoise.middleware.WhiteNoiseMiddleware")
+    STATICFILES_STORAGE = os.environ.get(
+        "STATICFILES_STORAGE",
+        "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    )
 
 AUTHENTICATION_BACKENDS: Tuple[str, ...] = (
     "django.contrib.auth.backends.ModelBackend",

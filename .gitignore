@@ -4,6 +4,9 @@ BrowserStackLocal
 .rejected
 .env
 .config
+.env.backend
+.env.frontend
+.env.*.local
 coverage
 coverage.*.xml
 coverage.json
@@ -30,6 +33,15 @@ geckodriver.log
 db.sqlite3
 db.sqlite3-journal
 node_modules
+.pnpm-store
+.pnpm-debug.log*
+.next/
+out/
+frontend/.pnpm-store/
+frontend/**/.next/
+frontend/**/out/
+frontend/**/next-env.d.ts
+frontend/**/*.tsbuildinfo
 media
 CACHE
 report.xml

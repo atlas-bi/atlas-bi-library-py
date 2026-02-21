@@ -1,0 +1,28 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "format": "biome check .",
+    "format:fix": "biome check --write ."
+  },
+  "dependencies": {
+    "@frontend/types": "workspace:^",
+    "@frontend/ui": "workspace:^",
+    "@hookform/resolvers": "^3.9.1",
+    "lucide-react": "^0.469.0",
+    "next": "^16.0.10",
+    "next-auth": "^4.24.13",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "react-hook-form": "^7.54.2",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "typescript": "5.7.2"
+  }
+}
