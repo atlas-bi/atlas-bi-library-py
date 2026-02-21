@@ -147,18 +147,6 @@ if _env_bool("CSRF_COOKIE_SECURE", False):
 if _env_bool("SESSION_COOKIE_SECURE", False):
     SESSION_COOKIE_SECURE = True
 
-if _env_bool("USE_WHITENOISE", False):
-    if "whitenoise.middleware.WhiteNoiseMiddleware" not in MIDDLEWARE:
-        try:
-            idx = MIDDLEWARE.index("django.middleware.security.SecurityMiddleware")
-            MIDDLEWARE.insert(idx + 1, "whitenoise.middleware.WhiteNoiseMiddleware")
-        except ValueError:
-            MIDDLEWARE.insert(0, "whitenoise.middleware.WhiteNoiseMiddleware")
-    STATICFILES_STORAGE = os.environ.get(
-        "STATICFILES_STORAGE",
-        "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    )
-
 SESSION_ENGINE = "redis_sessions.session"
 
 REDIS_HOST = os.environ.get("REDIS_HOST", "localhost")
@@ -223,6 +211,18 @@ MIDDLEWARE = [
     "htmlmin.middleware.MarkRequestMiddleware",  # for htmlmin
     "djangosaml2.middleware.SamlSessionMiddleware",
 ]
+
+if _env_bool("USE_WHITENOISE", False):
+    if "whitenoise.middleware.WhiteNoiseMiddleware" not in MIDDLEWARE:
+        try:
+            idx = MIDDLEWARE.index("django.middleware.security.SecurityMiddleware")
+            MIDDLEWARE.insert(idx + 1, "whitenoise.middleware.WhiteNoiseMiddleware")
+        except ValueError:
+            MIDDLEWARE.insert(0, "whitenoise.middleware.WhiteNoiseMiddleware")
+    STATICFILES_STORAGE = os.environ.get(
+        "STATICFILES_STORAGE",
+        "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    )
 
 AUTHENTICATION_BACKENDS: Tuple[str, ...] = (
     "django.contrib.auth.backends.ModelBackend",
