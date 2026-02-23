@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from rest_framework.permissions import BasePermission
-
 from atlas_index.models import (
     AtlasUser,
     GroupRoleLinks,
@@ -13,6 +11,7 @@ from atlas_index.models import (
     UserRoleLinks,
     UserRoles,
 )
+from rest_framework.permissions import BasePermission
 
 
 def get_atlas_user_for_request_user(request_user) -> AtlasUser | None:
