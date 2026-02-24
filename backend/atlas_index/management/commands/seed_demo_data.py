@@ -119,6 +119,15 @@ class Command(BaseCommand):
         # Replace [app].ProcName references for stored procs
         result = re.sub(r"\[app\]\.\[(\w+)\]", r"\1", result)
 
+        # Some blocks build dynamic SQL that references the legacy table name without schema.
+        # Ensure those also point at our renamed flat tables.
+        result = re.sub(
+            r"\bReportObjectDocMaintenanceLogs\b",
+            "reportObjectDocMaintenanceLogs",
+            result,
+            flags=re.IGNORECASE,
+        )
+
         return result
 
     def handle(self, *args, **options):
@@ -245,6 +254,14 @@ class Command(BaseCommand):
                     skip = True
                     break
             if skip:
+                skipped += 1
+                continue
+
+            batch_lower = batch.lower()
+            if (
+                "set @sqlrodml" in batch_lower
+                and "reportobjectdocmaintenancelogs" in batch_lower
+            ):
                 skipped += 1
                 continue
 

@@ -56,6 +56,22 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+
+def _env_bool(name: str, default: bool = False) -> bool:
+    val = environ.get(name)
+    if val is None:
+        return default
+    return val.strip().lower() in {"1", "true", "yes", "y", "on"}
+
+
+if _env_bool("USE_WHITENOISE", False):
+    if "whitenoise.middleware.WhiteNoiseMiddleware" not in MIDDLEWARE:
+        try:
+            idx = MIDDLEWARE.index("django.middleware.security.SecurityMiddleware")
+            MIDDLEWARE.insert(idx + 1, "whitenoise.middleware.WhiteNoiseMiddleware")
+        except ValueError:
+            MIDDLEWARE.insert(0, "whitenoise.middleware.WhiteNoiseMiddleware")
+
 ######################################################################
 # Templates
 ######################################################################
@@ -187,8 +203,14 @@ CELERY_RESULT_EXTENDED = True
 ######################################################################
 # Staticfiles
 ######################################################################
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+if _env_bool("USE_WHITENOISE", False):
+    STATICFILES_STORAGE = environ.get(
+        "STATICFILES_STORAGE",
+        "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    )
 
 ######################################################################
 # Solr
