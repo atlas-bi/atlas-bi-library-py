@@ -1,3 +1,11 @@
+from atlas_index.models import (
+    Collection,
+    CollectionReport,
+    CollectionTerm,
+    Initiative,
+    ReportObject,
+    Term,
+)
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from drf_spectacular.utils import extend_schema
@@ -7,23 +15,14 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from atlas_index.models import (
-    Collection,
-    CollectionReport,
-    CollectionTerm,
-    Initiative,
-    ReportObject,
-    Term,
-)
-
 from .permissions import AtlasRolePermission
 from .serializers import (
     CollectionDetailSerializer,
     CollectionReportSerializer,
     CollectionSerializer,
     CollectionTermSerializer,
-    InitiativeSerializer,
     InitiativeDetailSerializer,
+    InitiativeSerializer,
     ReportSearchSerializer,
     TermSearchSerializer,
     UserChangePasswordErrorSerializer,
