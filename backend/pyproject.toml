@@ -8,6 +8,7 @@ dependencies = [
     "mssql-django>=1.5",
     "celery[redis]>=5.4",
     "redis>=5.0",
+    "whitenoise>=6.6",
     "djangorestframework>=3.15",
     "djangorestframework-simplejwt>=5.3",
     "drf-spectacular>=0.28",

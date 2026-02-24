@@ -33,6 +33,8 @@ RUN pip install uv && \
 
 COPY backend/ ./
 
+COPY atlas-demo-seed_script.sql /app/seed.sql
+
 FROM python:3.13-slim-bookworm AS api
 
 ENV PYTHONUNBUFFERED=1

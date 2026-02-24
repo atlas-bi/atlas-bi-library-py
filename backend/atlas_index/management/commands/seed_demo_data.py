@@ -133,6 +133,11 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         seed_sql_path = os.environ.get("ATLAS_DEMO_SEED_SQL_PATH", "").strip()
         if not seed_sql_path:
+            baked = Path("/app/seed.sql")
+            if baked.is_file():
+                seed_sql_path = str(baked)
+
+        if not seed_sql_path:
             here = Path(__file__).resolve()
             for parent in [here, *here.parents]:
                 for name in ("atlas-demo-seed_script.sql", "seed.sql"):
