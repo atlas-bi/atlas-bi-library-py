@@ -33,6 +33,9 @@ importers:
       autoprefixer:
         specifier: ^10.4.22
         version: 10.4.22(postcss@8.5.6)
+      baseline-browser-mapping:
+        specifier: ^2.9.5
+        version: 2.9.5
       openapi-typescript-codegen:
         specifier: ^0.29.0
         version: 0.29.0
