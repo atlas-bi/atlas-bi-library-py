@@ -17,6 +17,14 @@ DEBUG = environ.get("DEBUG", "1") != "0"
 allowed_hosts_env = environ.get("ALLOWED_HOSTS", "localhost,api")
 ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(",") if host.strip()]
 
+csrf_trusted_origins_env = environ.get("CSRF_TRUSTED_ORIGINS", "").strip()
+if csrf_trusted_origins_env:
+    CSRF_TRUSTED_ORIGINS = [
+        origin.strip()
+        for origin in csrf_trusted_origins_env.split(",")
+        if origin.strip()
+    ]
+
 WSGI_APPLICATION = "api.wsgi.application"
 
 ROOT_URLCONF = "api.urls"
@@ -71,6 +79,21 @@ if _env_bool("USE_WHITENOISE", False):
             MIDDLEWARE.insert(idx + 1, "whitenoise.middleware.WhiteNoiseMiddleware")
         except ValueError:
             MIDDLEWARE.insert(0, "whitenoise.middleware.WhiteNoiseMiddleware")
+
+if _env_bool("USE_X_FORWARDED_HOST", False):
+    USE_X_FORWARDED_HOST = True
+
+if _env_bool("USE_X_FORWARDED_PORT", False):
+    USE_X_FORWARDED_PORT = True
+
+if _env_bool("SECURE_PROXY_SSL_HEADER", False):
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+if _env_bool("CSRF_COOKIE_SECURE", False):
+    CSRF_COOKIE_SECURE = True
+
+if _env_bool("SESSION_COOKIE_SECURE", False):
+    SESSION_COOKIE_SECURE = True
 
 ######################################################################
 # Templates
