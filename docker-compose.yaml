@@ -137,8 +137,6 @@ services:
       dockerfile: Dockerfile
       target: api
     working_dir: /app
-    volumes:
-      - ./atlas-demo-seed_script.sql:/app/seed.sql:ro
     expose:
       - "8000"
     ports:
