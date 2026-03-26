@@ -1,10 +1,3 @@
-from django.contrib.auth import get_user_model
-from django.contrib.auth.password_validation import validate_password
-from django.core.exceptions import ValidationError
-from django.db import transaction
-from django.utils.translation import gettext_lazy as _
-from rest_framework import exceptions, serializers
-
 from atlas_index.models import (
     AtlasUser,
     Collection,
@@ -14,6 +7,12 @@ from atlas_index.models import (
     ReportObject,
     Term,
 )
+from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+from django.db import transaction
+from django.utils.translation import gettext_lazy as _
+from rest_framework import exceptions, serializers
 
 from .permissions import get_atlas_user_for_request_user
 
@@ -140,15 +139,18 @@ class InitiativeSerializer(serializers.ModelSerializer):
         model = Initiative
         fields = ["initiative_id", "name", "description"]
 
+
 class TermSerializer(serializers.ModelSerializer):
     class Meta:
         model = Term
         fields = ["term_id", "name", "summary"]
 
+
 class ReportObjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReportObject
         fields = ["report_id", "title", "name"]
+
 
 class CollectionSerializer(serializers.ModelSerializer):
     initiative = InitiativeSerializer(read_only=True)
