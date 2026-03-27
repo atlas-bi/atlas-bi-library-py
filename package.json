@@ -87,7 +87,7 @@
     "open": "^9.1.0",
     "postcss": "^8.4.21",
     "postcss-cli": "^10.1.0",
-    "postcss-sort-media-queries": "4.3.0",
+    "postcss-sort-media-queries": "5.2.0",
     "puppeteer": "^19.8.3",
     "rollup-plugin-swc": "0.2.1",
     "rollup-stream-gulp": "0.0.3",
