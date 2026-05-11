@@ -4,12 +4,12 @@ module.exports = {
       process.env.LHCI_UPLOAD_TARGET &&
       process.env.LHCI_UPLOAD_TARGET !== 'lhci'
         ? {
-            target: process.env.LHCI_UPLOAD_TARGET,
+            target: process.env.LHCI_UPLOAD_TARGET
           }
         : {
             target: 'lhci',
             serverBaseUrl:
-              process.env.LHCI_SERVER_BASE_URL || 'https://lighthouse.atlas.bi',
+              process.env.LHCI_SERVER_BASE_URL || 'https://lighthouse.atlas.bi'
           },
     assert: {
       preset: 'lighthouse:no-pwa',
@@ -34,8 +34,8 @@ module.exports = {
         'image-size-responsive': 'warn',
         'lcp-lazy-loaded': 'warn',
         'errors-in-console': 'warn',
-        'font-size': 'warn',
-      },
+        'font-size': 'warn'
+      }
     },
 
     collect: {
@@ -49,8 +49,8 @@ module.exports = {
           '--disable-gpu-sandbox',
           '--disable-dev-shm-usage',
           '--no-first-run',
-          '--no-default-browser-check',
-        ],
+          '--no-default-browser-check'
+        ]
       },
       psiStrategy: 'desktop',
       disableStorageReset: true,
@@ -59,7 +59,7 @@ module.exports = {
         maxWaitForLoad: 60000,
         throttlingMethod: 'devtools',
         hostname: '127.0.0.1',
-        preset: 'desktop',
+        preset: 'desktop'
       },
       maxAutodiscoverUrls: 10,
       url: [
@@ -71,8 +71,8 @@ module.exports = {
         'http://127.0.0.1:8009/terms/',
         'http://127.0.0.1:8009/terms/1',
         'http://127.0.0.1:8009/reports/1',
-        'http://127.0.0.1:8009/users/2',
-      ],
-    },
-  },
-};
+        'http://127.0.0.1:8009/users/2'
+      ]
+    }
+  }
+}
