@@ -178,8 +178,7 @@ class Command(BaseCommand):
         # The seed SQL inserts into reportObject_doc without GitLabProjectURL.
         # If our schema made it NOT NULL, the seed will fail.
         try:
-            cur.execute(
-                """
+            cur.execute("""
                 BEGIN TRY
                     IF COL_LENGTH('dbo.reportObject_doc', 'GitLabProjectURL') IS NOT NULL
                     BEGIN
@@ -209,8 +208,7 @@ class Command(BaseCommand):
                 BEGIN CATCH
                     -- Non-fatal: continue even if ALTER isn't possible (e.g. type mismatch)
                 END CATCH
-                """
-            )
+                """)
         except pyodbc.Error:
             # Non-fatal
             pass
@@ -219,8 +217,7 @@ class Command(BaseCommand):
         # some rows may reference users that aren't present yet, which would block seeding.
         # For demo data we temporarily disable FK checks on the affected tables.
         try:
-            cur.execute(
-                """
+            cur.execute("""
                 BEGIN TRY
                     IF OBJECT_ID('dbo.userGroupsMembership', 'U') IS NOT NULL
                         ALTER TABLE dbo.userGroupsMembership NOCHECK CONSTRAINT ALL;
@@ -237,8 +234,7 @@ class Command(BaseCommand):
                 END TRY
                 BEGIN CATCH
                 END CATCH
-                """
-            )
+                """)
         except pyodbc.Error:
             pass
 
@@ -302,8 +298,7 @@ class Command(BaseCommand):
 
         # Postflight: re-enable constraints (without validating existing rows).
         try:
-            cur.execute(
-                """
+            cur.execute("""
                 BEGIN TRY
                     IF OBJECT_ID('dbo.userGroupsMembership', 'U') IS NOT NULL
                         ALTER TABLE dbo.userGroupsMembership WITH NOCHECK CHECK CONSTRAINT ALL;
@@ -320,8 +315,7 @@ class Command(BaseCommand):
                 END TRY
                 BEGIN CATCH
                 END CATCH
-                """
-            )
+                """)
         except pyodbc.Error:
             pass
 
